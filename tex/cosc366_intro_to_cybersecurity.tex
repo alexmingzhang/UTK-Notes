@@ -1,0 +1,316 @@
+\documentclass[12pt]{report}
+
+\usepackage[margin=1in]{geometry}
+\usepackage{amznotes}
+
+\title{\textbf{Introduction to Cybersecurity}\\
+\large UT Knoxville, Spring 2023, COSC 366}
+\author{Alex Zhang}
+
+\begin{document}
+
+\maketitle
+\tableofcontents
+
+\chapter{Security Concepts and Principals}
+
+\section{Fundamental Goals of Computer Security}
+
+\begin{dfnbox}{Computer Security}{computer-security}
+    \dfntxt{Computer security} is the practice of protecting computer-related assets from unauthorized actions, either by preventing such actions or detecting and recovering from them.
+\end{dfnbox}
+
+\paragraph{CIA Triad}
+The goal of \nameref{dfn:computer-security} is to help users complete their desired task safely, without short or long term risks.  To do this, we support computer-based services by providing essential security properties such as:
+
+\begin{itemize}
+    \item \dfntxt{Confidentiality}: only authorized parties can access data; applies at rest or in motion (data being transmitted)
+    \item \dfntxt{Integrity}: data, software or hardware remaining unchanged, except by authorized parties
+    \item \dfntxt{Availability}: information, services and computing resources are available for authorized use
+\end{itemize}
+
+\begin{dfnbox}{Principal}{}
+    A \dfntxt{principal} is an entity with a given identity, such as a user, service, or system process.
+\end{dfnbox}
+
+\begin{dfnbox}{Privilege}{}
+    A \dfntxt{privilege} defines what a principal can do, such as read/write/execute permissions.
+\end{dfnbox}
+
+\paragraph{Golden Principles}
+In regard to principals, there are three ``Golden Principles'':
+
+\begin{itemize}
+    \item \dfntxt{Authentication}: assurance that a principal is who they say they are
+    \item \dfntxt{Authorization}: proof that an entity has the necessary privilege to take the request action; most commonly done by authenticating a principal, and lookup up its privileges
+    \item \dfntxt{Auditability}: ability to identify principals responsible for past actions
+\end{itemize}
+
+Auditability (or accountability) gives away two key things: who conducted the attack and the methods by which an attack was made.
+
+\begin{dfnbox}{Trustworthy}{}
+    Something is \dfntxt{trustworthy} if it deserves our confidence.
+\end{dfnbox}
+
+\begin{dfnbox}{Trusted}{}
+    Something is \dfntxt{trusted} if it has our confidence.
+\end{dfnbox}
+
+\section{Computer security policies and attacks}
+
+\begin{dfnbox}{Asset}{asset}
+    An \dfntxt{asset} is a resource we want to protect, such as information, software, hardware, or computing/communications services.
+\end{dfnbox}
+
+Note that asset can refer to any tangible or intangible resources.
+
+\begin{dfnbox}{Security Policy}{}
+    A \dfntxt{security policy} specifies the design intent of a system's rules and practices (i.e. what the system is supposed to do and not do).
+\end{dfnbox}
+
+\begin{dfnbox}{Adversary}{}
+    An \dfntxt{adversary} is an entity who wants to violate a security policy to harm an asset.
+    \tcblower
+    Can also be called ``threat agents'' or ``threat actors''.
+\end{dfnbox}
+
+A formal security policy should precisely define each possible system state as either authorized (secure) or unauthorized (non-secure). Non-secure states raise the potential for attacks to happen.
+
+\begin{dfnbox}{Threat}{}
+    A \dfntxt{threat} is any combination of circumstances and entities allow harm to assets or cause security violations.
+\end{dfnbox}
+
+\begin{dfnbox}{Attack}{attack}
+    An \dfntxt{attack} is a deliberate attempt to cause a security violation.
+\end{dfnbox}
+
+\begin{dfnbox}{Attack Vector}{attack-vector}
+    An \dfntxt{attack vector} is the specific methods and steps by which an attack was executed.
+\end{dfnbox}
+
+\begin{dfnbox}{Mitigation}{mitigation}
+    \dfntxt{Mitigation} describes countermeasures to reduce the chance of a threat being actualized or lessen the cost of a successful attack.
+\end{dfnbox}
+
+\nameref{dfn:mitigation} includes operational and management processes, software controls, and other security mechanisms.
+
+\begin{exbox}{House Security Policy}{house}
+    Consider this simple security policy for a house: no one is allowed in the house unless accompanied by a family member, and only family members are authorized to take things out of the house.
+    \begin{itemize}
+        \item The presence of someone who wants to steal an asset from our house is a \textbf{threat}.
+        \item An unaccompanied stranger in the house is a \textbf{security violation}.
+        \item An unlocked door is a \textbf{vulnerability}.
+        \item A stranger entering through the unlocked door and stealing a television is an \textbf{attack}.
+        \item Entry through the unlocked door is an \textbf{attack vector}.
+    \end{itemize}
+\end{exbox}
+
+\section{Risk, risk assessment, and modeling expected losses}
+
+\begin{dfnbox}{Risk}{risk}
+    A \dfntxt{risk} is the expected loss of assets due to future attacks.
+\end{dfnbox}
+
+There are two was we assess risk: \dfntxt{quantitative} and \dfntxt{qualitative} risk assessment.
+\begin{itemize}
+    \item \dfntxt{Quantitative} risk assessment computes numerical estimate of risk
+    \item \dfntxt{Qualitative} risk assessment compares risks relative to each other
+\end{itemize}
+
+Quantitative risk assessment is more suited for incidents that occur regularly, with historical data and stable statistics to generate probability estimates. However, computer security incidents occur so infrequently that any estimate of probability likely isn't precise. In contrast, qualitative risk assessment is usually more practical. For each asset or asset class, their relevant threats are categorized based on probability of happening and impact if it happened.
+
+Precise estimates of risk are rarely possible in practice, so qualitative risk assessment is usually yields more informed decisions. A popular equation for modeling risk is:
+\[ R = T \cdot V \cdot C \]
+where:
+\begin{itemize}
+    \item $T$ is the probability of an attack happening,
+    \item $V$ is the probability such a vulnerability exists, and
+    \item $C$ is cost of a successful attack, both tangible and intangible costs
+\end{itemize}
+
+$C$ can encompass tangible losses like money or intangible losses like reputation. Whatever model we use, we can then model expected losses as such:
+
+In risk assessment, we ask ourselves these questions:
+\begin{enumerate}
+    \item What assets are most valuable, and what are their values?
+    \item What system vulnerabilities exist?
+    \item
+\end{enumerate}
+
+In answering these questions, it becomes apparant we cannot employ strictly quantitative risk assessment. A popular model for qualitative risk assessment is the \nameref{dfn:dread} model:
+
+\begin{dfnbox}{DREAD}{dread}
+    \dfntxt{DREAD} is a method of qualitative risk assessment using a subjective scaled rating system for five attributes.
+
+    \begin{center}\begin{tabular}{r | l | l}
+        Attribute & 10 & 1 \\ \hline
+        \dfntxt{Damage Potential} & data is extremely sensitive & data is worthless \\
+        \dfntxt{Reproducibility} & works every time & works only once \\
+        \dfntxt{Exploitability} & anyone can mount an attack & requires a nation state \\
+        \dfntxt{Affected Users} & 91-100\% of users & 0\% of users \\
+        \dfntxt{Discoverability} & threat is obviously apparent & threat is undetectable
+    \end{tabular}\end{center}
+
+    The final DREAD score takes the average of all five attributes.
+\end{dfnbox}
+
+A common criticism of \nameref{dfn:dread} is that rating discoverability might reward security through obscurity. Often, people will omit discoverability, or simply assign it the maximum value all the time.
+
+
+\[ ALE = \sum_{i=1}^{n} F_i \cdot C_i \]
+where:
+\begin{itemize}
+    \item $F_i$ is the estimated frequency of events of type $i$, and
+    \item $C_i$ is the average loss expected per occurence of an event of type $i$
+\end{itemize}
+
+\section{Adversary modeling and security analysis}
+
+\begin{dfnbox}{Adversary}{}
+    An \dfntxt{adversary} is an entity that wants to violate a security policy in order to harm an asset.
+\end{dfnbox}
+
+In designing computer security mechanisms, it is important to identify traits about potential adversaries. Some attributes may include:
+\begin{itemize}
+    \item identity: who are they?
+    \item objectives: what assets the adversary might try to harm
+    \item methods: the potential attack techniques or types of attacks
+    \item capabilities: skills, knowledge, personnel, and opportunity
+    % \item funding level -- how much money an attacker has
+    % \item outsider or insider -- whether or not the adversary may have special permissions or privileges
+\end{itemize}
+
+Different adversaries can have wildly different objectives, methods, and capabilities.
+
+\begin{dfnbox}{Security Analysis}{}
+    \dfntxt{Security analysis} aims to identify vulnerabilities and overlooked threats, as well as ways to improve defense against such threats
+\end{dfnbox}
+
+Types of analysis:
+\begin{itemize}
+    \item Formal security evaluation: standardized testing to ensure essential features and security
+    \item Internal vulnerability testing: internal team trying to find vulnerabilities
+    \item External penetration testing: third-party audits to find vulnerabilities; often the most effective
+\end{itemize}
+
+Security analysis is a heavily involved process that may employ a variety of methodologies. For example, manual source code review, review of design documents, and various penetration testing techniques. It's important to be aware of potential vulnerabilities as we are writing code.
+
+\section{Threat Modeling}
+A threat model will identify possible adversaries, threats, and attack vectors. We need to list a set of assumptions about the threats as well as clarify what is in and out of the scope of possibilities.
+
+\paragraph{Diagram-Driven Threat Model}
+Threat model diagrams include assets, infrastructure, and defenses/mitigations, making apparent the possible attack vectors. Popular examples include:
+\begin{itemize}
+    \item \dfntxt{Data Flow Diagrams} -- models all possible data routes
+    \item \dfntxt{User Workflow Diagram} -- models how users interact with the program, both frontend and backend
+    \item \dfntxt{Attack Trees} -- models all possible attack vectors like a flow chart; leaf nodes are initial actions
+\end{itemize}
+
+\begin{dfnbox}{STRIDE}{stride}
+    \dfntxt{STRIDE} is a model for identifying computer security threats.
+    \begin{itemize}
+        \item \dfntxt{Spoofing} -- attacker impersonates another user, or malicious server posing as a legitimate server
+        \item \dfntxt{Tampering} -- altering data without proper authorization; can occur when data is stored, processed
+        \item \dfntxt{Repudiation} -- lying about past actions (e.g. denying/claiming that something happened)
+        \item \dfntxt{Information Disclosure} -- exposure of confidential information without authorization
+        \item \dfntxt{Denial of Service} -- render service unusable or unreliable for users
+        \item \dfntxt{Elevation of Privilege} -- an unprivileged user gains privileges
+    \end{itemize}
+\end{dfnbox}
+
+\section{Threat Model Gaps}
+Often, wrong assumptions about risk or focus on wrong threats will lead to gaps between our threat model and what can realistically happen (e.g. if we don't account for something, but it does happen).
+
+\paragraph{Changing Times}
+New adversaries, technologies, software, and controls means we need to constantly adjust our threat model.
+
+\section{Design Principles}
+\begin{enumerate}
+    \item Simplicity and necessity; complexity increases risks (KISS -- keep it simple, stupid)
+    \item Safe Defaults -- get security out of the box; users rarely change defaults
+    \item Open Design -- don't rely on the secrecy of our code; it will leak
+    \item Complete Mediation -- never assume access is safe; always check access is allowed
+    \item Least Privilege -- don't give principals extraneous privileges; limit impact of compromise
+    \item Defense in depth -- multiple layers of security; don't rely on only one security control
+    \item Security by design -- think about security throughout development, not an afterthought
+    \item Design for evolution -- allow for change for whenever it's needed
+\end{enumerate}
+
+\section{Review}
+CIA Triad, Golden principles, trusted vs. trustworthy, confidentialty vs. privacy.
+
+TODO: add more review stuff from slides here; flesh out notes to reflect review
+
+\chapter{Cryptography}
+\paragraph{Cryptographic Rules to Remember}
+\begin{enumerate}
+    \item Do not design your own cryptographic protocols or algorithms
+    \item Kerckhoff's Principle -- security should only come from the secrecy of the crytographic key material, NOT the algorithm or code
+    \item Encryption only provides confidentiality, not integrity
+\end{enumerate}
+
+\begin{dfnbox}{Cipher, Plain Text, Cipher Text}{}
+    A \dfntxt{cipher} is any encryption or decryption algorithm. A \dfntxt{plaintext} message is vulnerable, usually prior to cipher. A \dfntxt{ciphertext} message is secure, usually after cipher is applied.
+\end{dfnbox}
+
+\begin{dfnbox}{Cryptographic Key}{}
+    A \dfntxt{cryptographic key} is a value which is used to decrypt cipher text; should be relatively large and remain private.
+\end{dfnbox}
+
+The \dfntxt{key space} is the set of all possible cryptographic keys. It should be large enough such that it would be impractical to try every possible key. For example, AES-256 uses 256 bit keys. Even a thermodynamically perfect computer with the power of the sun could not even count through $2^{256}$ keys, much less guess and check them.
+
+\paragraph{Threats}
+Attacks
+\begin{itemize}
+    \item Brute force attack -- guess and check all keys
+    \item Algorithmic break -- some flaw in the algorithm
+\end{itemize}
+
+Adversaries:
+\begin{itemize}
+    \item Passive -- just listens to communications
+    \item Active -- can modify data
+\end{itemize}
+
+\begin{dfnbox}{Information-Theoretic Security}{}
+    We say information has \dfntxt{information-theoretic security} if given \textbf{unlimited} computer power and time, an attacker cannot recover the plaintext from the ciphertext.
+\end{dfnbox}
+
+\begin{dfnbox}{Computational Security}{}
+    We say information has \dfntxt{computational security} if given \textbf{fixed} computer power and time, an attacker cannot recover the plaintext from the ciphertext.
+\end{dfnbox}
+
+\section{Symmetric Encryption Model}
+\begin{dfnbox}{Stream Cipher}{}
+    A \dfntxt{stream cipher} encrypts information one bit at a time.
+\end{dfnbox}
+
+\begin{exbox}{One-Time Pad}{}
+    XOR; provides information-theoretic security (cannot be certain what the plaintext message was)
+    \begin{itemize}
+        \item Key must be as long as the message
+        \item Key must never be reused
+        \item How do we share the key?
+   \end{itemize}
+\end{exbox}
+
+Many modern cryptographic algorithms work by taking a small cryptographic key and expanding it into a sufficiently large one-time pad key.
+
+\begin{dfnbox}{Block Cipher}{}
+    A \dfntxt{block cipher} encrypts information in blocks.
+\end{dfnbox}
+
+\begin{exbox}{AES}{}
+    In AES:
+    \begin{itemize}
+        \item Messages are split into 128-bit blocks (with padding)
+        \item Cryptographic key is 128, 196, or 256 bits long
+        \item Provides computational security
+        \item A single bit changed should change (on average) 50\% of the ciphertext
+    \end{itemize}
+    In addition, different block modes help to remove patterns among blocks.
+\end{exbox}
+
+\amzindex
+
+\end{document}

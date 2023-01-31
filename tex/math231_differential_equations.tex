@@ -1,0 +1,582 @@
+% general vs spacial solution
+
+\documentclass[12pt]{report}
+\usepackage[margin=1in]{geometry}
+
+\usepackage{amzmath}
+\usepackage{amsthm}
+\usepackage{units}
+\usepackage{tikz-cd}
+\usepackage{tabularx}
+\usepackage{siunitx}
+\usepackage{setspace}
+\onehalfspacing
+
+\title{MATH 231: Differential Equations}
+\author{Alex Zhang}
+
+\begin{document}
+\maketitle
+\tableofcontents
+\newpage
+
+\renewcommand{\arraystretch}{1.5}
+\chapter{}
+
+\begin{dfnbox}{Differential Equation}
+	A \dfntxt{differential equation} is an equation that relates one or more unknown functions and their derivatives.
+
+	\begin{itemize}
+		\item \dfntxt{Ordinary Differential Equation (ODE)}: One input
+		\item \dfntxt{Partial Differential Equation (PDE)}: Multiple inputs
+	\end{itemize}
+\end{dfnbox}
+
+\begin{exbox}{Free Fall (ODE)}
+	\begin{tabularx}{\linewidth}{|l|l|l|l|} \hline
+		\textbf{Acceleration} & $\frac{d^2h}{dt^2}=-g$ & $h\prime \prime(t)=-g$ & $g=9.8\frac{\unit{m}}{\unit{s}^2}$ \\ \hline
+		\textbf{Velocity} & $\frac{dh}{dt}=-gt+c_1$ & $h\prime (t)=-gt+c_1$ & $c_1$ is initial velocity \\ \hline
+		\textbf{Position} & Solved & $h(t)=-\frac{1}{2}gt^2+c_1t+c_2$ & $c_2$ is initial position \\ \hline
+	\end{tabularx}
+	\tcblower
+	\textbf{Note}: $\dot{h}(t)$ represents the first derivative of $h(t)$, and $\ddot{h}(t)$ represents its second derivative.
+\end{exbox}
+
+\begin{exbox}{Exponential Growth (ODE)}
+	\begin{tabular}{l l}
+		Diff. Eq. & $\dot{x}(t)=kx(t)$ or $\frac{dt}{dx}=kt$\\
+		Solution & $x(t)=x_oe^{kt}$ \\
+		Computation & $e^x = \sum_{n=0}^{\infty}\frac{x^n}{n!}$
+	\end{tabular}
+\end{exbox}
+
+\begin{exbox}{Heat Equation (PDE)}
+	$h(t,x) : $ temperature at time $t$ and location $x$
+
+	$$\frac{\delta h}{\delta t} = \frac12 \frac{\delta^2 h}{\delta x^2}$$
+	\tcblower
+	\textbf{Note}: This is an example of a \textbf{partial} differential equation as it has two inputs, $t$ and $x$.
+\end{exbox}
+
+
+\begin{dfnbox}{Linearity}
+	A differential equation is \dfntxt{linear} if it follows the form:
+	$$ F(x) = a_n(x) \frac{d^ny}{dx^n} + a_{n-1}(x) \frac{d^{n-1}y}{dx^{n-1}} + \ldots + a_0(x)y $$
+	where $a_n(x)$, $\ldots$, $a_0(x)$, and $F(x)$ depend only on the independent variable $x$ (i.e. linear equations can only be ODE).
+\end{dfnbox}
+
+\begin{tecbox}{Solving first order linear ODEs}
+	Take a first order linear ODE in standard form:
+	$$\frac{dy}{dx} + p(x)y = Q(x)$$
+	Using a function known as the  integrating factor$\ldots$
+	$$I(x) = e^{\int p(x)\ dx}$$
+	We can now find the general solution:
+	$$ y = \frac{1}{I(x)} \left[ \int I(x)Q(x)\ dx + C \right] $$
+\end{tecbox}
+
+\begin{exbox}{$\nicefrac{dy}{dx} + 2y = 2e^x$}
+	This equation is already in standard form. Let $P(x)=2$ and $Q(x) = 2e^x$. 
+	$$I(x) = e^{\int P(x)\ dx}=e^{\int 2\ dx} = e^{2x}$$
+	\begin{align*}
+		y &= \frac{1}{e^{2x}} \left[ \int e^{2x}2e^{x}\ dx + C \right] \\
+		&= \frac{1}{e^{2x}} \left[ 2 \int e^{3x}\ dx + C \right] \\
+		&= \frac{1}{e^{2x}} \left[ 2 \frac{e^{3x}}{3} + C \right] \\
+		&= \frac{2}{3} e^x + Ce^{-2x} \\
+	\end{align*}
+\end{exbox}
+
+\begin{tecbox}{Solving Exact Linear Equations}
+	$$M(x,y)dx + N(x,y)dy = 0$$
+	Check for exactness:
+	$$\frac{\delta M(x,y)}{\delta y} = \frac{\delta N(x,y)}{\delta x}$$
+	Then we can express the solution function as such:
+	$$ \frac{\delta f(x,y)}{\delta x} = M(x,y) $$
+	$$ \frac{\delta f(x,y)}{\delta y} = N(x,y) $$
+	Take the antiderivative of $ \frac{\delta f}{\delta x}$ with respect to $x$
+	$$ f(x,y) = \int M(x,y)\ dx + h(y)$$
+	$h(y)$ is a generic function that may have been lost in differentiation. To recover $h(y)$, take the derivative of $f(x,y)$ with respect to $y$
+	$$\frac{\delta f(x,y)}{\delta y} = N(x,y) + h\prime (y)$$
+\end{tecbox}
+
+\begin{dfnbox}{Order}
+	The \dfntxt{order} of a differential equation is defined by the most dominant derivative term.
+\end{dfnbox}
+
+\chapter{First Order Differential Equations}
+\begin{dfnbox}{Separable Equations}
+	A \dfntxt{separable equation} follows the form $\frac{dy}{dx} = f(x)g(y)$. It's easy to work with as it can be rewritten as $\frac{dy}{g(y)} = f(x)dx$
+\end{dfnbox}
+
+\begin{dfnbox}{Homogeneous Differential Equation}
+	A differential equation is \dfntxt{homogeneous} if each term of the equation is the same order.
+	
+	\textbf{Example}: $\frac{dy}{dx} = \frac{xy}{x^2-y^2}$ Here, $xy$, $x^2$, and $y^2$ are all order 2.
+\end{dfnbox}
+
+\begin{thmbox}{Solving Homogeneous DEs}
+	We can use a clever substitution to turn a difficult DE into something which can be solved more easily.
+	$$y=vx,\ dy=vdx+xdv$$
+	Near the end, we can substitute back.
+	$$v=\frac{y}{x}$$
+\end{thmbox}
+
+\newpage
+\chapter{Mathematical Modeling}
+\begin{genbox}{Compartmental Analysis}
+	\begin{tabular}{|c|l|} \hline
+		$x(t)$ & amount of substance in compartment at time $t$ \\ \hline
+		$\frac{dx}{dt}$ & rate of change of amount of substance in compartment \\ \hline
+	\end{tabular}
+	$$\frac{dx}{dt} = \text{input rate}\ -\ \text{output rate}$$
+\end{genbox}
+
+\begin{genbox}{Population Model}
+	$p(t)$: population at time $t$
+	
+	\textbf{Mathusian's Law}: $k_1$ is birthrate, $k_2$ is deathrate, $k=(k_1-k_2)$ is growth rate
+	$$\frac{dp}{dt} = k_1p(t)-k_2p(t)=kp(t)$$
+	$$\Rightarrow p(t)=p_0e^{kt}$$
+	
+	\textbf{Logistic Law}: $A = \frac{k_1}{2}$, $p_1=\frac{2k_1}{k_3}$ is capacity
+	$$\frac{dp}{dt} = k1_p(t) - k_3\frac{p(t)(p(t)-1)}{2}$$
+	$$\Rightarrow \frac{dp}{dt} = -Ap(p-p_1)$$
+	$$\Rightarrow \left| 1 - \frac{p_1}{p(t)} \right| = ce^{-Ap_1t}$$
+	$$\Rightarrow p(t) = \frac{p_0p_1}{p_0 + (p_1 - p_0)e^{-Ap_1t}}$$
+\end{genbox}
+
+\begin{genbox}{Heating and Cooling}
+	Here, we will only consider time and assume that heat is uniform inside of a room.
+	
+	\begin{tabular}{|c|l|} \hline
+		$T(t)$ & temperature inside a building at time $t$ \\ \hline
+		$\frac{dT}{dt}$ & rate of change of temperature in a building \\ \hline
+		$H(t)$ & heat produced by people inside a building \\ \hline
+		$U(t)$ & heat produced by cooling system \\ \hline
+		$k[M(t)-T(t)]$ & heat from outside where $k$ is a constant and $M(t)$ is the temp. outside \\ \hline
+	\end{tabular}
+	$$\frac{dT}{dt} = k \left[ M(t) - T(t) \right] + U(t) + H(t) $$
+	$$\Rightarrow \frac{dT}{dt} + kT(t) = kM(t) + U(t) + H(t)$$
+\end{genbox}
+
+\newpage
+\chapter{Linear Second-Order Differential Equations}
+
+\begin{genbox}{Homogeneous}
+	These equations usually follow a similar form where $a,b,c$ are constants:
+	$$ay\prime\prime + by\prime + cy = 0$$
+	We solve the \dfntxt{characteristic equation} to determine our answer:
+	$$ar^2+br+c=0$$
+	$$r = \frac{-b \pm \sqrt{b^2-4ac}}{2a}$$
+
+	There are three possible cases:
+	\begin{enumerate}
+		\item $b^2-4ac>0 \Rightarrow $ two distinct real roots, $r_1$ and $r_2$
+		
+		\textbf{General Solution:} $y(x)=c_1e^{r_1x} + c_2e^{r_2x}$
+
+		\item $b^2-4ac=0 \Rightarrow $ one real root, $r$
+		
+		\textbf{General Solution:} $y(x) =c_1e^{rx} + c_2xe^{rx}$
+
+		\item $b^2-4ac<0 \Rightarrow $ two complex roots, $r_1 = \alpha + \beta i$ and $r_2 = \alpha - \beta i$
+		
+		\textbf{General Solution:} $y(x) = e^{\alpha x} \left[ c_1 \cos(\beta x) + c_2 \sin(\beta x) \right]$
+	\end{enumerate}
+\end{genbox}
+
+\begin{genbox}{Non-Homogeneous (Undetermined Coefficients)}
+	These equations usually follow a similar form where $a,b,c$ are constants:
+	$$ay\prime\prime + by\prime + cy = G(x)$$
+	Our general solution is of the form
+	$$y_g(x) = y_c(x) + y_p(x)$$
+	\begin{itemize}
+		\item $y_c(x)$ is the general solution of the homogeneous equation when $G(x)=0$
+		\item $y_p(x)$ is the particular solution which follows a standard form depending on $G(X)$:
+	\end{itemize}
+	Standard guesses for $y_p(x)$:
+	\begin{center}
+		\begin{tabular}{|c|c|} \hline
+			$G(x)$ & Guess for $y_p(x)$ \\ \hline
+			$e^{rt}$ & $Ae^rt$ \\ \hline
+			$\sin(rt)$ or $\cos(rt)$ & $A\sin(rt) + B\cos(rt)$ \\ \hline
+			Degree $n$ polynomial & $A_0 + A_1t + \ldots + A_nt^n$ \\ \hline
+		\end{tabular}
+	\end{center}
+
+	Since these are guesses, you may need to:
+	\begin{itemize}
+		\item Multiply by $t^s$ to avoid matching $y_c(x)$
+		\item Add/multiply different types together
+	\end{itemize}
+
+\end{genbox}
+
+\begin{genbox}{Non-Homogeneous (Variation of Parameters)}
+	Our general solution is of the form
+	$$y_g(x) = y_c(x) + y_p(x)$$
+	\begin{itemize}
+		\item $y_c(x) = c_1y_1(x) + c_2y_2(x)$ is the complementary solution
+		\item $y_p(x) = u_1(x)y_1(x) + u_2(x)y_2(x)$ is the particular solution 
+	\end{itemize}
+	\textbf{Goal:} Find $u_1(x)$ and $u_2(x)$ such that $y_p(x)$ is a valid solution
+
+	\textbf{Tip:} Arbitrarily impose $u_1\prime(x)y_1(x) + u_2\prime(x)y_2(x) = 0$
+	
+	Now apply the following substitution:
+	$$ k(t) = \det \left( \begin{array}{cc} y_1(t) & y_2(t) \\ y_1\prime(t) & y_2\prime(t) \end{array} \right)$$
+	$$u_1 = -\frac{1}{a} \int \frac{y_2(t) f(t)}{k(t)} dt$$
+	$$u_2 = \frac{1}{a} \int \frac{y_1(t) f(t)}{k(t)} dt$$
+
+	Alternatively, impose the same constraint but make this substitution instead:
+	\begin{itemize}
+		\item $y\prime(x) = u_1(x) y_1\prime(x) + u_2(x) y_2\prime(x)$
+		\item $y\prime\prime(x) = u_1\prime(x) y_1\prime(x) + u_1(x) y_1\prime\prime(x) + u_2\prime(x) y_2\prime(x) + u_2(x)y_2\prime\prime(x) $
+	\end{itemize}
+\end{genbox}
+
+\newpage
+\chapter{Laplace Transformation}
+\begin{dfnbox}{Laplace Transform}
+	Let $f(t)$ be a function defined on $[0, \infty)$. The \dfntxt{Laplace transform} of $f$ is defined as:
+	$$\laplace\{f\}(s) = \int_{0}^{\infty} e^{-st}f(t)\ dt$$
+\end{dfnbox}
+
+We use $F$ to denote the Laplace transform of $f$:
+$$F(S) = \laplace\{f\}(s)$$
+Notice the Laplace transform is an improper integral, so we need to consider what conditions will cause it to diverge.
+
+\begin{exbox}{$\laplace\{e^{at}(s)\}$}
+	We simply plug $e^{at}$ as $f(t)$ in our formula:
+	\begin{align*}
+		\laplace \{e^{at}\}(s) &= \int_{0}^{\infty} e^{-st} e^{at}\ dt \\
+		&= \int_{0}^{\infty}e^{(a-s)t}\ dt \\
+		&= \left. \frac{e^{(a-s)t}}{a-s} \right\vert_{t=0}^{\infty} \\
+		&= \begin{cases}
+			0 - \frac{1}{a-s} = \frac{1}{s-a}, & s > a \\
+			\text{Diverges}, & s \leq a
+		\end{cases}
+	\end{align*}
+	Thus, $\laplace \{ e^{at} \}(s) = \frac{1}{s-a}$ if $s > a$.
+\end{exbox}
+
+\begin{genbox}{Common Laplace Transforms}
+	\begin{center}\begin{tabular}{>{\(\displaystyle}l<{\)} >{\(\displaystyle}l<{\)} >{\(\displaystyle}l<{\)}}
+		f(t) & \laplace\{f\}(s) & \text{Conditions} \\ \hline
+		1 & \frac{1}{s} & s>0 \\
+		e^{at} & \frac{1}{s-a} & s>a \\
+		t^n & \frac{n!}{s^{n+1}} & s>0 \\
+		\sin(bt) & \frac{b}{s^2+b^2} & s>0 \\
+		\cos(bt) & \frac{s}{s^2+b^2} & s>0 \\
+		e^{at}t^n & \frac{n!}{(s-a)^{n+1}} & s>a \\
+		e^{at}\sin(bt) & \frac{b}{(s-a)^2+b^2} & s>a \\
+		e^{at}\cos(bt) & \frac{s-a}{(s-a)^2 + b^2} & s>a
+	\end{tabular}\end{center}
+\end{genbox}
+
+\begin{genbox}{Properties of Laplace Transforms}
+	\begin{center}\begin{tabular}{l >{\(\displaystyle}l<{\)}}
+		Linearity & \laplace\{f+g\} = \laplace\{f\} + \laplace\{g\} \\
+		Constant c & \laplace\{cf\} = c\laplace\{f\} \\
+		Translation & \laplace\{e^{at}f(t)\}(s) = \laplace\{f\}(s-a) \\
+		$1$st Derivative & \laplace\{f\prime\}(s) = s\laplace\{f\}(s)-f(0) \\
+		$2$nd Derivative & \laplace\{f\prime\prime\}(s) = s^2 \laplace\{f\}(s) - sf(0) - f\prime(0) \\
+		$n$th Derivative & \laplace\left\{f^{(n)}\right\}(s) = s^n \laplace\{f\}(s) - s^{n-1}f(0) - s^{n-2}f\prime(0) - \cdots - f^{(n-1)}(0) \\
+		$t^nf(t)$ & \laplace\{t^nf(t)\}(s) = (-1)^n \frac{d^n}{ds^n}\left( \laplace\{f\}(s) \right)
+	\end{tabular}\end{center}
+\end{genbox}
+
+\begin{exbox}{$f(t)=sin(bt)$ for some $b \neq 0$}
+	\begin{align*}
+		\laplace\{f\}(s) &= \int_0^{\infty} e^{-st} \sin(bt)\ dt \\
+		&= \lim_{M \rightarrow \infty} \int_0^{M} e^{-st} \sin(bt)\ dt \\
+		&= \lim_{M \rightarrow \infty} \left[ - \frac{e^{-st}}{b} \cos(bt) \right]_{b=0}^{M} - \frac{s}{b} \lim_{M \rightarrow \infty} \int_0^{M} \cos(bt) e^{-st}\ dt \\
+		&= \frac{1}{b} - \frac{s}{b} \lim_{M \rightarrow \infty} \int_{0}^{M} e^{-st} \cos(bt)\ dt \\
+		&= \frac{1}{b} - \frac{s}{b} \lim_{M \rightarrow \infty} \left[ \left[ \frac{e^{-st}}{b} \sin(bt) \right]_{b=0}^{M} + \frac{s}{b} \int_{0}^{M} \sin(bt) e^{-st}\ dt \right] \\
+		&= \frac{1}{b} - \frac{s}{b} \left[ 0 + \frac{s}{b} \int_{0}^{\infty} e^{-st} \sin(bt)\ dt \right] \\
+		&= \frac{1}{b} - \frac{s^2}{b^2} \mathcal(L) (f)(s) \\
+		\Rightarrow \left[ 1 + \frac{s^2}{b^2} \right] \laplace\{f\}(s) &= \frac{1}{b} \\
+		\Rightarrow \frac{b^2+s^2}{b^2} \laplace\{f\}(s) &= \frac{1}{b} \\
+		\Rightarrow \laplace\{f\}(s) &= \frac{b}{b^2+s^2}\ \text{if}\ s>0
+	\end{align*}
+\end{exbox}
+
+\begin{exbox}{$f(t) = e^{at}$ for some $a$}
+	\begin{align*}
+		\laplace \{e^{at}\} (s) &= \int_{0}^{\infty} e^{-st} e^{at}\ dt \\
+		&= \int_{0}^{\infty} e^{(a-s)t}\ dt \\
+		&= \lim_{M \rightarrow \infty} \left[ \frac{1}{a-s} e^{(a-s)t} \right]_{t=0}^{M} \\
+		&= \frac{1}{a-s} \lim_{M \rightarrow \infty} \left[ e^{(a-s)M} - 1 \right] \\
+		&= \frac{1}{s-a}\ \text{if}\ s>a
+	\end{align*}
+\end{exbox}
+
+\begin{exbox}{Multi-Case Function}
+	Let $f(t) = \begin{cases}
+	2 & \text{if}\ 0<t<5, \\
+		0 & \text{if}\ 5 \leq t < 10, \\
+		e^{at} & \text{if}\ t \geq 10
+	\end{cases}$
+	\tcblower
+	\begin{align*}
+		\laplace \{f\}(s) &= \int_{0}^{\infty} e^{-st} f(t)\ dt \\
+		&= \int_{0}^{5} e^{-st} 2\ dt + \int_{5}^{10} e^{-st} 0\ dt + \int_{0}^{\infty} e^{-st}e^{at}\ dt \\
+		&= 2 \int_{0}^{5} e^{-st}\ dt + 0 + \int_{10}^{\infty} e^{(4-s)t}\ dt \\
+		&= -\frac{2}{s} \lim_{M \rightarrow \infty} \left[ e^{-st} \right]_{t=0}^{5} + \lim_{M \rightarrow \infty} \left[ \frac{e^{(4-s)t}}{4-s} \right]_{t=10}^{M} \\
+		&= -\frac{2}{s} (e^{-5s} - 1) + \frac{1}{4-s} \lim_{M \rightarrow \infty} \left[ e^{(4-s)M} - e^{(4-s)10} \right] \\
+		&= - \frac{2e^{-5s}}{s} + \frac{2}{s} + \frac{e^{-10(s-4)}}{s-4}\ \text{if}\ s>4
+	\end{align*}
+\end{exbox}
+
+\begin{thmbox}{Linearity}
+	For two functions $f_1$ and $f_2$, and any constants $c_1$ and $c_2$, we have:
+	$$\laplace\{c_1f_1 + c_2f_2\} = c_1\laplace\{f_1\} + c_2\laplace\{f_2\}$$
+\end{thmbox}
+
+\begin{exbox}{Linearity}
+	Let $f(t) = 11 + 10e^{4t} + 20\sin(2t)$
+	\tcblower
+	\begin{align*}
+		\laplace\{f\} &= \laplace\{11\} + \laplace\{10 e^{4t}\} + \laplace\{20 \sin(2t)\} \\
+		&= 11 \laplace\{1\} + 10 \laplace\{e^{4t}\} + 20 \laplace\{\sin (2t)\} \\
+		&= \frac{11}{s} + \frac{10}{s-4} + 20 \frac{2}{s^2+2}\ \text{if}\ s>4 \\
+		&= \frac{11}{s} + \frac{10}{s-4} + \frac{40}{s^2+4}\ \text{if}\ s>4
+	\end{align*}
+\end{exbox}
+
+\begin{thmbox}{Existence of Laplace Transform}
+	If $f(t)$ is continuous and exponential order with constant $c$, then
+	$$\laplace\{f(t)\}(s) = F(s)$$
+	is defined for all $f>c$.
+\end{thmbox}
+
+\begin{thmbox}{Existence of Laplace Transformation}
+	\textbf{Theorem:} Assume that there is $\alpha > 0$ such that
+	$$|f(t)| \leq Me^{at}\ \text{when}\ t \geq T$$
+	Then $\laplace\{f\}$ exists.
+	\tcblower
+	\textbf{Intuition:}
+	\begin{align*}
+		\laplace\{f\}(s) &= \int_{0}^{\infty} e^{-st} f(t)\ dt \\
+		&= \int_{0}^{T}e^{-st}f(t)\ dt + \int_{T}^{\infty} e^{-st} f(t)\ dt
+	\end{align*}
+	$$\left| \int_{T}^{\infty} e^{-st} f(t)\ dt \right| \leq \int_{T}^{\infty} e^{-st} |f(t)|\ dt \leq M \int_{T}^{\infty} e^{(\alpha - s)t}\ dt < \infty$$
+\end{thmbox}
+
+\begin{tecbox}{Solving an Initial Value Problem}
+	\begin{enumerate}
+		\item Take Laplace transform of both sides of the equation.
+		\item Reduce the equation to $\laplace\{y\} = \ldots$
+		\item $y = \laplace^{-1} \{ \ldots \}$
+	\end{enumerate}
+\end{tecbox}
+
+\begin{exbox}{Initial Value Problem}
+	$y\dprime - 2y\prime + 5y = -8e^{-t},\quad y(0)=2,\quad y\prime(0) = 12$
+	\tcblower
+	\begin{enumerate}
+		\item Take Laplace transform of both sides.
+		\[ \laplace\{ y\dprime - 2y\prime + 5y \} = \laplace\{ -8e^{-t} \} \]
+		\item We can use linearity to rewrite this as:
+		\[ \laplace\{ y\dprime \}(s) - 2\laplace \{ y\prime \}(s) + 5\laplace \{y\}(s) = -\frac{8}{s+1} \]
+		Let $Y(s) \coloneq \laplace\{y\}(s)$. 
+	\end{enumerate}
+\end{exbox}
+
+\section{Laplace Transform of Discontinuous Functions}
+
+\begin{dfnbox}{Unit Step Function}
+	\[ u(t) \coloneq \begin{cases}
+		1, & t < 0 \\	
+		0, & 0 < t
+	\end{cases} \]
+\end{dfnbox}
+
+\begin{dfnbox}{Rectangular Window Function}
+	\[ \Pi_{a,b}(t) \coloneq u(t-a) - u(t-b) = \begin{cases}
+		0, & t<a \\
+		1, & a<t<b \\
+		0, & b<t
+	\end{cases} \]
+\end{dfnbox}
+
+\begin{thmbox}{Translation}
+	If $a>0$, then:
+	\[ \laplace \{ f(t-a) u(t-a) \} (s) = e^{-as} \laplace \{f\} (s) \]
+	Conversely:
+	\[ \laplace^{-1} \{ e^{-as}F(s) \} (t) = f(t-a) u(t-a) \]
+\end{thmbox}
+
+\section{Dirac Delta Functions}
+
+In physics, we can model impulses as an ``instantaneous force''. How do we represent this in mathematics? We use the \dfntxt{dirac delta function} to represent an instantaneous thing.
+
+\begin{dfnbox}{Dirac Delta Function}
+	\[ \delta(x) = \lim_{b \to 0} \frac{a}{\abs{b} \pi} {e^{-\nicefrac{x}{b}}}^2 \]
+\end{dfnbox}
+
+Informally, we can think of this function as:
+\[ \delta(t) = \begin{cases}
+	\infty, & t=0 \\
+	0, & t \neq 0
+\end{cases} \]
+
+The Dirac delta function is a distribution that satisfies $ \int_{-\infty}^{\infty} f(t) \delta(t)\ dt = f(0)$.
+
+\begin{thmbox}{Identity}
+	For any $f : \R \to \R$, we have:
+	\[ \int_{-\infty}^{\infty} f(t) \delta(t-a)\ dt = f(a)\]
+	\tcblower
+	\begin{proof}
+		Let $s \coloneq t-a$ and $ds \coloneq dt$. Using integration by substitution, we have:
+		\begin{align*}
+			\int_{-\infty}^{\infty} f(t) \delta(t-a)\ dt &= \int_{-\infty}^{\infty} f(s+a) \delta(s)\ ds \\
+			&= f(0+a)
+		\end{align*}
+	\end{proof}
+\end{thmbox}
+
+\begin{exbox}{Laplace of Dirac Delta Function}
+	What is $\laplace \{ \delta \}$?
+	\begin{align*}
+		\laplace \{ \delta \} &= \int_0^{\infty} e^{-st} \delta(t)\ dt \\
+		&= \int_{-\infty}^{\infty} e^{-st} \delta(s)\ ds \\
+		&= e^{-0 \cdot s} \\
+		&= 1
+	\end{align*}
+\end{exbox}
+
+\begin{thmbox}{}
+	For any $a \in \R$, $\laplace \{ \delta(t - a) \} = e^{-as}$.
+\end{thmbox}
+
+\begin{exbox}{Spring Force System}
+	$\begin{cases}
+		y\dprime + 9y = 3 \delta(t - \pi) \\
+		y(0)=1, \quad y\prime(0) = 0
+	\end{cases}$
+	\tcblower
+	Let $Y \coloneq \laplace \{ y \}$. Then:
+	\begin{align*}
+		\laplace \{ y\dprime \} + 9 \laplace \{ y \} &= 3 \laplace \{ \delta(t - \pi) \} \\
+		s^2 Y - sy(0) - y\prime(0) + 9Y &= 3e^{-\pi s} \\
+		(s^2+9)Y &= 3e^{-\pi s} + s
+	\end{align*}
+	Thus, $Y(s) = \frac{3e^{-\pi s}}{s^2 + 9} + \frac{s}{s^2 + 9}$. Therefore, $y(t) = u(t - \pi) \sin(3(t-\pi)) + cos(3t)$.
+\end{exbox}
+
+\chapter{Qualitative Study}
+Consider the ODE $y\dprime = f(y) $ where $f$ is a given function.
+\begin{itemize}
+	\item $y\dprime + (1-y^2)y = 0 \implies f(y) = -(1-y^2)y$
+	\item $y\dprime = y^2 \implies f(y)=y^2$
+\end{itemize}
+
+\begin{dfnbox}{Energy}
+	\[ E(t) = \frac{1}{2} y\prime(t)^2 - F(y) \]
+	where $F$ is an antiderivative of $f$. In other words, $F\prime(y) = f(y)$.
+\end{dfnbox}
+
+\begin{thmbox}{Energy}
+	If $y(t)$ is a solution of $y\dprime = f(y)$, then $E\prime(t) = 0$. In particular, $E(t) = C$ where $C$ is some constant.
+	\tcblower
+	\begin{proof}
+		Consider the definition of the energy equation:
+		\[ E(t) = \frac{1}{2} y\prime(t)^2 - F(y) \]
+		Differentiating with respect to $t$, we get:
+		\begin{align*} E\prime(t) &= \frac{1}{2} \cdot 2y\prime(t)y\dprime(t) - f(y(t)) y\prime(t) \\
+			&= y\prime(t) \left[ \underbrace{y\dprime(t) - f(y(t))}_{=0} \right]
+		\end{align*}
+	\end{proof}
+\end{thmbox}
+
+\begin{exbox}{Application}
+	\[ \frac{1}{2} (y\prime(t))^2 - f(y) = K \implies y\prime(t) = 2 \left[ F(y) + K \right] \]
+	so
+	\[ y\prime(t) = \pm \sqrt{2 \left[ F(y) + K \right]} \]
+	Separation of variables:
+	\[ \pm \frac{dy}{\sqrt{2 \left[ F(y) + K \right]}} = dt\]
+	Then:
+	\[ t = \pm \int \frac{dy}{\sqrt{2 \left[ F(y) + K \right]}} + C\]
+\end{exbox}
+
+\begin{exbox}{}
+	\[ y\dprime = 6y^2 \]
+	Here, $f(y) = 6y^2$, so
+	\begin{align*}
+		t &= \pm \int \frac{dy}{\sqrt{2 \left[ 2y^3 + K \right]}} \\
+		&= \pm \in \frac{dy}{2 \sqrt{y^3 + K_1}}
+	\end{align*}
+	Let's consider for the sake of simplicity $K_1 = 0$. Then:
+	\begin{align*}
+		t &= \frac{1}{2} \int \frac{dy}{y^{\nicefrac{3}{2}}} + C \\
+		&= \frac{1}{2} \int y^{-\nicefrac{3}{2}}\ dy + C \\
+		&= \frac{1}{2} \cdot \frac{1}{-\nicefrac{1}{2}} y^{-\nicefrac{1}{2}} + C \\
+		&= C - y^{-\nicefrac{1}{2}}
+	\end{align*}
+	Then $y^{-\nicefrac{1}{2}} = C-t \implies y^{-1} = (c-t)^2$, so $y = \frac{1}{(C - t)^2}$
+\end{exbox}
+
+\section{Free Mechanical Vibration}
+
+The mass-spring system can be modelled with the following equation:
+\[ m y\dprime + by\prime + ky = F_{ex} \]
+where:
+\begin{itemize}
+	\item $m$: inertia (mass)
+	\item $b$: damping constant
+	\item $k$: stiffness
+	\item $F_{ex}$: external forces
+\end{itemize}
+
+In free vibration, we would have $F_{ex} = 0$. Hence, we will only consider:
+\[ m y\dprime + by\prime + ky = 0 \]
+
+\textbf{Goal:} Dynamic solutions $y(t)$. In particular, what does $y(t)$ look like as $t$ increases?
+
+\subsection{Undamped Case}
+	We consider a spring system ``undamped'' if $b = 0$.
+	\[ my\dprime + ky = 0 \]
+	Characteristic Equation: $mr^2 + k = 0 $, so $r_{1,2} = \pm i \sqrt{\nicefrac{k}{m}}$. Denote $\omega = \sqrt{\nicefrac{k}{m}}$ called \textbf{angular frequency}. Then, general solution is:
+	\[ y(t) = c_1 \underbrace{\cos(\omega t)}_{y_1(t)} + c_2 \underbrace{\sin(\omega t)}_{y_2(t)} \]
+	But how does $y(t)$ behave?
+	\begin{align*}
+		y(t) &= \sqrt{c_1^2 + c_2^2} \left[ \frac{c_1}{\sqrt{c_1^2 + c_2^2}} \cos(\omega t) + \frac{c_2}{\sqrt{c_1^2 + c_2^2}} \sin(\omega t) \right] \\
+		&= \sqrt{c_1^2 + c_2^2} \left[ \cos(\omega t) \sin(\phi) + \sin(\omega t) \cos(\phi) \right] \\
+		&= A \sin(\omega t + \phi)
+	\end{align*}
+	where:
+	\begin{itemize}
+		\item $A = \sqrt{c_1^2 + c_2^2}$ is an amplitude
+		\item $\omega = \sqrt{\nicefrac{k}{m}}$ is angular frequency
+		\item $\phi = \tan^{-1}\left( \nicefrac{c_1}{c_2} \right)$
+		\item $\nicefrac{\omega}{2\pi}$ is natural frequency
+		\item $\nicefrac{2 \pi}{\omega}$ is period
+	\end{itemize}
+
+\subsection{Overdamped Case}
+We consider a spring system ``overdamped'' if $b^2 > 4mk$. Then:
+\[ r_{1,2} = \frac{ - b \pm \sqrt{b^2 - 4mk} }{2m} \]
+Note that $r_1 < 0$ and $r_2 < 0$.
+\[ y(t) = c_1e^{r_1t} + c_2e^{r_2t} \]
+In general, as $t$ increases, $y(t)$ will exponentially approach $0$. Sometimes $y(t)$ may have one local maximum or minimum.
+
+\subsection{Underdamped Case}
+We consider a spring system ``underdamped'' if $b^2 < 4km$. Then:
+\[ r_{1,2} = \underbrace{- \frac{b}{2m}}_{\alpha} \pm i \underbrace{\frac{\sqrt{4km-b^2}}{2m}}_{\beta} \]
+
+\begin{align*}
+	y(t) &= e^{\alpha t} \left[ c1 \cos(\beta t) + c_2 \sin(\beta 
+	t) \right] \\
+	&= Ae^{\alpha t} \sin(\beta t + \phi) \\
+\end{align*}
+As $t$ increases, $y(t)$ will oscillate but still approach $0$.
+
+\subsection{Critically Damped}
+We consider a spring system ``critically damped'' if $b^2 = 4km$. Then:
+\[ r_1 = r_2 = - \frac{b}{2m} \]
+\begin{align*}
+	y(t) &= c_1 e^{- \frac{b}{2m} t} + c_2 te^{- \frac{b}{2m} t} \\
+	&= e^{- \frac{bt}{2m}} \left( c_1 + c_2 t \right)
+\end{align*}
+
+\end{document}

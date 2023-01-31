@@ -1,0 +1,2434 @@
+% TODO:
+% more notes about negation of and/or
+% cardinality
+
+\documentclass[letterpaper,12pt]{report}
+\usepackage[margin=1in]{geometry}
+
+\usepackage{amzmath}
+\usepackage{tabularx}
+\usepackage{amsthm}
+\usepackage{enumitem}
+\usepackage{nicefrac}
+
+\title{\textbf{Introduction to Abstract Mathematics}\\
+\large UT Knoxville, Fall 2022, MATH 300}
+
+\author{Peter Humphries, Conrad Plaut, and Alex Zhang}
+
+\begin{document}
+\renewcommand{\arraystretch}{1.25}
+
+\maketitle
+\tableofcontents
+
+\addcontentsline{toc}{chapter}{Preface}
+\chapter*{Preface}
+This text attempts to give a concise overview of the \textbf{Introduction to Abstract Mathematics} course at the University of Tennessee. The contents of this text are a compilation of things from Dr. Conrad Plaut's textbook, \textit{Introduction to Abstract Mathematics}, as well as Dr. Peter Humphries' lecture notes.
+
+Our goal is to create a logically sound model of mathematics that covers most arithmetic and algebraic properties we've been familiar with since grade school. Our general approach will be to assume as little possible, then prove things based on our assumptions.
+
+Although we will focus on aspects of formal math such as proofs and proof writing, we will still take naive approaches to defining fundamental objects such as numbers as sets. That is, we will define many things informally using natural language and prior knowledge.
+\chapter{Logic and Set Theory}
+In this chapter, we will discuss fundamental definitions and concepts that form the basis of abstract mathematics.
+
+\begin{genbox}{Overview}
+	\begin{itemize}[noitemsep]
+		\item Logical statements and laws
+		\item Basic proofs and proof techniques
+		\item Naive set theory and functions
+	\end{itemize}
+\end{genbox}
+
+\section{Logic}
+Logic is the study of formal reasoning. The most basic element of logic is a statement. While statements in spoken language can be ambiguous in meaning, we will only work with statements that are strictly either true or false.
+
+\begin{dfnbox}{Statement}{}
+    A \dfntxt{statement} is a claim that is either true or false.
+\end{dfnbox}
+
+\begin{dfnbox}{Truth Value}{}
+	A statement's \dfntxt{truth value} indicates whether the statement is true or false.
+\end{dfnbox}
+
+An \dfntxt{axiom} is a statement that is simply assumed to be true, while a \dfntxt{theorem} is a statement that can be proven to be true.
+
+Mathematics is based on the \dfntxt{axiomatic method}. We use defined terms alongside axioms assumed to be true in order to prove certain theorems. Different combinations of axioms can lead to different mathematical structures.
+
+In English, we can combine statements into compound statements using conjunctions like ``and'' or ``or''. The same idea can be used to combine logical statements. Throughout this chapter, we will let $P$ and $Q$ denote any arbitrary statement.
+
+\begin{dfnbox}{Logical Connective}{}
+	\dfntxt{Logical connectives} combine statements to form compound statements.
+	\tcblower
+    \begin{center}\begin{tabular}{lll}
+        Conjunction & ``$P$ and $Q$'' & $P \land Q$ \\
+        Disjunction & ``$P$ or $Q$'' & $P \lor Q$ \\
+    \end{tabular}\end{center}
+\end{dfnbox}
+
+We will use \textbf{truth tables} to reveal the logic of complex statements. These tables include every combination of possible input truth values and show the resulting truth values of the complex statement.
+
+\begin{exbox}{Truth Table for Logical Connectives}{}
+	\begin{center}
+		\begin{tabular}{c|c||c|c}
+			$P$ & $Q$ & $P \land Q$ & $P \lor Q$ \\ \hline
+			T & T & T & T \\
+			T & F & F & T \\
+			F & T & F & T \\
+			F & F & F & F \\
+		\end{tabular}
+	\end{center}
+\end{exbox}
+
+As we can see, the $\land$ and $\lor$ connectives follow our intuition of ``and'' and ``or''. Specifically, $P \land Q$ is true if $P$ is true \textbf{and} $Q$ is true. $P \lor Q$ is true if $P$ is true or $Q$ is true.
+
+\begin{dfnbox}{Negation}{}
+    The \dfntxt{negation} of a statement gives a statement with \textbf{opposite} truth values.
+	\tcblower
+	\[\neg P\]
+\end{dfnbox}
+
+
+
+\begin{exbox}{Truth Table for Negation}{}
+	\begin{center}
+		\begin{tabular}{c||c}
+			$P$ & $\neg P$ \\ \hline
+			T & F \\ \hline
+			F & T \\
+		\end{tabular}
+	\end{center}
+\end{exbox}
+
+\begin{dfnbox}{Conditional Statement}{}
+    A \dfntxt{conditional statement} combines two statements using implication.
+	\tcblower
+	\[P \implies Q\]
+\end{dfnbox}
+
+Some important things to note:
+\begin{itemize}
+	\item We can read this as ``$P$ implies $Q$'' or ``if $P$, then $Q$''.
+	\item $P$ is called the \dfntxt{hypothesis}; $Q$ is called the \dfntxt{conclusion}.
+	\item A false hypothesis can imply any conclusion, making the implication \dfntxt{vacuously true} (i.e a false statement can imply \textbf{any} statement, true or false)
+	\item The implication is false only when $P$ is true and $Q$ is false (i.e. a true statement cannot imply a false one)
+\end{itemize}
+
+\begin{exbox}{Truth Table for Conditional Statement}{}
+	\begin{center}
+		\begin{tabular}{ c | c || c}
+			$P$ & $Q$ & $P \implies Q$ \\ \hline
+			T & T & T \\ \hline
+			T & F & F \\ \hline
+			F & T & T \\ \hline
+			F & F & T \\
+		\end{tabular}
+	\end{center}
+\end{exbox}
+
+\begin{dfnbox}{Converse, Contrapositive, and Inverse}{}
+	Given $P \implies Q$, there are also three closely related conditional statements:
+	\begin{center}\begin{tabular}{lll}
+			\dfntxt{Converse} & $Q\implies P$ & No inherent equivalence to the original \\
+			\dfntxt{Contrapositive} & $(\neg Q) \implies (\neg P)$ & Always equivalent to the original \\
+			\dfntxt{Inverse} & $(\neg P) \implies (\neg Q)$ & Always equivalent to the converse
+		\end{tabular}\end{center}
+\end{dfnbox}
+
+Let's say we want to prove some conditional statement $P \implies Q$. We are only concerned with conditions that would make the implication \textbf{false}, namely if $P$ is true and $Q$ is false. That is, we do not have to worry about false hypotheses as the entire implication would then be true, regardless of the conclusion.
+
+\begin{tecbox}{Proving a Conditional Statement}{}
+	There are three basic methods of proving a conditional statement $P \implies Q$.
+	\tcblower
+	\begin{center}\begin{tabularx}{\linewidth}{llX}
+		1. & Direct Proof & Assume $P$ is true. Show that $Q$ would also be true. \\
+		2. & Contrapositive Proof & Assume $Q$ is false. Show that $P$ would also be false. \\
+		3. & Proof by Contradiction & Assume the negation of the conditional statement, $P \implies \neg Q$. Show that this assumption leads to an obvious contradiction.
+	\end{tabularx}\end{center}
+\end{tecbox}
+
+\begin{dfnbox}{Biconditional Statement}{}
+    A \dfntxt{biconditional statement} is a logical implication that goes both ways.
+	\tcblower
+	\[P \iff Q\]
+\end{dfnbox}
+
+We can read this as ``$P$ if and only if $Q$'' or ``if $P$ then $Q$, and vice versa''. We can also say $P$ and $Q$ are \dfntxt{logically equivalent} since they share the same truth values.
+
+\begin{exbox}{Truth Table for Biconditional Statement}{}
+	\begin{center}
+		\begin{tabular}{ c | c || c | c | c }
+			$P$ & $Q$ & $P\implies Q$ & $Q \implies P$ & $P \iff Q$ \\ \hline
+			T & T & T & T & T\\ \hline
+			T & F & F & T & F \\ \hline
+			F & T & T & F & F \\ \hline
+			F & F & T & T & T \\
+		\end{tabular}
+	\end{center}
+\end{exbox}
+
+\begin{tecbox}{Proving a Biconditional Statement}{}
+	Given a statement $P \iff Q$, we must prove two conditional statements:
+	\begin{enumerate}
+		\item $P \implies Q$
+		\item $Q \implies P$
+	\end{enumerate}
+\end{tecbox}
+
+\begin{dfnbox}{Tautology}{}
+	A \dfntxt{tautology} is a statement that is always true.
+\end{dfnbox}
+
+\begin{dfnbox}{Contradiction}{}
+	A \dfntxt{contradiction} is a statement that is always false.
+\end{dfnbox}
+
+Now that we've defined some basic terms and notation, we can explore some fundamental laws of logic.
+
+\begin{genbox}{Laws of Propositional Logic}
+Here, let $p$, $q$, and $r$ be any statement. Let $T$ be a tautology and $F$ be a contradiction.
+
+\begin{tabular}{|l|l|} \hline
+	Idempotent laws & $p \land p \iff p$ \\ & $p \lor p \iff p$ \\ \hline
+	Associative Laws & $(p \lor q) \lor r \iff p \lor (q \lor r)$ \\ & $(p \land q) \land r \iff p \land (q \land r)$ \\ \hline
+	Commutative Laws & $p \lor q \iff q \lor p$ \\ & $p \land q \iff q \land p$ \\ \hline
+	Distributive Laws & $p \lor (q \land r) \iff (p \lor q) \land (p \lor r)$ \\ & $p \land (q \lor r) \iff (p \land q) \lor (p \land r)$ \\ \hline
+	Identity Laws & $p \lor F \iff p$ \\ & $p \land T \iff p$ \\ \hline
+	Domination Laws & $p \land F \iff F$ \\ & $p \lor T \iff T$ \\ \hline
+	Double Negation & $\neg \neg p \iff p$ \\ \hline
+	Complement Laws & $p \land \neg p \iff F$ \\ & $p \lor \neg p \iff T$ \\ \hline
+	De Morgan's Laws & $\neg (p \lor q) \iff \neg p \land \neg q$ \\ & $\neg (p \lor q) \iff \neg p \lor \neg q$ \\ \hline
+	Absorption Laws & $p \lor (p \land q) \iff P$ \\ & $p \land (p \lor q) \iff p$ \\ \hline
+	Cond. Identities & $(p \implies q) \iff (\neg p \lor q)$ \\ & $(p \iff q) \iff \left[ (p \implies q) \land (q \implies p) \right]$ \\ \hline
+	Contrapositive & $(p \implies q) \iff (\neg q \implies \neg p)$ \\ \hline
+\end{tabular}
+
+\end{genbox}
+
+\begin{dfnbox}{Quantifier}{}
+    A \dfntxt{quantifier} specifies how many elements follow a particular statement.
+	\tcblower
+	\begin{center}\begin{tabular}{lll}
+		$\forall$ & ``for all'' & $\forall (x)(P(x)) \iff \left[ P(x_0) \land P(x_1) \land P(x_2) \land \ldots \right]$ \\
+		$\exists$ & ``there exists'' & $\exists (x)(P(x)) \iff \left[ P(x_0) \lor P(x_1) \lor P(x_2) \lor \ldots \right]$ \\
+	\end{tabular}\end{center}
+\end{dfnbox}
+
+% TODO: Find better way to explain the commented out stuff
+% Often, we will have to prove certain ideas about large, even infinite sets. While we can simply list and prove something for each element, there is a much better approach.
+
+% \begin{tecbox}{Proving Something for All Things in a Set}{}
+% 	The common approach is to choose an arbitrary element from that set, then use some property(s) guaranteed for all elements of the set to prove the result.
+% \end{tecbox}
+
+\section{Sets}
+\begin{dfnbox}{Set}{}
+    A \dfntxt{set} is a collection of distinct objects, none of which is the set itself.
+\end{dfnbox}
+
+Note that sets do not have to contain just numbers. Anything can be an element of a set---even other sets!
+
+\begin{exbox}{Common Sets}{}
+	Commonly used sets are typically denoted by double-struck capital characters.
+
+	\begin{center}\begin{tabular}{>{\(\displaystyle}l<{\)} l >{\(\displaystyle}l<{\)}}
+		\emptyset & Empty set & \{\} \\
+		\N & Natural numbers & \{1,2,3,\ldots\} \\
+		\Z & Integers & \{\ldots,-1,0,1,\ldots\} \\
+		\Q & Rationals & \left\{ \ldots, -\frac{1}{2}, \ldots, \frac{1}{2}, \ldots \right\} \\
+		\R & Real Numbers & \left\{ \ldots, 1, \ldots, 2, \ldots, \pi, \ldots \right\}
+	\end{tabular}\end{center}
+	\tcblower
+	\textbf{Note:} $\{\emptyset\}$ is \textbf{not} the empty set, rather the set containing the empty set.
+\end{exbox}
+
+\begin{dfnbox}{Set Relations}{}
+	\begin{center}\begin{tabular}{>{\(\displaystyle}l<{\)} l >{\(\displaystyle}l<{\)}}
+		\text{Symbol} & Description & \text{Example} \\ \hline
+		x \in A & Element $x$ is in set $A$ & 1 \in \N \\
+		x \not \in A & Element $x$ is \textbf{not} in set $A$ & 0 \not\in \N \\
+		A = B & Sets $A$ and $B$ are equal &\{1,2,3\} = \{2,1,3\} \\
+		A \subseteq B & $A$ is a subset of $B$ & \{ 1,2,3\} \subseteq \{1,2,3\} \\
+		A \subsetneq B & $A$ is a \textbf{proper} subset of $B$ & \{1,2\} \subsetneq \{1,2,3\} \\
+	\end{tabular}\end{center}
+\end{dfnbox}
+
+\begin{notebox}
+	There is no consistent rule regarding the usage of the generic subset symbol $\subset$. Among different texts, it can denote either ``subset or equal to'' or ``proper subset''. To avoid ambiguity, we will only use $\subseteq$ and $\subsetneq$.
+\end{notebox}
+
+\begin{dfnbox}{Set Operations}{}
+	\dfntxt{Set operations} take two input sets and creates a new set.
+	\begin{center}\begin{tabular}{l >{\(\displaystyle}l<{\)} >{\(\displaystyle}l<{\)}}
+		Name & \text{Definition} \\ \hline
+		\dfntxt{Intersection} & A \cap B \coloneq \left\{ x : (x \in A) \land (x \in B)\right\} \\
+		\dfntxt{Union} & A \cup B \coloneq \left\{ x : (x \in A) \lor (x \in B)\right\} \\
+		\dfntxt{Set Difference} & A \setminus B \coloneq \left\{ x : (x \in A) \land (x \notin B)\right\} \\
+		\dfntxt{Symmetric Difference} & A \symdiff B \coloneq \left\{ x : (x \in A) \oplus (x \in B)\right\} \\
+	\end{tabular}\end{center}
+\end{dfnbox}
+
+\begin{tecbox}{Proving Set Equality}{}
+	Imagine we had two sets, $A$ and $B$, and had to prove $A = B$. The usual approach is to show $A \subseteq B$ and $B \subseteq A$.
+\end{tecbox}
+
+\begin{exbox}{Simple Set Equality Proof}{}
+	Prove that if $A$ and $B$ are disjoint, then $A\setminus B = A$
+	\tcblower
+	\begin{proof}
+		We will prove the two subset relations.
+		\begin{enumerate}
+			\item Let $x \in A \setminus B$. Then $x \in A$ and $X \notin B$, so $x \in A$. Thus, $A \setminus B \subseteq A$.
+
+			\item Let $x \in A$. Suppos for contradiction $x \in B$. Then $x \in A \cup B$. But $A \cup B = \emptyset$ because $A$ and $B$ are disjoint. Hence, $x \notin B$, so $x \in A \setminus B$. Thus, $A \subseteq A \setminus B$
+		\end{enumerate}
+
+		Because $A\setminus B \subseteq A$ and $A \subseteq A \setminus B$, we therefore have $A \setminus B = A$.
+	\end{proof}
+\end{exbox}
+
+\begin{thmbox}{Disjoint Union}{}
+	If $A$ and $B$ are sets, then:
+	\[ A \cup B = (A \setminus B) \cup (A \cap B) \cup (B \setminus A)\]
+	where $A \setminus B$, $A \cap B$, $B \setminus A$ are all disjiont from one another.
+	\tcblower
+	\begin{proof}
+		Let $x \in A \cup B$ be arbitrary. TODO: FINISH PROOF
+	\end{proof}
+\end{thmbox}
+
+\begin{dfnbox}{Tuple}{}
+	A \dfntxt{tuple} is a collection of objects where order matters, denoted as $(a, b, c, \ldots)$.
+	\[a \neq b \iff (a,b) \neq (b,a)\]
+\end{dfnbox}
+
+A tuple of two elements is typically called an \dfntxt{ordered pair}.
+
+\begin{dfnbox}{Cartesian Product}{}
+    The \dfntxt{cartesian product} between two sets $A$ and $B$ is the set with every possible ordered pair of elements from $A$ and $B$.
+	\tcblower
+    \[A \times B = \{ (a,b) : a \in A\ \land b \in B\}\]
+\end{dfnbox}
+
+A Cartesian Product can also be expressed as a set raised to a power.
+\[A^n = \{(a_0, \ldots, a_n) : a_0, \ldots, a_n \in A\} = A \times \cdots \times A\]
+
+\iffalse
+\begin{dfnbox}{Partition}{}
+    A \dfntxt{partition} of a set is a grouping of its elements into non-empty subsets where every element is included in exactly one subset.
+\end{dfnbox}
+\fi
+\section{Functions}
+Consider the function $f(x) = x^2$ for the natural numbers ($1, 2, 3, \ldots$). $f$ maps values as such:
+\begin{align*}
+	1 &\mapsto 1 \\
+	2 &\mapsto 4 \\
+	3 &\mapsto 9 \\
+	\vdots
+\end{align*}
+The function $f$ is actually a set of ordered pairs $\{ (1,1), (2,4), (3,9), \ldots \}$ where we assign every natural number to its corresponding square.
+\begin{dfnbox}{Function}{}
+	Let $X$ and $Y$ be sets. A \dfntxt{function} from $X$ to $Y$ is a relation $f \subseteq X \times Y$ such that:
+	\begin{enumerate}
+		\item for all $x \in X$, there exists some $y \in Y$ such that $(x,y) \in f$, and
+		\item for all $x \in X$ and $y_1, y_2 \in Y$, if $(x,y_1) \in f$ and $(x, y_2) \in f$, then $y_1 = y_2$.
+	\end{enumerate}
+\end{dfnbox}
+
+The standard notation to define a function is $f : X \to Y$ where $X$ is the \dfntxt{domain} and $Y$ is the \dfntxt{codomain} of the function. We also write $f(x) = y$ instead of $(x,y) \in f$.
+
+\begin{dfnbox}{Image}{}
+	Let $f : X \to Y$ be a function, and let $A \subseteq X$. The \dfntxt{image} of $A$ is the set of all possible output values $A$ can produce.
+	\tcblower
+	\[ f[A] \coloneq \left\{ y \in Y : \exists(x \in A)\left[y = f(x)\right] \right\} \]
+\end{dfnbox}
+
+In a function $f : X \to Y$, taking the image of $X$ (i.e. $f[X]$) gives us the \dfntxt{range} of the function. It's a subset of the codomain, which is not necessarily equal to the codomain.
+
+\begin{dfnbox}{Inverse Image}{}
+	Let $f : X \to Y$ be a function, and let $B \subseteq Y$. The \dfntxt{inverse image} of $B$ is the set of all values of $X$ that map to something in $B$.
+	\tcblower
+	\[ f^{-1}[B] \coloneq \left\{ x \in X : f(x) \in B \right\} \]
+\end{dfnbox}
+
+% TODO: include basic image and preimage proofs, more examples!!
+
+% This warning only for when we used f(A) to denote image of A on f
+% \begin{notebox}
+% 	Notation of the image and preimage conflicts with our pre-existing idea of $f(x)$ and $f^{-1}(x)$.
+% 	\begin{itemize}
+% 		\item If we're dealing with elements from the domain of $f$, we compute as we normally would.
+% 		\item If we're dealing with subsets of the domain or codomain, we are working with images and preimages.
+% 	\end{itemize}
+% \end{notebox}
+
+\begin{dfnbox}{Open/Closed Interval}{}
+	An \dfntxt{interval} is a set that contains a range of elements.
+	\begin{itemize}
+		\item Open Interval $(a, b) = \{ n : a<n<b \}$
+		\item Closed Interval $[a, b] = \{ n : a \leq n \leq b \}$
+	\end{itemize}
+\end{dfnbox}
+
+\begin{exbox}{Image and Inverse Image}{}
+	Let $f : \R \to \R$ be defined by $f(x) = x^2$. We have:
+	\begin{itemize}
+		\item $f[\{1, -1\}] = \{1\}$
+		\item $f^{-1}[(0,1)] = (-1,0) \cup (0,1)$
+		\item $f[f^{-1}[\{-1\}]] = f[\emptyset] = \emptyset$
+		\item $f^{-1}[f[\{-1\}]] = f^{-1}[\{1\}] = \{-1,1\}$
+	\end{itemize}
+\end{exbox}
+
+\chapter{Real Numbers}
+We are all familiar with the properties of real numbers. It is less obvious how we can define the set of real numbers. The goal of this chapter is to present an axiomatic basis for defining the set real numbers. We can characterize the real numbers as a \textbf{complete ordered field}, and we take as axiomatic that there is only one complete ordered field.\footnote{More formally: if $\R$ and $S$ are both complete ordered fields, then there exists a unique isomorphism from $\R$ to $S$. This can actually be proven, but it won't be a topic for these notes.}
+
+\begin{genbox}{Overview}
+	\begin{itemize}
+		\item Definition of field, field axioms, and consequences of field axioms
+		\item Order axioms and their consequences
+		\item Infimum, supremum, completeness, and the Approximation Property
+		\item Absolute value, triangle inequality, and approximating polynomials
+	\end{itemize}
+\end{genbox}
+
+\section{Field Axioms}
+\begin{dfnbox}{Field}{}
+	A \dfntxt{field} is a set with two closed operations, addition and multiplication, that satisfy the following axioms for all $a,b,c \in \F$:
+
+	\begin{center}\begin{tabular}{l >{\(\displaystyle}l<{\)} >{\(\displaystyle}l<{\)}}
+		Axiom & \text{Addition} & \text{Multiplication} \\ \hline
+		Associativity & (a+b)+c = a+(b+c) & (ab)c = a(bc) \\
+		Commutativity & a+b = b+a & ab=ba \\
+		Distributivity & a(b+c) = ab+ac & (a+b)c = ac + bc \\
+		Identities & \exists(0 \in \F)(a+0 = a) & \exists(1 \in \F)(1 \neq 0 \land 1 a  = a) \\
+		Inverses & \exists(-a \in \F)(a + (-a) = 0) & (a \neq 0) \iff \exists(a^{-1} \in \F)(a a^{-1} = 1)
+	\end{tabular}\end{center}
+\end{dfnbox}
+
+``Closed operation'' just means that we can add or multiply any two things in the field and still get a thing in the field. ``Field'' is a pretty broad term and encompasses a lot more than just the real numbers.
+
+\begin{exbox}{Common Fields}{}
+	\begin{tabularx}{\linewidth}{l | l X}
+		\textbf{Fields} & \textbf{Not Fields} \\
+		\hline
+		$\R$: Real numbers & $\Z$: Integers & (no multiplicative inverse beside $\pm 1$) \\
+		$\Q$: Rational numbers & $\N$: Natural numbers & (no additive identity) \\
+		$\C$: Complex numbers & $M_n(\R)$: $n \times n$ matrices & (multiplication is not commutative)
+	\end{tabularx}
+\end{exbox}
+
+We may be tempted to start using familiar properties, like how multiplying by zero yields zero or how ${x^{-1}}^{-1} = x$. However, at this stage, we only know of the five field axioms. We will have to prove most of the properties we've been familiar with, no matter how trivial they may seem.
+
+\begin{thmbox}{Uniqueness of Addition in a Field}{add-unique}
+	For any field $\F$ and all $a,b \in \F$, the equation $a+x=b$ has a unique solution.
+	\tcblower
+	\begin{proof}
+		Let $\F$ be a field, and let $a,b \in \F$. We need to show both of the following:
+		\begin{enumerate}
+			\item \textbf{Existence:} $a+x=b$ has a solution $x \in \F$.
+			\item \textbf{Uniqueness:} if $x_1$ and $x_2$ are solutions to $a+x=b$, then $x_1=x_2$.
+		\end{enumerate}
+
+		Let $x_1 \coloneq (-a) + b$. Since $-a, b \in \F$ and $\F$ is closed under addition, then $x_1 \in \F$.
+		\begin{align*}
+			a + x_1 &= a + ((-a) + b) && x_1=(-a)+b \\
+			&= (a + (-a)) + b && \text{Additive Associativity} \\
+			&= 0 + b && \text{Additive Inverse} \\
+			&= b && \text{Additive Identity}
+		\end{align*}
+		Thus, $x_1$ is a solution to $a + x = b$.
+
+		Suppose that there exists some $x_2 \in \F$ that is also a solution to $a+x=b$. Then $a+x_1 = b$ and $a+x_2 = b$.
+		\begin{align*}
+			a + x_1 &= a + x_2 \\
+			(-a) + (a + x_1) &= (-a) + (a + x_2) && \text{Add $-a$ to both sides} \\
+			((-a) + a) + x_1 &= ((-a) + a) + x_2 && \text{Additive Associativity} \\
+			0 + x_1 &= 0 + x_2 && \text{Additive Inverse} \\
+			x_1 &= x_2 && \text{Additive Identity}
+		\end{align*}
+		Therefore, $a+x = b$ has only one solution.
+	\end{proof}
+\end{thmbox}
+
+A similar proof can be done for multiplication where $a \neq 0$.
+
+\begin{tecbox}{Proving Equality in a Field}{}
+	Imagine we had elements $a,b \in \F$ and had to prove they were equal. We can use the idea of uniqueness to prove that $a=b$.
+	\begin{enumerate}
+		\item Create some equation in the form of $x+y = z$ or $x \cdot y = z$ with $y$ and $z$ being fixed constants.
+		\item Show that $x=a$ and $x=b$ are both valid solutions to the equation.
+	\end{enumerate}
+	We can then use the fact that addition/multiplication is unique to conclude that $a=b$.
+	\tcblower
+	\textbf{Note:} When using uniqueness of multiplication, we cannot let $y = 0$ since anything times zero is zero.
+\end{tecbox}
+
+The following theorem demonstrates the above technique.
+
+\begin{thmbox}{Multiplication by Zero}{mult-by-zero}
+	For any field $\F$ and all $a \in \F$, $0 \cdot a = 0$
+	\tcblower
+	\begin{proof}
+		Let $\F$ be a field, and let $a \in \F$. Consider the following equation:
+		\[ a + x = a \]
+		\begin{enumerate}
+			\item Let $x = 0$. Then, by definition of the additive identity, $a+x = a + 0 = a$. Thus, $x = 0$ is a valid solution.
+			\item Let $x = 0 \cdot a$. Then:
+			\begin{align*}
+				a + x &= a + (0 \cdot a) && x = 0 \cdot a \\
+				&= (1 \cdot a) + (0 \cdot a) && \text{Multiplicative Identity} \\
+				&= a (1 + 0) && \text{Distributivity} \\
+				&= a \cdot 1 && \text{Additive Identity} \\
+				&= 1 \cdot a && \text{Commutative Property} \\
+				&= a && \text{Multiplicative Identity}
+			\end{align*}
+			Thus, $x = a \cdot 0$ is also a valid solution.
+		\end{enumerate}
+		By \nameref{thm:add-unique}, it must follow that $0 = a \cdot 0$.
+	\end{proof}
+\end{thmbox}
+
+\begin{thmbox}{Zero Product Property}{}
+	For any field $\F$ and all $a, b \in \F$, if $ab = 0$, then $a = 0$ or $b = 0$.
+	\tcblower
+	\begin{proof}
+		Let $\F$ be a field, and let $a, b \in \F$ where $ab = 0$.
+		\begin{itemize}
+			\item If $a = 0$, we're done.
+			\item If $a \neq 0$, then $a^{-1} \in \F$. Thus:
+			\begin{align*}
+				ab = 0  &\implies aba^{-1} = 0a^{-1} && \text{Multiply both sides by}\ a^{-1} \\
+				&\implies aa^{-1}b = 0a^{-1} && \text{Multiplicative Commutativity} \\
+				&\implies 1b = 0a^{-1} && \text{Multiplicative Inverse} \\
+				&\implies b = 0a^{-1} && \text{Multiplicative Identity} \\
+				&\implies b = 0 && \text{\nameref{thm:mult-by-zero}}
+			\end{align*}
+		\end{itemize}
+		In either case, $a = 0$ or $b = 0$.
+	\end{proof}
+\end{thmbox}
+
+\begin{thmbox}{Double Additive Inverse}{}
+	For any field $\F$ and all $a \in \F$, $a = -(-a)$.
+	\tcblower
+	\begin{proof}
+		Let $\F$ be a field, and let $a \in \F$. Consider the equation $x + (-a) = 0$.
+		\begin{enumerate}
+			\item Let $x = a$. Then $a + (-a) = 0$ by definition of Additive Inverse.
+			\item Let $x = -(-a)$. Then $-(-a) + (-a) = (-a) + -(-a) = 0$ by definition of Additive Inverse.
+		\end{enumerate}
+		By \nameref{thm:add-unique}, it must follow that $a = -(-a)$.
+	\end{proof}
+\end{thmbox}
+
+\begin{thmbox}{Double Multiplicative Inverse}{}
+	For any field $\F$ and all $a \in \F$ where $a \neq 0$, $a = (a^{-1})^{-1}$.
+	\tcblower
+	\begin{proof}
+		Let $\F$ be a field, and let $a \in \F$ where $a \neq 0$. Consider the equation $x a^{-1} = 1$.
+		\begin{enumerate}
+			\item Let $x = a$. Then $a a^{-1} = 1$ by definition of the Multiplicative Inverse.
+			\item Let $x = (a^{-1})^{-1}$. Then $(a^{-1})^{-1} a^{-1} = a^{-1} (a^{-1})^{-1} = 1$ by definition of the Multiplicative Inverse.
+		\end{enumerate}
+		By \nameref{thm:add-unique}, it must follow that $a = (a^{-1})^{-1}$.
+	\end{proof}
+\end{thmbox}
+
+% TODO:
+% 	- If a != 0 and b != 0, then (ab)^-1 = a^-1 b^-1
+%	- If a != 0, then -(a^-1) = (-a)^-1
+
+\iffalse
+\begin{thmbox}{Consequences of Field Axioms}{}
+	Let $\F$ be a field. The following statements hold for all $a,b \in \F$.
+	\begin{itemize}
+		\item $0 \cdot a = 0$.
+		\item If $ab = 0$, then $a = 0$ or $b = 0$.
+		\item $-(-a) = a$ and $-(a+b) = (-a) + (-b)$.
+		\item If $a \neq 0$ and $b \neq 0$, then $(a^{-1})^{-1} = a$, and $(ab)^{-1} = a^{-1}b^{-1}$
+		\item $-(a^{-1}) = (-a)^{-1}$ (i.e. inverse operations commute).
+	\end{itemize}
+	\tcblower
+	\textbf{Note:} None of these are strictly given by the axioms, but rather, they are proven as a consequence of the field axioms.
+\end{thmbox}
+\fi
+
+We can define subtraction and division as shorthand notation as adding/multiplying by the respective inverse.
+
+\begin{dfnbox}{Subtraction}{}
+	\[ a - b \coloneq a + (-b) \]
+\end{dfnbox}
+
+\begin{dfnbox}{Division}{}
+	\[ \frac{a}{b} \coloneq a b^{-1} \]
+\end{dfnbox}
+
+\section{Order Axioms}
+
+\begin{dfnbox}{Ordered Field}{}
+	A field $\F$ is \dfntxt{ordered} if and only if there exists a relation $<$ on $\F$ such that all $a,b,c \in \F$ satisfy the following axioms:
+
+	\begin{center}\begin{tabular}{ll}
+		Axiom & Description \\ \hline
+		Transitivity & If $a<b$ and $b<c$, then $a<c$ \\
+		Trichotomy & Only \textbf{one} is true: $a<b$ \textbf{or} $a=b$ \textbf{or} $b<a$ \\
+		Additive Property & If $a<b$, then $a+c < b+c$ \\
+		Multiplicative Property & If $a<b$ and $0<c$, then $ac < bc$
+	\end{tabular}\end{center}
+\end{dfnbox}
+
+This leaves us with the real numbers ($\R$) and rational numbers ($\Q$). The complex numbers ($\C$) have no order between the elements (is $1+2i < 2+1i$, or $2+1i < 1 + 2i$).
+
+\begin{genbox}{Order Notation and Terminology}
+	\begin{itemize}
+		\item $a<b$ is equivalent to $b>a$
+		\item $a \leq b$ is equivalent to $a<b$ or $a=b$
+		\item $a \in \F$ is \dfntxt{positive} if $a>0$
+		\item $a \in \F$ is \dfntxt{negative} if $a < 0$
+	\end{itemize}
+\end{genbox}
+
+From now on, we will use basic algebra in proofs without explaining each individual step.
+
+\begin{notebox}{}
+	Be careful when negating inequalities!
+	\begin{itemize}
+		\item The negation of $a < b$ is $a \geq b$, not $a > b$.
+		\item $a < b < c$ means $a < b$ \textbf{and} $b < c$, so its negation would be ``$a \geq b$ \textbf{or} $b \geq c$''
+	\end{itemize}
+\end{notebox}
+
+\begin{thmbox}{Negatives Flip Inequality}{neg-flip-ineq}
+	Let $\F$ be any ordered field, and let $a \in \F$. If $a<0$, then $-a > 0$.
+	\tcblower
+	\begin{proof}
+		Let $\F$ be an ordered field, and let $a \in \F$ where $a<0$. By the additive property, we can add $-a$ to both sides of the inequality. Then $(-a) + a < (-a) + 0$ which simplifies to $0 < -a$. Therefore, $-a > 0$.
+	\end{proof}
+\end{thmbox}
+
+\begin{thmbox}{$0<1$}{}
+	$0<1$ in any ordered field.
+	\tcblower
+	\begin{proof}
+		Suppose for contradiction that $1<0$. Since \nameref{thm:neg-flip-ineq}, then $-1>0$. Hence,  we can apply the multiplicative property to $0 < -1$ as such:
+		\begin{align*}
+			0 (-1) &< (-1)(-1) \\
+			&= -(-1) \\
+			&= 1
+		\end{align*}
+		That is, $0<1$, which contradicts our supposition that $1<0$. Thus, it must be true that $0 \leq 1$ (the negation of $1 < 0$). Since the field axioms strictly state $0 \neq 1$, then $0 < 1$.
+	\end{proof}
+\end{thmbox}
+
+\section{Completeness}
+Completeness deals with the idea of existence of bounds.
+
+\begin{dfnbox}{Upper Bound}{}
+	$M \in \F$ is an \dfntxt{upper bound} for $A$ if $M \geq x$ for all $x \in A$.
+\end{dfnbox}
+
+\begin{dfnbox}{Lower Bound}{}
+	$M \in \F$ is a \dfntxt{lower bound} for $A$ if $M \leq x$ for all $x \in A$.
+\end{dfnbox}
+
+We say a set is \dfntxt{bounded above} if there exists an upper bound for that set. Similarly, we say a set is \dfntxt{bounded below} if there exists a lower bound for that set.
+
+\begin{dfnbox}{Supremum}{}
+	$s \in \F$ is a \dfntxt{supremum} of $A$ ($\sup A$) if:
+	\begin{enumerate}
+		\item $s$ is an upper bound for $A$, and
+		\item $s \leq M$ for all upper bounds $M$ of $A$.
+	\end{enumerate}
+\end{dfnbox}
+
+\begin{dfnbox}{Infimum}{}
+	$s \in \F$ is an \dfntxt{infimum} of $A$ ($\inf A$) if:
+	\begin{enumerate}
+		\item $s$ is a lower bound for $A$, and
+		\item $s \geq M$ for all lower bounds $M$ of $A$.
+	\end{enumerate}
+\end{dfnbox}
+
+\begin{dfnbox}{Maximum}{}
+	$s \in \F$ is a \dfntxt{maximum} of $A$ ($\max A$) if $s$ is a supremum of $A$ and $s \in A$.
+\end{dfnbox}
+
+\begin{dfnbox}{Minimum}{}
+	$i \in \F$ is a \dfntxt{minimum} of $A$ ($\min A$) if $i$ is an infimum of $A$ and $i \in A$.
+\end{dfnbox}
+
+%From now on, we will mainly consider upper bounds, supremums, and maximums. There are similar proofs for cases involving lower bounds, infimums, and minimums.
+
+Now we can finally tackle the notion of ``completeness''.
+
+\begin{dfnbox}{Complete Field}{complete-field}
+	An ordered field $\F$ is \dfntxt{complete} if every $A \subseteq \F$ that is bounded above has a supremum.
+\end{dfnbox}
+
+\begin{dfnbox}{Real Numbers ($\R$)}{}
+	The set of \dfntxt{real numbers} is the unique complete ordered field.
+\end{dfnbox}
+
+The rational numbers are \textbf{not} complete. Consider the following set:
+\[ A \coloneq \{r \in \Q : r^2 < 2 \} \subseteq \Q \]
+A natural choice for a supremum might be $\sqrt{2}$, but note that $\sqrt{2}$ is not a rational number (proven in Example \ref{ex:sqrt-2-irrational}).
+
+\begin{thmbox}{Approximation Property for the Supremum}{}
+	Let $A \subseteq \R$ be nonempty and bounded above. Then $s = \sup A$ if and only if:
+	\begin{enumerate}
+		\item $\forall (x \in A) (s \geq x)$
+		\item $\forall (\epsilon > 0) \exists (x \in A) (s - \epsilon < x)$
+	\end{enumerate}
+	\tcblower
+	\begin{proof}
+		We will show that the definition of supremum and the proposed criteria in this proof are logically equivalent.
+
+		First, let's assume $s = \sup A$.
+		\begin{enumerate}
+			\item By definition, $s$ is an upper bound of $A$, so $\forall (x \in A)(s \geq x)$.
+			\item Suppose for contradiction that our second criterion does not hold. That is: $$\exists (\epsilon > 0) \forall (x \in A) (x \leq s - \epsilon)$$ Then $s-\epsilon$ is an upper bound of $A$. However, this contradicts our assumption that $s$ was the supremum for $a$. Therefore, our second criterion holds.
+		\end{enumerate}
+
+		Next, let's assume our two criteria are true.
+		\begin{enumerate}
+			\item By the first criterion, $s$ is an upper bound of $A$.
+			\item Suppose for contradiction there exists an upper bound $m$ of $A$ such that $s > m$. Let $\epsilon \coloneq s - m$. Then by our second criterion: $$\exists (x \in A)(s - (s - m) < x) \iff \exists (x \in A)(m < x)$$ This contradicts the idea that $m$ is an upper bound of $A$. Therefore, $s \leq m$ for all upper bounds $m$ of $A$.
+		\end{enumerate}
+		This proves the entire logical equivalence.
+	\end{proof}
+\end{thmbox}
+
+\section{Absolute Value}
+\begin{dfnbox}{Absolute Value}{}
+	For any $x \in \R$, the \dfntxt{absolute value} of $x$ is:
+	$$\abs{x} \coloneq \begin{cases}
+		x, & x \geq 0 \\
+		-x, & x < 0
+	\end{cases}$$
+\end{dfnbox}
+
+Absolute value of a real number can be thought as the magnitude or ``distance'' from zero. Similarly, the absolute value $\abs{x-y}$ can be thought of as the ``distance'' between $x$ and $y$.
+
+\begin{exbox}{$\abs{x}\abs{y} = \abs{xy}$}{abs-of-prod}
+	For all $x, y \in \R$, $\abs{x}\abs{y} = \abs{xy}$.
+	\tcblower
+	\begin{proof}
+		Let $x,y \in \R$. There are four cases to consider:
+		\begin{enumerate}
+			\item If $x \geq 0$ and $y \geq 0$, then $xy \geq 0$. Thus, $\abs{x} = x$, $\abs{y} = y$, and $\abs{xy} = xy$. Then $\abs{x}\abs{y} = xy = \abs{xy}$.
+			\item If $x \geq 0$ and $y < 0$, then $xy \leq 0$. Thus, $\abs{x} = x$, $\abs{y} = -y$, and $\abs{xy} = -xy$. Then $\abs{x}\abs{y} = x(-y) = -xy = \abs{xy}$.
+			\item If $x<0$ and $y \geq 0$, then the proof is similar to case 2.
+			\item If $x<0$ and $y<0$, then $xy>0$. Thus, $\abs{x} = -x$, $\abs{y} = -y$, and $\abs{xy} = xy$. Then $\abs{x}\abs{y} = (-x)(-y) = xy = \abs{xy}$.
+		\end{enumerate}
+	\end{proof}
+\end{exbox}
+
+\begin{exbox}{Bounds of Absolute Value}{abs-bounds}
+	For all $x \in \R$ and $M \geq 0$, $\abs{x} \leq M$ if and only if $-M \leq x \leq M$.
+	\tcblower
+	\begin{proof}
+		First, suppose that $\abs{x} \leq M$.
+		\begin{itemize}
+			\item If $x \geq 0$, then $\abs{x} = x$, so $-M \leq 0 \leq x = \abs{x} \leq M$.
+			\item If $x < 0$, then $\abs{x} = -x$, so $-M \leq - \abs{x} = x < 0 \leq M$.
+		\end{itemize}
+		In either case, $-M \leq x \leq M$.
+
+		Next, suppose that $-M \leq x \leq M$.
+		\begin{itemize}
+			\item If $x \geq 0$, then $\abs{x} = x \leq M$
+			\item If $x < 0$, then $\abs{x} \leq -(-M) = M$
+		\end{itemize}
+	\end{proof}
+\end{exbox}
+
+\begin{thmbox}{Triangle Inequality}{triangle-inequality}
+	For all $x,y \in \R$, $\abs{x+y} \leq \abs{x} + \abs{y}$
+	\tcblower
+	\begin{proof}
+		For any $x \in \R$, we have $\abs{x} \leq \abs{x}$. Thus, by Example \ref{ex:abs-bounds}, we have $-\abs{x} \leq x \leq \abs{x}$. Similarly, for any $y \in \R$, then $-\abs{y} \leq y \leq \abs{y}$. That is:
+		$$-\abs{x} - \abs{y} \leq x + y \leq \abs{x} + \abs{y}$$
+		$$ -(\abs{x} + \abs{y}) \leq x + y \leq \abs{x} + \abs{y} $$
+		Therefore, we have $\abs{x+y} \leq \abs{x} + \abs{y}$.
+	\end{proof}
+\end{thmbox}
+
+\begin{exbox}{Reverse Triangle Inequality}{}
+	For all $x, y \in \R$, $\abs{x-y} \geq \abs{x} - \abs{y}$.
+	\tcblower
+	\begin{proof}
+		Let $x, y \in \R$. By the \nameref{thm:triangle-inequality}, we have:
+		\[ \abs{x} = \abs{x - y + y} \leq \abs{x-y} + \abs{y}  \]
+		Thus, we have $\abs{x} \leq \abs{x-y} + \abs{y}$. Subtract both sides by $\abs{y}$, we get:
+		\[ \abs{x} - \abs{y} \leq \abs{x-y} \].
+	\end{proof}
+\end{exbox}
+
+\begin{exbox}{Approximating Polynomials}{}
+	Show that if $\abs{x+1} \leq 3$, then $\abs{x^2 + 3x + 2} \leq 12$.
+	\tcblower
+	\begin{proof}
+		Let $x \in \R$ where $\abs{x+1} \leq 3$. Note that $x^2 + 3x + 2 = (x+1)(x+2)$. Because \nameref{ex:abs-of-prod}, we have:
+		\[ \abs{x^2+3x+2} = \abs{(x+1)(x+2)} = \abs{x+1}\abs{x+2} \]
+		Since $\abs{x+1} \leq 3$, then:
+		\[ \abs{x+2} = \abs{(x+1) + 1} \leq \abs{x+1} + \abs{1} \leq 3 + 1 = 4 \]
+		Thus:
+		\[ \abs{x^2+3x+2} = \abs{x+1}\abs{x+2} \leq 3 \cdot 4 = 12 \]
+		Therefore, $\abs{x^2 + 3x + 2} \leq 12$.
+	\end{proof}
+\end{exbox}
+
+\chapter{Integers and Induction}
+
+\begin{genbox}{Overview}
+	\begin{itemize}
+		\item Formal definitions of the natural numbers ($\N$) and integers ($\Z$)
+		\item Properties of the integers, \nameref{thm:wop}
+		\item \nameref{thm:induction} and its uses
+		\item Divisibility, prime numbers, and prime factorizations
+	\end{itemize}
+\end{genbox}
+
+\section{Definitions of $\N$ and $\Z$}
+Now that we have defined the real numbers $\R$, we can use some interesting definitions to derive the natural numbers $\N$.
+
+\begin{dfnbox}{Closed Under Addition}{}
+	A set $X$ is \dfntxt{closed under addition} if $x_1+x_2 \in X$ for any $x_1, x_2 \in X$.
+	\tcblower
+	\[ \forall (x_1, x_2 \in X) (x_1 + x_2 \in X) \]
+\end{dfnbox}
+
+\begin{dfnbox}{Supernatural}{}
+	A set $X$ is \dfntxt{supernatural} if $X$ is closed under addition and $1 \in X$.
+\end{dfnbox}
+
+\begin{dfnbox}{Natural Numbers ($\N$)}{}
+	The \dfntxt{natural numbers} $\N$ is a set defined as:
+	\tcblower
+	\[ \N \coloneq \{ x \in \R : x \in X\ \text{for every supernatural set}\ X\} \]
+\end{dfnbox}
+
+We can think of the natural numbers as being the intersection of every possible supernatural set.
+
+\begin{exbox}{$\N$ is Supernatural}{}
+	(1) $\N$ is supernatural, and (2) if $A \subseteq \R$, is supernatural, then $\N \subseteq A$.
+	\tcblower
+	\begin{proof} Let $A \subseteq \R$ be supernatural.
+
+		\begin{enumerate}
+			\item $1 \in B$ for every supernatural set $B$, so $1 \in \N$ by the definition of $\N$. Let $x,y \in \N$. Then $x,y \in B$ for every supernatural set $B$. Therefore, $x+y \in B$ for every supernatural set $B$. That is, $x+y \in \N$, so $\N$ is closed under addition. Thus, $\N$ is supernatural.
+			\item Suppose that $A \subseteq \R$ is supernatural. Let $x \in \N$. By definition of $\N$, then $x \in A$. Thus, $\N \subseteq A$.
+		\end{enumerate}
+	\end{proof}
+\end{exbox}
+
+The previous lemma confirms our intuition that $\N$ is the ``smallest'' supernatural subset of $\R$. This idea is made precise in the next corollary.
+
+\iffalse
+\begin{thmbox}{Corollary 3.1.3}{}
+	\textbf{Corollary}: If $E \subseteq \N$ and $E$ is supernatural, then $E = \N$.
+	\tcblower
+	\begin{proof}
+		Let $E \subseteq \N$. $\N \subseteq E$ by Lemma 3.1.2, so $E = \N$.
+	\end{proof}
+\end{thmbox}
+\fi
+
+\begin{thmbox}{Gap Theorem}{gap}
+	If $n \in \N$, then $(n, n+1) \cap \N = \emptyset$.
+\end{thmbox}
+
+\begin{thmbox}{Well-Ordering Principle}{wop}
+	Every non-empty subset of $\N$ has a minimum.
+	\tcblower
+	\begin{proof}
+		Let $S \subseteq \N$ where $S \neq \emptyset$. We know that $0$ is the smallest natural number, so $0$ is a lower bound of $S$. Note that $\N \subseteq \R$, so $S \subseteq \R$. Since $\R$ is a \nameref{dfn:complete-field} and $S \subseteq \R$, then $S$ has an infimum. Let $b \coloneq \inf S$. It follows that $b+1$ is \textbf{not} a lower bound of $S$. Thus, for some $n \in S$:
+		\[ n < b + 1 \]
+		Suppose for contradiction that $n \neq \min S$. Then there exists $m \in S$ such that:
+		\begin{align*}
+			b \leq m < n < b+1
+			&\implies b-m \leq 0 < n-m < b-m+1 \\
+			&\implies 0 < n-m < (b-m) - (b-m) + 1 \\
+			&\implies 0 < n-m < 1
+		\end{align*}
+		However, by the \nameref{thm:gap}, there does not exist any natural number between $0$ and $1$. Hence, $n = b = \min S$.
+	\end{proof}
+\end{thmbox}
+
+\begin{dfnbox}{Integers ($\Z$)}{}
+	The set of \dfntxt{integers} is defined as:
+	\[ \Z \coloneq \{0\} \cup \N \cup \{n : -n \in \N\} \]
+\end{dfnbox}
+
+It also follows that the integers are closed both addition and multiplication. Moreover, the gap theorem still applies, and a slightly modified version of the \nameref{thm:wop} applies.
+
+\begin{thmbox}{$\Z$ is Closed Under Addition}{}
+	$\Z$ is closed under addition.
+	\tcblower
+	\begin{proof}
+		If $x,y \in \Z$, then $x+y \in \Z$. TODO: Finish proof
+	\end{proof}
+\end{thmbox}
+
+\begin{thmbox}{Gap Theorem for $\Z$}{}
+	If $n \in \Z$, then $(n,n+1) \cap \Z = \emptyset$.
+	\tcblower
+	\begin{proof}
+		TODO: Finish proof
+	\end{proof}
+\end{thmbox}
+
+\begin{thmbox}{Well-Ordering Principle for $\Z$}{wop-z}
+	Every nonempty subset of $\Z$ that is bounded above has a maximum.
+	\tcblower
+	\begin{proof}
+
+	\end{proof}
+\end{thmbox}
+
+\begin{exbox}{Floor and Ceiling Functions}{}
+	We can use the \nameref{thm:wop-z} to define the floor and ceiling functions. Let $x \in \R$ be arbitrary.
+	\begin{align*}
+		\floor{x} &= \max \{ n \in \Z : n \leq x \} \\
+		\ceil{x} &= \min \{ n \in \Z : n \geq x \}
+	\end{align*}
+	The maximum and minimum of these two sets is guaranteed. For floor, we are taking the maximum of a set bounded above by $x$. For ceiling, we are taking the minimum of a set bounded below by $x$.
+\end{exbox}
+
+\section{Basic Properties of the Integers}
+
+\begin{thmbox}{$\N$ is not Bounded Above}{}
+	$\N$ is not bounded above.
+	\tcblower
+	\begin{proof}
+		Suppose for contradiction that $\N$ is bounded above. Then there exists $s \coloneq \sup \N$ where $n \leq s$ for all $n \in \N$. Since $\N$ is closed under addition, if $n \in \N$ then $n+1 \in \N$. Hence $n+1 \leq s$, so $n \leq s - 1$. Thus, $s-1$ is an upper bound of $\N$. This contradicts $s$ being the supremum of $\N$.
+	\end{proof}
+\end{thmbox}
+
+\begin{thmbox}{Archimedean Principle}{archimedean}
+	For every $a,b \in \R$ where $b>0$, there exists an $n \in \N$ such that $nb>a$.
+	%$$\forall (a,b \in \R)\left[ (b>0) \implies \exists (n \in \N) (nb>a) \right]$$
+	\tcblower
+	\begin{proof}
+		Let $a,b \in \R$ where $b>0$. Suppose for contradiction that $nb \leq a$ for all $n \in \N$. Then $n \leq \nicefrac{a}{b}$ for all $n \in \N$, meaning $\N$ is bounded above by $\nicefrac{a}{b}$. Since we know $\N$ is not bounded above, then $nb > a$ for some $n \in \N$.
+	\end{proof}
+\end{thmbox}
+
+% Commented below is the proof of the archimedean principle provided in the textbook
+\iffalse
+\begin{thmbox}{Archimedean Principle}{}
+	For every $a,b \in \R$ where $b>0$, there exists an $n \in \N$ such that $nb>a$.
+	$$\forall (a,b \in \R)(b>0) \exists (n \in \N) (nb>a)$$
+	\tcblower
+	\begin{proof}
+		If $b>a$, then $1 \cdot b > a$, so $n=1$ satisfies the theorem.
+
+		If $b \leq a$, let $E = \{ m \in \N : mb \leq a \}$. Note that $1 \cdot b \leq a$, so $1 \in E$. Also, if $m \in E$, then $m \leq \frac{a}{b}$. Thus $E$ is non-empty and bounded above, so $\sup E$ exists. By the approximation property for the supremum using $\epsilon = 1$, there exists an $m \in E$ such that $m > \sup E - 1$. Then $n = m + 1$ means $n$ is a natural number and $n > \sup E$. Thus $n \notin E$. Therefore, $nb>a$ as required.
+	\end{proof}
+	%\tcblower
+	%\textbf{Note:} Not every field follows the Archimedean principle (e.g. hyperreals)
+\end{thmbox}
+
+\begin{thmbox}{Corollary 3.2.2}{}
+	\textbf{Corollary:} $\N$ is not bounded above.
+	\tcblower
+	\begin{proof}
+		Suppose that $M \in \R$ is an upper bound for $\N$. By the \nameref{thm:archimedean}, there exists some $n \in \N$ such that $n = n \cdot 1 > M$. This contradicts $M$ being an upper bound for $\N$. Therefore, $\N$ has no upper bound, so it is not bounded above.
+	\end{proof}
+\end{thmbox}
+
+The previous corollary also shows that $\Z$ is not bounded above. Combining this with the \nameref{thm:wop-z}, we can show that any interval of length greater than 1 contains an integer.
+\fi
+
+\begin{exbox}{Inverse Gap Theorem}{}
+	If $a,b \in \R$ satisfy $b>a+1$, then there exists $n \in \N$ such that $a \leq n < b$.
+	$$\forall (a,b \in \R)(b>a+1 \implies \exists (n \in \N) (a \leq n < b))$$
+	\tcblower
+	\begin{proof}
+		Let $E = \{ m \in \Z : m \geq a \}$. Because $\Z$ is not bounded above, then there must exist $m \geq a$, so $E$ is non-empty (otherwise, $a$ is an upper bound for $\Z$). Also, $a$ is a lower bound for $E$, so $m = \min E$ exists by the \nameref{thm:wop-z}. Because $m \in E$, we have $m \geq a$ Assume for contradiction that $m > a + 1$. Then $m-1 \in \Z$ and $m-1 > a$, so $m-1 \in E$. This contradicts $m = \min E$. Thus, $m \leq a + 1$, so $a \leq m \leq a + 1 < b$.
+	\end{proof}
+\end{exbox}
+
+The \nameref{thm:archimedean} allows us to prove some suprema and infima of sets.
+
+\begin{exbox}{Finding Supremum/Infimum of Weird Sets}{}
+	Let $A \coloneq \left\{ \frac{n+1}{n} : n \in \N \right\}$. Find $\sup A$ and $\inf A$, and prove that your answers are correct.
+
+	$$A = \left\{ 2, \frac32, \frac43, \frac54, \ldots \right\}$$
+	\tcblower
+	$\sup A = 2$
+	\begin{proof}
+		For any $n \in N$, we know $n \geq 1$, so $n+n \geq n + 1$ or more simply $2n \geq n+1$. Thus $2 \geq \frac{n+1}{n}$, so 2 is an upper bound of $A$. Also, $\frac{1+1}{1} = 2 \in A$, so $\max A = 2$ (exercise 2.19). Therefore, $\sup A = 2$.
+	\end{proof}
+
+	$\inf A = 1$
+	\begin{proof}
+		For any $n \in \N$, we have $n+1 > n$, so $\frac{n+1}{n}>1$. That is, $1$ is a lower bound for $A$. Also, $A$ is non-empty, so $\inf A$ exists. Assume for contradiction that $\inf A > 1$. Then there exists $m>1$ such that $m$ is a lower bound of $A$. That is, $m-1 > 0$, so $\frac{1}{m-1} > 0$. By the \nameref{thm:archimedean}, there exists some $n \in \N$ such that $n \cdot 1 > \frac{1}{m-1}$, so
+		\begin{align*}
+			n \cdot 1 &> \frac{1}{m-1}\\
+			n(m-1) &> 1\\
+			nm-n &> 1 \\
+			nm &> n+1 \\
+			m &> \frac{n+1}{n}
+		\end{align*}
+		This contradicts $m$ being a lower bound for $A$. Thus, $\inf A \leq 1$. Because $1$ is a lower bound for $A$, $\inf A = 1$.
+	\end{proof}
+\end{exbox}
+
+\begin{thmbox}{Principle of Induction}{induction}
+	For all $n \in \N$, let $P(n)$ be some statement. Suppose that:
+	\begin{enumerate}
+		\item $P(1)$ is true, and
+		\item for each $n \in \N$, if $P(n)$ is true then $P(n+1)$ is true.
+	\end{enumerate}
+	Then $P(n)$ is true for all $n \in \N$.
+	\tcblower
+	\begin{proof}
+		For contradiction, let's assume the negation of our original statement. That is, let's assume conditions 1 and 2 are satisfied, but $P(n)$ is false for some $n \in \N$.
+
+		Let $A \coloneq \{ n \in \N : \neg P(n) \}$. Since $A$ is not empty, then by the \nameref{thm:wop}, $A$ has a minimum. Let $m \coloneq \min A$. Because $m \in A$, then $P(m)$ is false. Since $P(1)$ is true, then $m > 1$. Therefore, $m-1 \in \N$, and because $m = \min A$, then $m-1 \notin A$. Therefore, $P(m-1)$ is true (otherwise, $m-1 \in A$). Thus, by condition 2, we have $P(m)$ is also true. This contradicts $m \in A$, so $P(n)$ is true for all $n \in \N$.
+	\end{proof}
+\end{thmbox}
+
+\begin{tecbox}{Basic Proof by Induction}{}
+	To prove that ``$P(n)$ is true for all $n \in \N$'' using the \nameref{thm:induction}:
+	\begin{enumerate}
+		\item \textbf{Base Case:} Prove $P(1)$ in a simple direct proof.
+		\item \textbf{Induction Hypothesis:} Assume that $P(n)$ is true for some $n \in \N$.
+		\item \textbf{Inductive Step:} Prove $P(n) \implies P(n+1)$.
+	\end{enumerate}
+\end{tecbox}
+
+\begin{exbox}{$\Z$ is Closed Under Multiplication}{}
+	If $m,n \in \Z$, then $mn \in \Z$
+	\tcblower
+	\begin{proof}
+		Suppose that $n=0$. Then $mn = m \cdot 0 = 0$ for any $m \in \Z$. So $mn \in \Z$.
+
+		Suppose that $n>0$ (i.e. $n \in \N$). Fix some $m \in \Z$ (i.e. choose one specific integer $m$). Let $P(n)$ be the statement $mn \in \Z$.
+		\begin{enumerate}
+			\item $P(1)$ is true because $m \cdot 1 = m \in \Z$.
+			\item Now suppose that $P(n)$ is true for some $n \in \N$. Then $mn \in \Z$, so $m(n+1) = mn + m \in \Z$ by the induction hypothesis and closure of $\Z$ under addition. Thus, $P(n+1)$ is true.
+		\end{enumerate}
+		Now that we have our base case and inductive step proved, we can safely say that $P(n)$ is true for all $n \in \N$. Thus, $mn \in \Z$ for all $m \in \Z$ and $n \in \N$.
+
+		Suppose that $n < 0$. Then $-n>0$, so $n \in \N$. Thus, $mn = -(m(-n)) \in \Z$ by the proof above.
+	\end{proof}
+\end{exbox}
+
+\begin{dfnbox}{Integer Powers}{}
+	\iffalse
+	For any $a \in R$ and $n \in \Z$, the expression $a^n$ is called $a$ \dfntxt{to the power of} $n$.
+	$$a^n = \begin{cases}
+		1 & \text{if}\ n=0 \\
+		a \cdot a^{n-1} & \text{if}\ n > 0 \\
+		\frac{a^{n+1}}{a} & \text{if}\ n < 0
+	\end{cases}$$
+	\fi
+
+	For any $a \in \R$:
+	\begin{itemize}
+		\item $a^0 = 1$
+		\item $a^{n+1} = a^n \cdot a$
+	\end{itemize}
+
+	If $a \neq 0$:
+	\begin{itemize}
+		\item $a^0 = 1$
+		\item $a^n = \frac{1}{a^{-n}}$ for $n < 0$
+	\end{itemize}
+\end{dfnbox}
+
+\begin{exbox}{Multiplication of Powers}{}
+	If $m, n \in \N$, then $a^ma^n = a^{m+n}$
+	\tcblower
+	\begin{proof}
+		Fix some $m \in \N$. For each $n \in \N$, let $P(n)$ be the statement $a^ma^n = a^{m+n}$.
+		\begin{enumerate}
+			\item $a^ma^1 = a^m a = a^{m+1}$ by definition of positive integer powers. Thus, $P(1)$ is true.
+			\item Suppose $P(n)$ is true for some $n \in \N$. Then $a^m a^{n+1} = a^m(a^na) = (a^ma^n)a = a^{m+n}a$ = $a^{m+n+1}$. So $P(n+1)$ is true.
+		\end{enumerate}
+		Therefore, $P(n)$ is true for all $n \in \N$.
+	\end{proof}
+\end{exbox}
+
+\begin{exbox}{Nested Powers}{}
+	If $a \in \R, a \neq 0$, and $m,n \in \Z$, then $(a^m)^n = a^{mn}$
+	\tcblower
+	\begin{proof} Consider the three following cases:
+		\begin{enumerate}
+			\item If $n=0$, then $(a^m)^0 = 1 = a^0 = a^m$
+			\item For all $n \in \N$, let $P(n)$ be the statement $(a^m)^n = a^{mn}$ where $m \in \Z$ is fixed.
+			\begin{enumerate}
+				\item $(a^m)^1 = a^m = a^{m \cdot 1}$, so our base case $P(1)$ is true.
+				\item Assume $P(n)$ is true for some $n \in \N$. Then:
+
+				$$(a^m)^{n+1} = (a^m)^n a^m = a^{mn}a^m = a^{mn+m} = a^{m(n+1)}$$
+				So $P(n+1)$ is true. That is, $P(n)$ is true for all $n \in \N$.
+			\end{enumerate}
+			\item If $n \in -\N$, then $-n \in \N$, so:
+			$$(a^m)^n = \frac{1}{(a^m)^{-n}} = \frac{1}{a^{-mn}} = a^{mn}$$
+		\end{enumerate}
+	\end{proof}
+\end{exbox}
+
+\begin{dfnbox}{Rational Numbers ($\Q$)}{}
+	The set of \dfntxt{rational numbers} is defined as:
+	\[ \Q \coloneq \left\{ \frac{p}{q} \in \R : p, q \in \Z, q \neq 0 \right\} \]
+\end{dfnbox}
+
+We can simply define the \dfntxt{irrational numbers} as $\R \setminus \Q$.
+
+\begin{thmbox}{$\Q$ is Closed Under Addition and Multiplication}{}
+	$\Q$ is closed under addition and multiplication.
+	\tcblower
+	\begin{proof}
+		Let $x,y \in \Q$. By definition of rational numbers:
+		\begin{enumerate}
+			\item There exist $a,b \in \Z$ where $b \neq 0$ and $x = \nicefrac{a}{b}$, and
+			\item There exist $c, d \in \Z$ where $d \neq 0 $ and $y = \nicefrac{c}{d}$
+		\end{enumerate}
+
+		We will use the idea that the integers are closed under addition and multiplication (Proposition 3.1.9 and Theorem 3.2.7). The two following equations were proven on page 24 of the textbook.
+
+		\begin{enumerate}
+			\item $x+y = \nicefrac{a}{b} + \nicefrac{c}{d} = \nicefrac{ad + bc}{bd}$. Since the integers are closed under addition and multiplication, then $ad+bc$ and $bd$ are both integers. Also, $b \neq 0$ and $d \neq 0$, so $bd \neq 0$. Thus, $x+y = \nicefrac{ad+bc}{bd} \in \Q$.
+			\item $xy = \nicefrac{a}{b} \cdot \nicefrac{c}{d} = \nicefrac{ac}{bd}$. Since the integers are closed under multiplication, then $ac$ and $bd$ are both integers. And, because $b \neq 0$ and $d \neq 0$, then $bd \neq 0$. Thus, $xy = \nicefrac{ac}{bd} \in \Q$.
+		\end{enumerate}
+	\end{proof}
+\end{thmbox}
+
+% TODO: Density of quotients in real numbers
+
+\iffalse
+\begin{thmbox}{Closure of $\Q$}{}
+	$\Q$ is closed under addition and multiplication
+	\tcblower
+	\begin{proof}
+		This is a homework question.
+		\begin{enumerate}
+			\item Choose $x,y \in \Q$.
+			\item Calculate $x+y$ and $xy$.
+			\item Prove $x+y$ and $xy$ satisfy the definition of $\Q$
+		\end{enumerate}
+	\end{proof}
+\end{thmbox}
+
+\begin{thmbox}{Density of $\Q$ in $\R$}{}
+	Let $r_1 < r_2$ be real numbers. Then there exists a rational number $\frac{p}{q}$ such that $r_1 < \frac{p}{q} < r_2$.
+	\tcblower
+
+\end{thmbox}
+\fi
+
+\section{Applications of Induction}
+
+\begin{exbox}{Triangular Numbers}{}
+	$\forall (n \in \N) \left[ \sum_{i=1}^{n} i = \frac{n(n+1)}{2} \right]$
+	\tcblower
+	\begin{proof}
+		We will use proof by induction. Let's first prove our base case:
+		$$\sum_{i=1}^{1}{i} = \frac{1(1+1)}{2} = 1$$
+		Suppose that $\sum_{i=1}^{n}i = \frac{n(n+1)}{2}$ for some $n \in \N$.
+
+		\begin{align*}
+			\sum_{i=1}^{n+1}i &= \left( \sum_{i=1}^{n} i \right) + (n+1) \\
+			&= \frac{n(n+1)}{2} + (n+1) \\
+			&= \frac{n(n+1)}{2} + \frac{2(n+1)}{2} \\
+			&= \frac{(n+1)(n+2)}{2} \\
+			&= \frac{(n+1)((n+1)+1)}{2}
+		\end{align*}
+	\end{proof}
+\end{exbox}
+
+\begin{exbox}{Sum of Consecutive Odd Numbers}{}
+	$\forall (n \in \N) \left[ \sum_{i=1}^{n} (2i-1) = n^2 \right]$
+	\tcblower
+	\begin{align*}
+		\sum_{i=1}^n (2i=1) &= 2 \left( \sum_{i=1}^n i \right) - \left( \sum_{i=1}^n 1 \right) \\
+		&= 2 \frac{n(n+1)}{2} - n \\
+		&= n(n+1)-n \\
+		&= n^2 + n - n \\
+		&= n^2
+	\end{align*}
+\end{exbox}
+
+\begin{exbox}{Cool}{}
+	If $p \in \R$ and $p > -1$, then $(1+ p)^n \geq 1+np$ for all $n \in \N$.
+	\tcblower
+	\begin{proof}
+		Let $n=1$. Then $(1+p)^1 = 1+p = 1+1\cdot p$, so $(1+p)^1 \geq 1 + 1 \cdot p$.
+
+		Next, suppose that $(1+p)^n \geq 1+np$ for some $n \in \N$. Then:
+		\begin{align*}
+			(1+p)^{n+1} &= (1+p)^n (1+p)\\
+			&\geq (1+np)(1+p) \\
+			&= 1 + p + np + np^2 \\
+			&= 1 + (n+1)p + np^2 \\
+			&\geq 1 + (n+1)p
+		\end{align*}
+	\end{proof}
+\end{exbox}
+
+\begin{genbox}{Variants of Induction}
+	Two important variants of proof by induction are using a base case other than $n=1$, and using \textbf{strong induction}.
+\end{genbox}
+
+\begin{thmbox}{Induction with Base Case $n_0$}{}
+	Let $P(n)$ be a statement for each $n \in \N$ such that
+	\begin{enumerate}
+		\item $P(n_0)$ is true, and
+		\item for all $n \in \N$ where $n \geq n_0$, if $P(n)$ is true then $P(n+1)$ is true
+
+		i.e. $P(n) \implies P(n+1)$
+	\end{enumerate}
+
+	Then $P(n)$ is true for all $n \in \N, n \geq n_0$.
+\end{thmbox}
+
+\begin{thmbox}{Strong Induction}{}
+	Let $P(n)$ be a statement for each $n \in \N$ such that
+	\begin{enumerate}
+		\item $P(1)$ is true, and
+		\item for all $n \in \N$, if $P(n)$ is true for all $k \leq n$ then $P(n+1)$ is true
+
+		i.e. $\left[ P(1) \land P(2) \land \ldots \land P(n) \right] \implies P(n+1)$
+	\end{enumerate}
+	Then $P(n)$ is true for all $n \in \N$.
+\end{thmbox}
+
+\begin{dfnbox}{Factorial}{}
+	The \dfntxt{factorial} of a non-negative integer $n$ is defined as:
+	$$n! = \begin{cases}
+		1 & \text{if}\ n=0 \\
+		n(n-1)! & \text{if}\ n > 0
+	\end{cases}$$
+	\tcblower
+	\textbf{Note:} $0!$ can be thought of as an ``empty product'', or the multiplicative identity times nothing.
+\end{dfnbox}
+
+\begin{exbox}{Factorials and Induction}{}
+	For all $n \geq 4$, $n! > 2^n$
+	\tcblower
+	\begin{proof}
+		Let $n=4$. Then $n! = 4! = 24$ and $2^n = 2^4 = 16$. Because $4! > 2^4$, the statement is true when $n=4$.
+
+		Assume that $n!>2^n$ is true for some $n \in \N$ where $n \geq 4$. Then:
+		\begin{align*}
+			(n+1)! &= n! \cdot (n+1) \\
+			&> 2^n \cdot (n+1) \\
+			&> 2^n \cdot 2 \\
+			&= 2^{n+1}
+		\end{align*}
+		Therefore, $n! > 2^n$ for all $n \geq 4$.
+	\end{proof}
+\end{exbox}
+
+\begin{dfnbox}{Binomial Coefficient}{}
+	The notation $n \choose k$ is called a \dfntxt{binomial coefficient}.
+
+	$${n \choose k} = \frac{n!}{k!(n-k)!}\ \text{for}\ 0 \leq k \leq n$$
+\end{dfnbox}
+
+For $n, k \geq 0$, ${n \choose k}$ also represents the number of ways to choose $k$ objects from a set of $n$ objects. We can read ${n \choose k}$ as ``$n$ choose $k$''.
+
+\begin{exbox}{B.C. Identities}{}
+\begin{enumerate}
+	\item ${n \choose k} = {n \choose n-k}$
+	$${n \choose n-k} = \frac{n!}{(n-k)! \left[ n - (n-k) \right]!} = \frac{n!}{(n-k)!k!} = {n \choose k}$$
+
+	\item ${n-1 \choose k-1} + {n-1 \choose k} = {n \choose k}$ (Additive Property for Pascal's Triangle)
+	\begin{align*}
+		{n-1 \choose k-1} + {n+1 \choose k} &= \frac{(n-1)!}{(k-1)! (n-k)!} + \frac{(n-1)!}{k!(n-1-k)!} \\
+		&= \frac{(n-1)!k}{k!(n-k)!} + \frac{(n-1)!(n-k)}{k!(n-k)!} \\
+		&= \frac{(n-1)! (k+n-k)}{k!(n-k)!} \\
+		&= \frac{(n-1)!n}{k!(n-k)!} \\
+		&= \frac{n!}{k!(n-k)!} \\
+		&= {n \choose k}
+	\end{align*}
+\end{enumerate}
+\end{exbox}
+
+% TODO: make a diagram of the pascal's triangle and show its properties
+\begin{dfnbox}{Pascal's Triangle}{}
+	The binomial coefficients can be arranged in a triangular pattern which makes it easy to expand the binomial $(a+b)^n$
+\end{dfnbox}
+
+\begin{exbox}{Binomial Expansion}{}
+	The coefficient of $a^k$ (NOTES ON PHONE)
+
+	\begin{align*}
+		(x-2)^4 &= {4 \choose 0} x^4 (-2)^0 + {4 \choose 1} x^3 (-2)^1 + {4 \choose 2} x^2(-2)^2 + {4 \choose 3} x^1 (-2)^3 + {4 \choose 4}x^0 (-2)^4 \\
+		&= 1 x^4 1 + 4 x^3 (-2) + 6 x^2 (4) + 4 x(-8) + 1 \cdot 1 \cdot 16 \\
+		&= x^4 - 8x^3 + 24x^2 - 32x + 16
+	\end{align*}
+\end{exbox}
+
+%TODO: Revise the proof of the binomial theorem, and fix the shitty examples
+\begin{thmbox}{Binomial Theorem}{binomial}
+	For all $a,b \in \R$ and all $n \in \N$:
+	$$(a+b)^n = \sum_{k=0}^{n} {n \choose k} a^k b^{n-k}$$
+\end{thmbox}
+
+Proof of the \nameref{thm:binomial} is on page 53 of \textit{Introduction to Abstract Mathematics}.
+
+\iffalse
+\begin{proof}
+	\textbf{Conventions:} $0! = 1$ and $0^0 = 1$
+
+	We will use induction in this proof. For our base case, if $n=1$, then by definition of integer power:
+	$$(a+b)^n = (a+b)^1 = (a+b)^0 + (a+b) = (a+b)$$
+
+	Using $n=1$ in our theorem, we get:
+	\begin{align*}
+		\sum_{k=0}^{n} {n \choose k} a^k b^{n-k} &= \sum_{k=0}^{1} {1 \choose k} a^k b^{1-k} \\
+		&= {1 \choose 0} a^0 b^1 + {1 \choose 1}a^1b^0 \\
+		&= b+a = a+b
+	\end{align*}
+
+	Now, suppose that $(a+b)^n = \sum_{k=0}^{n} {n \choose k} a^k b^{n-k}$ for some $n \in \N$. We need to prove that
+	$$(a+b)^{n+1} = \sum_{k=0}^{n+1} {n+1 \choose k} a^k b^{n+1-k}$$
+
+	\begin{align*}
+		(a+b)^{n+1} &= (a+b)^n (a+b) \\
+		&= \left( \sum_{k=0}^{n} {n \choose k} a^k b^{n-k} \right) (a+b) \\
+		&= \sum_{k=0}^{n} {n \choose k} a^{k+1} b^{n-k} + \sum_{k=0}^{n} {n \choose k} a^k b^{n-k+1} \\
+		&= \sum_{m=1}^{n+1} {n \choose m-1} a^m b^{n-m+1} + \sum_{m=0}^{n} {n \choose m} a^m b^{n-m+1} \\
+		&= {n \choose n} a^{n+1}b^{0} + \sum_{m=1}^{n} {n \choose m-1} a^m b^{n-m+1} + \sum_{m=1}^{n} {n \choose m} a^m b^{n-m+1} + {n \choose 0} a^0 b^{n+1} \\
+		&= a^{n+1} + \sum_{m=1}^{n} \left( {n \choose m-1} + {n \choose m} \right) a^m b^{n-m+1} + b^{n+1} \\
+		&= a^{n+1} + \sum_{m=1}^{n} {n+1 \choose m} a^m b^{n-m+1} + b^{n+1} \\
+		&= \sum_{m=0}^{n+1} {n+1 \choose m} a^m b^{n-m+1} = \sum_{k=0}^{n+1} {n+1 \choose k} a^k b^{n+1-k}
+	\end{align*}
+
+	Therefore, the theorem is true for all $n \in \N$.
+\end{proof}
+\fi
+
+\begin{exbox}{Using Binomial Theorem}{}
+	If $a,b \geq 0$ and $n \geq 2$ then:
+	$$(a+b)^n = a^n + na^{n-1}b + \sum_{k=0}^{n-1} {n \choose k} a^k b^{n-k} \geq a^n + na^{n-1}b$$
+	\tcblower
+	\begin{proof}
+		From the binomial theorem, we know:
+		\begin{align*}
+			(a+b)^n &= \sum_{k=0}^{n} {n \choose k} a^k b^{n-k} \\
+			&= {n \choose n} a^n b^0 + {n \choose n-1} a^{n-1} b^{1} + \sum_{k=0}^{n-2} {n \choose k} a^k b^{n-k} \\
+			&\geq a^n + na^{n-1}b\ \text{remember: } {n \choose n-1} = 1
+		\end{align*}
+	\end{proof}
+\end{exbox}
+
+\begin{exbox}{Using Binomial Theorem}{}
+	Show that $\sum_{k=0}^{n} {n \choose k} = 2^n$ for all $n \in \N$
+	\tcblower
+	\begin{proof}
+		$$2^n = (1+1)^n = \sum_{k=0}^{n} {n \choose k} 1^k 1^{n-k} = \sum_{k=0}^{n} {n \choose k}$$
+	\end{proof}
+\end{exbox}
+
+\begin{exbox}{Using Binomial Theorem}{}
+	Show that $\sum_{k=0}^{n} (-1)^K {n \choose k} = 0$ for all $n \in \N$
+	\tcblower
+	\begin{proof}
+		$$0 = 0^n = (-1 + 1)^n = \sum_{k=0}^n {n \choose k} (-1)^k 1^{n-k} = \sum_{k=0}^{n} (-1)^k {n \choose l}$$
+	\end{proof}
+\end{exbox}
+
+\section{Divisibility}
+\begin{dfnbox}{Divides}{}
+	For $a,b \in \Z$, $a$ \dfntxt{divides} $b$ if and only if $b=ac$ for some integer $c$.
+	\tcblower
+	\[ a \mid b \iff \exists(c \in \Z)(b=ac) \]
+\end{dfnbox}
+
+In this context, we call $a$ the \dfntxt{divisor} of $b$. We say that $a$ is a \dfntxt{proper divisor} of $b$ if $a>0$ and $a \neq \abs{b}$. If $c \mid a$ and $c \mid b$ then $c$ is a \dfntxt{common divisor} of $a$ and $b$.
+
+\begin{thmbox}{$1$ divides any integer}{}
+	\begin{proof}
+		Let $b \in \Z$. Then $b = 1 \cdot b$, so $1 \mid b$.
+	\end{proof}
+\end{thmbox}
+
+\begin{thmbox}{Every integer divides itself and $0$}{}
+	\begin{proof}
+		Let $a \in \Z$. Then $a = a \cdot 1$, so $a \mid a$. Also, $0 = a \cdot 0$, so $a \mid 0$.
+	\end{proof}
+\end{thmbox}
+
+\begin{thmbox}{0 only divides 0}{}
+	\begin{proof}
+		If $0 \mid b$ for some $b \in \Z$, then $b = 0 \cdot c$ for some $c \in \Z$. That is, $b = 0 \cdot c = 0$, so $0$ only divides $0$.
+	\end{proof}
+\end{thmbox}
+
+\begin{thmbox}{If $a \mid b$, then $\pm a \mid \pm b$}{}
+	\begin{proof}
+		Let $a \mid b$. Then $b = ac$ for some $c \in \Z$. Then:
+		\begin{itemize}
+			\item $-b = a(-c)$ where $(-c) \in \Z$, so $a \mid (-b)$
+			\item $-b = (-a)c$ where $c \in \Z$, so $(-a) \mid (-b)$
+			\item $b = (-a)(-c)$ where $(-c) \in \Z$, so $(-a) \mid b$
+		\end{itemize}
+		Therefore, $\pm a \mid \pm b$.
+	\end{proof}
+\end{thmbox}
+
+\begin{thmbox}{If $a \mid b$, then $a \leq b$}{}
+	If $a,b \in \N$ and $a \mid b$, then $a \leq b$. If $a$ is a proper divisor of $b$, then $a < b$.
+	\tcblower
+	\begin{proof}
+		Because $a \mid b$, we have $b = ac$ for some $c \in \Z$. Also, $c > 0$ because $a>0$ and $b>0$. Thus, $c \in \N$, so $c \geq 1$. Therefore, $b = ac \geq a$ by the multiplicative property.
+
+		If $a$ is a proper divisor of $b$, then $a \neq b$ by definition, so $a < b$ by trichotomy.
+	\end{proof}
+\end{thmbox}
+
+\begin{thmbox}{Divisibility of Linear Combinations}{}
+	If $a,b,c \in \Z$, and $a \mid b$ and $a \mid c$, then $a \mid (mb+nc)$ for any $m,n \in \Z$.
+	\tcblower
+	\begin{enumerate}
+		\item Write $b=ax$, $c=ay$ where $x,y \in \Z$.
+		\item Then find a way to write $mb + nc$ as $az$where $z \in \Z$.
+	\end{enumerate}
+\end{thmbox}
+
+\begin{exbox}{Simple Dividing Example}{}
+	Suppose $a,b \in \N$ and $a \mid b$. Then $a \leq b$. Also, if $a$ is a proper divisor of $b$, then $a<b$.
+	\tcblower
+	\begin{proof}
+		By definition, there exists $c \in \Z$ where $b=ac$. Since $b$ and $a$ are positive numbers, then $c$ must also be positive. Also, since $c \geq 1$, then $b \geq a$. If $a$ is a proper divisor, then $a \neq b$. Thus, $c>a$, so $b>a$.
+	\end{proof}
+\end{exbox}
+
+\begin{dfnbox}{$a \Z$}{}
+	For any $a \in \Z$ we define $a\Z$ as:
+	\begin{align*}
+		a \Z & \coloneq \{ n \in \Z : a \mid n \} \\
+		&= \{ n \in \Z : n = ka\ \text{for some}\ k \in \Z \}
+	\end{align*}
+\end{dfnbox}
+
+\begin{thmbox}{$a\Z$ is Closed Under Addition and Multiplication}{}
+	For any $a \in \Z$, $a \Z$ is closed under addition and multiplication.
+	\tcblower
+	\begin{proof}
+		Let $x,y \in a \Z$. By definition, $x = am$ and $y = an$ for some $m, n \in \Z$. Then:
+		$$x+y = am+an = a(m+n)$$
+		Since $m+n \in \Z$, then $a(m+n) = x+y \in a \Z$. Moreover:
+		$$xy = (am)(an) = a(man)$$
+		Since $man \in \Z$, then $a(man) = xy \in a\Z$.
+	\end{proof}
+\end{thmbox}
+
+\begin{exbox}{$a\Z$ Example}{}
+	For all $a,b \in \Z$, $a \mid b$ if and only if $b\Z \subseteq a\Z$.
+	\tcblower
+	Suppose that $a \mid b$. Then there exists some $c \in \Z$ such that $b = ac$. Suppose that $x \in b \Z$. By definition, $b \mid x$. That is, there is some $d \in \Z$ such that $x = bd$. Then:
+	$$x = bd = (ac)d = a(cd)$$
+	Since $cd \in \Z$, then $a(cd) = x \in a\Z$. Therefore, $b\Z \subseteq a\Z$.\\
+
+	Now suppose that $b\Z \subseteq a \Z$. Because $b \mid b$, we then know that $b \in b\Z \subseteq a \Z$, so $b \in a\Z$. Then, $a \mid b$ by definition of $a \Z$.
+\end{exbox}
+
+\begin{dfnbox}{Parity}{}
+	\dfntxt{Parity} describes whether an integer is even or odd. For any integer $n \in \Z$:
+	\begin{itemize}
+		\item $n$ is \dfntxt{even} if $n = 2k$ for some $k \in \Z$
+		\item $n$ is \dfntxt{odd} if $n = 2k+1$ for some $k \in \Z$
+	\end{itemize}
+\end{dfnbox}
+
+\begin{thmbox}{Every integer is either even or odd}{}
+	Every integer must be either even or odd, never both.
+	\tcblower
+	\begin{proof}
+		First, consider the parity of $0$ and $1$:
+		\begin{enumerate}
+			\item $0$ is even since $0 = 2 \cdot 0$
+			\item $1$ is odd since $1 = 2 \cdot 0 + 1$
+		\end{enumerate}
+
+		Next, let's use induction for integers greater than 0. Assume that $n \in \N$ is either even or odd.
+		\begin{enumerate}
+			\item If $n$ is even, then $n = 2k$ for some $k \in \Z$. Then, $n+1 = 2k+1$, so $n+1$ is odd.
+			\item If $n$ is odd, then $n = 2k+1$ for some $k \in \Z$. Then, $n+1 = (2k+1) +1 = 2k+2 = 2(k+1)$, so $n+1$ is odd.
+		\end{enumerate}
+
+		Now, let's prove the same for negative numbers. If $n \in -\N$, then $-n \in \N$, so $-n$ is either even or odd.
+		\begin{enumerate}
+			\item If $-n$ is even, then $-n = 2k$ for some $k \in \Z$. Then $n = 2(-k)$ where $(-k) \in \Z$, so $n$ is even.
+			\item If $-n$ is odd, then $-n = 2k + 1$ for some $k \in \Z$. Then $n = -(2k+1) = 2(-k) - 1 = 2(-k-1) +1$. Since $(-k-1) \in \Z$, then $n$ is odd.
+		\end{enumerate}
+		This completes the proof.
+	\end{proof}
+\end{thmbox}
+
+\begin{exbox}{Addition/Multiplication of Odd Numbers}{}
+	Prove that the sum of two odd integers is even, and the product of two odd integers is odd.
+	\tcblower
+	\begin{proof}
+		Let $m,n \in \Z$ be odd integers. Then $m = 2k+1$ and $n = 2l+1$ for some $m, n \in \Z$. Then:
+		\begin{align*}
+			m+n &= (2k+1) + (2l+1) \\
+			&= 2k+2l+2 \\
+			&= 2(k+l+1)
+		\end{align*}
+		Since $k+l+1 \in \Z$, then $m+n$ is even. Similarly:
+		\begin{align*}
+			mn &= (2k+1)(2l+1) \\
+			&= 4kl + 2k + 2l + 1 \\
+			&= 2(kl + k + l) + 1
+		\end{align*}
+		Since $kl + k + l \in \Z$, then $mn$ is odd.
+	\end{proof}
+\end{exbox}
+
+\begin{exbox}{Induction on Odd Integers}{}
+	Prove that $7^n + 13^n$ is divisible by $5$ for all odd $n \in \N$.
+	\tcblower
+	\begin{proof}
+		We will use induction on $k \in \Z$ were $n=2k+1$. First, if $k=0$:
+		$$ 7^n + 13^n = 7^{2 \cdot 0 + 1} + 13^{2\cdot 0 + 1} = 7^1 + 13^1 = 20 = 5(4)$$
+		That is, $5 \mid (7^1 + 13^1)$.
+
+		Next, Suppose that $5 \mid (7^{2k+1} + 13^{2k+1})$ for some $k \in \Z$ where $k \geq 0$. Then:
+		\begin{align*}
+			7^{2(k+1)+1} + 13^{2(k+1)+1} &= 7^{2k+3} + 13^{2k+3} \\
+			&= 7^2 + 7^{2k+1} \\
+			&= 7^2 \cdot 7^{2k+1} + 13^2 \cdot 13^{2k+1} \\
+			&= 49 \cdot 7^{2k+1} + 169 \cdot 13^{2k+1} \\
+			&= 49 (7^{2k+1} + 13^{2k+1}) + 120 \cdot 13^{2k+1}
+		\end{align*}
+		By the induction assumption, we know that $7^{2k+1} + 13^{2k+1} = 5c$ for some $c \in \Z$. Thus:
+		\begin{align*}
+			7^{2k+3} + 13^{2k+3} &= 49(7^{2k+1} + 13^{2k+1}) + 120 \cdot 13^{2k+1} \\
+			&= 49(5c) + 5(24 \cdot 13^{2k+1}) \\
+			&= 5(49c + 24 \cdot 13^{2k+1})
+		\end{align*}
+		Because $(49c + 24 \cdot 13^{2k+1}) \in \Z$, then $5 \mid (7^{2k+3} + 13^{2k+3})$. Therefore, $5 \mid (7^n + 13^n)$ for all odd integers $n$.
+	\end{proof}
+\end{exbox}
+
+\begin{dfnbox}{Greatest Common Divisor}{}
+	Given $a,b \in \Z$, the \dfntxt{greatest common divisor} of $a$ and $b$ is (informally) the largest integer $d$ that divides both $a$ and $b$.
+	$$d = \gcd(a,b)$$
+\end{dfnbox}
+
+\begin{thmbox}{Greatest Common Divisors}{}
+	If $a,b \in \Z$, then there is a common divisor $d$ of $a$ and $b$ such that:
+	\begin{enumerate}
+		\item $d = am+bn$ for some $mn \in \Z$
+		\item $d$ is non-negative
+		\item every common divisor of $a$ and $b$ divides $d$
+		\item if $a$ and $b$ are not both zero, and $c$ is a common divisor of $a$ and $b$, then $c \leq d$
+	\end{enumerate}
+	If $a$ and $b$ are not both zero, then the divisor $d$ is called the \dfntxt{greatest common divisor} of $a$ and $b$, denoted $d = \gcd(a,b)$.
+\end{thmbox}
+\begin{proof}
+	We will first prove that $d$ exists when both $a,b \geq 0$. Let's assume without loss of generality that $a \leq b$ (i.e. if $a \not \leq b$, swap the two and continue the proof).
+
+	\begin{enumerate}
+		\item If $a = 0$, then $b \mid a$ and $b \mid b$, so $b$ is a common divisor of $a$ and $b$. Then, we can choose $d$ as a linear combination of $a$ and $b$:
+		$$d = 0\cdot a + 1 \cdot b = b$$
+		Let $a+b = k$, and let $P(k)$ be the statement: ``If $a+b=k$, then there is a common divisor $d$ of $a$ and $b$ such that $d = ma+nb$ for $mn \in \Z$''
+
+		\textbf{Base Case:} If $k=0$, then $a=b=0$, so $P(0)$ is true from above.
+
+		\textbf{S.I. Hypothesis:} Suppose that $P(k)$ is true for $0 \leq k \leq n$ where $n \geq 0 \in \Z$.
+
+		Let $a,b \geq 0 \in \Z$ such that $a+b = n+1$. If $a=0$, then we are done. Otherwise, $1 \leq a \leq b$, so $0 \leq b-a < b$. Let $c = b-a$. Then:
+		$$a+c = a+b-a = n+1-a \leq n$$
+		By our induction hypothesis, there is a common divisor $d$ of $a$ and $c$, and there exist $m,n \in \Z$ such that:
+		\begin{align*}
+			d &= ma+nc \\
+			&= ma + n(b-a) \\
+			&= (m-n)a + nb
+		\end{align*}
+		Because $d$ is the common divisor of $a$ and $b-a$, then $d$ also divides any linear combination of $a$ and $b-a$, primarily $a + (b-a) = b$. Thus $d$ is a common divisor of $a$ and $b$, and $d = am+bn$ for some $m,n \in \Z$. That is, $P(n+1)$ is true by strong induction. In particular, property 1 holds.
+
+		\item If the common divisor $d$ from part 1 is negative, then $-d > 0$ is also a common divisor of $a$ and $b$. Also, $-d = a(-m) + b(-n)$ where $-m, -n \in \Z$. Thus, we can assume that $d \geq 0$.
+
+		\item Let $c$ be a common divisor of $a$ and $b$. Then $c \mid (am+bn)$ for all $m,n \in \Z$, so in particular, $c \mid d$.
+
+		\item Suppose that at least one of $a$ and $b$ is not zero. Let $c$ be a common divisor of $a$ and $b$. Then $c \neq 0$ (otherwise, $a=b=0$).
+		\begin{itemize}
+			\item If $c < 0$, then $c<d$ because $d \geq 0$.
+			\item If $c > 0$, then $a$ and $b$ are both non-negative, and $d > 0$. Consequently, $c,d \in \N$. We know $c \mid d$ from part 3, so $c \leq d$.
+		\end{itemize}
+	\end{enumerate}
+\end{proof}
+
+\begin{exbox}{Rational Numbers}{}
+    Let $r \neq 0$ and $r \in \Q$. Then $r = \nicefrac{m}{n}$ where $m,n \in \Z$ and $\gcd(m,n) = 1$.
+    \tcblower
+    \begin{proof}
+        Because $r \in \Q$ and $r \neq 0$, we can write $r = \nicefrac{a}{b}$ where $a,b \in \Z$ and $a,b \neq 0$. By Theorem 3.4.9, there exists $d = \gcd(a,b)$ where $a = md$ and $b = nd$. Thus:
+        $$r = \frac{a}{b} = \frac{md}{nd} = \frac{m}{n}$$
+        Suppose for contradiction that $k \coloneq \gcd(m,n) > 1$. Then $m = kp$ and $n = kq$ for some $p,q \in \Z$. Thus:
+        $$a = md = (kp)d = p(kd)$$
+        $$b = nd = (kq)d = q(kd)$$
+        That is, $kd$ is a common divisor of $a$ and $b$, and $kd > d$ since $k > 1$. This contradicts our assumption that $d$ was the greatest common divisor of $a$ and $b$. Therefore, $\gcd(m,n) \leq 1$. Since $\gcd$ is non-negative and both $a$ and $b$ are non-zero, then $\gcd(m,n) = 1$.
+    \end{proof}
+\end{exbox}
+
+\begin{exbox}{$\sqrt{2}$ is irrational}{sqrt-2-irrational}
+    \begin{proof}
+        Suppose for contradiction that $r^2 = 2$ for some $r \in \Q$ where $r > 0$. Then $r = \nicefrac{a}{b}$ where $\gcd(a,b)=1$. Now, $r^2 = \nicefrac{a^2}{b^2} = 2$, so $a^2 = 2b^2$. This means that $a^2$ is even. Thus, by Exercise 3.25, $a$ is also even. Hence, $a=2c$ for some $c \in \Z$. Thus:
+        \begin{align*}
+            (2c)^2 &= 2b^2 \\
+            4c^2 &= 2b^2 \\
+            2c^2 &= b^2
+        \end{align*}
+        Similarly, since $b^2$ is even, $b$ is also even. Then, $b=2d$ for some $d \in Z$. That is, $2$ is a common divisor of $a$ and $b$, so $\gcd(a,b) \geq 2$. This contradicts our assumption that $gcd(a,b) = 1$. Therefore, $\sqrt{2}$ is not rational.
+    \end{proof}
+\end{exbox}
+
+\section{Prime Factorization}
+
+\begin{thmbox}{Division Algorithm}{}
+    For all real numbers $0<d<a$, there exists a unique integer $q$ (the \dfntxt{quotient}) and a unique real number $r$ (the \dfntxt{remainder}) such that $0 \leq r < d$ and $a = qd + r$
+    \tcblower
+    \begin{proof}
+        Let $E = \left\{ m \in \Z : md \leq a \right\}$. We know $E$ is nonempty since both $0$ and $1$ must be in this set. Also, $E$ bounded above by $\nicefrac{a}{d}$. Therefore, by the \nameref{thm:wop} for $\Z$, $E$ has a maximum. Let $q \coloneq \max E$, so $qd \leq a$. Let $r = a-qd \geq 0$. Because $q+1 \not \in E$, we know that $(q+1)d > a$, so $qd+d > a$, so $qd+d>a$, and thus $r = a-qd < d$. That is, $0 \leq r < d$ and $a = qd+r$. This proves the existence of $q$ and $r$.
+
+        To prove uniqueness, assume that $q\prime$ and $r\prime$ satisfy the Division Algorithm. That is:
+        \[ 0 \leq r\prime < d \quad \text{and} \quad a = q\prime d + r\prime\]
+        We need to show $q = q\prime$ and $r = r\prime$. Assume without loss of generality that $q\prime \leq q$. Thus:
+        $$(q - q\prime)d = qd - q\prime d = (a-r) - (a-r\prime) = r\prime - r$$
+        (The first $a=qd+r$ and the second $a = q\prime d + r\prime$). We know $r \geq 0$ and $r\prime < d$, so $r\prime - r < d$. Also, $d \mid (r\prime - r)$, so either $d \leq r\prime - r$ which is a contradiction. Thus, $r\prime - r = 0$, so $r \prime = r$. Thus $(q - q\prime)d = 0$ and $d \neq 0$, so $q - q \prime = 0$. That is, $q = q\prime$. Therefore, the quotient ad the remainder in the division algorithm are unique.
+    \end{proof}
+\end{thmbox}
+
+A more general version where we allow $a \leq 0$ is the following:
+
+``If $a, d \in R$ where $d \neq 0$, then there exists a unique $q \in \Z$ and a unique $r \in R$ such that $0 \leq r < \abs{d}$ and $a = qd+r$''.
+
+\begin{exbox}{Using Uniqueness of the Division Algorithm}{}
+    Prove that if $a,b \in \N$ where $a,b > 1$, then $ab+1$ is \textbf{not} divisible by $a$ or $b$.
+    \tcblower
+    \begin{proof}
+        Suppose for contradiction that $a \mid (ab+1)$. Then there exists $c \in \Z$ where $ab+1 = ac$. This violates the uniqueness of the division algorithm.  Let $m \coloneq ab+1$. Then: \[m = \underbracket{b}_{\text{quotient}} \cdot a + \underbracket{1}_{\text{remainder}}\] \[m=\underbracket{c}_{\text{quotient}} \cdot a + \underbracket{0}_{\text{remainder}} \]
+        Because we have two \textbf{different} remainders when dividing $m$ by $a$, this violates the uniqueness of the division algorithm. Therefore, $ab+1$ is \dfntxt{not} divisible by $a$.
+
+        A similar proof shows $ab+1$ is not divisible by $b$.
+    \end{proof}
+\end{exbox}
+
+\begin{dfnbox}{Prime Numbers}{}
+    A natural number $p$ is \dfntxt{prime} if $p>1$ and $p$ has no proper divisors.
+\end{dfnbox}
+
+\begin{thmbox}{Infinite Primes}{}
+    There are an infinite number of prime numbers.
+    \tcblower
+    \begin{proof}
+        Suppose for contradiction that there are a finite number of primes. \[p_1, p_2, \ldots, p_k\] Let $n = p_1 p_2 \cdot p_k + 1$. As we proved previously, none of the $p_i$ divide $n$. Hence, either $n$ is prime, or there exists a prime number $q$ that divides $n$ but $q$ does not equal any $p_i$.
+    \end{proof}
+\end{thmbox}
+
+\begin{dfnbox}{Prime Factorization}{}
+    For a natural number $a \geq 2$, a \dfntxt{prime factorization} of $a$ is a product $a = p_1 p_2 \cdots p_k$ where each $p_i$ is prime and $p_1 \leq p_2 \leq \cdots \leq p_k$.
+\end{dfnbox}
+
+Ordering on the primes guarantees that each natural number $n \geq 2$ has a unique prime factorization. The prime numbers themselves are not necessarily distinct.
+
+\begin{thmbox}{Existence of Prime Factorization}{}
+    Every natural number can be written as a product of primes.
+    \tcblower
+    \begin{proof}
+        Note that $n=1$ is an \textbf{empty product}. Also, $n=2$ is prime, so $2$ can be written as a product of primes.
+
+        Assume that for some $n \geq 2$, every natural number $2 \leq k \leq n$ can be written as a product of primes.
+        \begin{itemize}
+            \item If $n+1$ is prime, then $n+1$ is automatically a product of primes.
+            \item If $n+1$ is not prime, then $n+1 = ab$ where $a$ and $b$ are proper divisors of $n+1$ (i.e. $2 \leq a \leq n$ and $2 \leq b \leq n$). By the induction hypothesis, each of $a$ and $b$ can be written as a product of primes.
+            \[a = p_1 p_2 \cdots p_k\]
+            \[b = q_1 q_2 \cdots q_l\]
+            Hence, $n+1 = ab = (p_1 p_2 \cdots p_k) (q_1 q_2 \cdots q_l)$, so $n+1$ is a product of primes.
+        \end{itemize}
+        By principle of strong induction, our theorem holds.
+    \end{proof}
+\end{thmbox}
+
+\begin{thmbox}{Fundamental Theorem of Arithmetic}{}
+    Every natural number $a \geq 2$ has a unique prime factorization.
+    \tcblower
+    \begin{proof}
+        Let $a \in \N$ where $a \geq 2$. We know a prime factorization for $a$ exists from our previous proof. If some natural number does not have a unique prime factorization, then by the \nameref{thm:wop} there exists a smallest such number. Assume $a \geq 2$ is the smallest natural number with more than $1$ prime factorization. That is, we can write $a$ as:
+        \begin{align*}
+            a = p_1 p_2 \cdots p_k \quad &\text{where} \quad p_1 \leq p_2 \leq \cdots \leq p_k \quad \text{and} \\
+            a = q_1 q_2 \cdots q_l \quad &\text{where} \quad q_1 \leq q_2 \leq \cdots \leq q_l
+        \end{align*}
+        where $p_i \neq q_i$ for some $i \in \Z$. Now we need to show that these two prime factorizations are different. Assume for contradiction that $p_1 = q_1$. Then, $p_2 p_3 \cdots p_k = q_2 q_3 \cdots q_l < a$. We then have a natural number smaller than $a$ with two distinct prime factorizations. Hence, this contradicts our choice of $a$ as the smallest such number. Therefore, we know $p_1 \neq q_1$.
+
+        Next, without loss of generality, we can assume that $p_1 < q_1$ (i.e. if $p_1 > q_1$, swap all $p_i$ with $q_i$ and continue). By the Division Algorithm, we can write $q_1 = qp_1 + r$ where $q_1r \in \N$ and $0<r<p_1$. (If $r=0$, then $q_1 = qp_1$, giving $q_1$ a proper divisor, so $r \neq 0$.)
+
+        Let $w = rq_2 q_3 \cdots q_l < a$ (because $r < p_1 < q_1$). Because $r < p_1$ and $p_1 < q_i$ for all $i \in \Z$ such that $2 \leq i \leq l$, then the prime $p_1$ does not appear in this product. But:
+        \begin{align*}
+            w &= r q_2 q_3 \cdots q_l \\
+            &= (q_1 - qp_1) q_2 q_3 \cdots q_l \\
+            &= q_1 q_2 \cdots q_l - q p_1 q_2 q_3 \cdots q_l \\
+            &= p_1 p_2 \cdots p_k - q p_1 q_2 q_3 \cdots q_l \\
+            &= p_1 (p_2 p_3 \cdots p_k - q\ q_2 q_3 \cdots q_l)
+        \end{align*}
+        Thus, by writing $p_2 p_3 \cdots p_k - q q_2 q_3 \cdots q_l$ as a product of primes, we will have a prime factorization of $w$ that contains $p_1$. That is, $w<a$ has two distinct prime factorizations. This contradicts $a$ being the smallest number with two distinct prime factorizations. Therefore, every $n \in \N$ where $n \geq 2$ has a unique prime factorization.
+    \end{proof}
+\end{thmbox}
+
+\begin{genbox}{Consequences of Unique Prime Factorizations}
+	\begin{itemize}
+		\item If $a \in \N$ and $p$ is a prime such that $p \mid a$, then $p$ is in the prime factorization of $a$.
+		\item If $a,b \in \N$ and $a,b \geq 2$, then the factors in the prime factorization of $ab$ consist of precisely one prime for each instance of a prime in the prime factorizations of $a$ and $b$.
+		\item Suppose that $p \in \N$ where $p \geq 2$. Then $p$ is prime if and only if the following property holds: ``If $a,b \in \N$ and $p \mid ab$, then $p \mid a$ or $p \mid b$. In particular, if $p \mid a^2$ then $p \mid a$''.
+	\end{itemize}
+\end{genbox}
+
+\chapter{Additional Topics}
+
+In this chapter, we will introduce new concepts build on past concepts. Primarily, we will take a closer look at functions and their properties.
+
+\begin{genbox}{Overview}
+	\begin{itemize}
+		\item Injective, surjective, and bijective functions as well as function inverses and compositions
+		\item Relations, equivalence relations, and equivalence classes
+		\item Modular congruence/equivalence, modular arithmetic using equivalence classes
+		\item Cardinality of finite sets, \nameref{thm:pie}, \nameref{thm:pigeonhole}
+		\item Cardinality of infinite sets and countability
+	\end{itemize}
+\end{genbox}
+
+\section{One-to-one and Onto Functions}
+
+\begin{dfnbox}{One-to-one Function}{}
+    A function $f : X \to Y$ is \dfntxt{one-to-one} (injective) if:
+    \[ \forall (x_1, x_2 \in X) \left[ f(x_1) = f(x_2) \implies x_1 = x_2 \right] \]
+\end{dfnbox}
+
+Note that the converse statement $x_1 = x_2 \implies f(x_1) = f(x_2)$ is automatically true by definition of a function.
+
+\begin{dfnbox}{Onto Function}{}
+    A function $f : X \to Y$ is \dfntxt{onto} (surjective) if:
+    \[ \forall (y \in Y) \exists (x \in X) (f(x)=y) \]
+\end{dfnbox}
+
+\begin{dfnbox}{Bijective Function}{}
+    A function $f : X \to Y$ is \dfntxt{bijective} if $f$ is both one-to-one and onto.
+\end{dfnbox}
+
+\begin{exbox}{}{}
+    $f : X \to Y$ is an onto function if and only if $f[X] = Y$
+    \tcblower
+    \begin{proof}
+        First, suppose $f : X \to Y$ is onto. By definition of a function, $f[X] \subseteq Y$, so we need to show $Y \subseteq X$. Let $y \in Y$ be arbitrary. Because $f$ is onto, then there exists $x \in X$ such that $f(x) = y$. That is, $y \in f[X]$, so $Y \subseteq f[X]$. Therefore, $f[X] = Y$.
+
+        Next, suppose $f[X] = Y$, and let $y \in Y$ be arbitrary. Then $y \in f[X]$, so $y = f(x)$ for some $x \in X$. Because this is true for all $y \in Y$, then $f$ is an onto function.
+    \end{proof}
+\end{exbox}
+
+\begin{exbox}{}{}
+    If $f : X \to Y$ is a one-to-one function, then $f(A \cap B) = f[A] \cap f[B]$ for all $A,B \subseteq X$.
+    \tcblower
+    \begin{proof}
+        From section 1.3, we know that $f(A \cap B) \subseteq f[A] \cap f[B]$. Suppose $f$ is one-to-one. Let $y \in f[A] \cap f[B]$. That is, $y \in f[A]$ and $y \in f[B]$. Thus, there exists some $x_1 \in A$ such that $f(x_1) = y$, and there exists some $x_2 \in B$ such that $f(x_2) = y$. That is, $f(x_1) = f(x_2)$. Because $f$ is one-to-one, that means $x_1 = x_2$. Hence, $x_1 \in A \cap B$, so $y = f(x_1) \in f(A \cap B)$. Therefore, $f[A] \cap f[B] \subseteq f(A \cap B)$.
+    \end{proof}
+\end{exbox}
+
+\begin{exbox}{}{}
+    $f : X \to Y$ is an onto function if and only if $f(f^{-1}[B]) = B$ for all $B \subseteq Y$.
+    \tcblower
+    \begin{proof}
+        First, assume $f$ is an onto function. From section 1.3, we know that $f(f^{-1}[B]) \subseteq B$ for all $B \subseteq Y$. Let $y \in B$. Because $f$ is onto, there exists $x \in X$ such that $f(x) = y$. Because $y \in B$, then $x \in f^{-1}[B]$. Thus, we can apply the image to both sides to attain $y = f(x) \in f(f^{-1}[B])$. Therefore, $B \subseteq f(f^{-1}[B])$, so $B = f(f^{-1}[B])$.
+
+        Next, assume that $f(f^{-1}[B]) = B$ for all $B \subseteq Y$. Let $y \in Y$ be arbitrary. If $y \in B$, then by our initial assumption, $y \in f(f^{-1}[B])$. Thus, there exists $x \in f^{-1}[B]$ such that $f(x) = y$. But then $x \in X$ and $f(x) = y$, so $f$ is onto.
+    \end{proof}
+\end{exbox}
+
+\begin{exbox}{}{}
+    $f : X \to Y$ is one-to-one if and only if $f^{-1}(f[A]) = A$ for all $A \subseteq X$.
+    \tcblower
+    \begin{proof}
+        Assume $f$ is one-to-one. From section 1.3, we know that $A \subseteq f^{-1}(f[A])$ for all $A \subseteq X$. Let $x_1 \in f^{-1}(f[A])$. Then $f(x_1) \in f[A]$, so there exists $x_2 \in A$ such that $f(x_1) = f(x_2)$. Because $f$ is one-to-one, then $x_1 = x_2$. Consequently, $x_1 \in A$. Therefore, $f^{-1}(f[A]) \subseteq A$, so $f^{-1}(f[A]) = A$.
+
+        Suppose that $f^{-1}(f[A]) = A$ for all $A \subseteq X$. We need to show that as a consequence, $f$ is a one-to-one function. Let $x_1, x_2 \in X$ such that $f(x_1) = f(x_2)$. Let $A = \{ x_1 \}$. By assumption:
+        \begin{align*}
+            f^{-1}(f[A]) &= \{ x \in X : f(x) \in f[A] \} \\
+            &= \{ x \in X : f(x) = f(x_1) \}
+        \end{align*}
+         Because $x_2 \in X$ and $f(x_2) = f(x_1)$, then $x_2 \in f^{-1}(f[A])$. By our initial assumption, we also have $x_2 \in A$. However, we defined $A$ as having only one distinct element. As such, $x_1 = x_2$ and $f(x_1) = f(x_2)$, satisfying the definition of a one-to-one function.
+    \end{proof}
+\end{exbox}
+
+\begin{dfnbox}{Inverse Function}{}
+	Let $f : X \to Y$ be a function. A function $g : Y \to X$ is an inverse of $f$ if:
+	\begin{enumerate}
+		\item $\forall (y \in Y) (f(g(y)) = y)$
+		\item $\forall (x \in X) (g(f(x)) = x)$
+	\end{enumerate}
+\end{dfnbox}
+
+The standard notation for the inverse of $f : X \to Y$ is $f^{-1}$. This is consistent with our earlier definition of $f^{-1}[B]$ as the inverse image of $B \subseteq Y$. It is possible that the inverse of a function does not exist, but we can still apply the inverse image to subsets of the co-domain.
+
+\begin{exbox}{}{}
+	Show that if $g$ is an inverse of $f$, then $f$ is an inverse of $g$
+	\tcblower
+	\begin{proof}
+		Because $g$ is an inverse function of $f$, we know that $g : Y \to X$ satisfies $f(g(y)) = y$ for all $y \in Y$, and $g(f(x)) = x$ for every $x \in X$. But then $f : X \to Y$ satisfies $g(f(x)) = x$ for $x \in X$, and $f(g(y)) = y$ for all $y \in Y$. That is, $f$ is an inverse of $g$.
+	\end{proof}
+\end{exbox}
+
+\begin{thmbox}{Existence of Inverse Functions}{}
+	Let $f : X \to Y$ be a function. Then $f$ has an inverse if and only if $f$ is bijective.
+	\tcblower
+	\begin{proof}
+		We will need to prove both directions of the logical equivalence. First, let's assume that $f : X \to Y$ has an inverse function called $g : Y \to X$. Then:
+		\begin{itemize}
+			\item $\forall(y \in Y)\left[ f(g(y)) = y \right]$, and
+			\item $\forall(x \in X)\left[ g(f(x)) = x \right]$
+		\end{itemize}
+		We need to show $f$ is both one-to-one and onto. Let $x_1, x_2 \in X$ such that $f(x_1) = f(x_2)$. Then:
+		\begin{align*}
+			x_1 &= g(f(x_1)) \\
+			&= g(f(x_2)) \\
+			&= x_2
+		\end{align*}
+		Thus, $f$ is a one-to-one function.
+
+		Let $y \in Y$. Then $y = f(g(y))$ and $g(y) \in X$. Thus, $f$ is an onto function. Since $f$ is both one-to-one and onto, then $f$ is a bijective function.
+
+		Next, we need to prove the converse statement. Suppose that $f$ is a bijective function. Then $f$ is onto, so for any $y \in Y$ there exists $x \in X$ such that $y = f(x)$. Define $g : Y \to X$ by $\underbrace{g(y)=x\ \text{if and only if}\ y=f(x)}_{\text{only works for one-to-one}}$. That is:
+		\begin{enumerate}
+			\item If $f(x) = y$, then $g(f(x)) = g(y) = x$ for all $x \in X$.
+			\item If $g(y) = x$, then $f(g(y)) = f(x) = y$ for all $y \in Y$.
+		\end{enumerate}
+		Therefore, $g$ is an inverse function of $f$.
+	\end{proof}
+\end{thmbox}
+
+\begin{thmbox}{Uniqueness of Inverse Functions}{}
+	If $f : X \to Y$ has an inverse, then the inverse is unique.
+	\tcblower
+	Suppose that $g_1 : Y \to X$ and $g_2 : Y \to X$ are both inverse functions of $f : X \to Y$. We need to prove $g_1 = g_2$ by showing that for every $y \in Y$ $g_1(y) = g_2(y)$. Let $y \in Y$. Because $f$ is onto, there is some $x \in X$ such that $y = f(x)$. Then:
+	\begin{align*}
+		g_1(y) &= g_1(f(x)) \\
+		&= x \\
+		&= g_2(f(x)) \\
+		&= g_2(y)
+	\end{align*}
+	Therefore, $g_1 = g_2$, so $f$ has a unique inverse.
+\end{thmbox}
+
+\begin{exbox}{}{}
+	Let $f : X \to Y$ be surjective (onto), and let $g : Y \to X$ satisfy $g(f(x)) = x$ for all $x \in X$. Show that $f$ is bijective and that $g = f^{-1}$.
+	\tcblower
+	\begin{proof}
+		We already know that $f$ is onto, so we only need to show that $f$ is one-to-one. Let $x_1, x_2 \in X$ such that $f(x_1) = f(x_2)$. Then:
+		\begin{align*}
+			x_1 &= g(f(x_1)) \\
+			&= g(f(x_2)) \\
+			&= x_2
+		\end{align*}
+		Thus, $f$ is one-to-one and is therefore a bijective function.
+
+		Next, we need to show $g = f^{-1}$ (i.e. $f(g(y)) = y$ for all $y \in Y$). Note that $f$ is onto, so for any $y \in Y$ there exists $x \in X$ such that $f(x) = y$. Therefore:
+		\begin{align*}
+			f(g(y)) &= f(g(f(x))) \\
+			&= f(x) \\
+			&= y
+		\end{align*}
+		Thus, $g$ is the inverse function of $f$.
+	\end{proof}
+\end{exbox}
+
+\begin{dfnbox}{Composition}{}
+	If $f : X \to Y$ and $g : Y \to Z$ are functions, then the \dfntxt{composition} of $f$ and $g$ is the function $g \circ f : X \to Z$ where $(g \circ f) (x) = g(f(x))$.
+\end{dfnbox}
+
+\begin{exbox}{}{}
+    Suppose that $f : X \to Y$ and $g : Y \to Z$ are functions such that $g$ is one-to-one and $g \circ f$ is onto. Show that $f$ is also onto.
+    \tcblower
+    \begin{proof}
+        Let $y \in Y$. Then $g(y) = z$ for some $z \in Z$. Because $g \circ f$ is onto, there exists $x \in X$ such that $(g \circ f)(x) = g(f(x)) = z$. That is, $g(y) = g(f(x))$. Because $g$ is one-to-one, we have $y = f(x)$ where $x \in X$. Therefore, $f$ is an onto function.
+    \end{proof}
+\end{exbox}
+
+\begin{exbox}{Composition Preserves Injectivity}{}
+    Show that if $f : X \to Y$ and $g : Y \to Z$ are both one-to-one, then $g \circ f$ is one-to-one.
+    \tcblower
+    \begin{proof}
+        Let $x_1, x_2 \in X$ such that $(g \circ f)(x_1) = (g \circ f)(x_2)$. That is, $g(f(x_1)) = g(f(x_2))$. Because $g$ is one-to-one, we have $f(x_1) = f(x_2)$. Because $f$ is one-to-one, we have $x_1 = x_2$. Therefore, $g \circ f$ is one-to-one.
+    \end{proof}
+\end{exbox}
+
+\begin{exbox}{Composition Preserves Surjectivity}{}
+    Suppose that $f : X \to Y$ and $g : Y \to Z$ are functions such that $g \circ f$ is one-to-one.
+    \tcblower
+    We can prove $f$ is one-to-one.
+    \begin{proof}
+        Let $x_1, x_2 \in X$ such that $f(x_1) = f(x_2)$. Then $g(f(x_1)) = g(f(x_2))$, so $(g \circ f)(x_1) = (g \circ f)(x_2)$. Because $g \circ f$ is one-to-one, then $x_1 = x_2$. Therefore, $f$ is one-to-one.
+    \end{proof}
+
+    However, $g$ is not necessarily one-to-one.
+    % TODO: put example of that here
+\end{exbox}
+
+\begin{dfnbox}{Identity Function}{}
+    For a non-empty set $A$, the identity function on $A$ is the function $\id_A : A \to A$ defined by:
+    \[ \forall (a \in A) ( \id_A(a) = a ) \]
+\end{dfnbox}
+
+This allows us to rephrase the definition of an inverse function as follows:
+
+Let $f : X \to Y$ be a function. A function $g : Y \to X$ is an inverse of $f$ if:
+\[ g \circ f = \id_X \quad \text{and} \quad f \circ g = \id_Y \]
+
+\section{Equivalence Relations}
+
+Recall that for two sets $X$ and $Y$ the \dfntxt{Cartesian product} $X \times Y$ is the set of ordered pairs where
+\[ X \times Y = \left\{ (x,y) : x \in X\ \text{and}\ y \in Y \right\} \]
+
+\begin{dfnbox}{Relation}{}
+    A \dfntxt{relation} on $X \times Y$ is any subset of $X \times Y$.
+    \tcblower
+    A \dfntxt{relation} on $X$ is any subset of $X \times X$.
+\end{dfnbox}
+
+Note that any function is also a relation. Recall the formal definition of a function $f$:
+\[ f = \{ (x,y) : y = f(x) \} \subseteq X \times Y \]
+We use a special notation for functions where $(x,y) \in f$ can be written as $y = f(x)$. Non-function relations also have a special notation:
+\[ (x,y) \in R  \iff \underbrace{x \mathrel{R} y}_{\mathclap{\text{``$x$ is related to $y$''}}} \]
+That is, $R = \{ (x, y) : x \mathrel{R} y \}$.
+
+\begin{exbox}{}{}
+    Let $L \coloneq \{ (x,y) : x,y \in \R, x < y \} \subseteq \R^2$. Then:
+    \[ (x,y) \in L \iff x \mathrel{L} y \iff x < y \]
+\end{exbox}
+
+\begin{dfnbox}{Equivalence Relation}{}
+    Let $X$ be a non-empty set, and let $R$ be a relation on $X$. $R$ is an \dfntxt{equivalence relation} if:
+    \begin{tabularx}{\linewidth}{l l >{\(\displaystyle}X<{\)}}
+        1. & $R$ is \dfntxt{reflexive} & \forall (x \in X) (x \mathrel{R} x) \\
+        2. & $R$ is \dfntxt{symmetric} & x \mathrel{R} y \implies y \mathrel{R} x \\
+        3. & $R$ is \dfntxt{transitive} & x \mathrel{R} y \land y \mathrel{Z} z \implies x \mathrel{R} z
+    \end{tabularx}
+\end{dfnbox}
+
+An equivalence relation is often denoted using the symbol $\sim$.
+
+\begin{exbox}{Equivalence Relations}{}
+    \begin{enumerate}
+        \item $R = \{ (a,b) \in \N^2 : a \mid b \}$
+
+        $a | a$ for all $a \in \N$, so $R$ is reflexive. Also, if $a \mid b$ and $b \mid c$, then $a \mid c$, so $R$ is transitive. However, $2 \mid 4$ but $4 \nmid 2$, so $R$ is not symmetric. Therefore, $R$ is not an equivalence relation.
+
+        \item For $x,y \in \R$, $x \mathrel{R} y$ if $x^2 = y^2$
+
+        $x^2 = x^2$ so $x \mathrel{R} x$ and thus $R$ is reflexive. Also, if $x^2 = y^2$ then $y^2 = x^2$, so $R$ is symmetric. And, if $x^2 = y^2$ and $y^2 = z^2$ then $x^2 = z^2$, so $R$ is also transitive. Therefore, $R$ is an equivalence relation.
+    \end{enumerate}
+\end{exbox}
+
+\begin{exbox}{Reflexivity, Symmetry, and Transitivity}{}
+    For $x,y \in \R$, define $x \mathrel{R} y$ to mean that $\abs{x-y} < 1$
+    \begin{enumerate}
+        \item $\abs{x - x} = 0 < 1$, so $R$ is reflexive.
+        \item $\abs{x-y} = \abs{y-x}$, so if $\abs{x-y} < 1$ then $\abs{y - x} < 1$. That is, $R$ is symmetric.
+        \item $\abs{0 - 0.5} = 0.5$ so $0 \mathrel{R} 0.5$, and $\abs{0.5 - 1} = 0.5 < 1$ so $0.5 \mathrel 1$. However, $\abs{0 - 1} = 1$, so $0 \mathrel{\not R} 1$. Thus, $R$ is not transitive.
+    \end{enumerate}
+\end{exbox}
+
+\begin{exbox}{Proving a Relation is an Equivalence Relation}{}
+    Suppose that the relation $R$ on $X$ is reflexive, and satisfies the ``twisted transitive law'':
+    \[ \forall (x,y,z \in X) (x \mathrel{R} y \land x \mathrel{R} z \implies y \mathrel{R} z) \]
+    Show that $R$ is an equivalence relation.
+    \tcblower
+    \begin{proof}
+        Let $R$ be a relation on $X$ that is reflexive and satisfies the ``twisted transitive law''. We need to show that the relation is symmetric and transitive. Let $x,y,z \in X$ be arbitrary.
+        \begin{enumerate}
+            \item Assume $x \mathrel{R} y$. Since $R$ is reflexive, then $x \mathrel{R} x$. Then by the ``twisted transitive law'', $y \mathrel{R} x$. Thus, $R$ is symmetric.
+            \item Assume $x \mathrel{R} y$ and $y \mathrel{R} z$. Then $y \mathrel{R} x$ because $R$ is symmetric. Applying the ``twisted transitive law'' to $y \mathrel{R} x$ and $y \mathrel{R} z$ gives $x \mathrel{R} z$. Thus, $R$ is transitive.
+        \end{enumerate}
+        Therefore, $R$ is an equivalence relation.
+    \end{proof}
+\end{exbox}
+
+\begin{dfnbox}{Equivalence Class}{}
+    Suppose that $\sim$ is an equivalence relation on $X$. For each $x \in X$, the set
+    \[ \overline{x} = \left\{ y \in X : x \sim y \right\} \]
+    is called the \dfntxt{equivalence class} of $x$.
+\end{dfnbox}
+
+\begin{thmbox}{Distinct Equivalence Classes}{}
+    Let $X$ be a set with equivalence relation $\sim$. If $x,y \in X$ and $\overline{x} \cap \overline{y} \neq \emptyset$, then $\overline{x} = \overline{y}$.
+    \tcblower
+    \begin{proof}
+        Since $\overline{x} \cap \overline{y} \neq \emptyset$, then there exists some $w \in \overline{x} \cap \overline{y}$. That is, $w \in \overline{x}$ and $w \in \overline{y}$, so $x \sim w$ and $y \sim w$. Suppose $z \in \overline{x}$. Then $x \sim z$ and $z \sim x$. Since $z \sim x$ and $x \sim w$, then by transitivity, $z \sim w$. By symmetry, $w \sim z$. From $y \sim w$ and $w \sim z$ we have $y \sim z$ by transitivity. Thus, $z \in \overline{y}$. Therefore, $\overline{x} \subseteq \overline{y}$. By a similar argument, we can also prove $\overline{y} \subseteq \overline{x}$, so $\overline{x} = \overline{y}$.
+    \end{proof}
+\end{thmbox}
+
+If any two equivalence classes intersect each other, then they must be the same equivalence class. Two distinct equivalence classes are always disjoint.
+
+\begin{exbox}{}{}
+    If $X$ is a set with equivalence relation $\sim$, $y \in \overline{x}$, then $\overline{x} = \overline{y}$.
+    \tcblower
+    \begin{proof}
+        Because $\sim$ is reflexive, we know that $y \in \overline{y}$. That is, $\overline{x} \cap \overline{y} \neq \emptyset$. Therefore, $\overline{x} = \overline{y}$ by the previous theorem.
+    \end{proof}
+\end{exbox}
+
+\begin{dfnbox}{Partition}{}
+    A \dfntxt{partition} of a set $X$ is a collection $P$ of subsets of $X$ such that:
+    \begin{enumerate}
+        \item for all $x \in X$, there exists $A \in P$ such that $x \in A$, and
+        \item if $A, B \in P$ and $A \cap B \neq \emptyset$, then $A = B$.
+    \end{enumerate}
+\end{dfnbox}
+
+That is, a partition of $X$ divides $X$ into disjoint subsets that cover $X$. No two distinct subsets of a partition may contain any same elements.
+
+Also note that no two equivalence classes of a set will contain any same elements. If we have an equivalence relation on $X$, then grouping each element of $X$ into its respective equivalence class forms a partition of $X$. If $X$ is a set with equivalence relation $\sim$, then the equivalence classes form a partition of $X$.
+
+Given a nonempty set $X$, there are two ``trivial'' equivalence relations:
+\begin{enumerate}
+    \item $x \sim y$ if and only if $x = y$
+
+    In this case, equivalence classes are the sets $\overline{x} = \{x\}$.
+    \item $x \sim y$ for all $x,y \in X$
+
+    In this case, there is only one distinct equivalence class where $\overline{x} = X$ for all $x \in X$.
+\end{enumerate}
+
+\begin{exbox}{}{}
+    For two sets $A$ and $B$, define $A \sim B$ to mean that there is a bijection $f : A \to B$. Show that $\sim$ is an equivalence relation.
+    \tcblower
+    \begin{proof}
+        For a set $A$, the function $\text{id}_A : A \to A$ is a bijection, so $\sim$ is reflexive.
+
+        Suppose that $A \sim B$. That is, there exists a bijection $f : A \to B$. Then $f^{-1} : B \to A$ is a bijection, so $B \sim A$. Thus, $\sim$ is symmetric.
+
+        Suppose that $A \sim B$ and $B \sim C$. That is, there exists a bijection $f : A \to B$ and a bijection $g : B \to C$. Then $g \circ f : A \to C$ is a bijection. Thus, $\sim$ is transitive.
+
+        Therefore, $\sim$ is an equivalence relation.
+    \end{proof}
+\end{exbox}
+
+\section{Modular Arithmetic}
+\begin{dfnbox}{Modular Equivalence}{}
+    For $m,n \in \Z$ and $k \in \N$, we say that \dfntxt{$m$ is equivalent to $n$ modulo $k$} if $k \mid (m - n)$.
+	\tcblower
+    \[ \underbrace{m \equiv n \pmod{k}}_{\text{``$m$ is equivalent to $n$ mod $k$''}} \iff \underbrace{k \mid (m - n)}_{m-n = kc\ \text{for}\ c \in \Z} \]
+\end{dfnbox}
+
+Note that modular equivalence is an equivalence relation on $\Z$.
+\begin{enumerate}
+    \item Reflexive: For $m \in \Z$, $m - m = 0 \cdot k$, so $m \equiv m \pmod{k}$
+    \item Symmetric: If $m \equiv n \pmod{k}$, then $m-n = kc$ for some $c \in \Z$. Thus, $n-m = k(-c)$ where $c \in \Z$, so $n \equiv m \pmod{k}$.
+    \item Transitive: If $l \equiv m \pmod{k}$ and $m \equiv n \pmod{l}$, then $l-m = ka$ and $m-n = kb$ where $a,b \in \Z$. That is:
+    \[l-n = (l-m) + (m-n) = ka + kb = k(a+b) \in \Z \]
+    Therefore, $l \equiv n \pmod{k}$.
+\end{enumerate}
+
+The set of equivalence classes modulo $k$ is denoted $\Z_k$.
+
+\begin{exbox}{$\Z_2$}{}
+	In $\Z_2$, we will have two equivalence classes, $\overline{0}$ and $\overline{1}$. That is, $\Z_2 = \{\overline{0}, \overline{1}\}$
+    \begin{align*}
+        \overline{0} &= \{ x \in \Z : 2 \mid (x - 0) \} = \{ \ldots, -4, -2, 0, 2, 4, \ldots \} \\
+        \overline{1} &= \{ x \in \Z : 2 \mid (x - 1) \} = \{ \ldots, -3, -1, 1, 3, 5, \ldots \}
+    \end{align*}
+\end{exbox}
+
+Similarly, $\Z_3 = \{\overline{0}, \overline{1}, \overline{2}\}$.
+
+\begin{thmbox}{$Z_k = \{\overline{0}, \ldots, \overline{k-1}\}$}{}
+    For all $k \in \N$, $\Z_k = \{\overline{0}, \overline{1}, \ldots, \overline{k-1}\}$, and these equivalence classes are distinct.
+    \tcblower
+    \begin{proof}
+        Let $m \in \Z$. By the division algorithm, we can write $m = qk + r$ where $q,r \in \Z$ and $0 \leq r \leq k-1$. Then, $m - r = qk$, so $m \equiv r \pmod{k}$. That is $\overline{m} = \overline{r}$, so $\overline{m}$ is one of the classes $\overline{0}, \overline{1}, \ldots, \overline{k-1}$. Suppose for contradiction $\overline{m} = \overline{n}$ where $0 \leq n < m \leq k-1$. Because they are the same equivalence class, then $k \mid (m - n)$. However, $k > m - n$ which contradicts $k \mid (m - n)$. Thus, the classes $\overline{0}, \overline{1}, \ldots, \overline{k-1}$ are all distinct.
+    \end{proof}
+\end{thmbox}
+
+Moreover, for any $k \in \N$ and $m \in \Z$, we have $\overline{m} = \overline{0}$ in $\Z_k$ if and only if $k \mid m$.
+
+\begin{exbox}{}{}
+    In $\Z_6$:
+    \[ \overline{0} = \{ \ldots, -12, -6, 0, 6, 12, \ldots\} = \{m \in \Z : 6 \mid m\} \]
+    \begin{itemize}
+        \item $\overline{19} = \overline{1}$ because $19 = 3 \cdot 6 +1 $
+        \item $\overline{43} = \overline{1}$ because $43 = 7 \cdot 6 + 1$
+        \item $\overline{-38} = \overline{4}$ because $-38 = -7 \cdot 6 + 4$
+    \end{itemize}
+\end{exbox}
+
+To perform arithmetic in $\Z_k$, we need to define addition and multiplication.
+
+\begin{dfnbox}{Modular Addition}{}
+    For $\overline{x}, \overline{y} \in \Z_k$, \dfntxt{modular addition} is defined as:
+    \[ \overline{x} + \overline{y} \coloneq \overline{x+y} \]
+\end{dfnbox}
+
+Also, we need to check that these operations are \dfntxt{well-defined}.
+
+
+This operation is well-defined if:
+\[ \overline{x} = \overline{w}\ \land\ \overline{y} = \overline{z} \implies \overline{x+y} = \overline{w+z} \]
+Since there are many elements we can choose to ``represent'' an equivalence class in our definition of Modular Addition, we need to ensure that every possible choice follows the definition.
+
+If $\overline{x} = \overline{w}$, then $x - w = ak$ for some $a \in \Z$. Similarly, if $\overline{y} = \overline{z}$, then $y - z = bk$ for some $b \in \Z$.
+\begin{align*}
+    (x+y) - (w+z) &= (x-w) + (y-z) \\
+    &= ak + bk \\
+    &= (a+b)k, \quad \text{where}\ a+b \in \Z
+\end{align*}
+Thus, $x+y \equiv w+z \pmod{k}$, so $\overline{x+y} = \overline{w+z}$.
+
+Similarly, we can show that $\overline{x} \cdot \overline{y} = \overline{x \cdot y}$ is well-defined.
+
+For all $k \in \N$, the set $\Z_k$ with addition and multiplication satisfies the field axioms except possibly the existence of multiplicative inverses.
+
+\begin{exbox}{$\Z_3$ is a Field}{}
+    $\Z_3$ is a field.
+    \tcblower
+    \begin{proof}
+        All we need to show is the existence of multiplicative inverses. The multiplicative identity is $\overline{1}$.
+        \[ \overline{1} \cdot \overline{1} = \overline{1} \quad \text{so} \quad \overline{1}^{-1} = \overline{1} \quad \text{in}\ \Z_3 \]
+        \[ \overline{2} \cdot \overline{2} = \overline{4} \cdot \overline{1} \quad \text{so} \quad \overline{2}^{-1} = \overline{2} \quad \text{in}\ \Z_3 \]
+        This proves that all elements except the additive identity have a multiplicative inverse. Therefore, $\Z_3$ is a field.
+    \end{proof}
+\end{exbox}
+
+\begin{thmbox}{Zero Product Property in Modular Arithmetic}{}
+    If $p \in \N$ is prime, and $a,b \in \Z$ where $\overline{ab} = \overline{0}$ in $\Z_p$, then $\overline{a} = \overline{0}$ or $\overline{b} = \overline{0}$.
+    \tcblower
+    \begin{proof}
+        If $\overline{ab} = \overline{0}$ in $\Z_p$, then $ab = kp$ for some $k \in \Z$. Therefore, $p \mid ab$, so $p \mid a$ or $p \mid b$ (Corollary 3.5.6).
+        \begin{itemize}
+            \item If $p \mid a$, then $a = mp$ for some $m \in \Z$. Thus, $\overline{a} = \overline{0}$.
+            \item If $p \mid b$, then $b = np$ for some $n \in \Z$. Thus, $\overline{b} = \overline{0}$.
+        \end{itemize}
+        One of the above statements must be true. Therefore, $\overline{a} = \overline{0}$ or $\overline{b} = \overline{0}$.
+    \end{proof}
+\end{thmbox}
+
+\begin{exbox}{}{}
+    If $k \in \N$ is not prime, then there exist $a,b \in \Z$ such that $\overline{ab} = \overline{0}$ in $\Z_k$ but $\overline{a} \neq \overline{0}$ and $\overline{b} \neq \overline{0}$.
+    \tcblower
+    \begin{proof}
+        Because $k$ is not prime, we can write $k=ab$ where $a,b \in \Z$ and $1 < a < k$, $1 < b < k$. Then, $k \nmid a$ because $k > a$, so $\overline{a} \neq \overline{0}$. Similarly, $k \nmid b$, so $\overline{b} \neq \overline{0}$. However, $\overline{ab} = \overline{k} = \overline{0}$.
+    \end{proof}
+\end{exbox}
+
+This shows that $Z_k$ is \textbf{not} a field when $k$ is not prime.
+
+\section{Finite Sets}
+
+\begin{dfnbox}{Restriction}{}
+    If $f : X \to Y$ is a function, and $A \subseteq X$, then the \dfntxt{restriction} of $f$ to $A$ is the function:
+    \[ \restrict{f}{A} : A \to Y \]
+    defined by $\restrict{f}{A} = f(x)$ for all $x \in A$.
+\end{dfnbox}
+
+We can read this as ``$f$ restricted to domain $A$''.
+
+\begin{exbox}{}{}
+    If $f : X \to Y$ is injective and $A \subseteq X$, then $\restrict{f}{A}$ is injective.
+    \tcblower
+    \begin{proof}
+        Let $g \coloneq \restrict{f}{A}$. Suppose there exist $x_1, x_2 \in A$ such that $g(x_1) = g(x_2)$. By definition of restriction, we have $f(x_1) = g(x_1)$ and $f(x_2) = g(x_2)$. Hence, $f(x_1) = f(x_2)$. Since $f$ is injective, then $x_1 = x_2$. Therefore, $\restrict{f}{A}$ is injective.
+    \end{proof}
+\end{exbox}
+
+\begin{dfnbox}{Corestriction}{}
+    The \dfntxt{corestriction} of $f$ is the function $f : X \to f[X]$.
+\end{dfnbox}
+
+In other words, the corestriction replaces the codomain with the range. As such, a corestriction is \textbf{always} onto. Although this is a different function, we typically use the same name.
+
+\begin{exbox}{}{}
+    Consider $f : \R \to \R$ defined by $f(x) = x^2$. The corestriction of $f$ is $f : \R \to [0, \infty)$.
+    % TODO: insert cool graph here
+\end{exbox}
+
+If $f$ is an injection, then the corestriction of $f$ is a bijection. An important use of bijections is defining the \dfntxt{cardinality} of a set.
+
+\begin{dfnbox}{Cardinality}{}
+    The \dfntxt{cardinality} of a set is a measure of the amount of elements in that set.
+\end{dfnbox}
+For finite sets, cardinality follows our intuition of ``size''. We can denote the cardinality of a set using the absolute value notation.
+\begin{itemize}
+    \item If $A = \emptyset$, then $\abs{A} = 0$.
+    \item If there exists a bijection $f : A \to \{i \in \N : i \leq n \}$, then $\abs{A} = n$.
+    \item If $A$ and $B$ are nonempty, and there exists a bijection $f : A \to B$, then $\abs{A} = \abs{B}$
+\end{itemize}
+
+In these cases, we say $A$ is finite with cardinality $\abs{A}$. We will write $\{i \in \N : i \leq n \}$ simply as $\{1, \ldots, n\}$, and we can list a finite set as $A = \{a_1, a_2, \ldots, a_n\}$.
+
+Our intuition of cardinality as ``size'' can deceive us when dealing with infinite sets.
+\begin{exbox}{Cardinality of $\Z_2$}{}
+    The sets $\Z$ and $2\Z$ have the same cardinality.
+    \tcblower
+    \begin{proof}
+        Let $f : \Z \to 2\Z$ be defined by $f(x) = 2x$. $f$ is a bijection, so $\abs{\Z} = \abs{2\Z}$.
+    \end{proof}
+\end{exbox}
+
+Although our intuition serves well in understanding cardinalities of finite sets, it can be difficult giving a logically sound explanation.
+
+\begin{exbox}{Cardinality of Subsets}{}
+    If $A$ is finite and $B \subseteq A$, then $B$ is finite and $\abs{B} \leq \abs{A}$.
+    \tcblower
+    \begin{proof}
+        If $A = \emptyset$ and $B \subseteq A$, then $B = \emptyset$. Thus, $B$ is finite, and $\abs{A} = \abs{B} = 0$, so $\abs{B} \leq \abs{A}$.
+
+        Otherwise, $A = \{ a_1, \ldots, a_n \}$ for some $n \in \N$. We can then use induction. For our base case, suppose $n=1$. Then $\abs{A} = 1$. If $B \subseteq A$, then either $B = \emptyset$ or $B = A$. Then $\abs{B} = 0$ or $\abs{B} = 1$ respectively. In either case, $\abs{B} \leq \abs{A}$.
+
+        Now, suppose the lemma is true for some $n \in \N$ where $n \geq 1$. Let $A = \{ a_1, \ldots, a_{n+1} \}$. By the induction hypothesis, there exists a bijection $f : \{a, \ldots, a_n\} \to \{1, \ldots, n\}$. If $B \subseteq A$, then one of the following must be true:
+        \begin{itemize}
+            \item $B = \emptyset$, so $\abs{B} = 0 \leq n+1 = \abs{A}$
+            \item $B = A$, so $\abs{B} = \abs{A}$
+            \item $0 \subsetneq B \subsetneq A$, so there exists $a_m \in A \setminus B$, $1 \leq m \leq n + 1$.
+        \end{itemize}
+        Let $g : A \to \{ 1, \ldots, n+1 \}$ be a function defined as such:
+        \begin{itemize}
+            \item $g(a_j) = f(a_j)$ if $j \neq n+1$ and $j \neq m$
+            \item $g(a_m) = n+1$
+            \item $g(a_{n+1}) = f(a_m)$
+        \end{itemize}
+        Thus, $g$ is a bijection (exercise 4.22). Let $h \coloneq \restrict{g}{B}$. Then $h$ is a bijection, and $h[B] \subseteq \{ 1, \ldots, n \}$. This is finite by the induction hypothesis, so $\abs{h[B]} \leq n$. But $h : B \to h[B]$ is a bijection, so $\abs{B} = \abs{h[B]} \leq n < \abs{A}$. Therefore, $B$ is finite, and $\abs{B} \leq \abs{A}$.
+    \end{proof}
+\end{exbox}
+
+\begin{thmbox}{Principle of Inclusion and Exclusion}{pie}
+    Let $A$ and $B$ be finite sets. Then $A \cup B$ and $A \cap B$ are finite, and $\abs{A \cup B} = \abs{A} + \abs{B} - \abs{A \cap B}$. If $A$ and $B$ are disjoint, then $\abs{A \cup B} = \abs{A} + \abs{B}$.
+\end{thmbox}
+
+\begin{exbox}{}{}
+    If $A$ is finite and $B$ is a proper subset of $A$, then $\abs{B} < \abs{A}$.
+    \tcblower
+    \begin{proof}
+        Outline:
+        \begin{itemize}
+            \item If $B \subsetneq A$, then $A \cup B = A$ and $A \cap B = B$ and $A \setminus B \neq \emptyset$ (so $\abs{A \setminus b} > 0)$ and $B \setminus A = \emptyset$.
+            \item Disjoint Union Lemma: $A \cup B = (A \setminus B) \cup (A \cap B) \cup (B \setminus A)$
+        \end{itemize}
+    \end{proof}
+\end{exbox}
+
+If $A_1, A_2, \ldots, A_n$ is a finite collection of sets, then we can define their union and intersection as:
+\begin{align*}
+    A_1 \cup A_2 \cup \cdots \cup A_n &= \left\{ x : x \in A_i\ \text{for some}\ i, 1 \leq i \leq n \right\} \\
+    A_1 \cap A_2 \cap \cdots \cap A_n &= \left\{ x : x \in A_i\ \text{for all}\ i, 1 \leq i \leq n \right\}
+\end{align*}
+
+\begin{dfnbox}{Big Union}{}
+	\[ \bigcup\limits_{i=1}^{n} A_i = \{ a : a \in A_i\ \text{for \textbf{some}}\ 1 \leq i \leq n \} \]
+\end{dfnbox}
+
+\begin{dfnbox}{Big Intersect}{}
+	\[ \bigcap\limits_{i=1}^{n} A_i = \{ a : a \in A_i\ \text{for \textbf{all}}\ 1 \leq i \leq n \} \]
+\end{dfnbox}
+
+\begin{exbox}{Partition Preserves Cardinality}{}
+    If $A$ is a finite set and $\{A_1, \ldots, A_n\}$ is a partition of $A$, then $\abs{A} = \sum_{i=1}^{n} \abs{A_i}$.
+    \tcblower
+    \begin{proof}
+        Let $A$ be a finite set. We will use induction in this proof. For convenience, let $P(n)$ be the statement $\abs{A} = \sum_{i=1}^{n} \abs{A_i}$. Note that $A$ is finite and $A_i \subseteq A$ for all $i$, so $A_i$ is also finite.
+
+        We will first prove $P(1)$. If $A_1 = A$, and $\abs{A_1} = \abs{A} = \sum_{i=1}^{1} \abs{A_i}$.
+
+        Next, assume $P(n)$ is true for some $n \in \N$. Let $\{ A_1, \ldots, A_{n+1} \}$ be a partition of $A$. Let $B \coloneq \bigcup_{i=1}^{n}A_i$. Then $\{A_1, \ldots, A_n\}$ is a partition of $B$. By the induction hypothesis, $\abs{B} = \sum_{i=1}^{n} \abs{A_i}$. Note that $B$ and $A_{n+1}$ is disjoint (otherwise, our collection of $A_1$ to $A_n$ would not be a partition). Also note that $A = B \cup A_{n+1}$. Thus, by the \nameref{thm:pie}:
+        \begin{align*}
+            \abs{A} &= \abs{B} + \abs{A_{n+1}} \\
+            &= \sum_{i=1}^{n} \abs{A_i} + \abs{A_{n+1}} \\
+            &= \sum_{i=1}^{n+1} \abs{A_i}
+        \end{align*}
+        Therefore, by the \nameref{thm:induction}, $P(n)$ is true for all $n \in \N$ (so long as we can partition $A$ into $n$ sets).
+    \end{proof}
+\end{exbox}
+
+\begin{exbox}{}{}
+    Let $f : X \to Y$ be a function where $\abs{X} = \abs{Y} > 0$. Then $f$ is onto if and only if $f$ is one-to-one. (That is, if $f$ is a surjection, then $f$ is a bijection.)
+\end{exbox}
+
+\begin{thmbox}{Pigeonhole Principle}{pigeonhole}
+    Let $f : X \to Y$ be a function where $\abs{X} > \abs{Y} > 0$. Then there exist $x_1, x_2 \in X$ where $f(x_1) = f(x_2)$ but $x_1 \neq x_2$.
+\end{thmbox}
+
+Intuitively, we can think of the elements of $X$ as pigeons and the elements of $Y$ as pigeonholes. Our function $f$ tries to put each pigeon into a pigeonhole. If there are more pigeons than there are pigeonholes, then at least two pigeons will share a pigeonhole.
+
+\begin{exbox}{}{}
+    Prove that if $A \subseteq \{1, 2, \ldots, 9\}$ where $\abs{A} = 6$, then there are distinct elements $x, y \in A$ such that $x+y = 10$.
+    \tcblower
+    \begin{proof}
+        Let $B \coloneq \{ \{1,9\}, \{2,8\}, \{3, 7\}, \{4, 6\}, \{5\} \}$. Then $\abs{B} = 5$. Let $f: A \to B$ be a function defined as follows:
+        \[\text{``for each $x \in A$, let $f(x)$ be the unique element of $B$ that contains $x$.''}\]
+        Note that $f$ is a function between finite sets where $\abs{A} > \abs{B} > 0$. Therefore, by the Pigeonhole Principle, there exist $x,y \in A$ such that $x \neq y$ and $f(x) = f(y)$. That is, $x$ and $y$ are in the same set in $B$, so $x+y = 10$.
+    \end{proof}
+\end{exbox}
+
+In the above example, we can think of $A$ as our pigeons and $B$ as our pigeonholes.
+
+% TODO: make references to previous examples
+We know from previous examples that $\Z_k$ satisfies every field axiom except existence of multiplicative inverses if $k$ is not prime. We can prove that if $k$ is prime and $\overline{m} \in \Z_k$ and $\overline{m} \neq \overline{0}$, then $\overline{m}$ has a multiplicative inverse in $\Z_k$.
+
+\begin{thmbox}{Conditions for $\Z_k$ being a field}{}
+    For $k \in \N$ where $k \geq 2$, $\Z_k$ is a field if and only if $k$ is prime.
+    \tcblower
+    \begin{proof}
+		Fix $\overline{m} \in \Z_k$ where $\overline{m} \neq \overline{0}$, and define the function $f : \Z_k \to \Z_k$ as $f\left(\overline{n}\right) = \overline{mn}$. If $f\left(\overline{a}\right) = f\left( \overline{b} \right)$ for $\overline{a}, \overline{b} \in \Z_k$, then $\overline{ma} = \overline{mb}$. Thus:
+        \[ \overline{0} = \overline{ma} - \overline{mb} = \overline{m} \left( \overline{a} - \overline{b} \right) \]
+        Because $k$ is prime, either $\overline{m} = \overline{0}$ or $\overline{a} - \overline{b} = \overline{0}$. But $\overline{m} \neq \overline{0}$, so $\overline{a} - \overline{b} = 0$. That is, $\overline{a} = \overline{b}$, so $f$ is one-to-one. By Corollary 4.3.9, $f$ is also onto, making $f$ a bijection. Thus, there exists $\overline{c} \in \Z_k$ such that $f \left( \overline{c} \right) = \overline{1}$ That is, $\overline{1} = f \left( \overline{c} \right) = \overline{mc} = \overline{m} \cdot \overline{c}$, so $\overline{m}^{-1} = \overline{c}$ in $\Z_k$. Therefore, if $k$ is prime, then every $\overline{m} \in \Z_k$ where $\overline{m} \neq \overline{0}$ has a multiplicative inverse $\Z_k$, so $\Z_k$ is a field.
+    \end{proof}
+\end{thmbox}
+
+\section{Infinite Sets}
+Recall that a set $A$ is finite if either:
+\begin{enumerate}
+    \item $A$ is empty (finite with cardinality $0$), or
+    \item there exists a bijection $f : A \to \{1, \ldots, n\}$ for some $n \in \N$ (finite with cardinality $n$)
+\end{enumerate}
+
+\begin{dfnbox}{Infinite}{}
+    A set is \dfntxt{infinite} if it is not finite.
+\end{dfnbox}
+
+\begin{exbox}{$\N$ is infinite}{}
+    \begin{proof}
+        Suppose for contradiction that $\N$ is finite with cardinality $n$.
+        %Then there exists a bijection between $\N$ and $\{1, \ldots, n\}$ for some $n \in \N$.
+        Then, $\{ 1, \ldots, n\}$ is a proper subset of $\N$ with $\abs{\{1, \ldots, n\}} = n$. This contradicts the fact that $\abs{B} < \abs{A}$ if $B \subsetneq A$ and $A$ is finite.
+    \end{proof}
+\end{exbox}
+
+\begin{exbox}{Infinite Primes (Revisited)}{}
+    The set of all prime numbers is infinite.
+    \tcblower
+    \begin{proof}
+        Suppose for contradiction that there exist only a finite number of primes. We can list these primes as $p_1, p_2, \ldots, p_k$. Let $n \coloneq p_1 p_2 \cdots p_k + 1$. By the Division Algorithm, for all $i \in \Z$ where $1 \leq i \leq k$, we can write $n = qp_i + r$ where $q \in \Z$ and $0 \leq r < p_i$. Moreover, $q$ and $r$ are unique. Thus:
+        \[ q = \frac{p_1 p_2 \cdots p_k}{p_i} \quad \text{and} \quad r = 1 \]
+        If $p_i \mid n$ for some $i$, then $n = sp_i + 0$ for some $s \in \Z$. This contradicts the uniqueness of $q$ and $r$ guaranteed by the Division Algorithm. Hence, none of the primes $p_1, p_2, \ldots, p_k$ divide $n$. This contradicts $n$ having a prime factorization. Therefore, there must exist infinitely many primes.
+    \end{proof}
+\end{exbox}
+
+Recall that two non-empty sets $A$ and $B$ have the same cardinality if there exists a bijection $f : A \to B$.
+
+\begin{dfnbox}{Countably Infinite}{}
+    A set is \dfntxt{countably infinite} if that set has the same cardinality as $\N$.
+\end{dfnbox}
+
+\begin{dfnbox}{Uncountably Infinite}{}
+    A set is \dfntxt{uncountably infinite} if that set is infinite but not countably infinite.
+\end{dfnbox}
+
+We will categorize all finite and countably infinite sets as as ``countable'' sets. We will also categorize all countably infinite and uncountably infinite sets as ``infinite'' sets.
+
+% TODO: Need better intuitive explanation here. Q is countably infinite, but there is no notion of a "next element" either.
+To help our intuition, we can think of a countable set as having an idea of a ``next element''. In $\N$, we can list 1, 2, 3, and so on. However, if we start listing real numbers from $0$, what is the ``next'' real number?
+
+\begin{exbox}{}{}
+    Show that if $A$ is countable and $f : A \to B$ is a bijection, then $B$ is countable.
+    \tcblower
+    \begin{proof}
+        Since $A$ is countable, then $A$ is either finite or countably infinite.
+        %Note that $A$ cannot be empty since $f : A \to B$ is a bijection.
+        \begin{itemize}
+            \item If $A$ is finite with cardinality $n$, then there exists a bijection $g : A \to \{1, \ldots, n\}$. Then $g \circ f^{-1} : B \to \{1, \ldots, n\}$ is a composition of two bijections and is therefore a bijection itself. Thus, $B$ is finite with cardinality $n$.
+            \item If $A$ is countably infinite, then there exists a bijection $g : A \to \N$. Again, $g \circ f^{-1} : B \to \N$ is a bijection. Thus, $B$ is countably infinite.
+        \end{itemize}
+        In either case, $B$ is countable (finite or countably infinite).
+    \end{proof}
+\end{exbox}
+
+\begin{exbox}{$\Z$ is countably infinite}{}
+    $\Z$ is countably infinite.
+    \tcblower
+    \begin{proof}
+        We need to show that there exists a bijection from $\Z$ to $\N$. First, let's define a function $f : \N \to \Z$ with the following:
+        \begin{align*}
+            f(n) &= {\begin{cases}
+            m, & n = 2m \\
+            -m, & n = 2m+1
+        \end{cases}} \\
+        &= {\begin{cases}
+            \frac{n}{2}, & n\ \text{ is even} \\
+            \frac{1-n}{2}, & n\ \text{ is odd}
+            \end{cases}
+        }
+        \end{align*}
+        This function is one-to-one and onto, so $f$ is bijective.
+
+        For example, to show $f$ is onto, let $m \in \Z$. If $m > 0$, then $f(2m) = m$ where $2m \in \N$. If $m > 0$, then $f(2m) = m$ where $2m \in \N$. If $m \leq 0$, then $f(2(-m) + 1) = -(-m) = m$ where $2(-m)+1 \in \N$.
+
+        Because $f$ is a bijection, then $f^{-1}$ is a bijection. Thus, $f^{-1} : \Z \to \N$ is a bijection, so $\abs{\Z} = \abs{\N}$. Therefore, $\Z$ is countably infinite.
+    \end{proof}
+\end{exbox}
+
+\begin{thmbox}{Cantor's Diagonal Argument}{cantor-diagonal}
+    The set $[0,1] \subseteq \R$ is uncountable.
+    \tcblower
+    \begin{proof}
+        We will use the idea that every real number in $[0,1]$ has a decimal expansion $0.\delta_1 \delta_2 \delta_3 \ldots$ where each $\delta$ represents a digit of the number. Conversely, every decimal expansion $0.\delta_1 \delta_2 \delta_3 \ldots$ represents a real number in the interval $[0,1] \in \R$.
+
+        \begin{notebox}{}
+            Note that $0.\overline{9} = 1.\overline{0}\ldots$, so we will avoid decimal expansions that end in repeating $9$s since they have an equivalent decimal expansion that ends in repeating $0$s.
+        \end{notebox}
+
+        Suppose for contradiction that $f : \N \to [0,1]$ is a bijection. This means we can ``list'' all the real numbers in the interval $[0,1]$.
+        \begin{align*}
+            1 &\mapsto 0.\delta_{11} \delta_{12} \delta_{13} \ldots \\
+            2 &\mapsto 0.\delta_{21} \delta_{22} \delta_{23} \ldots \\
+            3 &\mapsto 0.\delta_{31} \delta_{32} \delta_{33} . \ldots \\
+            & \vdots
+        \end{align*}
+        We can now construct a real number that is \textbf{not} in this list. For $n \in \N$, let:
+        \[ \delta_n = { \begin{cases}
+                \delta_{nn} - 1, & \delta_{nn} \neq 0 \\
+                1, & \delta_{nn} = 0
+            \end{cases} } \]
+        This new number $0.\delta_1 \delta_2 \delta_3 \ldots \neq 0.\delta_{n1} \delta_{n2} \delta_{n3} \ldots$ for all $n \in \N$ because $\delta_n \neq \delta_{nn}$. That is, $0.\delta_1 \delta_2 \delta_3 \ldots \notin f(\N)$, so $f$ is not surjective. This contradicts our initial assumption that $f$ was a bijection. Therefore, $[0,1] \in \R$ is uncountable.
+    \end{proof}
+\end{thmbox}
+
+\begin{exbox}{}{}
+    If $A$ is countable and $B \subseteq A$, then $B$ is uncountable
+\end{exbox}
+
+\begin{thmbox}{$\R$ is uncountable}{}
+    $\R$ is uncountable.
+    \tcblower
+    \begin{proof}
+        We know from \nameref{thm:cantor-diagonal} that $[0,1] \in \R$ is uncountable, so $\R$ itself is uncountable.
+    \end{proof}
+\end{thmbox}
+
+We know that $\N$ is countable and $\R$ is uncountable. What about $\Q$?
+
+\begin{exbox}{Countability of collections of sets}{countable-collections}
+    If $\{A_n\}_{n \in \N}$ is a countable collection of countable sets, then $\bigcup_{n \in N} A_n$ is countable.
+    \tcblower
+    \begin{proof}[Proof Sketch]
+        If $f : \N \to A$ is surjective, then $A$ is countable. For each $n \in \N$, let $A_n = \{ a_{n1}, a_{n2}, a_{n3}, \ldots\}$. Because $\{A_n\}_{n \in \N}$ is countable, we can list this collection as $\{ A_1, A_2, \ldots\}$.
+        \begin{align*}
+            A_1 &: a_{11}\ a_{12}\ a_{13}\ a_{14} \ldots \\
+            A_2 &: a_{21}\ a_{22}\ a_{23}\ a_{24} \ldots \\
+            A_3 &: a_{31}\ a_{32}\ a_{33}\ a_{34} \ldots \\
+            A_4 &: a_{41}\ a_{42}\ a_{43}\ a_{44} \ldots \\
+            \vdots
+        \end{align*}
+        Define $f : \N \to \bigcup A_n$ by listing each diagonal in order.
+        \[ f(1) = a_{11}, \quad f(2) = a_{12},\quad f(3) = a_{21},\quad f(4) = a_{13}, \ldots \]
+        This function is surjective (but possibly not bijective if there are two non-disjoint $A_i$). Therefore, $\bigcup A_n$ is countable.
+    \end{proof}
+\end{exbox}
+
+\begin{exbox}{$\Q$ is countable}{}
+    The set $\Q$ is countably infinite.
+    \tcblower
+    \begin{proof}
+        For each $n \in \N$, define $\Q_n = \left\{ \frac{m}{n} : m \in \Z \right\}$. Then let $f : \Z \to \Q_n$ be a bijection defined by $m \mapsto \frac{m}{n}$. Hence, $\Q_n$ is countable, so $\{\Q_n\}_{n \in \N}$ is a countable collection of countable sets, so
+        $\Q = \bigcup_{n \in \N} \Q_n$ is countable by the example \ref{ex:countable-collections}.
+    \end{proof}
+\end{exbox}
+
+\makeamzindex
+
+\end{document}

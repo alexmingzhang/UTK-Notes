@@ -1,0 +1,123 @@
+\documentclass[12pt]{report}
+
+\usepackage[margin=1in]{geometry}
+\usepackage[code]{amznotes}
+
+\title{\textbf{Systems Programming}\\
+\large UT Knoxville, Spring 2023, COSC 360}
+\author{Dr. James S. Plank, Alex Zhang}
+
+\begin{document}
+\maketitle
+\tableofcontents
+
+\addcontentsline{toc}{chapter}{Preface}
+\chapter*{Preface}
+These notes attempt to give a concise overview of \textbf{Systems Programming} course at the University of Tennessee. The contents of these notes come from Dr. James Plank's online COSC 360 notes\footnote{\url{https://web.eecs.utk.edu/\textasciitilde jplank/plank/classes/cs360/lecture\_notes.html}} as well as select comments from his in-person lectures.
+
+\chapter{Moving from C++ to C}
+In moving from C++ to C, we lose a lot of nice features: standard template library (STL), \texttt{iostream}, objects, methods, and operator overloading to name a few. We can think of C as a subset of C++ in terms of features. Only in rare circumstances will C code not compile in C++.
+
+\section{Basic Terminal I/O}
+In C, \texttt{stdio.h} provides \texttt{printf()} for terminal output, and \texttt{fgets()} and \texttt{scanf()} for terminal input.
+
+\begin{codebox}{Hello World in C}{cool}
+    \amzinputcode{c}{../code_snippets/helloworld.c}
+\end{codebox}
+
+\section{Scalar Types}
+
+\begin{dfnbox}{Scalar Type}{}
+    A \dfntxt{scalar type} is a type that stores a single value.
+\end{dfnbox}
+
+In C, there are seven default scalar types:
+\begin{itemize}
+    \item \texttt{char} --- 1 byte
+    \item \texttt{short} --- 2 bytes
+    \item \texttt{int} --- 4 bytes
+    \item \texttt{long} --- 4 or 8 bytes (depending on machine)
+    \item \texttt{float} --- 4 bytes
+    \item \texttt{double} --- 8 bytes
+    \item \texttt{pointer} --- 4 or 8 bytes (depending on machine)
+\end{itemize}
+
+Unlike C++, \texttt{bool} is not a default scalar type. As of C99, \texttt{bool} is defined in \texttt{stdbool.h}. Despite only storing 1 bit of info, \texttt{bool} occupies 1 byte of memory.
+
+
+Scalar variables can be declared in one of three scopes:
+\begin{itemize}
+    \item outside of all functions as \textbf{global} variables
+    \item inside a function implementation as a \textbf{local} variable
+    \item inside a function prototype as a \textbf{procedure} parameter
+\end{itemize}
+
+\textbf{Global} variables are allocated to memory once the program starts and only deallocates once the program terminates. \textbf{Local} variables are only allocated once the program reaches its function and are deallocated when the function ends.
+
+\begin{notebox}
+    There are no reference variables (\texttt{\&}) in C. Function parameters are \textbf{always} copied.
+\end{notebox}
+
+\section{Aggregate Types}
+
+\begin{dfnbox}{Aggregate Type}{}
+    An \dfntxt{aggregate type} stores one or more values.
+\end{dfnbox}
+
+In C, there are only two aggregate types: \nameref{dfn:array} and \nameref{dfn:struct}.
+
+\begin{dfnbox}{Array}{array}
+    An \dfntxt{array} is a contiguous piece of memory that stores multiple variables of the same scalar type.
+\end{dfnbox}
+
+In most programming languages (including C), arrays are represented by the memory address of its first element. Since the array is contiguous, C can easily calculate the memory address of all other elements.
+
+% TODO: add better explanation of dereferencing arrays
+
+In C, arrays can only be declared either globally or locally. When we pass an array to a function, we are only passing a pointer to its first element.
+
+\begin{dfnbox}{Structure}{struct}
+    A \dfntxt{structure} or \dfntxt{struct} is a contiguous piece of memory that stores multiple variables which can be different scalar types.
+\end{dfnbox}
+
+In C++, we can use structs and classes interchangeably---the only difference being that, by default, structs make members \texttt{public} while classes makes members \texttt{private}. In contrast, C does not have classes, and structs in C don't have the following capabilities:
+
+\begin{itemize}
+    \item No \textbf{access modifiers} like \texttt{public}, \texttt{private}, or \texttt{protected}
+    \item No \textbf{constructors} nor \textbf{destructors}
+    \item No \textbf{method functions}
+\end{itemize}
+
+In addition, C structs do not create a type by default. We have to explicitly create one using the \texttt{typedef} keyword.
+
+Member variables of a struct get padded to be aligned to ensure each variable is aligned to 4-bytes \textbf{and} consecutive memory is aligned to 4-bytes.
+
+The assignment operator (\texttt{=}) works as intended with structs but not so with arrays. If we have \texttt{int arr1[20]} and \texttt{int arr2[20]}, we cannot simply write \texttt{arr1 = arr2;}. Instead, we have to iterate through the array and copy each \texttt{int} one at a time.
+
+Generally, we always copy a specific number of bytes using the assignment operator. The only exception is when we copy a struct that has an array as a member. Assignment operators for structs copies \textbf{all data}.
+
+\begin{codebox}{Assignment Operator for Aggregate Types}{}
+    \amzinputcode{c}{../code_snippets/equals_arr_struct.c}
+\end{codebox}
+
+Similarly, if a function an argument that is a struct with a member array, it will \textbf{copy} the struct as a procedure parameter.
+
+\begin{codebox}{Confusing Struct Argument}{}
+    \amzinputcode{c}{../code_snippets/confusing_struct_arg.c}
+\end{codebox}
+
+\texttt{s.arr[9]} will still be 10! That's because \texttt{my\_func()} takes a \texttt{MyStruct} parameter, creating a copy of \texttt{MyStruct} for use in the function. Hence, we are only changing the copied \texttt{MyStruct} which gets deleted at the end of the function.
+In this case, \texttt{my\_func()} effectively does nothing.
+
+\section{Memory and \texttt{malloc()}}
+\texttt{malloc()} returns a pointer to a piece of continuous memory allocated only to our program. When we call \texttt{malloc()}, we specify a certain number of bytes which is then allocated to the program by the operating system. If the operating system can't allocate that much memory, \texttt{malloc} returns \texttt{NULL}. To prevent potential bus errors, \texttt{malloc()} only returns pointers aligned to $8$ bytes.
+
+All \texttt{malloc}'ed memory is deallocated either by calling \texttt{free()} on the pointer or when the program terminates. \texttt{free()} is mostly useful to deallocate data once it's no longer being used. Generally, there is no reason to call \texttt{free()} right before the program terminates.
+
+%Whereas \texttt{new} in C++ specifies an amount of a certain type, \texttt{malloc()} only accepts a number of bytes. It does not know how the memory is being used. As a consequence, we have to keep track of every array's size.
+
+\section{Strings}
+In C and C++, a string is a contiguous sequence of characters whose last character is the null character (ASCII value 0). While C++ has \texttt{std::string} which handles the memory of the characters for us, we don't have such luxury in C. Instead, we have to explicitly use an array of \texttt{char}, handling it just as we would any other array.
+
+\amzindex
+\end{document}

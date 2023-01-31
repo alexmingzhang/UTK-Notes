@@ -1,0 +1,573 @@
+\documentclass[12pt]{report}
+
+\usepackage[margin=1in]{geometry}
+\usepackage[math]{amznotes}
+\usepackage{enumitem}
+\usepackage{nicefrac}
+
+
+\title{\textbf{Introduction to Analysis}\\
+\large UT Knoxville, Spring 2023, MATH 341}
+\author{Mike Frazier, Peter Humphries, Alex Zhang}
+
+\begin{document}
+\maketitle
+\tableofcontents
+
+\chapter{Introduction}
+Our goal is to understand the theory of real functions in one variable. Specifically, we will deal with functions, limits, sequences, convergence, continuity, differentiation, and integration. Along the way, we will develop nuanced techniques for logical deduction and proof writing. The same ideas, concepts, and techniques are used to study more complicated mathematics.
+
+We will primarily focus on the idea of \textbf{convergence}. Many computational techniques and algorithms rely on iteration---successive approximations getting closer to an actual solution. In order for those algorithms to work, they need to converge towards an actual solution.
+
+To motivate our quest to learn about convergence, let's look at some classic iterative methods.
+
+\begin{exbox}{Newton's Method}{}
+    Given $c > 0$, suppose we want to calculate $\sqrt{c}$. Start with some initial guess $x_1 > 0$.
+    \begin{alignat*}{2}
+        & \text{Let}\quad & x_2 &\coloneq \frac{1}{2} \left( x_1 + \frac{c}{x_1} \right) \\
+        & \text{Let}\quad & x_3 &\coloneq \frac{1}{2} \left( x_2 + \frac{c}{x_2} \right) \\
+        && &\vdots \\
+        & \text{Let}\quad & x_{n+1} &\coloneq \frac{1}{2} \left( x_n + \frac{c}{x_n} \right)
+    \end{alignat*}
+    We find that $\lim_{n\to\infty} x_n = \sqrt{c}$.
+\end{exbox}
+
+Does this method work for all $c > 0$ and $x_1 > 0$? Assuming $\lim_{n\to\infty} x_n = x$ converges, then:
+\begin{alignat*}{2}
+    && x_{n+1} &= \frac{1}{2} \left( x_n + \frac{c}{x_n} \right) \\
+    &\implies \quad &x &= \frac{1}{2} \left( x + \frac{c}{x} \right) \\
+    &\implies &2x &= x + \frac{c}{x} \\
+    &\implies &x &= \frac{c}{x} \\
+    &\implies &x^2 &= c \\
+    &\implies &x &= \sqrt{c}
+\end{alignat*}
+
+The above calculation only makes sense if we know the sequence converges. Consider the sequence $x_{n+1} = 6 - x_n$ where $x_1 = 4$. Then:
+\[ x_1 = 4,\quad x_2 = 2,\quad x_3 = 4,\quad x_4 = 2,\quad \ldots \]
+
+% TODO: add reference for monotone convergence theorem
+% TODO: explain what a bounded monotone sequence even is
+
+Since this sequence does not converge, there is no limit when $n \to \infty$! In chapter 14, we will cover the Monotone Convergence Theorem, which states that any bounded monotone sequence converges.
+
+\begin{exbox}{Monotone Convergence Theorem}{}
+    Suppose that $c > 0$ and $x_1 > 0$. Then, for $n \geq 2$, the sequence $x_{n+1} = \frac{1}{2} \left( x-N + \frac{c}{x_n} \right)$ is:
+    \begin{itemize}
+        \item \textbf{bounded below} because $x_n > \sqrt{c}$ when $n \geq 2$, and
+        \item \textbf{decreasing} because $x_n+1 < x_n$ for $n \geq 2$.
+    \end{itemize}
+    Therefore, $x_n$ converges by the Monotone Convergence Theorem, and $\lim_{n\to\infty} x_n = \sqrt{c}$.
+\end{exbox}
+
+Let's look at a more complicated iterative method.
+
+\begin{exbox}{Picard's Method}{}
+    Suppose we had to solve $y\prime = f(x,y)$ where $y(x_0) = y_0$ (i.e. find a function $y$ that satisfies our two conditions). As it turns out, we can use an iterated method to solve this as well.
+    \begin{itemize}
+        \item Start with an initial guess $y_1(x)$
+        \item Define $\displaystyle y_{n+1}(x) \coloneq y_0 + \int_{x_0}^{x} f(t, y_n)\ dt$.
+    \end{itemize}
+    Provided that $f$ and $y_0$ are ``well-behaving'', then the sequence of functions $y_n(x)$ converges to the solution $y(x)$.
+\end{exbox}
+
+The idea that an infinite sequence of functions can converge suggests some notion of ``distance'' between functions. We can use a number of metrics for distance, some possibilities including:
+\begin{itemize}
+    \item \( \displaystyle \int_a^b \abs{f(x) - g(x)}\ dx \quad \) (total area between the two functions)
+    \item \( \displaystyle \sup \left\{ x : x = \abs{f(x) - g(x)} \right\} \quad \) (max possible ``vertical'' distance between the two curves)
+\end{itemize}
+
+\chapter{Logic and Proofs}
+
+To really understand the theory of real functions, we'll have to start from the basics. Logic and proofs constitute the quintessential ideas upon which all formal mathematics is constructed.
+
+\section{Basic Logic}
+\begin{dfnbox}{Statement}{}
+    A \dfntxt{statement} is a claim that is either true or false.
+    \tcblower
+    \[ p : \text{some claim} \]
+\end{dfnbox}
+
+We usually denote statements like variables, with a letter like $p$. For example, we can write ``$p: x > 2$'', which means $p$ represents the statement ``$x$ is greater than $2$''. Throughout this chapter, we will use $p$ and $q$ to represent arbitrary statements.
+
+\begin{dfnbox}{Conjunction}{conjunction}
+    The \dfntxt{conjunction} of two statements is itself a statement, which is true if and only if the two statements are both true.
+    \tcblower
+    \[ p \land q \]
+\end{dfnbox}
+
+\begin{dfnbox}{Disjunction}{disjunction}
+    The \dfntxt{disjunction} of two statements is itself a statement, which is true if and only if at least one of the statements is true.
+    \tcblower
+    \[ p \lor q \]
+\end{dfnbox}
+
+\nameref{dfn:conjunction} and \nameref{dfn:disjunction} follow our intuition of ``and'' and inclusive ``or'', respectively. We can visualize the two logical connectives using \dfntxt{truth tables}.
+
+\begin{exbox}{Truth Table of Conjunction}{conjunction}
+    \begin{center}\begin{tabular}{c | c || c}
+        $p$ & $q$ & $p \implies q$ \\ \hline
+        T & T & T \\
+        T & F & F \\
+        F & T & F \\
+        F & F & F
+    \end{tabular}\end{center}
+\end{exbox}
+
+\begin{exbox}{Truth Table of Disjunction}{disjunction}
+    \begin{center}\begin{tabular}{c | c || c}
+        $p$ & $q$ & $p \implies q$ \\ \hline
+        T & T & T \\
+        T & F & T \\
+        F & T & T \\
+        F & F & F
+    \end{tabular}\end{center}
+\end{exbox}
+
+
+% TODO: add truth tables
+
+\begin{dfnbox}{Negation}{}
+    The \dfntxt{negation} of a statement is a statement with opposite truth values.
+    \tcblower
+    \[ \neg p \]
+\end{dfnbox}
+
+\begin{dfnbox}{Implication}{}
+    An \dfntxt{implication} ``$p$ implies $q$'' states ``if $p$ is true, then $q$ is true''.
+    \tcblower
+    \[ p \implies q \]
+\end{dfnbox}
+
+In the implication $p \implies q$, we call $p$ the \dfntxt{hypothesis} and $q$ the \dfntxt{conclusion}. If the hypothesis is false to begin with, then the implication is not really meaningful. Instead of assigning those kinds of implications no truth value, we simply consider them true by convention. These kinds of truths are called \dfntxt{vacuous truths}.
+
+\begin{exbox}{Truth Table of Logical Implication}{}
+    \begin{center}\begin{tabular}{c | c || c}
+        $p$ & $q$ & $p \implies q$ \\ \hline
+        T & T & T \\
+        T & F & F \\
+        F & T & T \\
+        F & F & T
+    \end{tabular}\end{center}
+\end{exbox}
+
+\begin{exbox}{Simple Statements}{}
+    Let $p : x > 2$ and $q : x^2 > 1$. Consider the following statements:
+    \begin{itemize}
+        \item ``For all real numbers $x$, $p \implies q$''
+
+        \textbf{True.} If $x > 2$, then $x^2 > 1$.\footnote{This is normally where we would rigorously prove such a statement, but we will omit this for now.}
+
+        \item ``For all real numbers $x$, $q \implies p$''
+
+        \textbf{False.} Consider $x = 1.1$. Then $x^2 = 1.21 > 1$, but $x = 1.1 < 2$.
+    \end{itemize}
+\end{exbox}
+
+\begin{dfnbox}{Logical Equivalence}{equiv}
+    $p$ and $q$ are \dfntxt{logically equivalent} if $p \implies q$ and $q \implies p$.
+    \tcblower
+    \[ p \iff q \]
+\end{dfnbox}
+
+In other words, $p \iff q$ means that $p$ and $q$ share the same truth value. Either $p$ and $q$ are \textbf{always both true}, or $p$ and $q$ are \textbf{always both false}. Logical equivalence says nothing about the truth of $p$ and $q$ themselves.
+
+\begin{exbox}{Truth Table of Logical Equivalence}{}
+    \begin{center}\begin{tabular}{c | c || c}
+        $p$ & $q$ & $p \iff q$ \\ \hline
+        T & T & T \\
+        T & F & F \\
+        F & T & F \\
+        F & F & T
+    \end{tabular}\end{center}
+\end{exbox}
+
+\begin{dfnbox}{Converse}{converse}
+    Given the implication $p \implies q$, its \dfntxt{converse} statement is $q \implies p$.
+\end{dfnbox}
+
+It's important to note that an implication and its converse have no intrinsic equivalence.
+
+\begin{dfnbox}{Contrapositive}{contrapositive}
+    Given the implication $p \implies q$, its \dfntxt{contrapositive} statement is $\neg q \implies \neg p$.
+\end{dfnbox}
+
+Unlike the converse, an implication and its contrapositive are logically equivalent. To help our intuition, we can construct a truth table.
+
+\begin{exbox}{Truth Table of Contrapositive}{}
+    \begin{center}\begin{tabular}{c | c || c | c | c | c}
+        $p$ & $q$ & $\neg p$ & $\neg q$ & $p \implies q$ & $\neg q \implies \neg p$ \\ \hline
+        T & T & F & F & T & T \\
+        T & F & F & T & F & F \\
+        F & T & T & F & T & T \\
+        F & F & T & T & T & T
+    \end{tabular}\end{center}
+\end{exbox}
+
+As we can see, no matter what the truth values of the hypothesis and conclusion are, an implication and its contrapositive always have the same truth values.
+
+\begin{notebox}
+    It's important when constructing a truth table that we include \textbf{all} intermediate statements, not just the final statement.
+\end{notebox}
+
+% TODO: add truth table for contrapositive
+
+
+\section{Proofs and Proof Techniques}
+While truth tables are a quick way to gauge whether simple statements hold, they become impractical once we involve more complicated statements. Furthermore, truth tables don't really show intuition behind complicated statements whereas proofs should ultimately fuel our intuition.
+
+Very often, we will have to prove some implication like $p \implies q$. Recall how an implication is only false if its $p$ is true but $q$ is false. Therefore, we would only have to consider that case where $p$ is true but $q$ is false. We can prove an implication is true by simply showing that such a case could never happen. There are three simple proof techniques for doing so:
+
+\begin{enumerate}
+    \item \dfntxt{Direct Proof}: Assume $p$ is true, then reason that $q$ must be true as well.
+    \item \dfntxt{Proof by Contradiction}: Assume both $p$ and $\neg q$ are true, then logically derive some contradiction.
+    \item \dfntxt{Proof by Contrapositive}: Assume $\neg q$ is true, then reason that $\neg p$ must be true as well.
+\end{enumerate}
+
+It's hard to decide which proof technique is easiest for any given problem. Direct proofs are often more ``enlightening'', but it can be difficult to find the appropriate logic to reach the conclusion. It may be easier to try proof by contradiction or contrapositive.
+
+\begin{tecbox}{Proof by Contradiction}{contradiction}
+    To prove $p \implies q$ by contradiction, we carry out the following steps:
+    \begin{enumerate}
+        \item Assume $p$ is true, and suppose for the sake of contradiction $\neg q$ is true.
+        \item Logically derive a statement that contradicts something we know to be true.
+        \item Ultimately conclude that if $p$ is true, then $q$ must be true.
+    \end{enumerate}
+\end{tecbox}
+
+This technique is based on the following \nameref{dfn:equiv}:
+\[ (p \implies q) \iff \neg \left[ p \land (\neg q) \right] \]
+
+\begin{exbox}{Truth Table of \nameref{tec:contradiction}}{}
+    \begin{center}\begin{tabular}{c | c || c | c | c | c }
+        $p$ & $q$ & $p \implies q$ & $\neg q$ & $p \land (\neg q)$ & $\neg \left[ p \land (\neg q) \right]$ \\ \hline
+        T & T & T & F & F & T \\
+        T & F & F & T & T & F \\
+        F & T & T & F & F & T \\
+        F & F & T & T & F & T
+    \end{tabular}\end{center}
+\end{exbox}
+
+\begin{tecbox}{Proof by Contrapositive}{}
+    To prove $p \implies q$ by contrapositive, we carry out the following steps:
+    \begin{enumerate}
+        \item Assume $\neg q$ is true.
+        \item Directly prove that $\neg p$ is true.
+    \end{enumerate}
+\end{tecbox}
+
+\begin{exbox}{Logical Equivalence of Contrapositive}{}
+    Given statements $p$ and $q$, $p \implies q$ and $\neg q \implies \neg p$ are equivalent.
+    \tcblower
+    \begin{proof}
+        Assume $p \implies q$. To prove $\neg q \implies \neg p$, we can assume for contradiction that $\neg q$ and $p$ are both true. But $p \implies q$, so $q$ is true which contradicts $\neg q$. Hence, the assumption that $p$ is true was incorrect. Thus, $\neg q \implies \neg p$.
+
+        Assume $\neg q \implies \neg p$. From above, we have $\neg ( \neg p ) \implies \neg (\neg q)$, so $p \implies q$.
+    \end{proof}
+\end{exbox}
+
+\begin{exbox}{Proving Simple Logic Statements}{}
+    Let $p$, $q$, and $r$ be arbitrary statements. Prove that $\left[ p \implies (q \lor r) \right] \iff \left[ (p \land \neg q) \implies r \right]$.
+    \tcblower
+    \begin{proof}
+        Assume $p \implies (q \lor r)$. Suppose $p \land \neg q$. Then $p$ is true, so $q \lor r$ is true by assumption. Also, $\neg q$ is true, so $r$ must be true from $q \lor r$.
+
+        Assume $(p \land \neg q) \implies r$. Suppose $p$ is true. There are two possibilities:
+        \begin{enumerate}
+            \item If $q$ is true, then $q \lor r$ is true.
+            \item If $\neg q$ is true, then $p \land \neg q$ is true. Thus, $r$ is true by assumption. Hence, $q \lor r$ is true.
+        \end{enumerate}
+    \end{proof}
+\end{exbox}
+
+\chapter{Set Theory}
+To add to our mathematical vocabulary, we introduce sets and define functions in terms of sets.
+\section{Sets}
+\begin{dfnbox}{Set}{set}
+    A \dfntxt{set} is a collection of distinct objects.
+\end{dfnbox}
+
+For example, $\N \coloneq \{1,2,3\ldots\}$ is the set of all natural numbers, and $\Z \coloneq \{ \ldots, 1, 2, 3, \ldots\}$ is the set of all integers. It's conventional to use capital letters to denote sets and use lowercase letters to denote elements of sets. Throughout this
+chapter, we will use $A$ and $B$ to represent arbitrary sets.
+
+\begin{dfnbox}{Membership, $\in$}{}
+    We write $a \in A$ to mean ``$a$ is in $A$''.
+\end{dfnbox}
+
+\begin{dfnbox}{Subset, $\subseteq$}{}
+    $A$ is a \dfntxt{subset} of $B$ if every element of $A$ is also an element of $B$.
+    \tcblower
+    \[ A \subseteq B \iff \forall(x \in A)(x \in B) \]
+\end{dfnbox}
+
+\begin{dfnbox}{Set Equality, $=$}{}
+    $A$ \dfntxt{equals} $B$ if $A$ is a subset of $B$ and $B$ is a subset of $A$.
+    \tcblower
+    \[ A = B \iff (A \subseteq B \land B \subseteq A) \]
+\end{dfnbox}
+
+\begin{dfnbox}{Proper Subset, $\subsetneq$}{}
+    $A$ is a \dfntxt{proper subset} of $B$ if $A$ is a subset of $B$ but $B$ is not a subset of $A$.
+    \tcblower
+    \[ A \subseteq B \iff (A \subseteq B \land B \not\subseteq A) \]
+\end{dfnbox}
+
+\begin{dfnbox}{Empty Set ($\emptyset$)}{}
+    The \dfntxt{empty set} is the set that contains no elements.
+\end{dfnbox}
+
+As a convention, we will assume that $\emptyset$ is a subset of any set, including itself.
+
+% A useful way of visualizing set relations is with venn diagrams.
+
+\begin{tecbox}{Proving a Subset Relation}{}
+    To prove that $A \subseteq B$:
+    \begin{enumerate}
+        \item Let $x$ be an arbitrary element of $A$.
+        \item Show that $x \in B$.
+    \end{enumerate}
+    \tcblower
+    To prove that $A \not\subseteq B$, choose a specific $x \in A$ and show $x \notin B$.
+\end{tecbox}
+
+\begin{exbox}{Proving Simple Subset Relation}{}
+    Suppose that $A \subseteq B$ and $B \subseteq C$. Prove that $A \subseteq C$.
+    \tcblower
+    \begin{proof}
+        Let $x \in A$ be arbitrary. Since $A \subseteq B$, then $x \in B$. Similarly, since $B \subseteq C$, then $x \in C$. Therefore, $A \subseteq C$.
+    \end{proof}
+\end{exbox}
+
+\begin{dfnbox}{Union}{}
+    The \dfntxt{union} of two sets is the set of all things that are in one or the other set.
+    \tcblower
+    \[ A \cup B \coloneq \left\{ x : x \in A \lor x \in B \right\} \]
+\end{dfnbox}
+
+\begin{dfnbox}{Intersection}{}
+    The \dfntxt{intersection} of two sets is the set of all things that are in both sets.
+    \tcblower
+    \[ A \cap B \coloneq \left\{ x : x \in A \land x \in B \right\} \]
+\end{dfnbox}
+
+More generally, we can apply union and intersection to an arbitrary number of sets, finite or infinite. We use a notation similar to summation using $\sum$. Let $\Lambda$ be an indexing set, and for each $\lambda \in \Lambda$, let $A_\lambda$ be a set.
+\begin{align*}
+    \bigcup_{\lambda \in \Lambda} A_\lambda &= \left\{ x : x \in A_\lambda\ \text{for some}\ \lambda \in \Lambda \right\} \\
+    \bigcap_{\lambda \in \Lambda} A_\lambda &= \left\{ x : x \in A_\lambda\ \text{for all}\ \lambda \in \Lambda \right\}
+\end{align*}
+\begin{exbox}{Indexed Sets}{}
+    For $n \in \N$, let $A_n = \left[ \frac{1}{n}, 1 \right] = \left\{ x \in \R : \frac{1}{n} \leq x \leq 1 \right\}$. Prove that:
+    \begin{enumerate}[label=(\alph*)]
+        \item $\bigcup_{n=1}^\infty = (0,1]$
+        \item $\bigcap_{n=1}^\infty = \{1\}$
+    \end{enumerate}
+    \tcblower
+    \begin{proof}[Proof of (a)]
+        Suppose $x \in \bigcup_{n=1}^\infty A_n$. Then there exists $n \in \N$ such that $x \in A_n = \left[ \frac{1}{n}, 1 \right]$. That is, $0 < \frac{1}{n} \leq x \leq 1$. Therefore, $x \in (0, 1]$.
+
+        Suppose $x \in (0, 1]$. Then $x > 0$, so there exists $n_0 \in \N$ such that $\frac{1}{n_0} < x$. Then $\frac{1}{n_0} \leq x \leq 1$, so $x \in A_{n_0}$. Therefore, $x \in \bigcup_{n=1}^\infty A_n$.
+    \end{proof}
+
+    \begin{proof}[Proof of (b)]
+        Suppose $x \in \bigcap_{n=1}^\infty A_n$. Then $x \in A_1 = \{1\}$.
+
+        Suppose $x \in \{1\}$. Then $x = 1 \in \left[ \frac{1}{n}, 1 \right]$ for all $n \in \N$. Therefore, $x \in \bigcap_{n=1}^\infty A_n$.
+    \end{proof}
+\end{exbox}
+
+\begin{dfnbox}{Set Minus}{}
+    The \dfntxt{set difference} of two sets is the set of all things that are in first set but not the second set.
+    \tcblower
+    \[ A \setminus B = \{ x \in A : x \notin B \} \]
+\end{dfnbox}
+
+\begin{dfnbox}{Complement}{}
+    Let $X$ be a set called the \dfntxt{universal set}. The \dfntxt{complement} of $A$ in $X$ is defined as $X \setminus A$.
+    \tcblower
+    \[ A^c = X \setminus A = \{ x \in X : x \notin A \} \]
+\end{dfnbox}
+
+\begin{thmbox}{De Morgan's Laws for Sets}{}
+    Suppose $X$ is a set, and for any subset $S$ of $X$, let $S^c = X \setminus S$. Suppose that $A_\lambda \subseteq X$ for every $\lambda$ belonging to some index set $\Lambda$. Prove that:
+    \begin{enumerate}[label=(\alph*)]
+        \item \( \left( \bigcup_{\lambda \in \Lambda} A_\lambda \right)^c = \bigcap_{\lambda \in \Lambda} A_\lambda^c \);
+        \item \( \left( \bigcap_{\lambda \in \Lambda} A_\lambda \right)^c = \bigcup_{\lambda \in \Lambda}A_\lambda^c \).
+    \end{enumerate}
+    \tcblower
+    \begin{proof}[Proof of (a)]
+        First, let $a \in \left( \bigcup_{\lambda \in \Lambda} A_\lambda \right)^c$. Then, $a \in X \setminus \left( \bigcup_{\lambda \in \Lambda} A_\lambda \right)$, so $a \in X$ but $a \notin \left( \bigcup_{\lambda \in \Lambda} A_\lambda \right)$. Thus, $a \notin A_\lambda$ for any $\lambda \in \Lambda$, so $a \in X \setminus A_\lambda$ for all $\lambda \in \Lambda$. In other words, $a \in \bigcap_{\lambda \in \Lambda} A_\lambda^c$.
+
+        Next, let $a \in \bigcap_{\lambda \in \Lambda} A_\lambda^c$. Then $a \in A_\lambda^c$ for all $\lambda \in \Lambda$, so $a \in X$ but $a \notin A_\lambda$ for all $\lambda \in \Lambda$. That is, $a \notin \left( \bigcup_{\lambda\in\Lambda} A_\lambda \right)$. In other words, $a \in \left( \bigcup_{\lambda\in\Lambda} A_\lambda \right) ^ c$.
+    \end{proof}
+
+    \begin{proof}[Proof of (b)]
+        First, let $a \in \left( \bigcap_{\lambda \in \Lambda} A_\lambda \right)^c$. Then, $a \in X \setminus  \bigcap_{\lambda \in \Lambda} A_\lambda$, so $a \in X$ but $a \notin \bigcap_{\lambda \in \Lambda} A_\lambda$. That is, $a \notin A_\lambda$ for some $\lambda \in \Lambda$. Thus, $a \in X \setminus A_\lambda$ for some $\lambda \in \Lambda$. Therefore, $a \in \bigcup_{\lambda \in \Lambda} A_\lambda^c$.
+
+        Next, let $a \in \bigcup_{\lambda \in \Lambda} A_\lambda^c$. Then $a \in A_\lambda^c$ for some $\lambda \in \Lambda$, so $a \in X$ but $a \notin A_\lambda$ for some $\lambda \in \Lambda$. That is, $a \notin \left( \bigcap_{\lambda \in \Lambda} A_\lambda \right)$. Therefore, $a \in  \left( \bigcap_{\lambda \in \Lambda} A_\lambda \right)^c$.
+    \end{proof}
+\end{thmbox}
+
+\section{Functions}
+\begin{dfnbox}{Cartesian Product}{}
+    Let $X$ and $Y$ be sets. The \dfntxt{Cartesian product} of $X$ and $Y$ is the set of all ordered pairs $(x,y)$ where $x \in X$ and $y \in Y$.
+    \tcblower
+    \[ X \times Y \coloneq \left\{ (x,y) : x \in X \land y \in Y \right\} \]
+\end{dfnbox}
+
+\begin{dfnbox}{Function}{function}
+    Let $X$ and $Y$ be sets. A \dfntxt{function} from $X$ to $Y$ is a subset of $X \times Y$ such that for every $x \in X$, there exists a unique $y \in Y$ where $(x,y) \in f$.
+    \tcblower
+    \[ f : X \to Y \]
+\end{dfnbox}
+
+
+Given $f : X \to Y$, we call $X$ the \dfntxt{domain} of $f$ and $Y$ the \dfntxt{codomain} of $f$. Given $x \in X$, we write $f(x)$ to denote the unique element of $Y$ such that $(x,y) \in f$.
+\[ f(x) = y \iff (x,y) \in f \]
+
+\begin{dfnbox}{Function Image}{image}
+    Let $f : X \to Y$ be a function and $A \subseteq X$. The \dfntxt{image} of $A$ under $f$ is the set containing all possible function outputs from all inputs in $A$.
+    \tcblower
+    \[ f[A] \coloneq \{ f(a) : a \in A \} \]
+\end{dfnbox}
+
+Given $f : X \to Y$, we call $f[X]$ the \dfntxt{range} of $f$.
+
+\begin{exbox}{Function Images}{}
+    Suppose $f : X \to Y$ is a function, and $A_\lambda \subseteq X$ for each $\lambda \in \Lambda$. Then:
+    \begin{enumerate}[label=(\alph*)]
+        \item $f \left[ \bigcup_{\lambda \in \Lambda} A_\lambda \right] = \bigcup_{\lambda \in \Lambda} f \left[ A_\lambda \right]$
+        \item $f \left[ \bigcap_{\lambda \in \Lambda} A_\lambda \right] \subseteq \bigcap_{\lambda \in \Lambda} f \left[ A_\lambda \right]$
+    \end{enumerate}
+    \tcblower
+    In this example, we will only prove the ``forward'' direction. That is, we want to show that $f \left[ \bigcup_{\lambda \in \Lambda} A_\lambda \right] \subseteq \bigcup_{\lambda \in \Lambda} f \left[ A_\lambda \right]$.
+    \begin{proof}[Proof of (a)]
+        Let $y \in f \left[ \bigcup_{\lambda \in \Lambda} A_\lambda \right]$. By definition of \nameref{dfn:image}, then there exists $x \in \bigcup_{\lambda \in \Lambda} A_\lambda$ such that $y = f(x)$. Thus, there exists $\lambda_0 \in \Lambda$ such that $x \in \lambda_0$. That is, $y \in f \left[ A_{\lambda_0} \right]$. Therefore, $y \in \bigcup_{\lambda \in \Lambda} f \left[ A_\lambda \right]$.
+    \end{proof}
+\end{exbox}
+
+\begin{dfnbox}{Function Inverse Image}{inverse-image}
+    Let $f : X \to Y$ be a function and $B \subseteq Y$. The \dfntxt{inverse image} of $B$ under $f$ is the set containing all possible function inputs whose output is in $B$.
+    \tcblower
+    \[ f^{-1}[B] \coloneq \{ x \in X: f(x) \in B \} \]
+\end{dfnbox}
+
+Note the following logical equivalence:
+\[ x \in f^{-1} [B] \iff f(x) \in B \]
+
+\begin{exbox}{Function Inverse Images}{}
+    Suppose $f : X \to Y$ is a function, and $B_\lambda \subseteq Y$ for each $\lambda \in \Lambda$. Then:
+    \[ f^{-1} \left[ \bigcup_{\lambda \in \Lambda} B_\lambda \right] = \bigcup_{\lambda \in \Lambda} f^{-1} \left[ B_\lambda \right] \]
+    \tcblower
+    Again, we will only prove the ``forward direction''.
+    \begin{proof}
+        Let $x \in f^{-1} \left[ \bigcup_{\lambda \in \Lambda} B_\lambda \right]$. Then, $f(x) \in \bigcup_{\lambda \in \Lambda} B_\lambda$. That is, $f(x) \in B_{\lambda_0}$ for some $\lambda_0 \in \Lambda$. Thus, $x \in f^{-1} \left[ B_{\lambda_0} \right]$, so $x \in \bigcup_{\lambda \in \Lambda} f^{-1} \left[ B_\lambda \right]$.
+    \end{proof}
+\end{exbox}
+
+\begin{dfnbox}{Injective}{}
+    A function $f : X \to Y$ is \dfntxt{injective} if no two things in $X$ point to the same thing in $Y$.
+    \tcblower
+    \[ \forall (x_1, x_2 \in X) \left[ x_1 \neq x_2 \implies f\left(x_1\right) \neq f\left(x_2\right) \right] \]
+\end{dfnbox}
+
+\begin{tecbox}{Proving a Function is Injective}{}
+    To prove a function $f : X \to Y$ is injective:
+    \begin{enumerate}
+        \item Let $x_1, x_2 \in X$ where $f(x_1) = f(x_2)$.
+        \item Reason that $x_1 = x_2$.
+    \end{enumerate}
+\end{tecbox}
+
+\begin{exbox}{Proving Injectivity}{}
+    $f(x) = -3x-7$ is injective.
+    \tcblower
+    \begin{proof}
+        Suppose $f(x_1) = f(x_2)$. Then $-3x_1+7 = -3x_2+7$, so $-3x_1 = -3x_2$. Thus, $x_1 = x_2$, so $f$ is injective.
+    \end{proof}
+\end{exbox}
+
+\begin{exbox}{Disproving Injectivity}{}
+    Prove that $f(x)=x^2$ is not injective.
+    \tcblower
+    \begin{proof}
+        $f(-1) = 1$ and $f(1) = 1$, but $-1 \neq 1$. Thus, $f$ is not injective.
+    \end{proof}
+\end{exbox}
+
+\begin{dfnbox}{Surjective}{}
+    A function $f : X \to Y$ is a \dfntxt{surjective} if everything in $Y$ has a corresponding input in $X$.
+    \tcblower
+    \[ \forall (y \in Y) \left[ \exists (x \in X) (f(x) = y) \right] \]
+\end{dfnbox}
+
+Note that $f : X \to f[X]$ is \textbf{always} surjective.
+
+\begin{tecbox}{Proving a Function is Surjective}{}
+    To prove a function $f : X \to Y$ is surjective:
+    \begin{enumerate}
+        \item Let $y \in Y$ be arbitrary.
+        \item ``Undo'' the function $f$ to obtain $x \in X$ where $f(x)=y$.
+    \end{enumerate}
+\end{tecbox}
+
+\begin{exbox}{Proving Surjectivity}{}
+    Prove that $f : \R \to \R$ defined by $f(x) = -3x+7$ is surjective.
+    \tcblower
+    \begin{proof}
+        Let $y \in Y$ be arbitrary. Let $x \coloneq \frac{y-7}{-3}$. Then $x \in \R$, and:
+        \begin{align*}
+            f(x)
+            &= -3 \left( \frac{y-7}{-3} \right) + 7 \\
+            &= (y-7) + 7 \\
+            &= y
+        \end{align*}
+        Therefore, $f$ is surjective.
+    \end{proof}
+\end{exbox}
+
+\begin{dfnbox}{Bijective}{}
+    A function $f : X \to Y$ is \dfntxt{bijective} if it is both injective and surjective.
+\end{dfnbox}
+
+\begin{dfnbox}{Function Composition}{}
+    Let $f : X \to Y$ and $g : Y \to Z$ be functions. The \dfntxt{composition} of $f$ and $g$ is a function $g \circ f : X \to Z$ defined by:
+    \[ (g \circ f) (x) \coloneq g(f(x)) \]
+\end{dfnbox}
+
+\begin{thmbox}{Composition Preserves Injectivity and Surjectivity}{}
+    Suppose $f : X \to Y$ and $g : Y \to Z$ are functions.
+    \begin{enumerate}[label=(\alph*)]
+        \item If $f$ and $g$ are injective, then $g \circ f$ is injective.
+        \item If $f$ and $g$ are surjective, then $g \circ f$ is surjective.
+        \item If $f$ and $g$ are bijective, then $g \circ f$ is bijective.
+    \end{enumerate}
+    \tcblower
+    \begin{proof}[Proof of (a)]
+        Let $x_1, x_2 \in X$. Suppose that $(g \circ f)(x_1) = (g \circ f)(x_2)$. Then, $g(f(x_1)) = g(f(x_2))$. Because $g$ is injective, we have $f(x_1) = f(x_2)$. Because $f$ is injective, we have $x_1 = x_2$. Therefore, $g \circ f$ is injective.
+    \end{proof}
+
+    \begin{proof}[Proof of (b)]
+        Let $z \in Z$. Because $g$ is surjective, there exists an element $y \in Y$ such that $g(y) = z$. Because $f$ is surjective, there exists an element $x \in X$ such that $f(x) = y$. Thus, $(g \circ f)(x) = g(f(x)) = g(y) = z$. Therefore, $g \circ f$ is surjective.
+    \end{proof}
+
+    \begin{proof}[Proof of (c)]
+        We know that from (a) and (b) composition preserves injectivity and surjectivity. Thus, composition must also preserve bijectivity.
+    \end{proof}
+\end{thmbox}
+
+\begin{dfnbox}{Inverse Function}{}
+    Let $f : X \to Y$ be a bijection. The \dfntxt{inverse function} of $f$ is a function $f^{-1} : Y \to X$ defined by:
+    \[ f^{-1} \coloneq \{ (y,x) \in Y \times X : (x,y) \in f \} \]
+\end{dfnbox}
+
+The notation for inverse functions conflicts with the notation for inverse images. A key distinction to make it that only bijections can have an inverse function, but we can apply the inverse image to any function. Thus, given a bijection $f : X \to Y$, we know $f^{-1}(f(x)) = x$ for all $x \in X$, and $f(f^{-1}(y)) = y$ for all $y \in Y$.
+
+\begin{exbox}{}{}
+    Let $f : X \to Y$ and $g : Y \to X$ be functions such that $(g \circ f) = x$ for all $x \in X$, and $(f \circ g)(y) = y$ for all $y \in Y$. $f^{-1} = g$.
+    \tcblower
+    \begin{proof}
+
+    \end{proof}
+\end{exbox}
+
+\amzindex
+\end{document}

@@ -1,0 +1,770 @@
+\documentclass[12pt]{report}
+\usepackage[margin=1in]{geometry}
+
+\usepackage{amzmath}
+\usepackage{tabularx}
+\usepackage{amsthm}
+\usepackage{enumitem}
+\usepackage{nicefrac}
+
+\title{COSC 311: Discrete Structures}
+\author{Alex Zhang}
+
+\begin{document}
+\renewcommand{\arraystretch}{1.25}
+
+\maketitle
+\tableofcontents
+\newpage
+
+\chapter{Counting}
+\begin{dfnbox}{Permutation}
+	A \dfntxt{permutation} is a grouping of elements where order \textbf{does} matter.
+	\[ P(n, r) \frac{n!}{n-r}! \]
+\end{dfnbox}
+
+\begin{genbox}{Permutation Formulae}
+	\begin{center}\begin{tabular}{ll}
+		Permutations of size $r$ for $n$ objects & $P(n, r) = \frac{n!}{(n-r)!}$ \\
+		Must contain $x$ elements & $P(r, x) \times P(n-x, r-x)$ \\
+		Permutations with $r$ indistinguishable types & $\frac{n!}{n_1! \times n_2! \times \cdots \times n_r!}$ \\
+		Circular Arrangement & $\frac{n!}{n}$ \\
+	\end{tabular}\end{center}
+\end{genbox}
+
+\begin{dfnbox}{Combination}
+	A \dfntxt{combination} is a grouping of elements where order \textbf{does not} matter.
+	
+	$$ C(n,r) = {n \choose r} = \frac{P(n,r)}{r!} = \frac{n!}{r! \times (n-r)!}$$
+\end{dfnbox}
+
+We read ${n \choose r}$ as $n$ choose $r$.
+
+\begin{thmbox}{Binomial Theorem}
+	Given variables $x$ and $y$ and a positive integer $n$, the repeated product of the term $(x+y)$ with itself can be expanded as the following sum:
+	$$(x+y)^n = \sum_{k=0}^{n} {n \choose k} x^k y^{n-k} $$
+\end{thmbox}
+
+\begin{thmbox}{Combination With Repetition}
+	The number of combinations of $r$ objects chosen from $n$ distinct objects \textit{with repetition} is
+	$${{n+r-1}\choose{r}} = \frac{(n+r-1)!}{r!(n-1)!}$$
+\end{thmbox}
+
+\newpage
+\chapter{Logic}
+\dfntxt{Logic} is reasoning conducted or assessed according to strict principles of validity.
+
+\begin{dfnbox}{Proposition/Statement}
+	A \dfntxt{proposition} or \dfntxt{statement} is a declarative sentence that is exclusively either true or false.
+	$$\ p \coloneq 2+5=7 $$
+	
+	$p$ is a true proposition because $2+5=7$.
+\end{dfnbox}
+
+\begin{dfnbox}{Tautology}
+	A compound proposition is referred to as a \dfntxt{tautology} if it is true for all truth value assignments.
+\end{dfnbox}
+
+\begin{dfnbox}{Contradiction}
+	A compound proposition is referred to as a \dfntxt{contradiction} if it is false for all truth value assignments.
+\end{dfnbox}
+
+\begin{dfnbox}{Converse}
+	The \dfntxt{converse} of an implication $p \Rightarrow Q$ is defined as the implication $q \Rightarrow p$
+\end{dfnbox}
+
+\begin{dfnbox}{Contrapositive}
+	The \dfntxt{contrapositive} of an implication $p \Rightarrow q$ is defined as the implication proposition $\neg q \rightarrow \neg p$. It is logically equivalent to the original statement (i.e. has all same truth values).
+\end{dfnbox}	
+
+\begin{dfnbox}{Dual}
+	If $S$ is a statement with no operations other than negation, $\lor$ and $\land$, then the dual of $S$ ($S^d$) is a statement obtained from $S$ by replacing $\land$ with $\lor$ and vice versa.
+\end{dfnbox}
+
+\begin{thmbox}{Principle of Duality}
+	Assume $S$ and $T$ are statements with no other operations other than negation $\neg$. If $S \iff T$ then $S^d \iff T^d$
+	
+	\textbf{Substitution Rules}
+	\begin{enumerate}
+		\item If the original statement is a tautology, we can replace every occurrence of $p$ with $q$ and still have a tautology
+		\item If $q \iff p$, we can replace any $p$ with $q$ and still have a logically equivalent statement.
+	\end{enumerate}
+\end{thmbox}
+
+\begin{thmbox}{Rule of Universal Specification}
+	If a particular open statement becomes true for all replacements by elements of a given universe, the the open statement is true for each specific individual element in the universe.
+	$$ \left( \forall x [ m(x) \Rightarrow c(x) ] \land m(l) \right) \Rightarrow c(l) $$
+\end{thmbox}
+
+\begin{thmbox}{Rule of Universal Generalization}
+	If open statement $p(x)$ is proved to be true when $x$ is replaced by any arbitrarily chosen element $c$ from the universe, then $\forall x p(x)$ is true.
+\end{thmbox}
+
+\begin{genbox}{Laws of Propositional Logic}
+	\begin{tabular}{|l|l|l|} \hline
+		Idempotent laws & $p \land p \iff p$ & $p \lor p \iff p$ \\ \hline
+		Associative Laws & $(p \lor q) \lor r \iff p \lor (q \lor r)$ & $(p \land q) \land r \iff p \land (q \land r)$ \\ \hline
+		Commutative Laws & $p \lor q \iff q \lor p$ & $p \land q \iff q \land p$ \\ \hline
+		Distributive Laws & $p \lor (q \land r) \iff (p \lor q) \land (p \lor r)$ & $p \land (q \lor r) \iff (p \land q) \lor (p \land r)$ \\ \hline
+		Identity Laws & $p \lor F \iff p$ & $p \land T \iff p$ \\ \hline
+		Domination Laws & $p \land F \iff F$ & $p \lor T \iff T$ \\ \hline
+		Double Negation Law & $\neg \neg p \iff p$ & \\ \hline
+		Complement Laws & $p \land \neg p \iff F$ & $p \lor \neg p \iff T$ \\ \hline
+		De Morgan's Laws & $\neg (p \lor q) \iff \neg p \land \neg q$ & $\neg (p \lor q) \iff \neg p \lor \neg q$ \\ \hline
+		Absorption Laws & $p \lor (p \land q) \iff P$ & $p \land (p \lor q) \iff p$ \\ \hline
+		Conditional Identities & $(p \Rightarrow q) \iff (\neg p \lor q)$ & $(p \iff q) \iff \left[ (p \Rightarrow q) \land (q \Rightarrow p) \right]$ \\ \hline
+		Contrapositive & $(p \Rightarrow q) \iff (\neg q \Rightarrow \neg p)$ \\ \hline
+	\end{tabular}
+\end{genbox}
+
+\begin{genbox}{Proof by Contradiction}
+	$$(p \Rightarrow q) \iff \left[ (p \land \neg q) \Rightarrow F_0 \right]$$
+\end{genbox}
+
+\begin{dfnbox}{Open Proposition}
+	An \dfntxt{open proposition}
+	\begin{dfnitems}
+		\item has one or more variables belonging to a specified set of some universe
+		\item is not a proposition on its own
+		\item becomes a proposition when the variables are replaced by values
+	\end{dfnitems}
+\end{dfnbox}
+
+\begin{dfnbox}{Predicate}
+	A \dfntxt{predicate} is a proposition that depends on a variable.
+	$$P(x):\ \text{x is a prime number}$$
+\end{dfnbox}
+
+\begin{dfnbox}{Universal Quantifier}
+	The \dfntxt{universal quantifier} ($\forall$) states that \textbf{for all} values of a quantified variable, the proposition holds.
+	$$\forall (x \in \mathbb{N}) (P(x)) \iff P(1) \land P(2) \land P(3) \land \ldots$$
+\end{dfnbox}
+
+\begin{dfnbox}{Existential Quantifier}
+	The \dfntxt{existential quantifier} ($\exists$) states \textbf{there exists} a value for a quantified variable such that the proposition holds.
+	$$\exists (x \in \mathbb{N})(P(x)) \iff P(1) \lor P(2) \lor P(3) \ldots$$
+\end{dfnbox}
+
+\begin{genbox}{Negation of Quantified Statements}
+	$$\neg \forall x P(x) \iff \exists x \neg P(x)$$
+	$$\neg \exists x P(x) \iff \forall x \neg P(x)$$
+\end{genbox}
+
+\begin{genbox}{Rules of Inference}
+	The following are all tautologies in logic:
+
+	\begin{tabular}{|l|l|} \hline
+		Modus Ponens (Confirm) & $\left[ (p) \land (p \Rightarrow q) \right] \Rightarrow q$ \\ \hline
+		Modus Tollens (Contradict) & $\left[ (\neg q) \land (p \Rightarrow q) \right] \Rightarrow \neg p$ \\ \hline
+		Addition & $p \Rightarrow (p \lor q)$ \\ \hline
+		Simplification & $(p \land q) \Rightarrow p$ \\ \hline
+		Conjunction & $(p \land q) \Rightarrow (p \land q)$ \\ \hline
+		Hypothetical Syllogism & $\left[ (p \Rightarrow q) \land (q \Rightarrow r) \right] \Rightarrow (p \Rightarrow r)$ \\ \hline
+		Disjunctive Syllogism & $\left[ (p \lor q) \land (\neg p) \right] \Rightarrow q$ \\ \hline
+		Resolution & $\left[ (p \lor q) \land (\neg p \lor r) \right] \Rightarrow (q \lor r)$ \\ \hline
+	\end{tabular}
+
+	Let $A$ be any non-empty set.
+
+	\begin{tabular}{|l|l|} \hline
+		Universal Instantiation & $\left[ (c \in A) \land \forall(x \in A)(P(x)) \right] \Rightarrow P(c)$ \\ \hline
+		Universal Generalization & $\left[ (c \in A\ \text{(arbitrary)}) \land P(c) \right] \Rightarrow \forall(x \in A)(P(x))$ \\ \hline
+		Existential Instantiation & $\exists(x \in A)(P(x)) \Rightarrow \left[ (c \in A\ \text{(particular)}) \land P(c) \right]$ \\ \hline
+		Existential Generalization & $\left[ (c \in A) \land P(c) \right] \Rightarrow \exists (x \in A)(P(x))$ \\ \hline
+	\end{tabular}
+\end{genbox}
+
+\newpage
+\chapter{Proofs}
+\section{Mathematical Definitions}
+\begin{dfnbox}{Parity}
+	\dfntxt{Parity} describes whether an integer is even or odd.
+	
+	Let $x \in \mathbb{Z}$
+	\begin{dfnitems}
+		\item $\exists (k \in \mathbb{Z}) (x = 2k) \Rightarrow x\ \text{is even}$
+		\item $\exists (k \in \mathbb{Z}) (x = 2k+1) \Rightarrow x\ \text{is odd}$
+	\end{dfnitems}
+\end{dfnbox}
+
+\begin{dfnbox}{Rational Numbers}
+	$$ \exists (x, y \in \mathbb{Z}) \left( y \neq 0 \land r=\frac{x}{y} \right) \Rightarrow r\ \text{is rational}$$
+\end{dfnbox}
+
+\begin{dfnbox}{Divides}
+	An integer $x$ \dfntxt{divides} an integer $y$ if and only if $x \neq 0$ and $y = kx$ for some integer k.
+	$$ x | y \iff \left[ (x \in \mathbb{Z}) \land (x \neq 0) \land (y \in \mathbb{Z}) \land \exists (k \in \mathbb{Z}) (y = kx) \right]$$
+
+	\begin{exbox}{Linear Combinations}
+		Is it possible to sum 500 from any combination of elements from $A=\{144, 336, 30, 66, 138, 162, 318, 54, 84, 288, 126, 468\}$?
+
+		3 divides all elements of $A$. Therefore, 3 must divide any linear combination of the elements. But 3 does not divide 500, so it is impossible.
+	\end{exbox}
+\end{dfnbox}
+
+\begin{dfnbox}{Prime and Composite Numbers}
+	An integer $n$ is \dfntxt{prime} if and only if $n>1$ and the only positive integers that divide $n$ are 1 and $n$.
+	$$n\ \text{is prime} \iff \left[ (n>1) \land \forall (x \in \mathbb{Z}^+) \left[ (x = 1) \lor (x = n) \lor (x \not | n)\right] \right]$$
+	$$n\ \text{is prime} \iff \left| \{ x : (x \in \mathbb{Z}^+) \land (x | n) \} \right| = 2$$
+	An integer $n$ is \dfntxt{composite} if and only if $n>1$ and there is an integer $m$ such that $1<m<n$ and $m$ divides $n$.
+	$$n\ \text{is composite} \iff \left[ (n>1) \land \exists (m \in \mathbb{Z}) \left[ (1<m<n) \land (m | n) \right] \right]$$
+	$$n\ \text{is composite} \iff \left| \{x : (x \in \mathbb{Z}^+) \land (x | n) \} \right| > 2$$
+\end{dfnbox}
+
+\begin{dfnbox}{Common Divisor}
+	For $a, b \in \mathbb{Z}$, a positive integer $c$ is said to be a \dfntxt{common divisor} of $a$ and $b$ if $c|a$ and $c|b$.
+
+	If either $a \neq 0$ or $b \neq 0$ then $c \in \mathbb{Z}^+$ is called the greatest common divisor (GCD) of $a,b$ if:
+	\begin{dfnitems}
+		\item $c|a$ and $c|b$
+		\item for any common divisor of $a$ and $b$, say $d$, we have $d|c$
+	\end{dfnitems}
+
+	%$$ c = \gcd (a,b) \Rightarrow\ \text{ go get the important properties from the workbook}$$
+\end{dfnbox}
+
+
+%\begin{thmbox}{Euclidean Algorithm}
+%	Let $a,b \in \mathbb{Z}^+$ and set $r_0=a$ and $r_1=b$. Apply the Division Algorithm $n$ times as follows
+%\end{thmbox}
+
+\begin{dfnbox}{Integers Modulo}
+	The set of integers modulo $p$ (denoted $\mathbb{Z}_p$) is defined as:
+	$$ \mathbb{Z}_p = \{ x : 0 \leq x < p \} $$
+\end{dfnbox}
+
+\section{Introduction to Proofs}
+\begin{dfnbox}{Axiom}
+	An \dfntxt{axiom} is a statement assumed to be true. It usually serves as a basis for many elementary theorems which, in turn, are used to prove other theorems.
+\end{dfnbox}
+
+\begin{dfnbox}{Theorem}
+	A \dfntxt{theorem} is a statement that can be proven to be true.
+\end{dfnbox}
+
+\begin{dfnbox}{Proof}
+	A \dfntxt{proof} consists of a series of steps, each of which follow logically from assumptions or from previously proven statements, whose final step should result in the statement of the theorem being proven.
+\end{dfnbox}
+
+In computer science, proofs are important for a multitude of things, including but not limited to:
+\begin{dfnitems}
+	\item establishing that a program works as expected
+	\item showing that a cryptosystem is secure
+	\item validating a set of inferences in artificial intelligence
+\end{dfnitems}
+
+\newpage
+\chapter{Mathematical Induction and Recursion}
+
+\begin{dfnbox}{Induction}
+	\dfntxt{Induction} is a technique used to prove a proposition about any well-ordered set.
+	
+	To prove a proposition $p(k)$ for any $k$ in the well-ordered set $A$:
+	$$\left[ p(n_0) \land \forall (k \geq n_0) (p(k) \Rightarrow p(k+1)) \right] \Rightarrow \forall(n \in A)(p(n)$$
+	\begin{enumerate}
+		\item \textbf{Base Case} -- Prove $p(n_0)$ where $n_0$ is the first element of the set
+		\item \textbf{Inductive Step} -- Prove $p(k) \Rightarrow p(k+1)$. This recursively proves $p$ for the rest of our set
+	\end{enumerate}
+\end{dfnbox}
+
+\begin{exbox}{Sums of natural numbers}
+	$\forall(n \in \mathbb{Z}^+)(p(n))$ where $p(n)$ is defined as:
+	$$p(n) \coloneq \sum_{i=1}^{n}i = \frac{n(n+1)}{2}$$
+	\begin{enumerate}
+		\item \textbf{Base Case} -- Let $n_0=1$. Then $p(n_0)=\frac{1(1+1)}{2}$, which is true.
+		\item \textbf{Induction Step} -- We have proven $p(n)$ is already true. Now, we need to prove $$p(n+1) \coloneq \sum_{i=1}^{n+1}i = \frac{(n+1)((n+1)+1)}{2}$$ 
+	\end{enumerate}
+\end{exbox}
+
+\begin{dfnbox}{RSA Encryption}
+	
+\end{dfnbox}
+
+Based on two algorithms:
+
+\begin{enumerate}
+	\item Key Generation
+	\item RSA Function Evaluation: a function $F$ that takes input data $x$ and a key $k$ and produces either an encrypted result or plain text
+\end{enumerate}
+
+Steps to create secure RSA keys:
+\begin{enumerate}
+	\item Select two large prime numbers $p$ and $q$ (preferably above 512 digits)
+	\item Generate modulus $n = p \cdot q$
+	\item Calculate the totient $\phi (n) = (p-1) (q-1)$
+	\item Generate a public key as a prime number calculated from the interval $[ 3, \phi(n) ]$ that has a $\gcd$ of 1 with $\phi(n)$.
+	\item Generate a private key as the inverse of the prime number selected in the public key with respect to $\mod \phi(n)$
+\end{enumerate}
+
+\newpage
+\chapter{Summation}
+\begin{dfnbox}{Summation}
+	\dfntxt{Summation} is used to express the sum of terms in a numerical sequence
+	$$\sum_{i=s}^{n}a_i = a_s + a_{s+1} + \ldots + a_n$$
+	Terms:
+	\begin{dfnitems}
+		\item $i$: index of summation
+		\item $s$: lower limit of summation
+		\item $t$: upper limit of summation
+		\item $\sum_{i=s}^{n}a_1$: summation format
+		\item $a_s+a_{s+1}+\ldots+a_n$: expanded form
+	\end{dfnitems}
+\end{dfnbox}
+
+\begin{dfnbox}{Closed Form Sum}
+	A \dfntxt{closed form} for a sum is a finite expression used to calculate a sum.
+\end{dfnbox}
+
+\begin{genbox}{Common Closed Forms}
+	\textbf{Arithmetic Sequence}:
+	$$\forall(n \in \mathbb{N}) \sum_{k=0}^{n-1} (a+kd) = an + \frac{d(n-1)n}{2}$$
+	\textbf{Geometric Sequence}:
+	$$\forall (r \neq 1 \in \mathbb{R}) \forall (n \in \mathbb{N}) \sum_{k=0}^{n-1} a \cdot r^k = \frac{a(r^n-1)}{r-1}$$
+
+\end{genbox}
+
+\newpage
+\chapter{Functions and Relations}
+
+\begin{dfnbox}{Onto Function}
+	A function $f: A \rightarrow B$ is \dfntxt{onto} if every $b \in B$ has some $a \in A$ where $f(a) = b$.
+\end{dfnbox}
+
+\begin{dfnbox}{1-to-1 Function}
+	A function $f :  A \rightarrow B$ is \dfntxt{1-to-1} if every $a \in A$ has a unique $f(a) \in B$.
+
+	$$\left[ (a_1,a_2 \in A) \land (a_1 \neq a_2) \right] \Rightarrow f(a_1) \neq f(a_2)$$
+\end{dfnbox}
+
+\begin{exbox}{Onto Functions}
+	\textbf{Question:} Let $A = \{x,y,z\}$ and $B = \{1,2\}$. Are all functions $f : A \rightarrow B$ onto? How many onto functions are there from $A$ to $B$?
+	\tcblower
+	There are $|B|^{|A|}=8$ functions $f : A \rightarrow B$.
+
+	All functions $f: A \rightarrow B$ are onto except:
+	\begin{dfnitems}
+		\item $f_1 = \{(x,1), (y,1), (z,1)\}$ 
+		\item $f_2 = \{(x,2), (y,2), (z,2)\}$
+	\end{dfnitems}
+
+	Thus, there are only 6 onto functions $f : A \rightarrow B$.
+\end{exbox}
+
+\begin{exbox}{Choose}
+	Let $A = \{w,x,y,z\}$ and $B=\{1,2,3\}$. There are $3^4$ functinos from $A$ to $B$. For subsets of size $2$, there are $2^4$ functions from $A$ to $\{1,3\}$. So, there are
+	$$3 \cdot 2^4\ \text{or}\ {3 \choose 2} \cdot 2^4$$
+	functinos from $A$ to $B$ that are not onto.
+	\tcblower
+	The constant functions such as $\{(w,2), (x,2) (y,2), (z,2)\}$ will be counted twice.
+
+	Thus, the total number of distinct onto functions is $3^4 - {3 \choose 2} \cdot 2^4 + 3 = 36$
+\end{exbox}
+
+For finite sets $A$ and $B$, with $|A| = m$ and $|B| = n$, there are $$\sum_{k=0}^{n} (-1)^k {n \choose n-k} (n-k)^m$$ onto functions from $A$ to $B$.
+
+\begin{dfnbox}{Bijective Function}
+	A function $f: A \rightarrow B$ is \dfntxt{bijective} if it is both 1-to-1 and onto.
+\end{dfnbox}
+
+\begin{dfnbox}{Identity Function}
+	A function $1_A: A \rightarrow A$ is defined by $1_A(a) = a \forall a \in A$ is called the identity function on the set $A$.
+\end{dfnbox}
+
+\begin{dfnbox}{Function Equality}
+	For functions $f,g : A \rightarrow B$, we say that $f=g$ if $\forall(a \in A)\left[ f(a)=g(a) \right]$
+\end{dfnbox}
+
+\begin{exbox}{asdf}
+	Suppose $f: \mathbb{Z} \rightarrow \mathbb{Z}$ and $g : \mathbb{Z} \rightarrow \mathbb{Q}$ such that $\forall(x \in \mathbb{Z}) \left[ f(x) = x = g(x) \right]$. Is $f=g$?
+	\tcblower
+	No, $f$ is a 1-to-1 correspondence and $g$ is a 1-to-1 function that is not onto.
+\end{exbox}
+
+\begin{exbox}{asdf}
+	Consider $f,g : \mathbb{R} \rightarrow \mathbb{Z}$ where $\forall(x \in \mathbb{R}) \left[ g(x) = [x] \right]$.
+
+	If $x \in \mathbb{Z}$, then $f(x) = x$. If $x \in \mathbb{R} - \mathbb{Z}$, then $f(x) = |x| + 1$.
+
+	
+	\tcblower
+
+	If $x \in \mathbb{Z}$ then $f(x) = x = [x] = g(x)$
+
+	If $x \in \mathbb{R} \setminus \mathbb{Z}$ then $x = n + r$ where $n \in \mathbb{Z}$ and $0<r<1$
+
+	So, $f(x) = [x] + 1 =n + 1 = [x] = g(x)$.
+
+	Therefore, $\forall(x \in \mathbb{R}) \left[ f(x) = g(x) \right]$
+\end{exbox}
+
+\begin{dfnbox}{Composition of Functions}
+	Let $f : A \rightarrow B$ and $g : B \rightarrow C$. The \dfntxt{composition} of $g$ with $f$ (denoted as $g \circ f$) is a function $g \circ f : A \rightarrow C$ defined as:
+	$$\forall(a \in A) \left[ (g \circ f) (a) = g(f(a)) \right]$$
+\end{dfnbox}
+
+\begin{exbox}{Composition and Commutativity}
+	Suppose $f,g : \mathbb{R} \rightarrow \mathbb{R}$ with $f(x) = x^2$ and $g(x) = x+5$. Determine $(g \circ f)(x)$ and $(f \circ g)(x)$
+	\tcblower
+	$$(g \circ f)(x) = x^2 + 5$$
+	$$(f \circ g)(x) = (x+5)^2$$
+	Thus, composition of functions does not commute (i.e. it's not a commutative operation).
+\end{exbox}
+
+\begin{thmbox}{Preservation of Onto/1-to-1}
+	\textbf{Theorem:} Given $f: A \rightarrow B$ and $g : B \rightarrow C$
+	\begin{dfnitems}
+		\item If $f$ and $g$ are onto, then $(g \circ f)$ is onto
+		\item If $f$ and $g$ are 1-to-1, then $(g \circ f)$ is 1-to-1
+	\end{dfnitems}
+\end{thmbox}
+
+\begin{thmbox}{Associativity of Composition}
+	\textbf{Theorem:} Given $f : A \rightarrow B$ and $g : B \rightarrow C$ and $h : C \rightarrow D$
+	$$(h \circ g) \circ f = h \circ (g \circ f)$$
+\end{thmbox}
+
+\begin{dfnbox}{Powers of Functions}
+	Let $f : A \rightarrow A$.
+	\begin{dfnitems}
+		\item $f^1 = f$
+		\item $f^{n+1} = f \circ f^n$ for $n \in \mathbb{N}$
+	\end{dfnitems}
+\end{dfnbox}
+
+\begin{exbox}{Simple Power Function}
+	Suppose $A = \{1,2,3,4\}$ and $f : A \rightarrow A$ with $f = \{(1,2), (2,2), (3,1), (4,3) \}$. What is $f^2$ and $f^3$?
+	\tcblower
+	$$f^2 = f \circ f = \{ (1,2), (2,2), (3,2), (4,1) \}$$
+	$$ f^3 = f \circ f \circ f = \{(1,2), (2,2), (3,2), (4,2) \}$$
+\end{exbox}
+
+\begin{dfnbox}{Converse of a Relation}
+	For a relation $R$ from set $A$ to $B$, the \dfntxt{converse} of $R$ ($R^c$) is a relation from $B$ to $A$ defined as
+	$$R^c = \{(b,a) : (a,b) \in R\}$$
+\end{dfnbox}
+
+\begin{dfnbox}{Inverse}
+	Let $f : A \rightarrow B$. $f$ is invertible if: $$\exists (g : B \rightarrow A)(g \circ f = 1_A \land f \circ g = 1_B)$$ We call $g$ the \dfntxt{inverse} of $f$ denoted as $g = f^{-1}$.
+\end{dfnbox}
+
+\begin{exbox}{Invertible Functions}
+	Consider $f,g : \mathbb{R} \rightarrow \mathbb{R}$ with $f(x) = 2x+5$ and $g(x) = \frac{x-5}{2}$. Show that both $f$ and $g$ are invertible functions.
+	\tcblower
+	\begin{proof}
+		$(g \circ f)(x) = g(f(x)) = g(2x+5) = \frac{(2x+5) - 5}{2} = x$
+
+		$(f \circ g)(x)$
+
+		$g \circ f = f \circ g = 1_{\mathbb{R}}$
+
+		Thus, $f$ and $g$ are invertible functions. In addition, $f$ and $g$ are each other's inverses.
+	\end{proof}
+\end{exbox}
+
+\begin{thmbox}{Invertability}
+	\textbf{Theorem:} A function $f : A \rightarrow B$ is invertible if and only if $f$ is 1-to-1 and onto.
+	\tcblower
+
+\end{thmbox}
+
+\begin{thmbox}{asdf}
+	\textbf{Theorem:} If $f : A \rightarrow B$ and $g : B \rightarrow C$ are both invertible, then $g \circ f : A \rightarrow C$ is invertible, and $(g \circ f)^{-1} = f^{-1} \circ g^{-1}$
+\end{thmbox}
+
+\begin{dfnbox}{Preimage}
+	If $f : A \rightarrow B$, and $B_1 \subseteq B$.
+\end{dfnbox}
+
+\begin{thmbox}{Equivalences}
+	If $f : A \rightarrow B$ for finite sets $A$ and $B$ with $|A| = |B|$, then the following are equivalent:
+	\begin{dfnitems}
+		\item $f$ is 1-to-1
+		\item $f$ is onto
+		\item $f$ is invertible
+	\end{dfnitems}
+\end{thmbox}
+
+\chapter{Computational Complexity}
+\begin{dfnbox}{Dominated Function}
+	Let $f,g : \mathbb{Z}^+ \rightarrow \mathbb{R}$. We say $g$ \dfntxt{dominates} $f$ if %there exists $m \in \mathbb{R}^+$ and $k \in \mathbb{Z}^+$ such that
+	$$\exists (m \in \mathbb{R}^+, k \in \mathbb{Z}^+)\left[ n \geq k \Rightarrow \forall (n \in \mathbb{Z}^+)\left( |f(n)| \leq m|g(n)| \right) \right]$$
+
+	When $f$ is dominated by $g$, we say that $f$ is of order (at most) $g$ and write $f \in \bigO(g)$. We can think of $\bigO(g)$ as the set of all functions having domain $\mathbb{Z}^+$ and a co-domain $\mathbb{R}$ that are dominated by $g$.
+\end{dfnbox}
+
+\begin{thmbox}{asd}
+	$g \notin \bigO(f)$
+
+	Assume $g \in \bigO(f)$. Then, $\forall (n \geq k) (n^2 = |g(n)| \leq m|f(n)| = 5mn)$. For $n \in \mathbb{Z}^+$, as $n$ increases, $5m$ remains constant. So eventually, $5mn < n^2$ Hence, $g \notin \bigO(f)$.
+\end{thmbox}
+
+\begin{exbox}{Dominance}
+	Consider $f,g : \mathbb{Z}^+ \rightarrow \mathbb{R}$ with $f(n) = 5n^2 + 3n + 1$ and $g(n) = n^2$. Show that $f \in \bigO(g)$ and $g \in \bigO(f)$
+	\tcblower
+	\begin{proof}
+		$$|f(n)| = |5n^2 + 3n + 1| = 5n^2 + 3n + 1 \leq 5n^2 + 3n^2 + n^2 = 9n^2 = 9|g(n)|$$
+
+		For all $n \geq 1$ and $n = k$, we have $|f(n) \leq m |g(n)| = 9|g(n)|$ for any $m \geq 9$. Hence, $f \in \bigO(g)$.
+
+		$$|g(n)| = n^2 \leq 5n^2 \leq 5n^2 + 3n +1$$
+		For all $n \geq 1$ we have $|g(n)| \leq m |f(n) |$ for any $m \geq 1$ and $1 \leq k \leq n$. So $g \in \bigO(f)$.
+	\end{proof}
+\end{exbox}
+
+\begin{exbox}{Induction}
+	Consider $f,g : \mathbb{Z}^+ \rightarrow \mathbb{R}$ with $f(n) = 1+2+\ldots+n$ and $g(n) = 1^2 + 2^2 + \ldots + n^2$. How do we know that $f \in \bigO(n^2)$ and $g \in \bigO(n^3)$?
+	\tcblower
+	\begin{proof}
+		$f: \mathbb{Z}^+ \rightarrow \mathbb{R}$ where $f(n) = \frac{n(n+1)}{2}$. Hence, $f \in \bigO(n^2)$
+
+		$g(n) = \frac{(n(n+1)(2n+1))}{6}$. Hence, $g \in \bigO(n^3)$.
+	\end{proof}
+\end{exbox}
+
+\newpage
+\chapter{Graph Theory}
+
+\section{Introduction}
+\begin{dfnbox}{Graph}
+	A \dfntxt{graph} is a set of objects with some relation between the objects.
+	\tcblower
+	Formally, a \dfntxt{graph} $G$ is defined as a pair $(V,E)$ where:
+	\begin{dfnitems}
+		\item $V$ is a set of \dfntxt{vertices}
+		\item $E$ is a set of \dfntxt{edges}
+	\end{dfnitems}
+\end{dfnbox}
+
+We can think of a graph as a web of elements. When talking about graphs, we call the elements ``vertices'' and call the connections between elements ``edges''.
+
+\begin{dfnbox}{Directed/Undirected Graph}
+	A graph is \dfntxt{undirected} if every edge goes both ways. A graph is \dfntxt{directed} if some edges can only go one way.
+	\begin{dfnitems}
+		\item If a graph $G$ is undirected, then $E \subseteq \left\{\{u,v\} : u,v \in V \right\}$
+		\item If a graph $G$ is directed, then $E \subseteq \{(u,v) : u,v \in V\}$
+	\end{dfnitems}
+\end{dfnbox}
+
+Notice the difference between a set $\{a,b\}$ and a tuple $(a,b)$. The order of elements inside a set does not matter while the order of elements inside a tuple does matter.
+
+\begin{dfnbox}{Walk}
+	Let $x,y$ be two vertices in an undirected graph $G = (V,E)$. An $x-y$ \dfntxt{walk} in $G$ is a loop-free alternating sequence:
+	$$ asdf $$
+	with $e_i = \{x_{i-1}, x_i\}, 1 \leq i \leq n$. The length of the walk is the number of edges traversed ($n$ edges).
+
+	\begin{dfnitems}
+		\item If $n=0$, we consider it a \dfntxt{trivial walk}
+		\item If $x=y$ and $n>1$, we consider it a \dfntxt{closed walk}
+		\item If $x=y$ and $n \leq 0$, we consider it an \dfntxt{open walk}
+	\end{dfnitems}
+\end{dfnbox}
+
+\begin{genbox}{Walk Variations}
+	\iffalse
+	Let $x$-$y$ be a walk in the undirected graph $G = (V,E)$.
+	\begin{dfnitems}
+		\item If no edge in the $x$-$y$ walk is repeated, then $x$-$y$ walk is called an $x$-$y$ \dfntxt{trail}
+		\item A closed $x$-$x$ trail is called a \dfntxt{circuit}. We will assume all circuits of interest have at least one edge
+		\item If no vertex of an $x$-$y$ walk occurs more than once, the walk is called an $x$-$y$ \dfntxt{path}. If $x=y$, the closed path is called a \dfntxt{cycle}
+	\end{dfnitems}
+	\fi
+	\begin{center}\begin{tabular}{lccc}
+		Name & Repeated Vertices & Repeated Edges & Open/Closed \\ \hline
+		Open Walk & Yes & Yes & Open \\
+		Closed Walk & Yes & Yes & Closed \\
+		Trail & Yes & No & Open \\
+		Circuit & Yes & No & Closed \\
+		Path & No & No & Open \\
+		Cycle & No & No & Closed
+	\end{tabular}\end{center}
+\end{genbox}
+
+
+
+\begin{thmbox}{Trails are also paths}
+	\textbf{Theorem:} Let $G = (V,E)$ be an undirected graph with $a,b \in \mathbb{V}$. If there is a trail from $a$ to $b$, then there is also a path from $a$ to $b$.
+\end{thmbox}
+
+\begin{dfnbox}{Connected Graph}
+	Let $G = (V,E)$ be an undirected graph. We say that $G$ is \dfntxt{connected} if there is a path between any two distinct vertices of $G$. If $G$ is not connected, then $G$ is \dfntxt{disconnected}.
+\end{dfnbox}
+
+\begin{dfnbox}{Disconnected Graph}
+	A graph $G=(V,E)$ is \dfntxt{disconnected} if and only if $V$ can be partitioned in at least two subsets $V_1$ and $V_2$ such that (TODO FINISH THIS)
+\end{dfnbox}
+
+\begin{dfnbox}{Multigraph}
+	A \dfntxt{multigraph} is a directed graph where there can exist more than one edge between two vertices. Also, more edges may then be removed.
+\end{dfnbox}
+
+\section{Subgraphs}
+
+\begin{dfnbox}{Subgraph}
+	Let $G = (V,E)$ be a graph of any kind. $G\prime = (V\prime, E\prime)$ is a subgraph of $G$ if $V\prime \subseteq V$, $V\prime \neq \emptyset$, $E\prime \subseteq E$, and every edge $e = \{v_1, v_2\} \in E\prime$ satisfies $v_1, v_2 \in V\prime$.
+\end{dfnbox}
+
+In other words, we can create a subgraph by removing vertices and their respective edges.
+
+There are two types of subgraphs: induced subgraph and spanning subgraph.
+\begin{dfnitems}
+	\item A subgraph is \dfntxt{induced} if vertices and their edges are removed.
+	\item A subgraph is \dfntxt{spanning} if only edges are removed.
+\end{dfnitems}
+
+\begin{exbox}{Combinatorics}
+	How may distinct spanning subgraphs can be created from the following graph?
+	\[ V = \{a,b,c,d\}, E = \{ (a,b), (a,c), (b,c), (c,d) \} \]
+	\begin{center}
+		\begin{graph}
+			\node[vertex] (G_1) at (-2,0)  {a};
+			\node[vertex] (G_2) at (-1,1)   {b};
+			\node[vertex] (G_3) at (1,1)  {c};
+			\node[vertex] (G_4) at (2,0)  {d};
+			\node[vertex] (G_5) at (-1,-1)  {e};
+			\node[vertex] (G_6) at (1,-1)  {f};
+
+			\draw (G_1) -- (G_2) -- (G_3) -- (G_4) -- (G_6) -- (G_5) -- (G_1) -- cycle;
+			\draw (G_2) -- (G_5) -- cycle;
+			\draw (G_3) -- (G_6) -- cycle;
+			\draw (G_3) -- (G_5) -- cycle;
+		\end{graph}
+	\end{center}
+	\tcblower
+	
+	\[ \underbrace{4 \choose 0}_\text{remove 0} + \underbrace{4 \choose 1}_\text{remove 1} + \underbrace{4 \choose 2}_\text{remove 2} + \underbrace{4 \choose 3}_\text{remove 3} + \underbrace{4 \choose 4}_\text{remove 4} = 2^4 = 16 \]
+\end{exbox}
+
+\begin{dfnbox}{Complete Graph}
+	Let $V$ be a set of $n$ vertices. The \dfntxt{complete graph} on $V$, denoted by $K_n$, is a loop-free undirected graph such that for all $a,b \in V$ where $a \neq b$, there exists an edge $\{a,b\} \in E$.
+\end{dfnbox}
+
+In other words, a graph is complete if every vertex is connected to all others by an edge. You can get from any vertex to any other vertex in one move.
+
+\begin{dfnbox}{Complement Graph}
+	Let $G = (V,E)$ be a loop-free undirected graph where $n = \abs{V}$. The complement of $G$, denoted by $\overline{G}$, is the subgraph of $K_n$ consisting of all $n$ vertices of $G$ and all edges $e = \{v_1, v_2\} \not \in E$ that satisfy $v_1, v_2 \in V$. If $G = K_n$, then $\overline{G} = \emptyset$ (i.e. $\overline{G}$ is a null graph). 
+\end{dfnbox}
+
+Note that for any graph $G$, $G + \overline{G}$ is a complete graph.
+
+\begin{dfnbox}{Graph Isomorphism}
+	Let $G_1 = (V_1, E_1)$ and $G_2 = (V_2, E_2)$ where $G_1$ and $G_2$ are undirected graphs. A function $f : V_1 \to V_2$ is a \dfntxt{graph isomorphism} if:
+	\begin{enumerate}
+		\item $f$ is 1-to-1 and onto
+		\item $\forall (a,b \in V_1) \left[ \{a,b\} \in E \iff \{f(a), f(b)\} \in E_2 \right]$
+	\end{enumerate}
+\end{dfnbox}
+
+We say $G_1$ and $G_2$ are \dfntxt{isomorphic} if there exists a graph isomorphism between $G_1$ and $G_2$.
+
+\begin{exbox}{Isomorphism}
+	Are the two following graphs isomorphic?
+
+	\begin{center}
+		\begin{graph}
+			\node[vertex] (G_1) at (-2,0)  {a};
+			\node[vertex] (G_2) at (-1,1)   {b};
+			\node[vertex] (G_3) at (1,1)  {c};
+			\node[vertex] (G_4) at (2,0)  {d};
+			\node[vertex] (G_5) at (-1,-1)  {e};
+			\node[vertex] (G_6) at (1,-1)  {f};
+
+			\draw (G_1) -- (G_2) -- (G_3) -- (G_4) -- (G_6) -- (G_5) -- (G_1) -- cycle;
+			\draw (G_2) -- (G_5) -- cycle;
+			\draw (G_3) -- (G_6) -- cycle;
+			\draw (G_3) -- (G_5) -- cycle;
+		\end{graph}
+
+		\begin{graph}
+			\node[vertex] (u) at (0, 2)  {u};
+			\node[vertex] (v) at (-1, 1)  {v};
+			\node[vertex] (w) at (1, 1)  {w};
+			\node[vertex] (x) at (-2, 0)  {x};
+			\node[vertex] (y) at (0, 0)  {y};
+			\node[vertex] (z) at (2, 0)  {z};
+			
+			\draw (u) -- (v) -- (x) -- (y) -- (z) -- (w) -- (u) -- cycle;
+			\draw (v) -- (y) -- (w) -- (v) -- cycle;
+		\end{graph}
+	\end{center}
+	\tcblower
+	Consider the following circuit in the second graph:
+	$$u \to w \to v \to y \to w \to z \to y \to x \to v \to u$$
+	No circuit of size 9 exists in the first graph. Thus, the two graphs are not isomorphic.
+\end{exbox}
+
+\section{Planar Graphs}
+
+\begin{dfnbox}{Planar Graph}
+	A graph is \dfntxt{planar} if its edges can be drawn without crossing lines.
+\end{dfnbox}
+
+\begin{dfnbox}{Bi-Partite Graph}
+	$G = (V,E)$ is \dfntxt{bi-partite} if $V$ can be split into two disjoint subsets, $V_1$ and $V_2$, and every edge connects a vertex in $V_1$ to a vertex in $V_2$ (or vice versa).
+\end{dfnbox}
+
+\begin{dfnbox}{Bi-Partite Complete Graph}
+	A graph is \dfntxt{bi-partite complete} if it is bi-partite and has every possible edge that still satisfies the definition of bi-partite.
+\end{dfnbox}
+
+\section{Elementary Subdivision and Homeomorphic Graphs}
+
+\begin{dfnbox}{Elementary Subdivision}
+
+\end{dfnbox}
+
+\begin{dfnbox}{Homeomorphic Graph}
+	$G_1$ and $G_2$ are \dfntxt{homeomorphic} if they can be obtained from the same loop-free undirected graph $H$ by a sequence of elementary subdivisions.
+\end{dfnbox}
+
+\begin{thmbox}{Kuratowski's Theorem}
+	A graph is nonplanar if and only if it contains a subgraph that is homeomorphic to either $K_5$ or $K_{3,3}$.
+\end{thmbox}
+
+\chapter{Hamiltonian Paths and Cycles}
+\section{Introduction}
+\begin{dfnbox}{Hamiltonian Cycle}
+	A Hamiltonian cycle is a cycle that visits each vertex of a graph only once (except for the vertex that is both the start and end, which is visited twice).
+\end{dfnbox}
+
+A Hamiltonian graph is a graph or multi-graph with 3 or more vertices that has a Hamiltonian cycle.
+
+\begin{dfnbox}{Hamiltonian Path}
+	A \dfntxt{Hamiltonian path} is a path in a graph or multigraph that contains each vertex only once.
+\end{dfnbox}
+
+Recall that in a path, we do not need to return to the beginning.
+
+Surprisingly, we have not found any formal conditions that will guarantee that a graph will contain a Hamiltonian cycle or define a Hamiltonian path. Proving the existence of a Hamiltonian cycle and Hamiltonian path is a prime example of an NP-complete problem.
+
+\section{Properties}
+Let $G = (V,E)$ be a graph.
+\begin{dfnitems}
+	\item If there exists a Hamiltonian cycle, then every vertex is degree $2$ or more.
+	\item If a vertex is degree 2, then the two edges that are incident with $a$ must appear in every Hamiltonian cycle of the graph.
+	\item If a vertex is degree more than 2, and you pass through that vertex when constructing a Hamiltonian cycle, then any unused edges incident with that vertex can be removed from further consideration.
+\end{dfnitems}
+
+\begin{genbox}{Bi-Partite Labeling Strategy}
+	If $G$ has a Hamiltonian path, then it defines an alternating sequence between the two bi-partite graphs. If $\abs{V_1} \neq \abs{V_2}$, then no Hamiltonian path can exist.
+\end{genbox}
+
+\section{Tournament Graphs}
+\begin{dfnbox}{Tournament}
+	Let $K_n^+$ be a complete, directed graph with $n$ vertices. For each distinct pair of vertices $x$ and $y$, exactly one of the edges $(x, y)$ or $(y,x)$ is in $K_n^+$. We call $K_n^+$ a \dfntxt{tournament}, and it is guaranteed to contain a directed Hamiltonian path.
+\end{dfnbox}
+
+\section{Useful Theorems}
+\begin{thmbox}{Paths}
+	Let $G = (V, E)$ be a loop-free graph with $\abs{V} = n \geq 2$. If $\deg(x) + \deg(y) \geq n-1$ for all $x, y \in V$ where $x \neq y$, then $G$ must have a Hamiltonian path.
+\end{thmbox}
+
+\begin{thmbox}{Cycles}
+	Let $G = (V,E)$ be a loop-free undirected graph with $\abs{V} = n \geq 3$. If $\deg(x) + \deg(y) \geq n$ for all non-adjacent $x,y \in V$, then $G$ must have a Hamiltonian cycle.
+\end{thmbox}
+
+\section{Graph Coloring}
+\begin{dfnbox}{Coloring}
+	
+\end{dfnbox}
+
+\end{document}

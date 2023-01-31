@@ -1,0 +1,134 @@
+\documentclass[12pt]{report}
+
+\usepackage[margin=1in]{geometry}
+\usepackage{amzmath}
+\usepackage{xfrac}
+
+\title{\textbf{Calculus III}\\
+\large UT Knoxville, Spring 2023, MATH 341}
+\author{Stella Thistlethwaite, Alex Zhang}
+
+\begin{document}
+\maketitle
+\tableofcontents
+
+\chapter{Introduction}
+Much of our focus will be on Stoke's Theorem.
+
+\chapter{Three-Dimensional Space}
+In past math classes, we have been used to dealing in $\R^2$ where we work with two degrees of freedom: $x$ and $y$. Now, we will be working in $\R^3$ with three degrees of freedom: $x$, $y$, and $z$.
+
+\section{Points}
+
+\begin{dfnbox}{Point}{point}
+    A \dfntxt{point} in $\R^n$ space is an $n$-tuple that specifies a location in that space.
+    \tcblower
+    \[ p = (p_1, \ldots, p_n) \in \R^n \]
+\end{dfnbox}
+
+\begin{dfnbox}{Distance}{}
+    Given two points $a, b\in \R^n$, the \dfntxt{distance} between the two points is defined as:
+    \[ d(a, b) \coloneq \sqrt{ (b_1 - a_1)^2 + \cdots + (b_n - a_n)^2} \]
+\end{dfnbox}
+
+\begin{exbox}{Distance Between Points}{}
+    Find the distance between $p_1 = (-1, -1, 4)$ and $p_2 = (-1, 4, -1)$.
+    \tcblower
+    \begin{align*}
+         d(p_1, p_2) &= \sqrt{ (-1-(-1))^2 + (4-(-1))^2 + (-1-1)^2 } \\
+         &= \sqrt{ 0^2 + 5^2 + (-5)^2 } \\
+         &= \sqrt{ 50 }
+    \end{align*}
+\end{exbox}
+
+\begin{dfnbox}{Sphere}{sphere}
+    Given a point $c = (h, k, l) \in \R^3$, a \dfntxt{sphere} is the set of all points $(x,y,z) \in \R^3$ that are a distance $r$ from the point $c = (h,k,l)$.
+    \tcblower
+    \[ (x-h)^2 + (y-k)^2 + (z-l)^2 = r^2 \]
+\end{dfnbox}
+
+Note that all the points of the sphere are equidistant to the center of the sphere. This means the sphere is really a hollow shell.
+
+\begin{exbox}{Circle}{}
+    Show that the following quadratic equation represents a circle by rewriting it in standard form. Find the center $c = (h,k)$ and the radius $r$.
+    \[ x^2 + y^2 + x = 0 \]
+    \tcblower
+    To solve this, we will have to complete the square:
+    \begin{align*}
+        x^2 + x + y^2 &= 0 \\
+        \implies x^2 + x + \frac{1}{4} + y^2 &= \frac{1}{4} \\
+        \implies \left( x + \frac12 \right)^2 + y^2 &= \frac14
+    \end{align*}
+\end{exbox}
+
+\begin{dfnbox}{Cylinder}{}
+    Given a planar curve $c$, the surface in $\R^3$ defined by all parallel lines crossing the curve $c$ is called a \dfntxt{cylinder}.
+\end{dfnbox}
+
+Similarly, the set of all points $(x,y,z)$ such that $x$ and $y$ satisfy $(x-h)^2 + (y-k)^2 = r^2$ forms a circular cylinder. Note that our broad definition of cylinder does not require the cylinder to be circular.
+
+Regarding the quadrants:
+\begin{align*}
+    Q1 &= \left\{ (x,y) \in \R^2 : x > 0, y > 0 \right\} \\
+    Q4 &= \left\{ (x,y) \in \R^2 : x > 0, y < 0 \right\}
+\end{align*}
+
+
+\section{Vectors}
+
+\begin{dfnbox}{Vector}{vector}
+    A \dfntxt{vector} is a mathematical object that contains multiple objects of the same type.
+    \tcblower
+    \[ \overrightarrow{v} = \alg{v_1, \ldots, v_n} \in \R^n \]
+\end{dfnbox}
+
+As customary in most mathematics textbooks, we will always denote vectors using the little arrow thing. In the context of three-dimensional space, we will only be working with vectors with three components. In addition, we will think of vectors as having a magnitude and direction.
+
+\begin{dfnbox}{Scalar Multiplication}{}
+    Given a vector $\vec{v}$ and scalar $k$, we define \dfntxt{scalar multiplication} as:
+    \[ k \cdot \vec{v} \coloneq \alg{kv_1, \ldots, kv_n} \]
+\end{dfnbox}
+
+Note that scalar multiplication is associative, commutative, and distributive.
+\begin{itemize}
+    \item $a(b\vec{v}) = b(a(\vec{v})) = (ab) \vec{v}$
+    \item $(k_1 + k_2) \vec{v} = k_1 \vec{v} + k_2 \vec{v}$
+    \item $k (\vec{v} + \vec{w}) = k{v} + k\vec{w}$
+\end{itemize}
+
+\begin{dfnbox}{Norm}{}
+    A vector's \dfntxt{norm} is its magnitude or length.
+    \tcblower
+    \[ \norm{v} \coloneq \sqrt{v_1^2 + \cdots + v_n^2} \]
+\end{dfnbox}
+
+\begin{dfnbox}{Unit Vector}{}
+    A \dfntxt{unit vector} is a vector whose magnitude is 1.
+\end{dfnbox}
+
+We will introduce shorthand notation for the three standard unit vectors:
+\begin{itemize}
+    \item $\hat{i} \coloneq \alg{1,0,0}$
+    \item $\hat{j} \coloneq \alg{0,1,0}$
+    \item $\hat{k} \coloneq \alg{0,0,1}$
+\end{itemize}
+These three vectors form the \dfntxt{standard basis} for $\R^3$. That is, we can express any vector in $\R^3$ as a linear combination of $\hat{i}, \hat{j}, \hat{k}$.
+
+\begin{tecbox}{Finding a Unit Vector from a Given Vector}{}
+    Given a vector $\vec{v} = \alg{x, y, z} \in \R^3$, we can find the \dfntxt{unit vector} $\vec{u}$ with the same direction by:
+    \[ \vec{u} = \frac{\vec{v}}{\norm{v}} = \alg{\frac{x}{\norm{v}}, \frac{y}{\norm{v}}, \frac{z}{\norm{v}}} \]
+\end{tecbox}
+
+\begin{dfnbox}{Dot Product}{}
+    Given two vectors $\vec{a}$ and $\vec{b}$ whose cardinality are both $n$, we define the \dfntxt{dot product} of $\vec{a}$ and $\vec{b}$ as:
+    \[ \vec{a} \cdot \vec{b} \coloneq a_1b_1 + \cdots + a_nb_n \]
+\end{dfnbox}
+
+Like scalar multiplication, dot product is also associative, commutative, and distributive.
+
+\begin{thmbox}{}{}
+    If $\vec{a}$ and $\vec{b}$ are vectors and $c$ is the angle between $\vec{a}$ and $\vec{b}$, then $\vec{a} \cdot \vec{b} = \norm{\vec{a}} \ \norm{\vec{b}} \cdot \cos(c)$.
+\end{thmbox}
+
+\makeamzindex
+\end{document}

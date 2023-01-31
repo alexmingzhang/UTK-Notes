@@ -1,0 +1,496 @@
+\documentclass[12pt]{report}
+\usepackage[margin=1in]{geometry}
+
+\usepackage{amzmath}
+
+\usepackage{tabularx}
+
+% Inline Verbatim with \Verb
+\usepackage{fancyvrb}
+
+% Binary Number Formatting
+\usepackage{soul}
+\newcounter{binst}
+\makeatletter
+\newcommand{\binary}[1]{\begingroup%
+	\setcounter{binst}{0}
+	\def\SOUL@soeverytoken{%
+		\stepcounter{binst}%
+		\ifnum\value{binst}=5\relax%
+		\setcounter{binst}{1}\,%
+		\fi%
+		\the\SOUL@token}%
+	\so{#1}\endgroup} 
+\makeatother
+
+\title{COSC 230: Computer Organization}
+\author{Alex Zhang}
+
+\begin{document}
+\renewcommand{\arraystretch}{1.25}
+
+\maketitle
+\tableofcontents
+\newpage
+
+\chapter{Introduction to Computer Organization}
+The goal of computer organization is to hide the complexity of the system from the end user. While the computer itself is certainly a complicated machine, the user does not need to understand its intricacies. In contrast, computer scientists and engineers should understand such intricacies in order to create better programs.
+ 
+\begin{dfnbox}{Computer Organization}
+	\dfntxt{Computer organization} is how functional components are put together to create a computer.
+\end{dfnbox}
+
+\begin{dfnbox}{Abstraction}
+	\dfntxt{Abstraction} is a way to handle complexity by hiding unnecessary details from the user.
+\end{dfnbox}
+
+\begin{dfnbox}{Software}
+	\dfntxt{Software} consists of processor instructions written to perform operations.
+\end{dfnbox}
+
+Generally, software exists in two spaces:
+\begin{enumerate}
+	\item User Space -- user applications (e.g. Microsoft Word, Google Chrome)
+	\item System Space -- operating system, system tasks
+\end{enumerate}
+
+\begin{dfnbox}{Operating System}
+	The \dfntxt{operating system} is the software that supports a computer's basic functions, such as scheduling tasks, executing applications, and controlling peripherals.
+\end{dfnbox}
+
+The operating system is a layer of \dfntxt{abstraction} between the user and hardware. Typically, the user space interfaces with the system space (operating system) through system calls, and the system space interfaces with hardware through I/O.
+
+\begin{dfnbox}{Hardware}
+	\dfntxt{Hardware} consists of the physical components in a computer which operate by routing electrons (i.e. electricity).
+\end{dfnbox}
+
+\begin{dfnbox}{Motherboard}
+	The \dfntxt{motherboard} physically connects all components of the computer. The board is responsible for routing data and power throughout the entire system.
+\end{dfnbox}
+
+Most PC motherboards include a basic input/output system (BIOS) that allows you to directly interface with the motherboard. This allows you to configure things such as which hard drive to boot from.
+
+\begin{dfnbox}{Central Processing Unit (CPU)}
+	The \dfntxt{central processing unit (CPU)} acts as the brain of the computer.
+	\begin{dfnitems}
+		\item performs all basic operations of the system
+		\item facilitates data transfer within the system's memory or peripherals
+		\item manages the other components of the system
+	\end{dfnitems}
+\end{dfnbox}
+
+Most modern CPUs consist of multiple \dfntxt{operating cores}. Each core contains its own cache (memory), arithmetic unit, logic unit, memory management unit, integer and floating-point registers, and a floating point unit.
+	
+CPUs also contain$\ldots$
+\begin{dfnitems}
+	\item System Agent -- display agent and memory controller
+	\item Cache -- onboard memory; significantly faster than RAM
+	\item I/O Controller -- connects I/O devices to the CPU
+\end{dfnitems}
+
+\newpage
+\chapter{Memory}
+\begin{dfnbox}{Memory Hierarchy}
+	\dfntxt{Memory hierarchy} tells us what kind of computer storage is the fastest.
+	
+	\begin{enumerate}
+		\item \dfntxt{Internal:} CPU registers and cache
+		\item \dfntxt{Main:} the system RAM and controller cards
+		\item \dfntxt{On-line mass storage:} hard drives
+		\item \dfntxt{Off-line bulk storage:} flash memory, optical discs, external hard drives
+	\end{enumerate}
+
+	The first three are also called primary, secondary, and tertiary storage.
+\end{dfnbox}
+
+The main difference between the speed of primary and secondary storage is caused by the physical distance between the storage and processor. Since memory operations occur upwards of billions of times a second, the time for electrons to travel between memory and processor adds up. Registers and cache are physically attached to the CPU while RAM may be inches away.
+
+\begin{dfnbox}{Memory Controller}
+	The \dfntxt{memory controller} manages the flow of data going to and from the computer's memory.
+\end{dfnbox}
+
+\begin{dfnbox}{Random Access Memory (RAM)}
+	\dfntxt{Random Access Memory (RAM)} encompasses all longer term, volatile memory storage in a computer.
+\end{dfnbox}
+
+\begin{dfnbox}{Static RAM}
+	\dfntxt{Static RAM} uses several transistors to statically lock in a value by feeding back the previous output as an input to a logic circuit (i.e. latch).
+	
+	\begin{dfnitems}
+		\item Very stable
+		\item Takes lots of space; unable to pack tightly
+	\end{dfnitems}
+\end{dfnbox}
+
+\begin{dfnbox}{Dynamic RAM}
+	\dfntxt{Dynamic RAM} uses a capacitor to store a bit's value and one transistor to control the capacitor.
+
+	\begin{dfnitems}
+		\item Small; can be packed tightly in a grid with row and depth fields for the memory controller
+	\end{dfnitems}
+
+	\begin{dfnitems}
+		\item Capacitors passively leak charge, so they must be periodically refreshed ($\sim64$ ms)
+		\item Capacitors discharge when reading, so if the bit is 1, we must charge the capacitor after reading
+		\item Charging a capacitor is not instantaneous
+		\item Capacitors store very little charge, so it must be amplified by a \dfntxt{sense amplifier} to be read
+	\end{dfnitems}
+\end{dfnbox}
+
+\begin{genbox}{DRAM Timings}
+	Because DRAM is typically packed tightly in a grid there are two main operations:
+	\begin{dfnitems}
+		\item \dfntxt{Row Address Strobe (RAS)} navigates the memory controller to the proper row
+		\item \dfntxt{Column Address Strobe (CAS)} navigates the memory controller to the proper column 
+	\end{dfnitems}
+	Consequently, we need to properly time these operations and account for latency:
+	\begin{dfnitems}
+		\item CL: CAS latency
+		\item tRCD: latency between RAS and CAS
+	\end{dfnitems}
+\end{genbox}
+
+\chapter{Cache}
+\begin{dfnbox}{Cache}
+	\dfntxt{Cache} is the CPU's onboard memory.
+\end{dfnbox}
+
+Overall, cache is faster but smaller than RAM, and it is slower but larger than CPU registers. Cache itself is split into multiple \dfntxt{levels} based on their speed, with level 1 being the fastest. The amount of cache levels depends on the CPU.
+
+Whenever we read from cache, we need to search through the cache to find the value. A \dfntxt{cache hit} occurs when we find our value. A \dfntxt{cache miss} occurs when we cannot find our value. Then, the CPU has to ask the memory controller to find the value in RAM.
+
+\begin{enumerate}
+	\item Compulsory Miss: nothing yet in cache; just bring in random values from RAM and hope they are useful
+	\item Capacity Miss: no more room in the cache
+	\item Conflict Miss: two memory addresses mapped to the same location
+\end{enumerate}
+
+Because cache is fairly small, we only want to store commonly used values in it. There are more intricate ways to make memory reads from cache more efficient. These depend on using a program's past behavior to predict future behavior.
+
+\begin{genbox}{Principle of Spatial Locality}
+	Instead of grabbing just one value at a time, we can grab multiple values around it.
+\end{genbox}
+
+\begin{genbox}{Principle of Temporal Locality}
+	The more often a variable is moved, the lower level of cache it stays at.
+\end{genbox}
+
+There are three kinds of cache:
+\begin{genbox}{Types of Cache}
+	\begin{tabularx}{\linewidth}{l l X}
+		1. & Direct-mapped Cache & Byte offset matches byte block size \\
+		2. & Set-associative Cache & asdf \\
+		3. & Fully-associative Cache & wow
+	\end{tabularx}
+\end{genbox}
+
+
+We implement two policies:
+\begin{enumerate}
+	\item Write Back: Read/write inside of cache; writes to backing store when eviction occurs
+	\item Write Through: Write through all levels of cache and RAM; decreased speed
+\end{enumerate}
+
+If we run into a capacity miss, we need to \dfntxt{evict} an entry to make room for the new one.
+\begin{genbox}{Eviction Policies}
+	\begin{enumerate}
+		\item First in First out (FIFO): evict the oldest entry
+		\item Least Recently Used (LRU): evict entries that haven't been used in a while
+		\item Least Frequently Used (LFU): evict entries that aren't frequently used
+		\item Random
+	\end{enumerate}
+\end{genbox}
+
+\newpage
+\chapter{Binary Numbers}
+We are all familiar with the decimal number system where there are ten digits, 0 through 9. This is called a \dfntxt{base 10} number system. Binary uses a \dfntxt{base 2} number system where the only digits are 0 and 1.
+
+\begin{exbox}{Binary Numbers}
+	Consider the base 10 number 13.
+	\begin{align*}
+	1 \cdot 10^1 + 3 \cdot 10^0 &= 10+3\\
+	&= 13
+	\end{align*}
+
+	The binary representation would be $\binary{1101}_{(2)}$.
+	\begin{align*}
+		1 \cdot 2^3 + 1 \cdot 2^2 + 0 \cdot 2^1 + 1 \cdot 2^0 &= 2^3 + 2^2 + 2^0 \\
+		&= 8 + 4 + 1 \\
+		&= 13
+	\end{align*}
+\end{exbox}
+
+\begin{dfnbox}{IEEE--754}
+	\begin{dfnitems}
+		\item The standard for storing floating point numbers
+		\item \verb|fadd.s|: add single-precision floats
+		\item \verb|fadd.d|: add double-precision floats
+	\end{dfnitems}
+\end{dfnbox}
+
+\begin{dfnbox}{Signed Integer}
+	A \dfntxt{signed integer} uses the most significant bit to denote the number's sign (positive or negative).
+	\begin{dfnitems}
+		\item Leftmost bit is 0 if positive or 1 if negative
+	\end{dfnitems}
+\end{dfnbox}
+
+\begin{dfnbox}{Two's Complement ($2_c$)}
+	To convert any number from positive to negative or vice versa, we use \dfntxt{two's complement}.
+
+	\begin{enumerate}
+		\item Flip all bits
+		\item Add 1
+	\end{enumerate}
+\end{dfnbox}
+
+\begin{dfnbox}{Logical Shifting}
+	A \dfntxt{logical shift} is a bitwise operation that shifts all bits of a number. In many programming languages, left shift is denoted by $\ll$ and right shift is denoted by $\gg$.
+\end{dfnbox}
+
+In programming, logical shift can be used a shorthand for multiplying and dividing by powers of two.
+$$ n \ll k = n \cdot 2^k $$
+$$ n \gg k = n \div 2^k $$
+\begin{exbox}{Multiplication and Division}
+	$\binary{00010100}_{(2)}$ is the binary representation for 20.
+	\begin{align*}
+		\binary{00010100}_{(2)} \ll 1 &= \binary{00101000}_{(2)} \\
+		20 \ll 1 &= 20 \cdot 2^1 = 40 \\
+		\binary{00010100}_{(2)} \ll 2 &= \binary{01010000}_{(2)} \\
+		20 \ll 2 &= 20 \cdot 2^2 = 80 \\
+		\binary{00010100}_{(2)} \gg 1 &= \binary{00001010}_{(2)} \\
+		20 \gg 1 &= 20 \div 2^1 = 10 \\
+		\binary{00010100}_{(2)} \gg 2 &= \binary{00000101}_{(2)} \\
+		20 \gg 2 &= 20 \div 2^2 = 5
+	\end{align*}
+\end{exbox}
+
+\newpage
+\chapter{Instructing the CPU}
+This section focuses on \dfntxt{assembly}, the lowest-level language that's still easily readable. In particular, we'll be looking at RISC-V, one of many assembly languages. It sports a reduced instruction set, making it ideal for beginners.
+
+\begin{dfnbox}{Assembly (Language)}
+	\dfntxt{Assembly} refers to any low-level programming language with very strong correspondence between the language's instructions and the architecture's machine code instructions.
+\end{dfnbox}
+
+\begin{dfnbox}{Instruction Set Architecture (ISA)}
+	The \dfntxt{Instruction Set Architecture} is an abstract model of a computer. It defines the support instructions, data types, registers, and other fundamental features.
+\end{dfnbox}
+
+\begin{dfnbox}{Data Segment}
+	A \dfntxt{data segment} is a portion of a program that contains static global variables and static local variables. The size is determined by the size of the values in the source code, thus does not change at runtime.
+\end{dfnbox}
+
+\begin{dfnbox}{Instruction}
+	An \dfntxt{instruction} is a primitive operation which is executed by the CPU. Individual instructions exist as memory which is parsed by the CPU.
+\end{dfnbox}
+
+\newpage
+\chapter{RISC-V}
+\begin{dfnbox}{RISC-V} \dfntxt{RISC-V} is an assembly language. More specifically, RISC-V is an open standard instruction set architecture.
+	
+	RISC-V source code contains four distinct things:
+	\begin{dfnitems}
+		\item \textbf{Comment}: notes in the source code that aren't parsed
+		\item \textbf{Directive}:  tells assembler to take some action or change a setting
+		\item \textbf{Label}: denotes different sections of the code; allows ability to jump between labels
+		\item \textbf{Instruction}: performs a basic operation
+	\end{dfnitems}
+\end{dfnbox}
+
+\section{Architecture and Application}
+
+\begin{dfnbox}{Stack}
+	The \dfntxt{stack} is a piece of random-access memory used to store \textbf{local} variables.
+	
+	Register \textbf{sp} (stack pointer) points to the bottom of the stack.
+	\begin{dfnitems}
+		\item Allocate --- add sp, sp, -16
+		\item 
+	\end{dfnitems}
+\end{dfnbox}
+
+\begin{dfnbox}{Register}
+	\dfntxt{Registers} are fast memory locations found onboard the CPU. They're easier to access and faster than RAM, making them ideal for storing temporary and constantly accessed data.
+	
+	RISC-V has 32 integer registers (x0--x31) which can be addressed by their special names:
+	\begin{dfnitems}
+		% \item \textbf{x1--x31}: general purpose registers; can be used without any restrictions
+		\item \textbf{zero}: \textbf{always} set to zero
+		\item \textbf{ra}: function return address; stores the address of the instruction after a call
+		\item \textbf{sp}: stack pointer
+		\item \textbf{gp}: global data pointer
+		\item \textbf{t0--t6}: temporary storage
+		\item \textbf{fp}: frame pointer for function-local stack data
+		\item \textbf{s0--s11}: saved registers (if frame pointer is not in use, x8 becomes s0)
+		\item \textbf{a0--a1}: arguments passed to functions and function return values
+		\item \textbf{a2-a7}: arguments passed to functions
+	\end{dfnitems}
+
+	RISC-V also has 32 floating point registers which follow the same scheme.
+\end{dfnbox}
+
+\section{Instruction Set}
+The RISC-V instruction set only has 47 instructions. Despite its size, it is still a turing-complete language.
+
+\begin{genbox}{Computational Instructions}
+	All computational instructions except \verb|lui| and \verb|auipc| take three arguments: destination register, source register, and a second source register or immediate value. Instructions using an immediate value typically end with the letter \verb|i|.
+	\begin{dfnitems}
+		\item \verb|add,addi,sub|: addition and subtraction
+		\item \verb|sll,slli,srl,srli,sra,srai|: logical shift
+		\item \verb|and,andi,or,ori,xor,xori|: logical bitwise operation
+		\item \verb|slt,slti,sltu,sltui|: \textit{set if less than}; set destination register to 1 if the first source operand is less than the second, else 0
+		\item \verb|lui|: \textit{load upper immediate}; loads bits 12--31 of destination register with a 20-bit immediate value
+		\item \verb|auipc|: \textit{add upper immediate} to PC and store the result in the destination register (adds 20-bit immediate to the upper 20 bits of the program counter, enabling PC-relative addressing in RISC-V)
+	\end{dfnitems}
+	\tcblower
+	\textbf{Note}: immediate values are data stored as part of the instruction itself
+	
+	\textbf{Note}: \verb|lui| and \verb|auipc| can be used to achieve 32-bit operations by (1) setting bits 12--31 to the upper 20 bits of the value and (2) using \verb|addi| to the lower 12 bits for the complete 32-bit result
+\end{genbox}
+
+\begin{genbox}{Control Flow Instructions}
+	These consist mainly of conditional branching instructions: compare two registers, and based on the result, jump to a label
+	\begin{dfnitems}
+		\item \verb|beq,bne,blt,bltu,bge,bgeu| -- branch if equal/not equal/less than/less than unsigned/greater than/greater than unsigned
+		\item \verb|jal|: \textit{jump and link}; set destination register to program counter (return address) then jump to statement at target address
+		\item \verb|jalr|: \textit{jump and link}; jump to statement at label and set return address to \textbf{ra}
+	\end{dfnitems}
+\end{genbox}
+
+\begin{genbox}{Memory Access Instructions}
+	These instructions transfer data between a register and a memory location. These instructions involve either \textbf{b}yte, \textbf{h}alfword, or \textbf{w}ord.
+	
+	\textbf{Load} instructions copy data to a destination register. The letter \textbf{u} denotes load using zero-extend.
+	\begin{dfnitems}
+		\item \verb|lb,lbu,lh,lhu,lw|
+	\end{dfnitems}
+
+	\textbf{Store} instructions copy data to a memory address.
+	\begin{dfnitems}
+		\item \verb|sb,sh,sw|
+	\end{dfnitems}
+
+	Fence: TODO
+\end{genbox}
+
+\begin{genbox}{System Instructions}
+	\begin{dfnitems}
+		\item \verb|ecall|: invoke a system call by invoking the service specified in register \verb|a7|
+		\item \verb|ebreak|: initiate a debugger breakpoint
+		\item \verb|csrrw,csrrwi,csrrc,csrrci,csrrs,csrrsi|: TODO
+	\end{dfnitems}
+\end{genbox}
+
+\begin{genbox}{Pseudo-Instructions}
+	Pseudo-instructions don't exist on the machine but can be instead expanded by the assembler.
+\end{genbox}
+
+\begin{dfnbox}{Machine Code}
+	\begin{dfnitems}
+		\item A format of 1s and 0s that instruct the CPU
+		\item Every instruction in RISC-V is 32 bits (makes this simple to encode and decode)
+		\item These 32-bits must encode everything (opcode -- instruction group's unique number) (parameters -- registers and/or immediate values)
+	\end{dfnitems}
+\end{dfnbox}
+
+\begin{dfnbox}{Branches and Jumps}
+	\begin{dfnitems}
+		\item All branches and jumps are PC-relative
+		\item Branches are encoded with a 12-bit immediate, but only bits [12:1] are encoded
+		\item The 12-bit immediate describes how many bytes away the label is (remember: each instruction is typically 4 bytes)
+		\item Initially a 13-bit signed number, but right-most bit is chopped off since it must be a multiple of 2
+		\item 
+	\end{dfnitems}
+\end{dfnbox}
+
+\newpage
+\chapter{Instruction Pipeline}
+
+For simplicity, we will be looking at a basic example of an instruction pipeline. 
+
+\begin{genbox}{RISC-V Pipeline}
+	\begin{enumerate}
+		\item Instruction Fetch (IF)
+		\item Instruction Decode (ID)
+		\item Execute (EXE)
+		\item Memory (MEM)
+		\item Write-back (WB)
+	\end{enumerate}
+\end{genbox}
+
+\begin{dfnbox}{Data Hazard}
+	\dfntxt{Data Hazards} are problems that may occur during a pipeline.
+\end{dfnbox}
+
+\begin{dfnbox}{RAW (Read After Write)}
+	\textbf{Problem:} An instruction needs a past instruction's output, so we need to wait until writeback before going to the next instruction.
+	
+	\textbf{Solution:} Operand Forwarding -- directly forward the output of the instruction to the next instruction (immediately after ALU outputs)
+\end{dfnbox}
+
+\begin{dfnbox}{Branch Prediction}
+	Predict which way a branch instruction will go.
+	\begin{dfnitems}
+		\item At first, use random guess
+		\item Afterwards, use past data to make accurate predictions
+		\item If right more times than wrong, this will significantly speed up branch instructions
+		\item If wrong, we have to flush pipeline
+	\end{dfnitems}
+
+	One bit branch predictor flips prediction as soon as prediction is wrong
+	Two bit branch predictor flips prediction after two wrong predictions
+\end{dfnbox}
+
+\begin{dfnbox}{Scalar Machine}
+	A \dfntxt{Scalar machine} is a machine that can do atmost one instruction per CPU clock cycle.
+\end{dfnbox}
+
+\chapter{I/O}
+
+\dfntxt{I/O} stands for general input/output. In terms of low-level computing, we will be focusing on devices and components communicating with one another.
+
+\begin{dfnbox}{Poll}
+	A device needs to continuously check or \dfntxt{poll} the device's register for any change that might occur.
+\end{dfnbox}
+
+A device needs to be actively listening to properly receive information from another device. The \dfntxt{polling rate} signifies how often a device checks for inputs.
+
+\begin{dfnbox}{Port I/O (PIO)}
+	\dfntxt{Port I/O} uses special assembly instructions to communicate with a dedicated I/O bus.
+\end{dfnbox}
+
+\begin{dfnbox}{Memory-mapped I/O (MMIO)}
+	\dfntxt{Memory-mapped I/O} maps the device's registers to RAM's address space. It uses the memory controller to arbitrate.
+\end{dfnbox}
+
+MMIO is the preferred method for simpler, embedded systems since a dedicated I/O bus is not necessary.
+
+\begin{dfnbox}{Character Oriented I/O}
+	\dfntxt{Character Oriented I/O} uses two status registers to receive and transmit information.
+\end{dfnbox}
+
+We will typically only read and write one character at a time, usually the size of one byte. The size of the character can vary depending on the system.
+
+\begin{dfnbox}{Block Oriented I/O}
+	\dfntxt{Block Oriented I/O} uses RAM to communicate blocks of data at a time. Status registers are still used to:
+	\begin{dfnitems}
+		\item Communicate which memory address to look at
+		\item Notify the hardware device that something happened
+	\end{dfnitems}
+\end{dfnbox}
+
+Typically, large I/O systems will use block-oriented I/O.
+
+Transferring data over a wire is simply send voltage across or not and then wait until the clock on the other side has had a chance to sample it. However, as we know with wires, they can be subjected to interference. This mainly occurs when some other sort of electric device is nearby. Furthermore, there is resistance in a wire. Therefore, the strong voltage sent on one end is not “felt” on the other end.
+
+To shield from signal interference, we have two techniques:
+
+\begin{enumerate}
+	\item Differential Signaling: Use two intertwined wires to send the same information, but one has inverted information. That way, if there is interference, it will affect both wires, so we can still recover data.
+	\item Shielding: Wrap the wire with material that intercepts interference and drives it to ground
+\end{enumerate}
+
+For long-distance cables, we usually use both techniques, or we use fiber-optic cables instead.
+
+\end{document}

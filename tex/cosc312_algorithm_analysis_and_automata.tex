@@ -1,0 +1,249 @@
+\documentclass[12pt]{report}
+
+\usepackage[margin=1in]{geometry}
+\usepackage[math]{amznotes}
+\usepackage{xfrac}
+\usepackage{enumitem}
+\usepackage{tikz}
+\usetikzlibrary{arrows.meta}
+
+\title{\textbf{Algorithm Analysis and Automata}\\
+\large UT Knoxville, Spring 2023, COSC 312}
+\author{Dr. Michael W. Berry, Alex Zhang}
+
+\begin{document}
+\maketitle
+\tableofcontents
+
+\chapter{Introduction}
+As computer scientists, we like to think of ourselves as problem solvers. We can abstract problems in three distinct components: unknowns, data, and conditions.
+
+In understanding how we abstract problems, computer scientists have conceptualized the Theory of Computation (TOC) which covers three areas:
+\begin{itemize}
+    \item \textbf{Automata} -- problem solving devices
+    \item \textbf{Computability} -- framework that categorizes devices by computing power
+    \item \textbf{Complexity} -- space complexity of tools used to solve them
+\end{itemize}
+
+In understanding our approach to solving problems, we think of the data, conditions, and unknowns as such:
+\begin{itemize}
+    \item \textbf{Data} exists as ``words'' in a given ``alphabet''
+    \item \textbf{Conditions} form a set of words called a \textbf{language}
+    \item \textbf{Unknowns} are boolean values, true if a word is in the language, false if otherwise
+\end{itemize}
+
+We denote an ``alphabet'' using $\Sigma$ and all possible words of finite length with $\Sigma^*$. Any subset $L \subseteq \Sigma^*$ is a \dfntxt{formal language}.
+
+\chapter{Finite Automata}
+
+\begin{dfnbox}{Finite Automaton}{}
+    A \dfntxt{finite automaton} (FA) is a simple, idealized machine used to recognize patterns within input taken from some character set.
+\end{dfnbox}
+
+Finite automata can be used to generalize many applications ranging from parsers for compilers, pattern recognition, speech processing, and market prediction. We can formally define any finite automaton as a 5-tuple $(Q, \Sigma, \delta, q_0, F)$ where:
+\begin{itemize}
+    \item $Q$ is a finite set of all possible states
+    \item $\Sigma$ is a finite set of symbols (alphabet)
+    \item $\delta$ is a function $\delta : Q \times \Sigma \to Q$ (describes how input symbols change the state)
+    \item $q_0 \in Q$ is the initial state
+    \item $F \subseteq Q$ is the set of acceptable final states
+\end{itemize}
+
+Let's consider a simple, arbitrary finite automaton $M_1$.
+\begin{itemize}
+    \item $M_1$ receives input symbols one at a time
+    \item $M_1$ transitions states based on input
+    \item When $M_1$ reads the last symbol, it outputs whether or not it ends in an acceptable final state
+\end{itemize}
+
+\begin{dfnbox}{Acceptance}{}
+    Let $M = (Q, \Sigma, \delta, q_0, F)$ be a finite automaton and $w = a_1 \ldots a_n$ be a string over $\Sigma$. We say $M$ \dfntxt{accepts} $w$ if there exists a sequence of states $r_0 \ldots r_n$ in $Q$ such that:
+    \begin{itemize}
+        \item $r_0 = q_0$
+        \item $\delta(r_i, a_{i+1}) = r_{i+1}$
+        \item $r_n \in F$
+    \end{itemize}
+\end{dfnbox}
+
+Finite automaton design approach:
+\begin{enumerate}
+    \item Identify the possible states of the finite automaton
+    \item Identify the condition to change from one state to another
+    \item Identify initial and final states
+    \item Add missing transitions
+\end{enumerate}
+
+Given a finite automaton, we can deduce the language of possible inputs.
+
+\begin{exbox}{Simple Finite Automaton}{}
+    Let $M_1 \coloneq (Q, \Sigma, \delta, q_1, F)$ where $Q = \{q_1, q_2, q_3\}$, $\Sigma = \{0, 1\}$, and $F = \{q_2\}$. Define a possible transition function $\delta$.
+    \tcblower
+    The transition function $\delta : Q \times \Sigma \to Q$ must map every ordered pair of a state and letter to another state.
+
+    \begin{center}\begin{tabular}{c | c | c }
+        & 0 & 1 \\ \hline
+        $q_1$ & $q_1$ & $q_2$ \\
+        $q_2$ & $q_3$ & $q_2$ \\
+        $q_3$ & $q_2$ & $q_2$
+    \end{tabular}\end{center}
+
+    Then, the language is:
+    \[ L(M_1) = \left\{ (w \in \Sigma^*: 1 \in w) \land (\text{has even number of 0s following the last 1}) \right\} \]
+\end{exbox}
+
+\begin{exbox}{Simple Finite Automaton}{}
+    Let $M_2 \coloneq (Q, \Sigma, \delta, q_1, F)$ where $Q = \{q_1, q_2\}$, $\Sigma = \{0, 1\}$, and $F = \{q_2\}$. Consider a possible transition function $\delta$ defined as such:
+
+    \begin{center}\begin{tabular}{c | c | c }
+        & 0 & 1 \\ \hline
+        $q_1$ & $q_1$ & $q_2$ \\
+        $q_2$ & $q_1$ & $q_2$ \\
+    \end{tabular}\end{center}
+
+    This time, our language is much simpler:
+    \[ L(M_2) = \{ w \in \Sigma^* : w\ \text{ends in a 1} \} \]
+
+    Now imagine if kept everything the same but made $F = \{q_1\}$. Because our finite automaton's initial state is $q_1$, we must now consider the possibility of the empty word. Then our language is:
+    \[ L(M_2) = \{ w \in \Sigma^* : w\ \text{ does not end in 1} \} \]
+\end{exbox}
+
+\begin{exbox}{Pattern Recognizing Finite Automaton}{}
+    Let $M_3 \coloneq (Q, \Sigma, \delta, q_1, F)$ where $Q = \{s, q_1, q_2, r_1, r_2\}$, $\Sigma = \{a, b\}$, and $F = \{q_1, r_1\}$. Consider a possible transition function $\delta$ defined as such:
+
+    \begin{center}\begin{tabular}{c | c | c }
+        & 0 & 1 \\ \hline
+        $s$ & $q_1$ & $r_1$ \\
+        $q_1$ & $q_1$ & $q_2$ \\
+        $q_2$ & $q_1$ & $q_2$ \\
+        $r_1$ & $r_2$ & $r_1$ \\
+        $r_2$ & $r_2$ & $r_1$ \\
+    \end{tabular}\end{center}
+
+    Now our machine encompasses two smaller machines. $s$ acts as a branch point where we must lock ourselves into either $q$ states or $r$ states.
+
+    % \begin{center}\begin{tikzpicture}
+    %     \begin{scope}[every node/.style={circle,thick,draw}]
+    %         \node (s) at (0,0) {s};
+    %         \node (q1) at (-2,-3) {q1};
+    %         \node (q2) at (-2, -6) {q2};
+    %         \node (r1) at (2,-3) {r1};
+    %         \node (r2) at (2, -6) {r2};
+    %     \end{scope}
+
+    %     \begin{scope}[>={Stealth[black]},
+    %           every node/.style={fill=white,circle},
+    %           every edge/.style={draw=red,very thick}]
+    %         \path [->] (s) edge node {$a$} (q1);
+    %         \path [->] (s) edge node {$b$} (r1);
+    %         \path [->] (q1) edge node {$b$} (q2);
+    %         \path [->] (r1) edge node {$a$} (r2);
+    %     \end{scope}
+    % \end{tikzpicture}\end{center}
+
+    Then our language is:
+    \[ L(M_3) = \{ w \in \Sigma^* : (w\ \text{starts and ends with}\ a) \lor (w\ \text{starts and ends with}\ b) \} \]
+\end{exbox}
+
+Now, let's start with a given language, then find an acceptable transition function $\delta$.
+\begin{exbox}{Finding $\delta$ from Language}{}
+    Suppose $\Sigma = \{a, b\}$. Let $F_1$ be a finite automaton that recognizes the language $A_1 \coloneq \{w : w\ \text{has at exactly two a's} \}$. Let $F_2$ be a finite automaton that recognizes the language $A_2 \coloneq \{w : w\ \text{has at least two b's} \}$.
+
+    % \begin{center}\begin{tikzpicture}
+    %     \begin{scope}[every node/.style={circle,thick,draw}]
+    %         \node (1) at (0,0) {};
+    %         \node (2) at (3,0) {};
+    %         \node (3) at (6,0) {};
+    %         \node (4) at (9,0) {};
+    %     \end{scope}
+
+    %     \begin{scope}[>={Stealth[black]},
+    %           every node/.style={fill=white,circle},
+    %           every edge/.style={draw=red,very thick}]
+    %         \path [->] (1) edge [loop above] node {$b$} (1);
+    %         \path [->] (1) edge node {$a$} (2);
+    %         \path [->] (2) edge [loop above] node {$b$} (2);
+    %         \path [->] (2) edge node {$a$} (3);
+    %         \path [->] (3) edge [loop above] node {$b$} (3);
+    %         \path [->] (3) edge node {$a$} (4);
+    %         \path [->] (4) edge [loop above] node {$a,b$} (4);
+    %     \end{scope}
+    % \end{tikzpicture}\end{center}
+\end{exbox}
+
+\chapter{Regular Languages}
+
+\begin{dfnbox}{Regular Language}{}
+    A language is \dfntxt{regular} if there exists a finite automaton that can accept every possible word from the language.
+\end{dfnbox}
+
+\begin{dfnbox}{Concatenation}{}
+    Let $A$ and $B$ be languages. $A$ \dfntxt{concatenate} $B$ is defined as:
+    \[ A \circ B \coloneq \{ xy | x \in A \land y \in B \}  \]
+\end{dfnbox}
+
+\begin{dfnbox}{Star}{}
+    \[ A^* \coloneq \{ x_1 \ldots x_k : k \geq 0, x_i \in A, 0 \leq i \leq k \} \]
+\end{dfnbox}
+
+\begin{thmbox}{Closure of Regular Languages}{}
+    Class of regular languages is closed under intersection and closed under complementation.
+\end{thmbox}
+
+\section{Nondeterminism}
+
+For complicated languages, it is difficult to create a completely deterministic finite automaton. If we forego determinism, we can have a more generalized finite automaton that allows for branching options.
+
+\begin{dfnbox}{Nondeterministic Computation}{}
+    A machine that is \dfntxt{nondeterministic} is allowed to choose its next state.
+\end{dfnbox}
+
+To introduce nondeterminism, we need more choices for the next state and allow state change without any input.
+
+\begin{dfnbox}{Nondeterministic Finite Automaton (NFA)}{}
+    A \dfntxt{nondeterministic finite automaton} is a 5-tuple $(Q, \Sigma, \delta, q_0, F)$ where:
+    \begin{itemize}[noitemsep]
+        \item $Q$ is a finite set of states
+        \item $\Sigma$ is a finite set of symbols (alphabet)
+        \item $\delta$ is a \textbf{relation} between $Q \times (\Sigma \cup \{ \epsilon\})$ and $\mathcal{P}(Q)$
+        \item $q_0 \in Q$ is the start state
+        \item $F \subseteq Q$ is the set of accept states
+    \end{itemize}
+    In this context, $\epsilon$ represents a nondeterministic choice by the machine.
+\end{dfnbox}
+
+Notice that in an NFA, we only specify that $\delta$ is a relation. NFA computation is usually more expensive than DFA computation. In theory, every NFA can be converted into an equivalent DFA.
+
+\begin{dfnbox}{Acceptance (NFA)}{}
+    Let $N \coloneq (Q, \Sigma, \delta, q_0, F)$ be an NFA and $w \coloneq y_1 \ldots y_n$ be a string over $\Sigma \cup \{\epsilon\}$. We say $N$ \dfntxt{accepts} $w$ if there exists a sequence of states $r_0, \ldots, r_m \in Q$ such that:
+    \begin{enumerate}[noitemsep]
+        \item $r_0 = q_0$
+        \item $\delta(r_i, y_{i+1}) = r_{i+1}$ for $i = 0, \ldots, m-1$
+        \item $r_m \in F$.
+    \end{enumerate}
+\end{dfnbox}
+
+\begin{thmbox}{Closure of Regular Languages}{}
+    The class of regular languages is closed under the union operation.
+    \tcblower
+    \begin{proof}[Proof sketch]
+        TODO: draw proof sketch here
+    \end{proof}
+\end{thmbox}
+
+\section{DFA/NFA Equivalence}
+
+When converting from a DFA to an NFA, we need to account for the machine's options.
+
+\begin{tecbox}{Converting NFA to DFA}{}
+    To convert an NFA to a DFA, we carry out the following steps:
+    \begin{enumerate}
+        \item Let $N \coloneq (Q, \Sigma, \delta, q_0, F)$ be an NFA that recognizes the language $A$.
+        \item Construct the DFA $M$ that also recognizes $A$. For convenience, define $M \coloneq (Q\prime, \Sigma, \delta\prime, q_0\prime, F\prime)$.
+        \item For all $R \subseteq Q$, define $E(R)$ to be the collection of all states that can be reached from $R$ by going along $\epsilon$ transitions, including members of $R$ themselves.
+        \item Modify $\delta\prime$ to place additional edges on all states that can be reached by going along $\epsilon$ edges after every step.
+        \item Set $q_0\prime = E(\{q_0\})$ and $F\prime = \{ R \in Q\prime : R\ \text{contains an accept state of}\ N \}$.
+    \end{enumerate}
+\end{tecbox}
+
+\amzindex
+\end{document}
