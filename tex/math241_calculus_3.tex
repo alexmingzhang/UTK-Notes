@@ -2,6 +2,7 @@
 
 \usepackage[margin=1in]{geometry}
 \usepackage{amzmath}
+\usepackage{enumitem}
 \usepackage{xfrac}
 
 \title{\textbf{Calculus III}\\
@@ -126,9 +127,59 @@ These three vectors form the \dfntxt{standard basis} for $\R^3$. That is, we can
 
 Like scalar multiplication, dot product is also associative, commutative, and distributive.
 
-\begin{thmbox}{}{}
-    If $\vec{a}$ and $\vec{b}$ are vectors and $c$ is the angle between $\vec{a}$ and $\vec{b}$, then $\vec{a} \cdot \vec{b} = \norm{\vec{a}} \ \norm{\vec{b}} \cdot \cos(c)$.
+\begin{thmbox}{Angle Between Vectors}{}
+    If $\vec{a}$ and $\vec{b}$ are vectors and $\theta$ is the angle between $\vec{a}$ and $\vec{b}$, then:
+    \[ \vec{a} \cdot \vec{b} = \norm{\vec{a}} \ \norm{\vec{b}} \cdot \cos(\theta) \]
+    \tcblower
+    \begin{proof}
+        TODO: finish proof
+    \end{proof}
 \end{thmbox}
+
+\begin{dfnbox}{Parallel, Perpendicular}{}
+    \begin{itemize}[noitemsep]
+        \item Two vectors are \dfntxt{parallel} if the angle between the vectors is $0\deg$.
+        \item Two vectors are \dfntxt{perpendicular} if the angle between the vectors is $90\deg$.
+    \end{itemize}
+\end{dfnbox}
+
+\begin{dfnbox}{Orthogonal}{}
+    $\vec{a}$ and $\vec{b}$ are \dfntxt{orthogonal} if $\vec{a} \cdot \vec{b} = 0$.
+\end{dfnbox}
+
+Given a vector $\vec{a} = \alg{a_1, a_2, a_3}$, we have:
+
+\[ \frac{\vec{a}}{\norm{a}} = \alg{\cos \alpha, \cos \beta, \cos \gamma} \]
+where:
+\begin{itemize}
+    \item $\alpha = \cos^{-1} \left( \frac{a_1}{\norm{\vec{a}}} \right) \quad$ (angle between $\vec{a}$ and the $x$-axis)
+    \item $\beta = \cos^{-1} \left( \frac{a_2}{\norm{\vec{a}}} \right) \quad$ (angle between $\vec{a}$ and the $y$-axis)
+    \item $\beta = \cos^{-1} \left( \frac{a_3}{\norm{\vec{a}}} \right) \quad$ (angle between $\vec{a}$ and the $z$-axis)
+\end{itemize}
+
+\begin{dfnbox}{Work}{}
+    If $F$ is a force moving a particle from a point $p$ to a point $q$, the \dfntxt{work} performed by the force is given by:
+    \[ W = \vec{F} \cdot \overrightarrow{PQ} \]
+\end{dfnbox}
+
+\begin{exbox}{Finding Work}{}
+    Find the work done by a force $\vec{F} = \alg{3,4,5}$ in moving an object from $p = (2,1,0)$ to $q = (4,6,2)$.
+    \tcblower
+    First, we find $\overrightarrow{pq}$ as such:
+    \begin{align*}
+        \overrightarrow{pq}
+        &= \alg{4-2, 6-1, 2-0} \\
+        &= \alg{2,5,2}
+    \end{align*}
+    Then, we can find work:
+    \begin{align*}
+        W
+        &= \vec{F} \cdot \overrightarrow{PQ} \\
+        &= \alg{3,4,5} \cdot \alg{2,5,2} \\
+        &= 6 + 20 + 10 \\
+        &= 36
+    \end{align*}
+\end{exbox}
 
 \makeamzindex
 \end{document}

@@ -1,7 +1,8 @@
 \documentclass[12pt]{report}
 
 \usepackage[margin=1in]{geometry}
-\usepackage{amznotes}
+\usepackage[code]{amznotes}
+\usepackage{enumitem}
 
 \title{\textbf{Introduction to Cybersecurity}\\
 \large UT Knoxville, Spring 2023, COSC 366}
@@ -12,7 +13,7 @@
 \maketitle
 \tableofcontents
 
-\chapter{Security Concepts and Principals}
+\chapter{Security Concepts and Principles}
 
 \section{Fundamental Goals of Computer Security}
 
@@ -20,41 +21,41 @@
     \dfntxt{Computer security} is the practice of protecting computer-related assets from unauthorized actions, either by preventing such actions or detecting and recovering from them.
 \end{dfnbox}
 
-\paragraph{CIA Triad}
-The goal of \nameref{dfn:computer-security} is to help users complete their desired task safely, without short or long term risks.  To do this, we support computer-based services by providing essential security properties such as:
+The goal of \nameref{dfn:computer-security} is to help users complete their desired task safely, without short or long term risks.  To do this, we support computer-based services by providing essential security properties.
 
-\begin{itemize}
-    \item \dfntxt{Confidentiality}: only authorized parties can access data; applies at rest or in motion (data being transmitted)
-    \item \dfntxt{Integrity}: data, software or hardware remaining unchanged, except by authorized parties
-    \item \dfntxt{Availability}: information, services and computing resources are available for authorized use
-\end{itemize}
-
-\begin{dfnbox}{Principal}{}
-    A \dfntxt{principal} is an entity with a given identity, such as a user, service, or system process.
+\begin{dfnbox}{CIA Triad}{cia}
+    The \dfntxt{CIA triad} is a pneumonic device that includes three essential security properties:
+    \begin{itemize}[noitemsep]
+        \item \dfntxt{Confidentiality}: only authorized parties can access data; applies at rest and in motion (data being transmitted)
+        \item \dfntxt{Integrity}: data, software or hardware remaining unchanged, except by authorized parties
+        \item \dfntxt{Availability}: information, services and computing resources are available for authorized use
+    \end{itemize}
 \end{dfnbox}
 
-\begin{dfnbox}{Privilege}{}
-    A \dfntxt{privilege} defines what a principal can do, such as read/write/execute permissions.
+\begin{dfnbox}{Principal, Privilege}{}
+    A \dfntxt{principal} is an entity with a given identity, such as a user, service, or system process. A \dfntxt{privilege} defines what a principal can do, such as read/write/execute permissions.
 \end{dfnbox}
 
-\paragraph{Golden Principles}
-In regard to principals, there are three ``Golden Principles'':
+In addition to the \nameref{dfn:cia}, we also have three security properties relating to principals.
+\begin{dfnbox}{Golden Principles}{}
+    The \dfntxt{Golden Principles} are three security properties regarding principals:
 
-\begin{itemize}
-    \item \dfntxt{Authentication}: assurance that a principal is who they say they are
-    \item \dfntxt{Authorization}: proof that an entity has the necessary privilege to take the request action; most commonly done by authenticating a principal, and lookup up its privileges
-    \item \dfntxt{Auditability}: ability to identify principals responsible for past actions
-\end{itemize}
+    \begin{itemize}[noitemsep]
+        \item \dfntxt{Authentication}: assurance that a principal is who they say they are
+        \item \dfntxt{Authorization}: proof that an entity has the necessary privilege to take the request action; most commonly done by authenticating a principal, and lookup up its privileges
+        \item \dfntxt{Auditability}: ability to identify principals responsible for past actions
+    \end{itemize}
+
+\end{dfnbox}
 
 Auditability (or accountability) gives away two key things: who conducted the attack and the methods by which an attack was made.
 
-\begin{dfnbox}{Trustworthy}{}
-    Something is \dfntxt{trustworthy} if it deserves our confidence.
+\begin{dfnbox}{Trustworthy, Trusted}{}
+    Something is \dfntxt{trustworthy} if it deserves our confidence.     Something is \dfntxt{trusted} if it has our confidence.
+
 \end{dfnbox}
 
-\begin{dfnbox}{Trusted}{}
-    Something is \dfntxt{trusted} if it has our confidence.
-\end{dfnbox}
+TODO: private v. confidential
 
 \section{Computer security policies and attacks}
 
@@ -244,10 +245,12 @@ TODO: add more review stuff from slides here; flesh out notes to reflect review
 \chapter{Cryptography}
 \paragraph{Cryptographic Rules to Remember}
 \begin{enumerate}
-    \item Do not design your own cryptographic protocols or algorithms
-    \item Kerckhoff's Principle -- security should only come from the secrecy of the crytographic key material, NOT the algorithm or code
-    \item Encryption only provides confidentiality, not integrity
+    \item Do not design your own cryptographic protocols or algorithms.
+    \item \dfntxt{Kerckhoff's Principle} -- security should only come from the secrecy of the crytographic key material, NOT the algorithm or code.
+    \item Encryption only provides confidentiality, not integrity.
 \end{enumerate}
+
+\section{Introduction}
 
 \begin{dfnbox}{Cipher, Plain Text, Cipher Text}{}
     A \dfntxt{cipher} is any encryption or decryption algorithm. A \dfntxt{plaintext} message is vulnerable, usually prior to cipher. A \dfntxt{ciphertext} message is secure, usually after cipher is applied.
@@ -259,25 +262,24 @@ TODO: add more review stuff from slides here; flesh out notes to reflect review
 
 The \dfntxt{key space} is the set of all possible cryptographic keys. It should be large enough such that it would be impractical to try every possible key. For example, AES-256 uses 256 bit keys. Even a thermodynamically perfect computer with the power of the sun could not even count through $2^{256}$ keys, much less guess and check them.
 
-\paragraph{Threats}
-Attacks
+Some possible threats to encryption may be:
 \begin{itemize}
     \item Brute force attack -- guess and check all keys
     \item Algorithmic break -- some flaw in the algorithm
 \end{itemize}
 
-Adversaries:
+Some possible adversaries include:
 \begin{itemize}
     \item Passive -- just listens to communications
     \item Active -- can modify data
 \end{itemize}
 
 \begin{dfnbox}{Information-Theoretic Security}{}
-    We say information has \dfntxt{information-theoretic security} if given \textbf{unlimited} computer power and time, an attacker cannot recover the plaintext from the ciphertext.
+    We say information has \dfntxt{information-theoretic security} if given \textbf{unlimited} computer power and time, an attacker could not recover the plaintext from the ciphertext.
 \end{dfnbox}
 
 \begin{dfnbox}{Computational Security}{}
-    We say information has \dfntxt{computational security} if given \textbf{fixed} computer power and time, an attacker cannot recover the plaintext from the ciphertext.
+    We say information has \dfntxt{computational security} if given \textbf{fixed} computer power and time, an attacker could not recover the plaintext from the ciphertext.
 \end{dfnbox}
 
 \section{Symmetric Encryption Model}
@@ -287,7 +289,7 @@ Adversaries:
 
 \begin{exbox}{One-Time Pad}{}
     XOR; provides information-theoretic security (cannot be certain what the plaintext message was)
-    \begin{itemize}
+    \begin{itemize}[noitemsep]
         \item Key must be as long as the message
         \item Key must never be reused
         \item How do we share the key?
@@ -302,7 +304,7 @@ Many modern cryptographic algorithms work by taking a small cryptographic key an
 
 \begin{exbox}{AES}{}
     In AES:
-    \begin{itemize}
+    \begin{itemize}[noitemsep]
         \item Messages are split into 128-bit blocks (with padding)
         \item Cryptographic key is 128, 196, or 256 bits long
         \item Provides computational security
@@ -311,6 +313,61 @@ Many modern cryptographic algorithms work by taking a small cryptographic key an
     In addition, different block modes help to remove patterns among blocks.
 \end{exbox}
 
-\amzindex
+\section{Asymmetric Encryption Model}
 
+\begin{dfnbox}{Asymmetric Encryption, Public Key, Private Key}{}
+    \dfntxt{Asymmetric encryption} utilizes two cryptographic keys: a \dfntxt{public key} which encrypts data, and a \dfntxt{private key} which decrypts data.
+\end{dfnbox}
+
+Unfortunately, public key encryption is orders of magnitude slower than symmetric key encryption. Luckily, we don't have to strictly use only one or the other.
+
+\begin{dfnbox}{Hybrid Encryption, Key Wrap}{}
+    \dfntxt{Hybrid encryption} incorporates both symmetric key and public key encryption. We encrypt our message using a symmetric key, and we send both the encrypted message and the symmetric key encrypted using the other party's public key. This encrypted key is called a \dfntxt{key wrap}.
+\end{dfnbox}
+
+Suppose we only need to send a single integer. While the key space is large, the message space is small. Thus, an attacker could guess and check all possible messages until it matches the encrypted message.
+
+\begin{dfnbox}{Padding}{}
+    Many encryption algorithms \dfntxt{pad} messages to:
+    \begin{itemize}[noitemsep]
+        \item ensure the message is properly formatted
+        \item prevent attacks by adding random noise
+    \end{itemize}
+\end{dfnbox}
+
+There are many ways to pad a message. Generally, we want to use the optimal asymmetric encryption padding (OAEP).
+
+\begin{dfnbox}{RSA}{}
+    \dfntxt{RSA} is a common and mathematically simple cryptographic algorithm that provides computational security.
+\end{dfnbox}
+
+\begin{codebox}{Basic RSA Encryption using C\#}{}{}
+    \begin{amzcode}{csharp}
+        var message = "Hello World!";
+        var plaintext = Encoding.ASCII.GetString(ciphertext);
+        var rsa = RSA.Create(2048);
+        var public_key = rsa.ExportRSAPublicKeyPem();
+        var private_key = rsa.exportRSAPrivateKeyPem();
+
+        var ciphertext = rsa.Encrypt(plaintext, RSAEncryptionPadding.OaepSHA256);
+
+        var decrypted = rsa.Decrypt(ciphertext, RSAEncryptionPadding.OaepSHA256);
+        var decrypted_plaintext = Encoding.ASCII.GetString(decrypted);
+    \end{amzcode}
+\end{codebox}
+
+\section{Digital Signatures}
+Although encryption provides confidentiality of data, we still cannot be sure whether the data came from who we think it did. As such, we can digitally sign data, providing us three properties:
+
+\begin{enumerate}
+    \item Data origin authentication -- the data comes from the owner of the private key
+    \item Data integrity -- the data has not changed since it was sent
+    \item Non-repudiation -- the sender cannot later claim to have not sent the data
+\end{enumerate}
+
+Similar to encryption algorithms, there are signing algorithms that create digital signatures and verification algorithms that verify digital signatures. In addition, we still pad our messages before signing to ensure the message is formatted and to prevent some (relatively esoteric) attacks.
+
+Data is hashed before signed, and different key pairs should be used for encryption/decryption and signing/verification.
+
+\amzindex
 \end{document}

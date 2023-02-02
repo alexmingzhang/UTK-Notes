@@ -3,7 +3,7 @@
 \usepackage[margin=1in]{geometry}
 \usepackage[math]{amznotes}
 \usepackage{enumitem}
-\usepackage{nicefrac}
+\usepackage{xfrac}
 
 
 \title{\textbf{Introduction to Analysis}\\
@@ -14,8 +14,14 @@
 \maketitle
 \tableofcontents
 
+\addcontentsline{toc}{chapter}{Preface}
+\chapter*{Preface}
+These notes attempt to give a concise overview of the \textbf{Introduction to Analysis} course at the University of Tennessee (MATH 341). The contents of these notes come from Dr. Michael Frazier's lecture notes as well as Dr. Peter Humphries' lecture notes.
+
+The first few weeks of the class are spent reviewing content from \textbf{Introduction to Abstract Mathematics} (MATH 300). As such, there will be much repeated content. Afterwards, we focus on analysis of real functions.
+
 \chapter{Introduction}
-Our goal is to understand the theory of real functions in one variable. Specifically, we will deal with functions, limits, sequences, convergence, continuity, differentiation, and integration. Along the way, we will develop nuanced techniques for logical deduction and proof writing. The same ideas, concepts, and techniques are used to study more complicated mathematics.
+Our goal is to understand the theory of real functions in one variable. Specifically, we will deal with functions, limits, sequences, convergence, continuity, differentiation, and integration. The same ideas, concepts, and techniques are used to study more complicated mathematics.
 
 We will primarily focus on the idea of \textbf{convergence}. Many computational techniques and algorithms rely on iteration---successive approximations getting closer to an actual solution. In order for those algorithms to work, they need to converge towards an actual solution.
 
@@ -78,7 +84,7 @@ The idea that an infinite sequence of functions can converge suggests some notio
 
 \chapter{Logic and Proofs}
 
-To really understand the theory of real functions, we'll have to start from the basics. Logic and proofs constitute the quintessential ideas upon which all formal mathematics is constructed.
+Logic is backbone of all formal mathematics. When building a logically sound model of mathematics, we start with a small collection of axioms. We then work with those axioms to deduce other logically sound statements, reaffirming what we already knew and discovering new ideas along the way.
 
 \section{Basic Logic}
 \begin{dfnbox}{Statement}{}
@@ -87,18 +93,18 @@ To really understand the theory of real functions, we'll have to start from the 
     \[ p : \text{some claim} \]
 \end{dfnbox}
 
-We usually denote statements like variables, with a letter like $p$. For example, we can write ``$p: x > 2$'', which means $p$ represents the statement ``$x$ is greater than $2$''. Throughout this chapter, we will use $p$ and $q$ to represent arbitrary statements.
+We usually denote statements with a letter like $p$. For example, we can write ``$p: x > 2$'', which means $p$ represents the statement ``$x$ is greater than $2$''. Throughout this chapter, we will use $p$ and $q$ to represent arbitrary statements.
 
 \begin{dfnbox}{Conjunction}{conjunction}
     The \dfntxt{conjunction} of two statements is itself a statement, which is true if and only if the two statements are both true.
     \tcblower
-    \[ p \land q \]
+    \[ p \land q : p\ \text{is true \textbf{and}}\ q\ \text{is true} \]
 \end{dfnbox}
 
 \begin{dfnbox}{Disjunction}{disjunction}
     The \dfntxt{disjunction} of two statements is itself a statement, which is true if and only if at least one of the statements is true.
     \tcblower
-    \[ p \lor q \]
+    \[ p \lor q : p\ \text{is true \textbf{or}}\ q\ \text{is true} \]
 \end{dfnbox}
 
 \nameref{dfn:conjunction} and \nameref{dfn:disjunction} follow our intuition of ``and'' and inclusive ``or'', respectively. We can visualize the two logical connectives using \dfntxt{truth tables}.
@@ -171,6 +177,8 @@ In the implication $p \implies q$, we call $p$ the \dfntxt{hypothesis} and $q$ t
 
 In other words, $p \iff q$ means that $p$ and $q$ share the same truth value. Either $p$ and $q$ are \textbf{always both true}, or $p$ and $q$ are \textbf{always both false}. Logical equivalence says nothing about the truth of $p$ and $q$ themselves.
 
+We can also say ``$p$ if and only if $q$'' or ``$p$ iff $q$'' to denote logical equivalence.
+
 \begin{exbox}{Truth Table of Logical Equivalence}{}
     \begin{center}\begin{tabular}{c | c || c}
         $p$ & $q$ & $p \iff q$ \\ \hline
@@ -206,7 +214,7 @@ Unlike the converse, an implication and its contrapositive are logically equival
 As we can see, no matter what the truth values of the hypothesis and conclusion are, an implication and its contrapositive always have the same truth values.
 
 \begin{notebox}
-    It's important when constructing a truth table that we include \textbf{all} intermediate statements, not just the final statement.
+    When constructing a truth table, we must include \textbf{all} intermediate statements, not just the final statement.
 \end{notebox}
 
 % TODO: add truth table for contrapositive
@@ -215,12 +223,12 @@ As we can see, no matter what the truth values of the hypothesis and conclusion 
 \section{Proofs and Proof Techniques}
 While truth tables are a quick way to gauge whether simple statements hold, they become impractical once we involve more complicated statements. Furthermore, truth tables don't really show intuition behind complicated statements whereas proofs should ultimately fuel our intuition.
 
-Very often, we will have to prove some implication like $p \implies q$. Recall how an implication is only false if its $p$ is true but $q$ is false. Therefore, we would only have to consider that case where $p$ is true but $q$ is false. We can prove an implication is true by simply showing that such a case could never happen. There are three simple proof techniques for doing so:
+Very often, we will have to prove some implication like $p \implies q$. Recall how an implication is only false if $p$ is true but $q$ is false. Therefore, we would only have to consider that case where $p$ is true but $q$ is false. We can prove an implication is true by simply showing that such a case could never happen. There are three simple proof techniques for doing so:
 
 \begin{enumerate}
-    \item \dfntxt{Direct Proof}: Assume $p$ is true, then reason that $q$ must be true as well.
-    \item \dfntxt{Proof by Contradiction}: Assume both $p$ and $\neg q$ are true, then logically derive some contradiction.
-    \item \dfntxt{Proof by Contrapositive}: Assume $\neg q$ is true, then reason that $\neg p$ must be true as well.
+    \item \dfntxt{Direct Proof:} Assume $p$ is true, then reason that $q$ must be true as well.
+    \item \dfntxt{Proof by Contradiction:} Assume both $p$ and $\neg q$ are true, then logically derive some contradiction.
+    \item \dfntxt{Proof by Contrapositive:} Assume $\neg q$ is true, then reason that $\neg p$ must be true as well.
 \end{enumerate}
 
 It's hard to decide which proof technique is easiest for any given problem. Direct proofs are often more ``enlightening'', but it can be difficult to find the appropriate logic to reach the conclusion. It may be easier to try proof by contradiction or contrapositive.
@@ -234,8 +242,8 @@ It's hard to decide which proof technique is easiest for any given problem. Dire
     \end{enumerate}
 \end{tecbox}
 
-This technique is based on the following \nameref{dfn:equiv}:
-\[ (p \implies q) \iff \neg \left[ p \land (\neg q) \right] \]
+In terms of logic notation, proof by contradiction follows:
+\[ \left[ \left( p \land (\neg q) \right) \implies \text{Contradiction} \right] \implies \left[ p \implies q \right]\]
 
 \begin{exbox}{Truth Table of \nameref{tec:contradiction}}{}
     \begin{center}\begin{tabular}{c | c || c | c | c | c }
@@ -247,6 +255,9 @@ This technique is based on the following \nameref{dfn:equiv}:
     \end{tabular}\end{center}
 \end{exbox}
 
+By the above truth table, we can safely assume the following logical equivalence:
+\[ (p \implies q) \iff \neg \left[ p \land (\neg q) \right] \]
+
 \begin{tecbox}{Proof by Contrapositive}{}
     To prove $p \implies q$ by contrapositive, we carry out the following steps:
     \begin{enumerate}
@@ -255,11 +266,14 @@ This technique is based on the following \nameref{dfn:equiv}:
     \end{enumerate}
 \end{tecbox}
 
+In terms of logic notation, proof by contrapositive follows:
+\[ (\neg q \implies \neg p) \iff (p \implies q) \]
+We can actually prove this using proof by contradiction!
 \begin{exbox}{Logical Equivalence of Contrapositive}{}
     Given statements $p$ and $q$, $p \implies q$ and $\neg q \implies \neg p$ are equivalent.
     \tcblower
     \begin{proof}
-        Assume $p \implies q$. To prove $\neg q \implies \neg p$, we can assume for contradiction that $\neg q$ and $p$ are both true. But $p \implies q$, so $q$ is true which contradicts $\neg q$. Hence, the assumption that $p$ is true was incorrect. Thus, $\neg q \implies \neg p$.
+        Assume $p \implies q$. To prove $\neg q \implies \neg p$, we can suppose for contradiction that $\neg q$ and $p$ are both true. But $p \implies q$, so $q$ is true which contradicts $\neg q$. Hence, the assumption that $p$ is true was incorrect. Thus, $\neg q \implies \neg p$.
 
         Assume $\neg q \implies \neg p$. From above, we have $\neg ( \neg p ) \implies \neg (\neg q)$, so $p \implies q$.
     \end{proof}
@@ -279,8 +293,9 @@ This technique is based on the following \nameref{dfn:equiv}:
     \end{proof}
 \end{exbox}
 
-\chapter{Set Theory}
-To add to our mathematical vocabulary, we introduce sets and define functions in terms of sets.
+\chapter{Naive Set Theory}
+Set theory is a whole other can of worms that really isn't that meaningful right now. Instead, we will take a naive approach to sets and define them informally. That way, we can avoid the chicanery and get to what really matters.
+
 \section{Sets}
 \begin{dfnbox}{Set}{set}
     A \dfntxt{set} is a collection of distinct objects.
@@ -294,7 +309,7 @@ chapter, we will use $A$ and $B$ to represent arbitrary sets.
 \end{dfnbox}
 
 \begin{dfnbox}{Subset, $\subseteq$}{}
-    $A$ is a \dfntxt{subset} of $B$ if every element of $A$ is also an element of $B$.
+    $A$ is a \dfntxt{subset} of $B$ if everything in $A$ is also in $B$.
     \tcblower
     \[ A \subseteq B \iff \forall(x \in A)(x \in B) \]
 \end{dfnbox}
@@ -308,11 +323,15 @@ chapter, we will use $A$ and $B$ to represent arbitrary sets.
 \begin{dfnbox}{Proper Subset, $\subsetneq$}{}
     $A$ is a \dfntxt{proper subset} of $B$ if $A$ is a subset of $B$ but $B$ is not a subset of $A$.
     \tcblower
-    \[ A \subseteq B \iff (A \subseteq B \land B \not\subseteq A) \]
+    \[ A \subsetneq B \iff (A \subseteq B \land B \not\subseteq A) \]
 \end{dfnbox}
+
+In other words, $A$ is a proper subset of $B$ if everything in $A$ is also in $B$, but $B$ has something that $A$ does not.
 
 \begin{dfnbox}{Empty Set ($\emptyset$)}{}
     The \dfntxt{empty set} is the set that contains no elements.
+    \tcblower
+    \[ \emptyset \coloneq \{ \} \]
 \end{dfnbox}
 
 As a convention, we will assume that $\emptyset$ is a subset of any set, including itself.
@@ -407,6 +426,9 @@ More generally, we can apply union and intersection to an arbitrary number of se
 \end{thmbox}
 
 \section{Functions}
+We generally think of functions as a ``map'' or ``rule'' that assigns numbers to other numbers. For example, $f(x) = 2x$ maps $1 \mapsto 2$, $2 \mapsto 4$, etc. In formal mathematics, it's conventional to actually define functions in terms of sets.
+
+
 \begin{dfnbox}{Cartesian Product}{}
     Let $X$ and $Y$ be sets. The \dfntxt{Cartesian product} of $X$ and $Y$ is the set of all ordered pairs $(x,y)$ where $x \in X$ and $y \in Y$.
     \tcblower
@@ -440,7 +462,7 @@ Given $f : X \to Y$, we call $f[X]$ the \dfntxt{range} of $f$.
     \tcblower
     In this example, we will only prove the ``forward'' direction. That is, we want to show that $f \left[ \bigcup_{\lambda \in \Lambda} A_\lambda \right] \subseteq \bigcup_{\lambda \in \Lambda} f \left[ A_\lambda \right]$.
     \begin{proof}[Proof of (a)]
-        Let $y \in f \left[ \bigcup_{\lambda \in \Lambda} A_\lambda \right]$. By definition of \nameref{dfn:image}, then there exists $x \in \bigcup_{\lambda \in \Lambda} A_\lambda$ such that $y = f(x)$. Thus, there exists $\lambda_0 \in \Lambda$ such that $x \in \lambda_0$. That is, $y \in f \left[ A_{\lambda_0} \right]$. Therefore, $y \in \bigcup_{\lambda \in \Lambda} f \left[ A_\lambda \right]$.
+        Let $y \in f \left[ \bigcup_{\lambda \in \Lambda} A_\lambda \right]$. By definition of \nameref{dfn:image}, there exists $x \in \bigcup_{\lambda \in \Lambda} A_\lambda$ such that $y = f(x)$. Thus, there exists $\lambda_0 \in \Lambda$ such that $x \in \lambda_0$. That is, $y \in f \left[ A_{\lambda_0} \right]$. Therefore, $y \in \bigcup_{\lambda \in \Lambda} f \left[ A_\lambda \right]$.
     \end{proof}
 \end{exbox}
 
@@ -464,7 +486,7 @@ Note the following logical equivalence:
 \end{exbox}
 
 \begin{dfnbox}{Injective}{}
-    A function $f : X \to Y$ is \dfntxt{injective} if no two things in $X$ point to the same thing in $Y$.
+    A function $f : X \to Y$ is \dfntxt{injective} if no two inputs in $X$ have the same output in $Y$.
     \tcblower
     \[ \forall (x_1, x_2 \in X) \left[ x_1 \neq x_2 \implies f\left(x_1\right) \neq f\left(x_2\right) \right] \]
 \end{dfnbox}
@@ -494,7 +516,7 @@ Note the following logical equivalence:
 \end{exbox}
 
 \begin{dfnbox}{Surjective}{}
-    A function $f : X \to Y$ is a \dfntxt{surjective} if everything in $Y$ has a corresponding input in $X$.
+    A function $f : X \to Y$ is \dfntxt{surjective} if everything in $Y$ has a corresponding input in $X$.
     \tcblower
     \[ \forall (y \in Y) \left[ \exists (x \in X) (f(x) = y) \right] \]
 \end{dfnbox}
@@ -565,9 +587,118 @@ The notation for inverse functions conflicts with the notation for inverse image
     Let $f : X \to Y$ and $g : Y \to X$ be functions such that $(g \circ f) = x$ for all $x \in X$, and $(f \circ g)(y) = y$ for all $y \in Y$. $f^{-1} = g$.
     \tcblower
     \begin{proof}
-
+        todo: finish proof
     \end{proof}
 \end{exbox}
+
+\chapter{Number Systems}
+Our goal is to create an axiomatic basis for the real numbers $\R$. We need to establish axioms for $\R$ and then derive all further properties from the axioms. We would like these axioms to be as minimal and agreeable as possible; however, finding axioms that characterize $\R$ is not easy. Instead, we'll start from the natural numbers $\N$ and expand from there.
+
+\section{Natural Numbers $\N$ and Induction}
+How do we define the natural numbers? Listing every natural number is definitely not an option. We could try to define the natural numbers as $\N \coloneq \{ 1, 2, \ldots \}$. However, the ``$\ldots$'' is ambiguous. Instead, we can come up with some rules such that only the natural numbers could satisfy those rules.
+
+\begin{dfnbox}{Peano Axioms for $\N$}{}
+    The \dfntxt{Peano axioms} are axioms that can be used to define the natural numbers $\N$.
+    \begin{enumerate}[noitemsep]
+        \item $1 \in \N$
+        \item Every $n \in \N$ has a successor called $n+1$.
+        \item $1$ is \textbf{not} the successor of any $n \in \N$.
+        \item If $n,m \in \N$ have the same successor, then $n = m$.
+        \item If $1 \in S$ and every $n \in S$ has a successor, then $\N \subseteq S$.
+    \end{enumerate}
+\end{dfnbox}
+
+\begin{notebox}
+    Note that there is no one ``prescribed'' way to do define the natural numbers. This is just the most popular approach.
+\end{notebox}
+
+From the fifth axiom, we can derive a new proof technique for proving an arbitrary statement for all natural numbers.
+
+\begin{thmbox}{Principle of Induction}{induction}
+    Let $P(n)$ is a statement for each $n \in \N$. Suppose:
+    \begin{enumerate}
+        \item $P(1)$ is true, and
+        \item if $P(n)$ is true, then $P(n+1)$ is true.
+    \end{enumerate}
+    Then $P(n)$ is true for all $n \in \N$.
+    \tcblower
+    \begin{proof}
+        Let $P(n)$ be a statement for each $n \in \N$. Assume $P(1)$ is true and $P(n) \implies P(n+1)$ for all $n \in \N$. Let $S \coloneq \{ n \in \N : P(n) \} \subseteq \N$. Then $1 \in S$ because $P(1)$ is true. Note that if $n \in S$, then $P(n)$ is true. Hence, $P(n+1)$ is true by assumption. Thus, $n+1 \in S$. By the fifth Peano axiom, we have $S = \N$.
+    \end{proof}
+\end{thmbox}
+
+A proof by induction kind of has a ``domino effect''. We set up the dominoes by proving $P(n) \implies P(n+1)$ and knock over the first domino by proving $P(1)$. The result is that all the dominoes will topple each other, leaving no domino standing.
+
+\[ \underbracket{P_1}_{\text{by (1)}} \implies \underbracket{P_2}_{\text{by (2)}} \implies \underbracket{P_3}_{\text{by (2)}} \implies \ldots \]
+
+\begin{tecbox}{Proof by Induction}{induction}
+    To prove a statement $P(n)$ for all $n \in \N$:
+    \begin{enumerate}
+        \item \textbf{Base Case:} Prove $P(1)$.
+        \item \textbf{Induction Step:} Assume $P(n)$ is true from some $n \in \N$, then prove $P(n) \implies P(n+1)$.
+    \end{enumerate}
+\end{tecbox}
+
+It is crucial that we actually use our assumption that $P(n)$ is true in the induction step. Otherwise, our proof is most likely wrong.
+
+\begin{exbox}{Simple Proof by Induction}{}
+    Prove that $1+2+\cdots + n = \frac{n(n+1)}{2}$ for all $n \in \N$.
+    \tcblower
+    \begin{proof}
+        Let $P(n)$ be the statement $1 + 2 + \cdots + n = \frac{n(n+1)}{2}$.
+
+        \textbf{Base Case:} When $n=1$, $\text{LHS} = 1$ and $\text{RHS} = \frac{1(1+1)}{2} = 1$, so $P(1)$ is true.
+
+        \textbf{Induction Step:} Assume that $P(n)$ is true for some $n \in \N$. Then:
+        \begin{align*}
+            1 + 2 + \cdots + n + (n+1)
+            &= \frac{n(n+1)}{2} + (n+1) \\
+            &= (n+1) \left( \frac{n}{2} + 1 \right) \\
+            &= \frac{(n+1)(n+2)}{2}
+        \end{align*}
+        That is, $P(n+1)$ is true. By the \nameref{thm:induction}, $P(n)$ is true for all $n \in \N$.
+    \end{proof}
+\end{exbox}
+
+\section{Integers $\Z$}
+On $\N$, our idea of addition ($+$) and multiplication ($\cdot$) already satisfy the following properties:
+
+\begin{tabular}{l l l}
+    Commutativity & $n+m = m+n$ & $n \cdot m = m \cdot n$ \\
+    Associativity & $(n \cdot m) \cdot k$ & $n \cdot (m \cdot k)$ \\
+    Distributivity & $n \cdot (m + k) = n \cdot m + n \cdot k$ \\
+    Identity & $n \cdot 1 = n$
+\end{tabular}
+
+We can expand this number system by including:
+\begin{enumerate}
+    \item an \dfntxt{additive identity} ($n+0 = n$ for all $n \in \N$)
+    \item \dfntxt{additive inverses} (for all $n \in \N$, add $-n$ so $-n + n = 0$)
+    \item \dfntxt{multiplicative inverses} (for all $n \in \Z \setminus \{0\}$, define $\sfrac{1}{n}$ such that $n \cdot \sfrac{1}{n} = 1$)
+\end{enumerate}
+
+From just 1 and 2, we then have the set of integers ($\Z$). To attain the rational numbers ($\Q$), we include 3 and define $m \cdot \sfrac{1}{n} = \sfrac{m}{n}$ when $n \neq 0$. Thus, we have:
+
+\[ \Q \coloneq \left\{ \frac{m}{n} : m,n \in Z \land n \neq 0 \right\} \]
+
+To ensure multiplication works as intended, we also define $\frac{m}{n} \cdot \frac{k}{l} \coloneq \frac{m \cdot k}{n \cdot l}$.
+
+We say $\frac{m_1}{n_1} = \frac{m_2}{n_2}$ if and only if $m_1n_1 = m_2n_2$ where $n_1, n_2 \neq 0$. In other words, $\frac{m_1}{n_1} \sim \frac{m_2}{n_2} \iff m_1n_2 = m_2n_1$. Thus, $\Q$ is the set of equivalence classes for this relation.
+
+If $n = kp$ and $m = kq$, where $k,p,q \in \Z$, $k \neq 0$, $q \neq 0$, then:
+\[ \frac{n}{m} = \frac{kp}{kq} = \frac{k}{p}, \quad \text{because}\ kpq = kqp \]
+If $n$ and $m$ have no common factor (except $\pm 1$), then we say that $\sfrac{n}{m} \in \Q$ is in the ``lowest terms'' or ``reduced terms''. The set $(Q, +, \cdot)$ forms a field. However, we cannot write $x = \sfrac{n}{m}$ where $x^2 = 2$.
+
+\begin{exbox}{}{}
+    for $n \in \Z$, if $n^2$ is even, then $n$ is even.
+\end{exbox}
+
+\begin{thmbox}{Root 2 is Irrational}{}
+    \begin{proof}
+        Suppose for contradiction that there exist $n,m \in \Z$ such that $\left( \frac{n}{m} \right)^2 = 2$. If $n = kp$ and $m = kq$, then we can ``cancel'' the common factor $k$ to write $\frac{n}{m} = \frac{p}{q}$. That is, we can assume that $n$ and $m$ have no (non-trivial) common factors. Now, $\frac{n^2}{m^2} = 2$, so $n^2 = 2m^2$. Thus, $n^2$ is an even number.
+
+    \end{proof}
+\end{thmbox}
 
 \amzindex
 \end{document}
