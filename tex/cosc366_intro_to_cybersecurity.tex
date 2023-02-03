@@ -23,7 +23,7 @@
 
 The goal of \nameref{dfn:computer-security} is to help users complete their desired task safely, without short or long term risks.  To do this, we support computer-based services by providing essential security properties.
 
-\begin{dfnbox}{CIA Triad}{cia}
+\begin{dfnbox}{Confidentiality, Integrity, Availablity (CIA)}{cia}
     The \dfntxt{CIA triad} is a pneumonic device that includes three essential security properties:
     \begin{itemize}[noitemsep]
         \item \dfntxt{Confidentiality}: only authorized parties can access data; applies at rest and in motion (data being transmitted)
@@ -37,7 +37,7 @@ The goal of \nameref{dfn:computer-security} is to help users complete their desi
 \end{dfnbox}
 
 In addition to the \nameref{dfn:cia}, we also have three security properties relating to principals.
-\begin{dfnbox}{Golden Principles}{}
+\begin{dfnbox}{Authentication, Authorization, Auditability (Golden Principles)}{}
     The \dfntxt{Golden Principles} are three security properties regarding principals:
 
     \begin{itemize}[noitemsep]
@@ -55,7 +55,9 @@ Auditability (or accountability) gives away two key things: who conducted the at
 
 \end{dfnbox}
 
-TODO: private v. confidential
+\begin{dfnbox}{Privacy, Confidentiality}{}
+    \dfntxt{Privacy} is a sense of being in control of access that others have to ourselves. It deals exclusively with people. \dfntxt{Confidentiality} is an extension of privacy to also include personally sensitive data.
+\end{dfnbox}
 
 \section{Computer security policies and attacks}
 
@@ -81,12 +83,9 @@ A formal security policy should precisely define each possible system state as e
     A \dfntxt{threat} is any combination of circumstances and entities allow harm to assets or cause security violations.
 \end{dfnbox}
 
-\begin{dfnbox}{Attack}{attack}
-    An \dfntxt{attack} is a deliberate attempt to cause a security violation.
-\end{dfnbox}
+\begin{dfnbox}{Attack, Attack Vector}{attack}
+    An \dfntxt{attack} is a deliberate attempt to cause a security violation. An \dfntxt{attack vector} is the specific methods and steps by which an attack was executed.
 
-\begin{dfnbox}{Attack Vector}{attack-vector}
-    An \dfntxt{attack vector} is the specific methods and steps by which an attack was executed.
 \end{dfnbox}
 
 \begin{dfnbox}{Mitigation}{mitigation}
@@ -112,7 +111,7 @@ A formal security policy should precisely define each possible system state as e
     A \dfntxt{risk} is the expected loss of assets due to future attacks.
 \end{dfnbox}
 
-There are two was we assess risk: \dfntxt{quantitative} and \dfntxt{qualitative} risk assessment.
+There are two ways we assess risk: \dfntxt{quantitative} and \dfntxt{qualitative} risk assessment.
 \begin{itemize}
     \item \dfntxt{Quantitative} risk assessment computes numerical estimate of risk
     \item \dfntxt{Qualitative} risk assessment compares risks relative to each other
@@ -169,17 +168,18 @@ where:
 
 \begin{dfnbox}{Adversary}{}
     An \dfntxt{adversary} is an entity that wants to violate a security policy in order to harm an asset.
+    \begin{itemize}[noitemsep]
+        \item \dfntxt{identity}: who are they?
+        \item \dfntxt{objectives}: what assets the adversary might try to harm
+        \item \dfntxt{methods}: the potential attack techniques or types of attacks
+        \item \dfntxt{capabilities}: skills, knowledge, personnel, and opportunity
+        % \item funding level -- how much money an attacker has
+        % \item outsider or insider -- whether or not the adversary may have special permissions or privileges
+    \end{itemize}
 \end{dfnbox}
 
 In designing computer security mechanisms, it is important to identify traits about potential adversaries. Some attributes may include:
-\begin{itemize}
-    \item identity: who are they?
-    \item objectives: what assets the adversary might try to harm
-    \item methods: the potential attack techniques or types of attacks
-    \item capabilities: skills, knowledge, personnel, and opportunity
-    % \item funding level -- how much money an attacker has
-    % \item outsider or insider -- whether or not the adversary may have special permissions or privileges
-\end{itemize}
+
 
 Different adversaries can have wildly different objectives, methods, and capabilities.
 
@@ -201,7 +201,7 @@ A threat model will identify possible adversaries, threats, and attack vectors. 
 
 \paragraph{Diagram-Driven Threat Model}
 Threat model diagrams include assets, infrastructure, and defenses/mitigations, making apparent the possible attack vectors. Popular examples include:
-\begin{itemize}
+\begin{itemize}[noitemsep]
     \item \dfntxt{Data Flow Diagrams} -- models all possible data routes
     \item \dfntxt{User Workflow Diagram} -- models how users interact with the program, both frontend and backend
     \item \dfntxt{Attack Trees} -- models all possible attack vectors like a flow chart; leaf nodes are initial actions
@@ -209,7 +209,7 @@ Threat model diagrams include assets, infrastructure, and defenses/mitigations, 
 
 \begin{dfnbox}{STRIDE}{stride}
     \dfntxt{STRIDE} is a model for identifying computer security threats.
-    \begin{itemize}
+    \begin{itemize}[noitemsep]
         \item \dfntxt{Spoofing} -- attacker impersonates another user, or malicious server posing as a legitimate server
         \item \dfntxt{Tampering} -- altering data without proper authorization; can occur when data is stored, processed
         \item \dfntxt{Repudiation} -- lying about past actions (e.g. denying/claiming that something happened)
@@ -246,7 +246,7 @@ TODO: add more review stuff from slides here; flesh out notes to reflect review
 \paragraph{Cryptographic Rules to Remember}
 \begin{enumerate}
     \item Do not design your own cryptographic protocols or algorithms.
-    \item \dfntxt{Kerckhoff's Principle} -- security should only come from the secrecy of the crytographic key material, NOT the algorithm or code.
+    \item \dfntxt{Kerckhoff's Principle} -- security should only come from the secrecy of the crytographic key, NOT the algorithm or code.
     \item Encryption only provides confidentiality, not integrity.
 \end{enumerate}
 
@@ -282,28 +282,31 @@ Some possible adversaries include:
     We say information has \dfntxt{computational security} if given \textbf{fixed} computer power and time, an attacker could not recover the plaintext from the ciphertext.
 \end{dfnbox}
 
-\section{Symmetric Encryption Model}
-\begin{dfnbox}{Stream Cipher}{}
-    A \dfntxt{stream cipher} encrypts information one bit at a time.
+\begin{dfnbox}{Stream Cipher, Block Cipher}{}
+    A \dfntxt{stream cipher} encrypts information one bit at a time.     A \dfntxt{block cipher} encrypts information in blocks.
 \end{dfnbox}
 
-\begin{exbox}{One-Time Pad}{}
-    XOR; provides information-theoretic security (cannot be certain what the plaintext message was)
+\section{Symmetric Encryption Model}
+
+\begin{dfnbox}{Symmetric-Key Algorithm}{}
+    A \dfntxt{symmetric-key algorithm} encrypts plaintext and decrypts ciphertext using the same cryptographic key.
+\end{dfnbox}
+
+\begin{dfnbox}{One-Time Pad (OTP)}{}
+    The \dfntxt{one-time pad} is a symmetric stream cipher that XOR's a message with a key. The resulting ciphertext is information theoretic so long as the following are met:
     \begin{itemize}[noitemsep]
-        \item Key must be as long as the message
+        \item Key must be as long as the plaintext
+        \item Key must be random
         \item Key must never be reused
-        \item How do we share the key?
+        \item Key must be kept completely secret
    \end{itemize}
-\end{exbox}
+\end{dfnbox}
 
 Many modern cryptographic algorithms work by taking a small cryptographic key and expanding it into a sufficiently large one-time pad key.
 
-\begin{dfnbox}{Block Cipher}{}
-    A \dfntxt{block cipher} encrypts information in blocks.
-\end{dfnbox}
 
-\begin{exbox}{AES}{}
-    In AES:
+\begin{dfnbox}{Advanced Encryption Standard (AES)}{}
+    \dfntxt{AES} is the most common symmetric block cipher, providing computational security.
     \begin{itemize}[noitemsep]
         \item Messages are split into 128-bit blocks (with padding)
         \item Cryptographic key is 128, 196, or 256 bits long
@@ -311,21 +314,19 @@ Many modern cryptographic algorithms work by taking a small cryptographic key an
         \item A single bit changed should change (on average) 50\% of the ciphertext
     \end{itemize}
     In addition, different block modes help to remove patterns among blocks.
-\end{exbox}
+\end{dfnbox}
 
 \section{Asymmetric Encryption Model}
 
 \begin{dfnbox}{Asymmetric Encryption, Public Key, Private Key}{}
-    \dfntxt{Asymmetric encryption} utilizes two cryptographic keys: a \dfntxt{public key} which encrypts data, and a \dfntxt{private key} which decrypts data.
+    \dfntxt{Asymmetric encryption} utilizes two cryptographic keys: a \dfntxt{public key} which encrypts plaintext, and a \dfntxt{private key} which decrypts ciphertext.
 \end{dfnbox}
 
-Unfortunately, public key encryption is orders of magnitude slower than symmetric key encryption. Luckily, we don't have to strictly use only one or the other.
+Unfortunately, public key encryption is orders of magnitude slower than symmetric key encryption. We can circumvent this through hybrid encryption.
 
 \begin{dfnbox}{Hybrid Encryption, Key Wrap}{}
-    \dfntxt{Hybrid encryption} incorporates both symmetric key and public key encryption. We encrypt our message using a symmetric key, and we send both the encrypted message and the symmetric key encrypted using the other party's public key. This encrypted key is called a \dfntxt{key wrap}.
+    \dfntxt{Hybrid encryption} incorporates both symmetric key and public key encryption. We encrypt our plaintext using a symmetric key, and we send both the encrypted ciphertext and the symmetric key encrypted using the other party's public key. This encrypted key is called a \dfntxt{key wrap}.
 \end{dfnbox}
-
-Suppose we only need to send a single integer. While the key space is large, the message space is small. Thus, an attacker could guess and check all possible messages until it matches the encrypted message.
 
 \begin{dfnbox}{Padding}{}
     Many encryption algorithms \dfntxt{pad} messages to:
@@ -334,6 +335,8 @@ Suppose we only need to send a single integer. While the key space is large, the
         \item prevent attacks by adding random noise
     \end{itemize}
 \end{dfnbox}
+
+Suppose we only need to send a single integer. While the key space is large, the message space is small. Thus, an attacker could guess and check all possible messages until it matches the encrypted message.
 
 There are many ways to pad a message. Generally, we want to use the optimal asymmetric encryption padding (OAEP).
 

@@ -40,14 +40,20 @@ We denote an ``alphabet'' using $\Sigma$ and all possible words of finite length
     A \dfntxt{finite automaton} (FA) is a simple, idealized machine used to recognize patterns within input taken from some character set.
 \end{dfnbox}
 
-Finite automata can be used to generalize many applications ranging from parsers for compilers, pattern recognition, speech processing, and market prediction. We can formally define any finite automaton as a 5-tuple $(Q, \Sigma, \delta, q_0, F)$ where:
-\begin{itemize}
-    \item $Q$ is a finite set of all possible states
-    \item $\Sigma$ is a finite set of symbols (alphabet)
-    \item $\delta$ is a function $\delta : Q \times \Sigma \to Q$ (describes how input symbols change the state)
-    \item $q_0 \in Q$ is the initial state
-    \item $F \subseteq Q$ is the set of acceptable final states
-\end{itemize}
+Finite automata can be used to generalize many applications ranging from parsers for compilers, pattern recognition, speech processing, and market prediction.
+
+\begin{dfnbox}{Deterministic Finite Automaton (DFA)}{dfa}
+    A \dfntxt{deterministic finite automaton} is a finite automaton where each state transition leads to exactly one state.
+    \tcblower
+    We can formally define a DFA as a 5-tuple $(Q, \Sigma, \delta, q_0, F)$ where:
+    \begin{itemize}[noitemsep]
+        \item $Q$ is a finite set of all possible states
+        \item $\Sigma$ is a finite set of symbols called an \dfntxt{alphabet}
+        \item $\delta : Q \times \Sigma \to Q$ is a \dfntxt{transition function}
+        \item $q_0 \in Q$ is the \dfntxt{start state}
+        \item $F \subseteq Q$ is the set of \dfntxt{accept states}
+    \end{itemize}
+\end{dfnbox}
 
 Let's consider a simple, arbitrary finite automaton $M_1$.
 \begin{itemize}
@@ -58,7 +64,7 @@ Let's consider a simple, arbitrary finite automaton $M_1$.
 
 \begin{dfnbox}{Acceptance}{}
     Let $M = (Q, \Sigma, \delta, q_0, F)$ be a finite automaton and $w = a_1 \ldots a_n$ be a string over $\Sigma$. We say $M$ \dfntxt{accepts} $w$ if there exists a sequence of states $r_0 \ldots r_n$ in $Q$ such that:
-    \begin{itemize}
+    \begin{itemize}[noitemsep]
         \item $r_0 = q_0$
         \item $\delta(r_i, a_{i+1}) = r_{i+1}$
         \item $r_n \in F$
@@ -200,18 +206,20 @@ For complicated languages, it is difficult to create a completely deterministic 
 To introduce nondeterminism, we need more choices for the next state and allow state change without any input.
 
 \begin{dfnbox}{Nondeterministic Finite Automaton (NFA)}{}
-    A \dfntxt{nondeterministic finite automaton} is a 5-tuple $(Q, \Sigma, \delta, q_0, F)$ where:
+    A \dfntxt{nondeterministic finite automaton} is a finite automaton where each state transition can lead to an arbitrary number of states.
+    \tcblower
+    We can formally define an NFA as a 5-tuple $(Q, \Sigma, \delta, q_0, F)$ where:
     \begin{itemize}[noitemsep]
         \item $Q$ is a finite set of states
-        \item $\Sigma$ is a finite set of symbols (alphabet)
-        \item $\delta$ is a \textbf{relation} between $Q \times (\Sigma \cup \{ \epsilon\})$ and $\mathcal{P}(Q)$
-        \item $q_0 \in Q$ is the start state
-        \item $F \subseteq Q$ is the set of accept states
+        \item $\Sigma$ is a finite set of symbols called an \dfntxt{alphabet}
+        \item $\delta : Q \times (\Sigma \cup \{ \epsilon\}) \to \mathcal{P}(Q)$ is a \dfntxt{transition function}
+        \item $q_0 \in Q$ is the \dfntxt{start state}
+        \item $F \subseteq Q$ is the set of \dfntxt{accept states}
     \end{itemize}
     In this context, $\epsilon$ represents a nondeterministic choice by the machine.
 \end{dfnbox}
 
-Notice that in an NFA, we only specify that $\delta$ is a relation. NFA computation is usually more expensive than DFA computation. In theory, every NFA can be converted into an equivalent DFA.
+To account for the nondeterminism, $\delta$ now points to a subset of $Q$. NFA computation is usually more expensive than DFA computation. In theory, every NFA can be converted into an equivalent DFA.
 
 \begin{dfnbox}{Acceptance (NFA)}{}
     Let $N \coloneq (Q, \Sigma, \delta, q_0, F)$ be an NFA and $w \coloneq y_1 \ldots y_n$ be a string over $\Sigma \cup \{\epsilon\}$. We say $N$ \dfntxt{accepts} $w$ if there exists a sequence of states $r_0, \ldots, r_m \in Q$ such that:
@@ -232,13 +240,14 @@ Notice that in an NFA, we only specify that $\delta$ is a relation. NFA computat
 
 \section{DFA/NFA Equivalence}
 
-When converting from a DFA to an NFA, we need to account for the machine's options.
+The ambiguity in an NFA lies in the state transitions. We can convert an NFA into an equivalent DFA, shifting the ambiguity to the states.
 
 \begin{tecbox}{Converting NFA to DFA}{}
     To convert an NFA to a DFA, we carry out the following steps:
     \begin{enumerate}
         \item Let $N \coloneq (Q, \Sigma, \delta, q_0, F)$ be an NFA that recognizes the language $A$.
-        \item Construct the DFA $M$ that also recognizes $A$. For convenience, define $M \coloneq (Q\prime, \Sigma, \delta\prime, q_0\prime, F\prime)$.
+        \item Construct the DFA $M$ that also recognizes $A$. For convenience, define:
+        \[ M \coloneq (Q\prime, \Sigma, \delta\prime, q_0\prime, F\prime) \]
         \item For all $R \subseteq Q$, define $E(R)$ to be the collection of all states that can be reached from $R$ by going along $\epsilon$ transitions, including members of $R$ themselves.
         \item Modify $\delta\prime$ to place additional edges on all states that can be reached by going along $\epsilon$ edges after every step.
         \item Set $q_0\prime = E(\{q_0\})$ and $F\prime = \{ R \in Q\prime : R\ \text{contains an accept state of}\ N \}$.

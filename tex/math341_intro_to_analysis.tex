@@ -294,7 +294,7 @@ We can actually prove this using proof by contradiction!
 \end{exbox}
 
 \chapter{Naive Set Theory}
-Set theory is a whole other can of worms that really isn't that meaningful right now. Instead, we will take a naive approach to sets and define them informally. That way, we can avoid the chicanery and get to what really matters.
+Set theory is a whole other can of worms that really isn't that meaningful right now. Instead of constructing an axiomatic basis for sets, we will just take a naive approach and define sets informally. That way, we can avoid the chicanery and get to what really matters.
 
 \section{Sets}
 \begin{dfnbox}{Set}{set}
@@ -595,10 +595,10 @@ The notation for inverse functions conflicts with the notation for inverse image
 Our goal is to create an axiomatic basis for the real numbers $\R$. We need to establish axioms for $\R$ and then derive all further properties from the axioms. We would like these axioms to be as minimal and agreeable as possible; however, finding axioms that characterize $\R$ is not easy. Instead, we'll start from the natural numbers $\N$ and expand from there.
 
 \section{Natural Numbers $\N$ and Induction}
-How do we define the natural numbers? Listing every natural number is definitely not an option. We could try to define the natural numbers as $\N \coloneq \{ 1, 2, \ldots \}$. However, the ``$\ldots$'' is ambiguous. Instead, we can come up with some rules such that only the natural numbers could satisfy those rules.
+How do we define the natural numbers? Listing every natural number is definitely not an option. We could try to define the natural numbers as $\N \coloneq \{ 1, 2, \ldots \}$. However, the ``$\ldots$'' is ambiguous. Instead, we can define $\N$ in terms of its properties.
 
 \begin{dfnbox}{Peano Axioms for $\N$}{}
-    The \dfntxt{Peano axioms} are axioms that can be used to define the natural numbers $\N$.
+    The \dfntxt{Peano axioms} are five axioms that can be used to define the natural numbers $\N$.
     \begin{enumerate}[noitemsep]
         \item $1 \in \N$
         \item Every $n \in \N$ has a successor called $n+1$.
@@ -623,13 +623,13 @@ From the fifth axiom, we can derive a new proof technique for proving an arbitra
     Then $P(n)$ is true for all $n \in \N$.
     \tcblower
     \begin{proof}
-        Let $P(n)$ be a statement for each $n \in \N$. Assume $P(1)$ is true and $P(n) \implies P(n+1)$ for all $n \in \N$. Let $S \coloneq \{ n \in \N : P(n) \} \subseteq \N$. Then $1 \in S$ because $P(1)$ is true. Note that if $n \in S$, then $P(n)$ is true. Hence, $P(n+1)$ is true by assumption. Thus, $n+1 \in S$. By the fifth Peano axiom, we have $S = \N$.
+        Let $P(n)$ be a statement for each $n \in \N$. Assume $P(1)$ is true and $P(n) \implies P(n+1)$ for all $n \in \N$. Let $S \coloneq \{ n \in \N : P(n) \} \subseteq \N$. Then $1 \in S$ because $P(1)$ is true. Note that if $n \in S$, then $P(n)$ is true. Hence, $P(n+1)$ is true by assumption. Thus, $n+1 \in S$. By the fifth Peano axiom, we have $\N \subseteq S$. Since $S$ was defined as a subset of $\N$, we have $\N = S$.
     \end{proof}
 \end{thmbox}
 
 A proof by induction kind of has a ``domino effect''. We set up the dominoes by proving $P(n) \implies P(n+1)$ and knock over the first domino by proving $P(1)$. The result is that all the dominoes will topple each other, leaving no domino standing.
 
-\[ \underbracket{P_1}_{\text{by (1)}} \implies \underbracket{P_2}_{\text{by (2)}} \implies \underbracket{P_3}_{\text{by (2)}} \implies \ldots \]
+\[ \underbracket{P(1)}_{\text{by 1.}} \implies \underbracket{P(2)}_{\text{by 2.}} \implies \underbracket{P(3)}_{\text{by 2.}} \implies \cdots \]
 
 \begin{tecbox}{Proof by Induction}{induction}
     To prove a statement $P(n)$ for all $n \in \N$:

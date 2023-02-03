@@ -181,5 +181,54 @@ where:
     \end{align*}
 \end{exbox}
 
+\section{Gradient}
+
+\begin{dfnbox}{Gradient}{}
+
+\end{dfnbox}
+
+\begin{exbox}{Gradient}{}
+    $f(T,L,\rho) = \frac{1}{2L} \sqrt{\frac{T}{\rho}}$
+
+    The gradient of $f(T,L,P)$ is denoted
+    \begin{align*}
+        \nabla f(T,L,\rho)
+        &= \alg{\frac{\partial f}{\partial T}, \frac{\partial f}{\partial L}, \frac{\partial f}{\partial \rho}} \\
+        &= \alg{\frac{1}{4L\sqrt{T \rho}}, -\frac{1}{2L^2} \sqrt{\frac{T}{\rho}}, -\frac{1}{4L} \sqrt{\frac{T}{\rho^3}}}
+    \end{align*}
+    We can then calculate gradient as such:
+    \begin{align*}
+        \nabla f(2,1,1)
+        &= \alg{ \frac{1}{4(1)\sqrt{(2)(1)}} , -\frac{1}{2(1)}\sqrt{\frac{2}{1}} , -\frac{1}{(4)(1)} \sqrt{\frac{2}{1}} } \\
+        &= \alg{ \frac{1}{4\sqrt{2}} , -\frac{\sqrt{2}}{2} , - \frac{\sqrt{2}}{4} }
+    \end{align*}
+\end{exbox}
+
+\begin{dfnbox}{Directional Derivative}{}
+    The \dfntxt{directional derivative} of $f(x,y,z)$ in the direction of $\vec{u}$ is defined as:
+    \[ \nabla f(x,y,z) \cdot \vec{u} \]
+\end{dfnbox}
+
+The dot product of the gradient $\nabla f(x,y,z)$ with a unit vector $\frac{\vec{a}}{\norm{\vec{a}}}$
+
+\begin{exbox}{Directional Derivative}{}
+    If $f(x,y,z) = xy^2z^5$, find the directional derivative of $f(x,y,z)$ at the point $(1,0,-2)$ in the direction of the unit vector $\vec{u} = \frac{\vec{a}}{\norm{\vec{a}}}, \vec{a} = \alg{1,2,-2}$.
+    \tcblower
+    For this, we calculate $\nabla f(1,0,-1)$, then calculate the dot product of $\nabla f(1,0,-1)$ with the unit vector $\vec{u} = \alg{\sfrac{1}{3}, \sfrac{2}{3}, \sfrac{-2}{3}}$. Thus, the directional derivative of $f(x,y,z)$ at $(1,0,-1)$ denoted by $Df(1,0,-1)$ in the direction of $\vec{u}$ is:
+    \begin{align*}
+        Df(1,0,-1)
+        &= \nabla f(1,2,-2) \cdot \vec{u} \\
+        &= \alg{\frac{\partial f}{\partial x}, \frac{\partial f}{\partial y}, \frac{\partial f}{\partial z}} \cdot \vec{u} \\
+        &= \alg{0,0,0} \cdot \alg{\frac13, \frac23, -\frac23} \\
+        &= 0
+    \end{align*}
+\end{exbox}
+
+\section{Projecting Vectors}
+\newcommand{\vectorproj}[2][]{\textit{proj}_{\vect{#1}}\vect{#2}}
+\begin{dfnbox}{Vector Projection}{}
+    Given $\vec{a}$ and $\vec{b}$ that are non-zero vectors, the \dfntxt{vector projection} of $\vec{b}$ over the vector $\vec{a}$ is denoted by:
+\end{dfnbox}
+
 \makeamzindex
 \end{document}
