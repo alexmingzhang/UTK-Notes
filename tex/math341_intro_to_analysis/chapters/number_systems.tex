@@ -1,0 +1,380 @@
+Our goal is to create an axiomatic basis for the real numbers $\R$. We need to establish axioms for $\R$ and then derive all further properties from the axioms. We would like these axioms to be as minimal and agreeable as possible; however, finding axioms that characterize $\R$ is not easy. Instead, we'll start from the natural numbers $\N$ and expand from there.
+
+\section{Natural Numbers $\N$ and Induction}
+How do we define the natural numbers? Listing every natural number is definitely not an option. We could try to define the natural numbers as $\N \coloneq \{ 1, 2, \ldots \}$. However, the ``$\ldots$'' is ambiguous. Instead, we can define $\N$ in terms of its properties.
+
+\begin{dfnbox}{Peano Axioms for $\N$}{}
+    The \dfntxt{Peano axioms} are five axioms that can be used to define the natural numbers $\N$.
+    \begin{enumerate}[noitemsep]
+        \item $1 \in \N$
+        \item Every $n \in \N$ has a successor called $n+1$.
+        \item $1$ is \textbf{not} the successor of any $n \in \N$.
+        \item If $n,m \in \N$ have the same successor, then $n = m$.
+        \item If $1 \in S$ and every $n \in S$ has a successor, then $\N \subseteq S$.
+    \end{enumerate}
+\end{dfnbox}
+
+\begin{notebox}
+    Note that there is not one ``prescribed'' way to do define the natural numbers. This is just the most popular approach.
+\end{notebox}
+
+From the fifth axiom, we can derive a new proof technique for proving an arbitrary statement for all natural numbers.
+
+\begin{thmbox}{Principle of Induction}{induction}
+    Let $P(n)$ be a statement for each $n \in \N$. Suppose that:
+    \begin{enumerate}[noitemsep]
+        \item $P(1)$ is true, and
+        \item if $P(n)$ is true, then $P(n+1)$ is true.
+    \end{enumerate}
+    Then $P(n)$ is true for all $n \in \N$.
+    \tcblower
+    \begin{proof}
+        Let $S \coloneq \{ n \in \N : P(n) \}$. Then $1 \in S$ because $P(1)$ is true. Note that if $n \in S$, then $P(n)$ is true. Hence, $P(n+1)$ is true by assumption, so $n+1 \in S$. By the fifth Peano axiom, we have $\N \subseteq S$. Since $S$ was defined as a subset of $\N$, we have $\N = S$. Therefore, $P(n)$ is true for all $n \in \N$.
+    \end{proof}
+\end{thmbox}
+
+A proof by induction kind of has a ``domino effect''. We set up the dominoes by proving $P(n) \implies P(n+1)$ and knock over the first domino by proving $P(1)$. The result is that all the dominoes will topple each other, leaving no domino standing.
+
+\[ \underbracket{P(1)}_{\text{by 1.}} \implies \underbracket{P(2)}_{\text{by 2.}} \implies \underbracket{P(3)}_{\text{by 2.}} \implies \cdots \]
+
+\begin{tecbox}{Proof by Induction}{induction}
+    To prove a statement $P(n)$ for all $n \in \N$, we need two things:
+    \begin{enumerate}
+        \item \dfntxt{Base Case}: Prove $P(1)$.
+        \item \dfntxt{Induction Step}: Assume $P(n)$ is true from some $n \in \N$, then prove $P(n) \implies P(n+1)$.
+    \end{enumerate}
+\end{tecbox}
+
+It is crucial that we actually use our assumption that $P(n)$ is true in the induction step. Otherwise, our proof is most likely wrong.
+
+\begin{exbox}{Simple Proof by Induction}{}
+    Prove that $1+2+\cdots + n = \frac{n(n+1)}{2}$ for all $n \in \N$.
+    \tcblower
+    \begin{proof}
+        Let $P(n)$ be the statement $1 + 2 + \cdots + n = \frac{n(n+1)}{2}$.
+
+        \textbf{Base Case:} When $n=1$, $\text{LHS} = 1$ and $\text{RHS} = \frac{1(1+1)}{2} = 1$, so $P(1)$ is true.
+
+        \textbf{Induction Step:} Assume that $P(n)$ is true for some $n \in \N$. Then:
+        \begin{align*}
+            1 + 2 + \cdots + n + (n+1)
+            &= \frac{n(n+1)}{2} + (n+1) \\
+            &= (n+1) \left( \frac{n}{2} + 1 \right) \\
+            &= \frac{(n+1)(n+2)}{2}
+        \end{align*}
+        That is, $P(n+1)$ is true. By the \nameref{thm:induction}, $P(n)$ is true for all $n \in \N$.
+    \end{proof}
+\end{exbox}
+
+\section{Integers $\Z$}
+From the natural numbers, we can easily construct the integers. First, we assume the existence an operation, addition ($+$) and multiplication ($\cdot$). On $\N$, we assume addition and multiplication satisfy the following properties for all $a,b,c \in \N$:
+
+\begin{center}\begin{tabular}{l l l}
+    \tabitem\dfntxt{Commutativity} & $a+b = b+a$ & $a \cdot b = b \cdot a$ \\
+    \tabitem\dfntxt{Associativity} & $(a+b)+c = a+(b+c)$ & $(a \cdot b) \cdot c = a \cdot (b \cdot c)$ \\
+    \tabitem\dfntxt{Distributivity} & $a \cdot (b+c) = a \cdot b + a \cdot c$ \\
+    \tabitem\dfntxt{Identity} & $1 \cdot n = n$
+\end{tabular}\end{center}
+
+We can expand this number system by including:
+\begin{enumerate}
+    \item an \dfntxt{additive identity} ($n+0 = n$ for all $n \in \N$)
+    \item \dfntxt{additive inverses} (for all $n \in \N$, add $-n$ so $-n + n = 0$)
+\end{enumerate}
+From this, we can construct the set of integers.
+
+\begin{dfnbox}{Integers $\Z$}{}
+    The set of \dfntxt{integers} is defined as:
+    \[ Z \coloneq \N \cup \{0\} \cup \{ -n : n \in \N \} \]
+\end{dfnbox}
+
+\begin{dfnbox}{Even, Odd, Parity}{}
+    Let $a \in \Z$.
+    \begin{itemize}[noitemsep]
+        \item $a$ is \dfntxt{even} if there exists $k \in \Z$ where $a = 2k$.
+        \item $a$ is \dfntxt{odd} if there exists $k \in \Z$ where $a = 2k+1$.
+        \item \dfntxt{Parity} describes whether an integer is even or odd.
+    \end{itemize}
+\end{dfnbox}
+
+\begin{thmbox}{Parity Exclusivity}{}
+    Every integer is either even or odd, never both.
+    \tcblower
+    TODO: prove this
+\end{thmbox}
+
+\begin{exbox}{Parity of Square}{square-parity}
+    For $n \in \Z$, if $n^2$ is even, then $n$ is even.
+    \tcblower
+    \begin{proof}
+        We proceed by contraposition. Suppose $n$ is not even. Then $n$ is odd, and thus can be expressed as $n = 2k+1$ for some $k \in \Z$. Then:
+        \begin{align*}
+            n^2 &= (2k+1)(2k+1) \\
+            &= 4k^2 + 4k + 1
+        \end{align*}
+        Since the integers are closed under addition and multiplication, then $4k^2 + 4k \in \Z$. Thus, $n^2$ is odd.
+    \end{proof}
+\end{exbox}
+
+\section{Rational Numbers $\Q$}
+
+We can further expand this number system by the following:
+\begin{enumerate}
+    \item Include \dfntxt{multiplicative inverses} (for all $n \in \Z \setminus \{0\}$, define $\sfrac{1}{n}$ such that $n \cdot \sfrac{1}{n} = 1$)
+    \item Define $m \cdot \sfrac{1}{n} \coloneq \sfrac{m}{n}$ when $n \neq 0$.
+\end{enumerate}
+
+From this, we can construct the set of rational numbers.
+
+\begin{dfnbox}{Rational Numbers $\Q$}{}
+    The set of \dfntxt{rational numbers} is defined as:
+    \[ \Q \coloneq \left\{ \frac{m}{n} : m,n \in Z \land n \neq 0 \right\} \]
+\end{dfnbox}
+
+To ensure multiplication works as intended, we also define $\frac{m}{n} \cdot \frac{k}{l} \coloneq \frac{m \cdot k}{n \cdot l}$.
+
+We say $\frac{m_1}{n_1} = \frac{m_2}{n_2}$ if and only if $m_1n_1 = m_2n_2$ where $n_1, n_2 \neq 0$. In other words, $\frac{m_1}{n_1} \sim \frac{m_2}{n_2} \iff m_1n_2 = m_2n_1$. Thus, $\Q$ is the set of equivalence classes for this relation.
+
+If $n = kp$ and $m = kq$, where $k,p,q \in \Z$, $k \neq 0$, $q \neq 0$, then:
+\[ \frac{n}{m} = \frac{kp}{kq} = \frac{k}{p}, \quad \text{because}\ kpq = kqp \]
+If $n$ and $m$ have no common factor (except $\pm 1$), then we say that $\sfrac{n}{m} \in \Q$ is in the ``lowest terms'' or ``reduced terms''. The set $(Q, +, \cdot)$ forms a field. However, we cannot write $x = \sfrac{n}{m}$ where $x^2 = 2$.
+
+\begin{thmbox}{$\sqrt{2}$ is not a Rational Number}{}
+    $\sqrt{2} \notin \Q$
+    \tcblower
+    \begin{proof}
+        Suppose for contradiction $\sqrt{2}$ is a rationa number. Then, there exist $n,m \in \Z$ such that $(\sfrac{n}{m})^2 = 2$. If $n = kp$ and $m = kq$, then we can ``cancel'' the common factor $k$ to write $\sfrac{n}{m} = \sfrac{p}{q}$. That is, we can assume that $n$ and $m$ have no (non-trivial) common factors. Now, $\sfrac{n^2}{m^2} = 2$, so by multiplying both sides by $m^2$, we get $n^2 = 2m^2$. Thus, $n^2$ is an even number, so $n$ is also even (Example \ref{ex:square-parity}). Then, we can write $n = 2k$ where $k \in \Z$. Then:
+            \begin{alignat*}{2}
+                & \implies \quad & (2k)^2 &= 2m^2 \\
+                & \implies \quad & 4k^2 &= 2m^2 \\
+                & \implies \quad & 2k^2 &= m^2
+            \end{alignat*}
+            Then $m^2$ is even, so $m$ is even. Thus, $m$ and $n$ are both even, so they are multiples of $2$. This contradicts the fact that we defined $\sfrac{n}{m}$ in the lowest terms.
+    \end{proof}
+\end{thmbox}
+
+Does there exist $r \in \Q$ such that $r^2 = 3$?
+
+\begin{dfnbox}{Divides}{}
+    For $a,b, \in \Z$, we say $a$ \dfntxt{divides} $b$ if $b$ is a multiple of $a$.
+    \tcblower
+    \[ a \mid b \iff \exists(c \in \Z)(b=ac) \]
+\end{dfnbox}
+
+\begin{thmbox}{Division Algorithm}{}
+    Suppose $a,b \in \Z$. Then $a = kb + r$ where $k \in \Z$ and $r \in \Z$ where $0 \leq r < a$.
+\end{thmbox}
+
+\begin{exbox}{}{}
+    If $p \in \N$ and $3 \mid p^2$, then $3 \mid p$.
+    \tcblower
+    \begin{proof}
+        By the division algorithm, $p = 3k+j$ where $k \in \Z$ and $j \in \Z$ where $0 \leq j < 3$. Then, $p^2 = (3k+j)^2 = 9k^2 + 6kj + j^2$. Suppose that $3 \mid p^2$. Then, $p^2 = 3l = 9k^2 + 6kj + j^2$. Thus:
+        \[ j^2 = 3l-9k^2-6kj = 3(l-3k^2-2kj) \]
+        We have $3 \mid j^2$. Hence, $j \neq 1, j \neq 2$, leaving only $j = 0$. Therefore, $p = 3k + 0$, so $3 \mid p$.
+    \end{proof}
+\end{exbox}
+
+\begin{exbox}{$\sqrt{3}$ is not a Rational Number}{}
+    \begin{proof}
+        Suppose for contradiction $\sqrt{3}$ is a rational number. Then, there exist $n, m \in \Z$ such that $(\sfrac{n}{m})^2$. If $n$ and $m$ share a common factor, then we can ``cancel'' the common factor to where $\sfrac{n}{m} = \sfrac{kp}{kq} = \sfrac{p}{q}$. Thus, we may assume that $n$ and $m$ have no nontrivial common factor.
+        \begin{alignat*}{2}
+            && \left(\frac{n}{m}\right)^2 &= 3 \\
+            & \implies \quad & \frac{n^2}{m^2} &= 3 \\
+            & \implies \quad & n^2 &= 3m^2
+        \end{alignat*}
+        Thus, $3 \mid n^2$, so $3 \mid n$ by the previous lemma. Writing $n = 3k$ for some $k \in \Z$, we have:
+        \begin{alignat*}{2}
+            && (3k)^2 &= 3m^2 \\
+            & \implies \quad & 9k^2 &= 3m^2 \\
+            & \implies \quad & 3k^2 &= m^2
+        \end{alignat*}
+        That is, $3 \mid m^2$ so $3 \mid m$. Thus, $3$ divides both $n$ and $m$. This contradicts the fact that we defined $\sfrac{n}{m}$ in the lowest terms.
+    \end{proof}
+\end{exbox}
+
+\section{Fields}
+
+\begin{dfnbox}{Field}{field}
+    A \dfntxt{field} is a set $F$ with two defined operations, addition and multiplication, satisfying the following for all $a,b,c \in F$:
+
+    \begin{center}\begin{tabular}{l l l}
+		Axiom & \text{Addition} & \text{Multiplication} \\ \hline
+		\dfntxt{Associativity} & $(a+b)+c = a+(b+c)$ & $(ab)c = a(bc)$ \\
+		\dfntxt{Commutativity} & $a+b = b+a$ & $ab=ba$ \\
+		\dfntxt{Distributivity} & $a(b+c) = ab+ac$ & $(a+b)c = ac + bc$ \\
+		\dfntxt{Identities} & $\exists(0 \in \F)(a+0 = a)$ & $\exists(1 \in \F)(1 \neq 0 \land 1 a  = a)$ \\
+		\dfntxt{Inverses} & $\exists(-a \in \F)(a + (-a) = 0)$ & $(a \neq 0) \iff \exists(a^{-1} \in \F)(a a^{-1} = 1)$
+	\end{tabular}\end{center}
+
+\end{dfnbox}
+
+All the ``standard facts'' of arithmetic and algebra in $\R$ follows from these axioms.
+
+$\Q$, $\R$, and $\C$ are infinite fields, but $\Z_p$ (arithmetic modulo $p$) is a finite field if $p$ is prime.
+
+More generally, $F_q$ where $q = p^k$ is a finite field.
+
+\begin{thmbox}{Facts about Fields}{}
+    Let $F$ be a field. For all $a,b,c \in F$:
+    \begin{enumerate}[noitemsep,label=(\alph*)]
+        \item if $a+c = b+c$, then $a = b$
+        \item $a \cdot 0 = 0$
+        \item $(-a) \cdot b = -(a \cdot b)$
+        \item $(-a) \cdot (-b) = a \cdot b$
+        \item if $a \cdot c = b \cdot c$ and $c \neq 0$, then $a = b$
+        \item if $a \cdot b = 0$, then $a = 0$ or $b = 0$
+        \item $-(-a) = a$
+        \item $-0 = 0$
+    \end{enumerate}
+    \tcblower
+    \begin{proof}[Proof of (g)]
+        \begin{align*}
+            -(-a)
+            &= -(-a) + 0 \\
+            &= -(-a) + (a + (-a)) \\
+            &= -(-a) + (-a + a) \\
+            &= \left(-(-a) + (-a) \right) + a \\
+            &= \left( (-a) + -(-a) \right) + a \\
+            &= 0 + a \\
+            &= a + 0 \\
+            &= a
+        \end{align*}
+    \end{proof}
+\end{thmbox}
+
+\section{Ordered Fields}
+
+\begin{dfnbox}{Ordered Field}{}
+    An \dfntxt{ordered field} is a field with a relation $<$ such that for all $a,b,c \in F$:
+    \begin{center}\begin{tabular}{l l}
+        Axiom & Description \\ \hline
+        \dfntxt{Trichotomy} &  Only one is true: $a<b$, $a=b$, or $b<a$ \\
+        \dfntxt{Transitivity} & if $a<b$ and $b<c$ then $a<c$ \\
+        \dfntxt{Additive Property} & if $b < c$, then $a+b < a+c$ \\
+        \dfntxt{Multiplicative Property} & if $b<c$ and $0<a$, then $a \cdot b < a \cdot c$
+    \end{tabular}\end{center}
+\end{dfnbox}
+
+We then define $>$ as the inverse relation of $<$.
+
+\begin{thmbox}{Facts about Ordered Fields}{}
+    \begin{itemize}[noitemsep]
+        \item if $a < b$ then $-b < -a$
+        \item if $a < b$ and $c < 0$, then $cb < ca$
+        \item if $a \neq 0$, then $a^2 = a \cdot a > 0$
+        \item $0 < 1$
+        \item if $0<a<b$ then $0 < \sfrac{1}{b} < \sfrac{1}{a}$
+    \end{itemize}
+\end{thmbox}
+
+Although $\C$ is a field, it is not an ordered field. We can certainly define some kind of ``order'' on $\C$, but there is no way to make it satisfy the four axioms of an ordered field. For example, $i^2 = -1 < 0$, contradicting the fact that any nonzero number's square is greater than $0$ in an ordered field.
+
+$\R$ and $\Q$ are ordered fields.
+
+\begin{dfnbox}{Absolute Value}{}
+    Let $F$ be an ordered field. For $a \in F$, we define the \dfntxt{absolute value} of $a$ as:
+    \[ \abs{a} \coloneq \begin{cases} a, & a \geq 0 \\ -a, & a < 0 \end{cases} \]
+\end{dfnbox}
+
+We can think of $\abs{a-b}$ as the distance between $a$ and $b$. More egnerally, $\abs{a-b} = d(a,b)$ is the metric we are using.
+
+\begin{thmbox}{Properties of Absolute Value}{}
+    \begin{itemize}
+        \item $\abs{a} \geq 0$, $a \leq \abs{a}$, and $-a \leq \abs{a}$
+        \item $\abs{ab} = \abs{a}\abs{b}$
+    \end{itemize}
+\end{thmbox}
+
+\begin{thmbox}{Triangle Inequality}{}
+    Let $F$ be an ordered field. For any $a,b \in F$, $\abs{a+b} \leq \abs{a} + \abs{b}$.
+    \tcblower
+    \begin{proof}
+        There are two cases to consider. If $a+b \geq 0$, then:
+        \begin{align*}
+            \abs{a+b}
+            &= a+b \\
+            &\leq \abs{a} + b \\
+            &\leq \abs{a} + \abs{b}
+        \end{align*}
+        If $a+b < 0$, then:
+        \begin{align*}
+            \abs{a+b}
+            &= -(a+b) \\
+            &= -a-b \\
+            &\leq \abs{a} - b \\
+            &\leq \abs{a} + \abs{b}
+        \end{align*}
+    \end{proof}
+\end{thmbox}
+
+\section{Completeness}
+
+\begin{dfnbox}{Bounded Above, Bounded Below, Bounded}{}
+    Let $F$ be an ordered field, and let $A \subseteq F$.
+    \begin{itemize}[noitemsep]
+        \item $A$ is \dfntxt{bounded above} if there exists $b \in F$ such that $a \leq b$ for all $a \in A$. In this context, $b$ is an \dfntxt{upper bound} for $A$.
+        \item $A$ is \dfntxt{bounded below} if there exists $c \in F$ such that $c \leq a$ for all $a \in A$. In this context, $c$ is a \dfntxt{lower bound} for $A$.
+        \item $A$ is \dfntxt{bounded} if $A$ is bounded above and bounded below.
+    \end{itemize}
+\end{dfnbox}
+
+\begin{exbox}{Upper and Lower Bounds}{}
+    Consider the set $ (0,1) \coloneq \{ x \in \R : 0<x<1\}$.
+    \begin{itemize}[noitemsep]
+        \item $(0,1)$ is bounded above by $1$ and any number greater than $1$.
+        \item $(0,1)$ is bounded below by $0$ and any negative number.
+    \end{itemize}
+    Consider the set $[3, \infty) \coloneq \{ x \in \R : 3 \leq x \}$.
+    \begin{itemize}[noitemsep]
+        \item $[3, \infty)$ is not bounded above.
+        \item $[3, \infty)$ is bounded below by $3$ and any number less than $3$.
+    \end{itemize}
+\end{exbox}
+
+\begin{dfnbox}{Maximum, Minimum}{}
+    Let $F$ be an ordered field, and let $A \subseteq F$.
+    \begin{itemize}[noitemsep]
+        \item If there exists $M \in A$ such that $M$ is an upper bound for $A$, then $M$ is the \dfntxt{maximum} of $A$, denoted $M = \max A$
+        \item If there exists $m \in A$ such that $m$ is a lower bound for $A$, then $m$ is the \dfntxt{minimum} of $A$, denoted $m = \min A$.
+    \end{itemize}
+\end{dfnbox}
+
+Note that from the above example, $(0,1)$ has neither a maximum nor a minimum. However, 3 is the minimum of $[3,\infty)$.
+
+\begin{dfnbox}{Supremum, Infimum}{}
+    Let $F$ be an ordered field, and let $A \subseteq F$. If there exists $s \in F$ such that:
+    \begin{enumerate}
+        \item $s$ is an upper bound for $A$, and
+        \item $s < t$ for any upper bound $t$ for $A$,
+    \end{enumerate}
+    then $s$ is the \dfntxt{supremum} of $A$, denoted $s = \sup A$.
+\end{dfnbox}
+
+If $A$ has a supremum, then that supremum is unique. ()
+
+\begin{thmbox}{Maximum is the Supremum}{}
+    Let $F$ be an ordered field, and let $A \subseteq F$. If $A$ has a maximum $M$, then $M = \sup A$.
+    \tcblower
+    \begin{proof}
+        Since $M = \max A$, we know $M$ is an upper bound for $A$. Let $t$ be an upper bound for $A$. Since $M \in A$, then $t \geq M$. Thus, $M$ is less than or equal to any upper bound $t$, so $M = \sup A$.
+    \end{proof}
+\end{thmbox}
+
+\begin{exbox}{Supremum of $(0,1)$}{}
+    Prove that $\sup (0,1) = 1$.
+    \tcblower
+    \begin{proof}
+        First, note that $1$ is an upper bound for $(0,1)$. Next, suppose that $t \in \Q$ is an upper bound for $(0,1)$. Since $0 < \sfrac{1}{2} < 1$, then $0 < \sfrac{1}{2} \leq t$. By transitivity, $t > 0$. Suppose for contradiction $t < 1$. Because $0 < t < 1$, we have $1 < 1 + t < 2$. Dividing across by $2$, we have $\sfrac{1}{2} < \sfrac{1+t}{2} < 1$. That is, $\sfrac{1+t}{2} \in (0,1)$. But $t < 1$, so $2t < 1+t$. Thus, $t < \sfrac{1+t}{2}$. This contradicts our assumption that $t$ is an upper bound for $(0,1)$. Therefore, $t \geq 1$, so $\sup (0,1) = 1$.
+    \end{proof}
+\end{exbox}
+
+\begin{dfnbox}{Completeness}{}
+    An ordered field $F$ is \dfntxt{complete} if every nonempty subset of $F$ that is bounded above has a supremum in $F$.
+\end{dfnbox}
+
+
+
+\begin{thmbox}{$\Q$ is not complete}{}
+
+\end{thmbox}

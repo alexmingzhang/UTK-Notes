@@ -1,0 +1,311 @@
+Set theory is a whole other can of worms that really isn't that meaningful right now. Instead of constructing an axiomatic basis for sets, we will just take a naive approach and define sets informally. That way, we can avoid the chicanery and get to what really matters.
+
+\section{Sets}
+
+\begin{dfnbox}{Set}{set}
+    A \dfntxt{set} is a collection of distinct objects.
+\end{dfnbox}
+
+For example, $\N \coloneq \{1,2,3\ldots\}$ is the set of all natural numbers, and $\Z \coloneq \{ \ldots, 1, 2, 3, \ldots\}$ is the set of all integers. It's conventional to use capital letters to denote sets and use lowercase letters to denote elements of sets. Throughout this
+chapter, we will use $A$ and $B$ to represent arbitrary sets.
+
+\begin{dfnbox}{Membership, $\in$}{}
+    We write $a \in A$ to mean ``$a$ is in $A$''.
+\end{dfnbox}
+
+\begin{dfnbox}{Subset, $\subseteq$}{}
+    $A$ is a \dfntxt{subset} of $B$ if everything in $A$ is also in $B$.
+    \tcblower
+    \[ A \subseteq B \iff \forall(x \in A)(x \in B) \]
+\end{dfnbox}
+
+\begin{dfnbox}{Set Equality, $=$}{}
+    $A$ \dfntxt{equals} $B$ if $A$ is a subset of $B$ and $B$ is a subset of $A$.
+    \tcblower
+    \[ A = B \iff (A \subseteq B \land B \subseteq A) \]
+\end{dfnbox}
+
+\begin{dfnbox}{Proper Subset, $\subsetneq$}{}
+    $A$ is a \dfntxt{proper subset} of $B$ if $A$ is a subset of $B$ but $B$ is not a subset of $A$.
+    \tcblower
+    \[ A \subsetneq B \iff (A \subseteq B \land B \not\subseteq A) \]
+\end{dfnbox}
+
+In other words, $A$ is a proper subset of $B$ if everything in $A$ is also in $B$, but $B$ has something that $A$ does not.
+
+\begin{notebox}
+    Among mathematics textbook, the generic subset symbol $\subset$ has no standardized definition. Some use it to represent subset or equal; others use it to represent proper subset. We will simply avoid using $\subset$ to avoid any ambiguity.
+\end{notebox}
+
+\begin{dfnbox}{Empty Set ($\emptyset$)}{}
+    The \dfntxt{empty set} is the set that contains no elements.
+    \tcblower
+    \[ \emptyset \coloneq \{ \} \]
+\end{dfnbox}
+
+As a convention, we will assume that $\emptyset$ is a subset of any set, including itself.
+
+% A useful way of visualizing set relations is with venn diagrams.
+
+\begin{tecbox}{Proving a Subset Relation}{}
+    To prove that $A \subseteq B$:
+    \begin{enumerate}
+        \item Let $x$ be an arbitrary element of $A$.
+        \item Show that $x \in B$.
+    \end{enumerate}
+    \tcblower
+    To prove that $A \not\subseteq B$, choose a specific $x \in A$ and show $x \notin B$.
+\end{tecbox}
+
+\begin{exbox}{Proving Simple Subset Relation}{}
+    Suppose that $A \subseteq B$ and $B \subseteq C$. Prove that $A \subseteq C$.
+    \tcblower
+    \begin{proof}
+        Let $x \in A$ be arbitrary. Since $A \subseteq B$, then $x \in B$. Similarly, since $B \subseteq C$, then $x \in C$. Therefore, $A \subseteq C$.
+    \end{proof}
+\end{exbox}
+
+\begin{dfnbox}{Union}{}
+    The \dfntxt{union} of two sets is the set of all things that are in one or the other set.
+    \tcblower
+    \[ A \cup B \coloneq \left\{ x : x \in A \lor x \in B \right\} \]
+\end{dfnbox}
+
+\begin{dfnbox}{Intersection}{}
+    The \dfntxt{intersection} of two sets is the set of all things that are in both sets.
+    \tcblower
+    \[ A \cap B \coloneq \left\{ x : x \in A \land x \in B \right\} \]
+\end{dfnbox}
+
+More generally, we can apply union and intersection to an arbitrary number of sets, finite or infinite. We use a notation similar to summation using $\sum$. Let $\Lambda$ be an indexing set, and for each $\lambda \in \Lambda$, let $A_\lambda$ be a set.
+\begin{align*}
+    \bigcup_{\lambda \in \Lambda} A_\lambda &= \left\{ x : x \in A_\lambda\ \text{for some}\ \lambda \in \Lambda \right\} \\
+    \bigcap_{\lambda \in \Lambda} A_\lambda &= \left\{ x : x \in A_\lambda\ \text{for all}\ \lambda \in \Lambda \right\}
+\end{align*}
+\begin{exbox}{Indexed Sets}{}
+    For $n \in \N$, let $A_n = \left[ \frac{1}{n}, 1 \right] = \left\{ x \in \R : \frac{1}{n} \leq x \leq 1 \right\}$. Prove that:
+    \begin{enumerate}[label=(\alph*)]
+        \item $\bigcup_{n=1}^\infty = (0,1]$
+        \item $\bigcap_{n=1}^\infty = \{1\}$
+    \end{enumerate}
+    \tcblower
+    \begin{proof}[Proof of (a)]
+        Suppose $x \in \bigcup_{n=1}^\infty A_n$. Then there exists $n \in \N$ such that $x \in A_n = \left[ \frac{1}{n}, 1 \right]$. That is, $0 < \frac{1}{n} \leq x \leq 1$. Therefore, $x \in (0, 1]$.
+
+        Suppose $x \in (0, 1]$. Then $x > 0$, so there exists $n_0 \in \N$ such that $\frac{1}{n_0} < x$. Then $\frac{1}{n_0} \leq x \leq 1$, so $x \in A_{n_0}$. Therefore, $x \in \bigcup_{n=1}^\infty A_n$.
+    \end{proof}
+
+    \begin{proof}[Proof of (b)]
+        Suppose $x \in \bigcap_{n=1}^\infty A_n$. Then $x \in A_1 = \{1\}$.
+
+        Suppose $x \in \{1\}$. Then $x = 1 \in \left[ \frac{1}{n}, 1 \right]$ for all $n \in \N$. Therefore, $x \in \bigcap_{n=1}^\infty A_n$.
+    \end{proof}
+\end{exbox}
+
+\begin{dfnbox}{Set Minus}{}
+    The \dfntxt{set difference} of two sets is the set of all things that are in first set but not the second set.
+    \tcblower
+    \[ A \setminus B = \{ x \in A : x \notin B \} \]
+\end{dfnbox}
+
+\begin{dfnbox}{Complement}{}
+    Let $X$ be a set called the \dfntxt{universal set}. The \dfntxt{complement} of $A$ in $X$ is defined as $X \setminus A$.
+    \tcblower
+    \[ A^c = X \setminus A = \{ x \in X : x \notin A \} \]
+\end{dfnbox}
+
+\begin{thmbox}{De Morgan's Laws for Sets}{}
+    Suppose $X$ is a set, and for any subset $S$ of $X$, let $S^c = X \setminus S$. Suppose that $A_\lambda \subseteq X$ for every $\lambda$ belonging to some index set $\Lambda$. Prove that:
+    \begin{enumerate}[label=(\alph*)]
+        \item \( \left( \bigcup_{\lambda \in \Lambda} A_\lambda \right)^c = \bigcap_{\lambda \in \Lambda} A_\lambda^c \);
+        \item \( \left( \bigcap_{\lambda \in \Lambda} A_\lambda \right)^c = \bigcup_{\lambda \in \Lambda}A_\lambda^c \).
+    \end{enumerate}
+    \tcblower
+    \begin{proof}[Proof of (a)]
+        First, let $a \in \left( \bigcup_{\lambda \in \Lambda} A_\lambda \right)^c$. Then, $a \in X \setminus \left( \bigcup_{\lambda \in \Lambda} A_\lambda \right)$, so $a \in X$ but $a \notin \left( \bigcup_{\lambda \in \Lambda} A_\lambda \right)$. Thus, $a \notin A_\lambda$ for any $\lambda \in \Lambda$, so $a \in X \setminus A_\lambda$ for all $\lambda \in \Lambda$. In other words, $a \in \bigcap_{\lambda \in \Lambda} A_\lambda^c$.
+
+        Next, let $a \in \bigcap_{\lambda \in \Lambda} A_\lambda^c$. Then $a \in A_\lambda^c$ for all $\lambda \in \Lambda$, so $a \in X$ but $a \notin A_\lambda$ for all $\lambda \in \Lambda$. That is, $a \notin \left( \bigcup_{\lambda\in\Lambda} A_\lambda \right)$. In other words, $a \in \left( \bigcup_{\lambda\in\Lambda} A_\lambda \right) ^ c$.
+    \end{proof}
+
+    \begin{proof}[Proof of (b)]
+        First, let $a \in \left( \bigcap_{\lambda \in \Lambda} A_\lambda \right)^c$. Then, $a \in X \setminus  \bigcap_{\lambda \in \Lambda} A_\lambda$, so $a \in X$ but $a \notin \bigcap_{\lambda \in \Lambda} A_\lambda$. That is, $a \notin A_\lambda$ for some $\lambda \in \Lambda$. Thus, $a \in X \setminus A_\lambda$ for some $\lambda \in \Lambda$. Therefore, $a \in \bigcup_{\lambda \in \Lambda} A_\lambda^c$.
+
+        Next, let $a \in \bigcup_{\lambda \in \Lambda} A_\lambda^c$. Then $a \in A_\lambda^c$ for some $\lambda \in \Lambda$, so $a \in X$ but $a \notin A_\lambda$ for some $\lambda \in \Lambda$. That is, $a \notin \left( \bigcap_{\lambda \in \Lambda} A_\lambda \right)$. Therefore, $a \in  \left( \bigcap_{\lambda \in \Lambda} A_\lambda \right)^c$.
+    \end{proof}
+\end{thmbox}
+
+\section{Functions}
+We generally think of functions as a ``map'' or ``rule'' that assigns numbers to other numbers. For example, $f(x) = 2x$ maps $1 \mapsto 2$, $2 \mapsto 4$, etc. In formal mathematics, it's conventional to actually define functions in terms of sets.
+
+
+\begin{dfnbox}{Cartesian Product}{}
+    Let $X$ and $Y$ be sets. The \dfntxt{Cartesian product} of $X$ and $Y$ is the set of all ordered pairs $(x,y)$ where $x \in X$ and $y \in Y$.
+    \tcblower
+    \[ X \times Y \coloneq \left\{ (x,y) : x \in X \land y \in Y \right\} \]
+\end{dfnbox}
+
+\begin{dfnbox}{Relation}{relation}
+    Let $X$ and $Y$ be sets. A \dfntxt{relation} between $A$ and $B$ is a subset of the Cartesian product $A \times B$.
+\end{dfnbox}
+
+\begin{dfnbox}{Function}{function}
+    Let $X$ and $Y$ be sets. A \dfntxt{function} from $X$ to $Y$ is a subset of $X \times Y$ such that for every $x \in X$, there exists a unique $y \in Y$ where $(x,y) \in f$.
+    \tcblower
+    More formally, a \dfntxt{function} $f : X \to Y$ is a subset of $X \times Y$ satisfying:
+    \begin{enumerate}[noitemsep]
+        \item $\forall (x \in X) \left[ \exists (y \in Y)((x,y) \in f) \right]$
+        \item $(x,y_1),(x,y_2) \in f \implies y_1 = y_2$
+    \end{enumerate}
+\end{dfnbox}
+
+
+Given $f : X \to Y$, we call $X$ the \dfntxt{domain} of $f$ and $Y$ the \dfntxt{codomain} of $f$. Given $x \in X$, we write $f(x)$ to denote the unique element of $Y$ such that $(x,y) \in f$.
+\[ f(x) = y \iff (x,y) \in f \]
+
+\begin{dfnbox}{Function Image}{image}
+    Let $f : X \to Y$ be a function and $A \subseteq X$. The \dfntxt{image} of $A$ under $f$ is the set containing all possible function outputs from all inputs in $A$.
+    \tcblower
+    \[ f[A] \coloneq \{ f(a) : a \in A \} \]
+\end{dfnbox}
+
+Given $f : X \to Y$, we call $f[X]$ the \dfntxt{range} of $f$.
+
+\begin{exbox}{Function Images}{}
+    Suppose $f : X \to Y$ is a function, and $A_\lambda \subseteq X$ for each $\lambda \in \Lambda$. Then:
+    \begin{enumerate}[label=(\alph*)]
+        \item $f \left[ \bigcup_{\lambda \in \Lambda} A_\lambda \right] = \bigcup_{\lambda \in \Lambda} f \left[ A_\lambda \right]$
+        \item $f \left[ \bigcap_{\lambda \in \Lambda} A_\lambda \right] \subseteq \bigcap_{\lambda \in \Lambda} f \left[ A_\lambda \right]$
+    \end{enumerate}
+    \tcblower
+    In this example, we will only prove the ``forward'' direction. That is, we want to show that $f \left[ \bigcup_{\lambda \in \Lambda} A_\lambda \right] \subseteq \bigcup_{\lambda \in \Lambda} f \left[ A_\lambda \right]$.
+    \begin{proof}[Proof of (a)]
+        Let $y \in f \left[ \bigcup_{\lambda \in \Lambda} A_\lambda \right]$. By definition of \nameref{dfn:image}, there exists $x \in \bigcup_{\lambda \in \Lambda} A_\lambda$ such that $y = f(x)$. Thus, there exists $\lambda_0 \in \Lambda$ such that $x \in \lambda_0$. That is, $y \in f \left[ A_{\lambda_0} \right]$. Therefore, $y \in \bigcup_{\lambda \in \Lambda} f \left[ A_\lambda \right]$.
+    \end{proof}
+\end{exbox}
+
+\begin{dfnbox}{Function Inverse Image}{inverse-image}
+    Let $f : X \to Y$ be a function and $B \subseteq Y$. The \dfntxt{inverse image} of $B$ under $f$ is the set containing all possible function inputs whose output is in $B$.
+    \tcblower
+    \[ f^{-1}[B] \coloneq \{ x \in X: f(x) \in B \} \]
+\end{dfnbox}
+
+Note the following logical equivalence:
+\[ x \in f^{-1} [B] \iff f(x) \in B \]
+
+\begin{exbox}{Function Inverse Images}{}
+    Suppose $f : X \to Y$ is a function, and $B_\lambda \subseteq Y$ for each $\lambda \in \Lambda$. Then:
+    \[ f^{-1} \left[ \bigcup_{\lambda \in \Lambda} B_\lambda \right] = \bigcup_{\lambda \in \Lambda} f^{-1} \left[ B_\lambda \right] \]
+    \tcblower
+    Again, we will only prove the ``forward direction''.
+    \begin{proof}
+        Let $x \in f^{-1} \left[ \bigcup_{\lambda \in \Lambda} B_\lambda \right]$. Then, $f(x) \in \bigcup_{\lambda \in \Lambda} B_\lambda$. That is, $f(x) \in B_{\lambda_0}$ for some $\lambda_0 \in \Lambda$. Thus, $x \in f^{-1} \left[ B_{\lambda_0} \right]$, so $x \in \bigcup_{\lambda \in \Lambda} f^{-1} \left[ B_\lambda \right]$.
+    \end{proof}
+\end{exbox}
+
+\section{Injective and Surjective}
+
+\begin{dfnbox}{Injective}{}
+    A function $f : X \to Y$ is \dfntxt{injective} if no two inputs in $X$ have the same output in $Y$.
+    \tcblower
+    \[ \forall (x_1, x_2 \in X) \left[ x_1 \neq x_2 \implies f\left(x_1\right) \neq f\left(x_2\right) \right] \]
+\end{dfnbox}
+
+\begin{tecbox}{Proving a Function is Injective}{}
+    To prove a function $f : X \to Y$ is injective:
+    \begin{enumerate}
+        \item Let $x_1, x_2 \in X$ where $f(x_1) = f(x_2)$.
+        \item Reason that $x_1 = x_2$.
+    \end{enumerate}
+\end{tecbox}
+
+\begin{exbox}{Proving Injectivity}{}
+    $f(x) = -3x-7$ is injective.
+    \tcblower
+    \begin{proof}
+        Suppose $f(x_1) = f(x_2)$. Then $-3x_1+7 = -3x_2+7$, so $-3x_1 = -3x_2$. Thus, $x_1 = x_2$, so $f$ is injective.
+    \end{proof}
+\end{exbox}
+
+\begin{exbox}{Disproving Injectivity}{}
+    Prove that $f(x)=x^2$ is not injective.
+    \tcblower
+    \begin{proof}
+        $f(-1) = 1$ and $f(1) = 1$, but $-1 \neq 1$. Thus, $f$ is not injective.
+    \end{proof}
+\end{exbox}
+
+\begin{dfnbox}{Surjective}{}
+    A function $f : X \to Y$ is \dfntxt{surjective} if everything in $Y$ has a corresponding input in $X$.
+    \tcblower
+    \[ \forall (y \in Y) \left[ \exists (x \in X) (f(x) = y) \right] \]
+\end{dfnbox}
+
+Note that $f : X \to f[X]$ is \textbf{always} surjective.
+
+\begin{tecbox}{Proving a Function is Surjective}{}
+    To prove a function $f : X \to Y$ is surjective:
+    \begin{enumerate}
+        \item Let $y \in Y$ be arbitrary.
+        \item ``Undo'' the function $f$ to obtain $x \in X$ where $f(x)=y$.
+    \end{enumerate}
+\end{tecbox}
+
+\begin{exbox}{Proving Surjectivity}{}
+    Prove that $f : \R \to \R$ defined by $f(x) = -3x+7$ is surjective.
+    \tcblower
+    \begin{proof}
+        Let $y \in Y$ be arbitrary. Let $x \coloneq \frac{y-7}{-3}$. Then $x \in \R$, and:
+        \begin{align*}
+            f(x)
+            &= -3 \left( \frac{y-7}{-3} \right) + 7 \\
+            &= (y-7) + 7 \\
+            &= y
+        \end{align*}
+        Therefore, $f$ is surjective.
+    \end{proof}
+\end{exbox}
+
+\begin{dfnbox}{Bijective}{}
+    A function $f : X \to Y$ is \dfntxt{bijective} if it is both injective and surjective.
+\end{dfnbox}
+
+\begin{dfnbox}{Function Composition}{}
+    Let $f : X \to Y$ and $g : Y \to Z$ be functions. The \dfntxt{composition} of $f$ and $g$ is a function $g \circ f : X \to Z$ defined by:
+    \[ (g \circ f) (x) \coloneq g(f(x)) \]
+\end{dfnbox}
+
+\begin{thmbox}{Composition Preserves Injectivity and Surjectivity}{}
+    Suppose $f : X \to Y$ and $g : Y \to Z$ are functions.
+    \begin{enumerate}[label=(\alph*)]
+        \item If $f$ and $g$ are injective, then $g \circ f$ is injective.
+        \item If $f$ and $g$ are surjective, then $g \circ f$ is surjective.
+        \item If $f$ and $g$ are bijective, then $g \circ f$ is bijective.
+    \end{enumerate}
+    \tcblower
+    \begin{proof}[Proof of (a)]
+        Let $x_1, x_2 \in X$. Suppose that $(g \circ f)(x_1) = (g \circ f)(x_2)$. Then, $g(f(x_1)) = g(f(x_2))$. Because $g$ is injective, we have $f(x_1) = f(x_2)$. Because $f$ is injective, we have $x_1 = x_2$. Therefore, $g \circ f$ is injective.
+    \end{proof}
+
+    \begin{proof}[Proof of (b)]
+        Let $z \in Z$. Because $g$ is surjective, there exists an element $y \in Y$ such that $g(y) = z$. Because $f$ is surjective, there exists an element $x \in X$ such that $f(x) = y$. Thus, $(g \circ f)(x) = g(f(x)) = g(y) = z$. Therefore, $g \circ f$ is surjective.
+    \end{proof}
+
+    \begin{proof}[Proof of (c)]
+        We know that from (a) and (b) composition preserves injectivity and surjectivity. Thus, composition must also preserve bijectivity.
+    \end{proof}
+\end{thmbox}
+
+\begin{dfnbox}{Inverse Function}{}
+    Let $f : X \to Y$ be a bijection. The \dfntxt{inverse function} of $f$ is a function $f^{-1} : Y \to X$ defined by:
+    \[ f^{-1} \coloneq \{ (y,x) \in Y \times X : (x,y) \in f \} \]
+\end{dfnbox}
+
+The notation for inverse functions conflicts with the notation for inverse images. A key distinction to make it that only bijections can have an inverse function, but we can apply the inverse image to any function. Thus, given a bijection $f : X \to Y$, we know $f^{-1}(f(x)) = x$ for all $x \in X$, and $f(f^{-1}(y)) = y$ for all $y \in Y$.
+
+\begin{exbox}{}{}
+    Let $f : X \to Y$ and $g : Y \to X$ be functions such that $(g \circ f) = x$ for all $x \in X$, and $(f \circ g)(y) = y$ for all $y \in Y$. $f^{-1} = g$.
+    \tcblower
+    \begin{proof}
+        todo: finish proof
+    \end{proof}
+\end{exbox}

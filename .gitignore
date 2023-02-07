@@ -1,2 +1,18 @@
 .DS_Store
 update.sh
+
+# No latex auxiliary files
+_minted*
+*.aux
+*.code
+*.dfn
+*.ex
+*.fdb_latexmk
+*.fls
+*.log
+*.out
+*.synctex.gz
+*.tec
+*.toc
+*.thm
+*.xdv

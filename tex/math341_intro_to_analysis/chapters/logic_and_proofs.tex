@@ -1,0 +1,227 @@
+Logic is the backbone of all formal mathematics. When building a logically sound model of mathematics, we start with a small collection of axioms. We then work with those axioms to deduce other logically sound statements, reaffirming what we already knew and discovering new ideas along the way.
+
+\section{Basic Logic}
+\begin{dfnbox}{Statement}{}
+    A \dfntxt{statement} is a claim that is either true or false.
+    \tcblower
+    \[ p : \text{some claim} \]
+\end{dfnbox}
+
+We usually denote statements with a letter like $p$. For example, we can write ``$p: x > 2$'', which means $p$ represents the statement ``$x$ is greater than $2$''. Throughout this chapter, we will use $p$ and $q$ to represent arbitrary statements.
+
+\begin{dfnbox}{Conjunction}{conjunction}
+    The \dfntxt{conjunction} of two statements is itself a statement, which is true if and only if the two statements are both true.
+    \tcblower
+    \[ p \land q : p\ \text{is true \textbf{and}}\ q\ \text{is true} \]
+\end{dfnbox}
+
+\begin{dfnbox}{Disjunction}{disjunction}
+    The \dfntxt{disjunction} of two statements is itself a statement, which is true if and only if at least one of the statements is true.
+    \tcblower
+    \[ p \lor q : p\ \text{is true \textbf{or}}\ q\ \text{is true} \]
+\end{dfnbox}
+
+\nameref{dfn:conjunction} and \nameref{dfn:disjunction} follow our intuition of ``and'' and inclusive ``or'', respectively. We can visualize the two logical connectives using \dfntxt{truth tables}.
+
+\begin{exbox}{Truth Table of Conjunction}{conjunction}
+    \begin{center}\begin{tabular}{c | c || c}
+        $p$ & $q$ & $p \implies q$ \\ \hline
+        T & T & T \\
+        T & F & F \\
+        F & T & F \\
+        F & F & F
+    \end{tabular}\end{center}
+\end{exbox}
+
+\begin{exbox}{Truth Table of Disjunction}{disjunction}
+    \begin{center}\begin{tabular}{c | c || c}
+        $p$ & $q$ & $p \implies q$ \\ \hline
+        T & T & T \\
+        T & F & T \\
+        F & T & T \\
+        F & F & F
+    \end{tabular}\end{center}
+\end{exbox}
+
+
+% TODO: add truth tables
+
+\begin{dfnbox}{Negation}{}
+    The \dfntxt{negation} of a statement is a statement with opposite truth values.
+    \tcblower
+    \[ \neg p \]
+\end{dfnbox}
+
+\begin{dfnbox}{Implication}{}
+    An \dfntxt{implication} ``$p$ implies $q$'' states ``if $p$ is true, then $q$ is true''.
+    \tcblower
+    \[ p \implies q \]
+\end{dfnbox}
+
+In the implication $p \implies q$, we call $p$ the \dfntxt{hypothesis} and $q$ the \dfntxt{conclusion}. If the hypothesis is false to begin with, then the implication is not really meaningful. Instead of assigning those kinds of implications no truth value, we simply consider them true by convention. These kinds of truths are called \dfntxt{vacuous truths}.
+
+\begin{exbox}{Truth Table of Implication}{}
+    \begin{center}\begin{tabular}{c | c || c}
+        $p$ & $q$ & $p \implies q$ \\ \hline
+        T & T & T \\
+        T & F & F \\
+        F & T & T \\
+        F & F & T
+    \end{tabular}\end{center}
+\end{exbox}
+
+\begin{exbox}{Simple Statements}{}
+    Let $p : x > 2$ and $q : x^2 > 1$. Consider the following statements:
+    \begin{itemize}
+        \item ``For all real numbers $x$, $p \implies q$''
+
+        \textbf{True.} If $x > 2$, then $x^2 > 1$.\footnote{This is normally where we would rigorously prove such a statement, but we will omit this for now.}
+
+        \item ``For all real numbers $x$, $q \implies p$''
+
+        \textbf{False.} Consider $x = 1.1$. Then $x^2 = 1.21 > 1$, but $x = 1.1 < 2$.
+    \end{itemize}
+\end{exbox}
+
+\begin{dfnbox}{Logical Equivalence}{equiv}
+    $p$ and $q$ are \dfntxt{logically equivalent} if $p \implies q$ and $q \implies p$.
+    \tcblower
+    \[ p \iff q \]
+\end{dfnbox}
+
+In other words, $p \iff q$ means that $p$ and $q$ share the same truth value. Either $p$ and $q$ are \textbf{always both true}, or $p$ and $q$ are \textbf{always both false}. Logical equivalence says nothing about the truth of $p$ and $q$ themselves.
+
+We can also say ``$p$ if and only if $q$'' or ``$p$ iff $q$'' to denote logical equivalence.
+
+\begin{exbox}{Truth Table of Logical Equivalence}{}
+    \begin{center}\begin{tabular}{c | c || c}
+        $p$ & $q$ & $p \iff q$ \\ \hline
+        T & T & T \\
+        T & F & F \\
+        F & T & F \\
+        F & F & T
+    \end{tabular}\end{center}
+\end{exbox}
+
+\begin{dfnbox}{Converse}{converse}
+    Given the implication $p \implies q$, its \dfntxt{converse} statement is $q \implies p$.
+\end{dfnbox}
+
+It's important to note that an implication and its converse have no intrinsic equivalence.
+
+
+\begin{exbox}{Truth Table of Converse}{}
+    \begin{center}\begin{tabular}{c | c || c | c}
+        $p$ & $q$ & $p \implies q$ & $q \implies p$ \\ \hline
+        T & T & T & T \\
+        T & F & F & T \\
+        F & T & T & F \\
+        F & F & T & T
+    \end{tabular}\end{center}
+\end{exbox}
+
+\begin{dfnbox}{Contrapositive}{contrapositive}
+    Given the implication $p \implies q$, its \dfntxt{contrapositive} statement is $\neg q \implies \neg p$.
+\end{dfnbox}
+
+Unlike the converse, an implication and its contrapositive are logically equivalent. To help our intuition, we can construct a truth table.
+
+\begin{exbox}{Truth Table of Contrapositive}{}
+    \begin{center}\begin{tabular}{c | c || c | c | c | c}
+        $p$ & $q$ & $\neg p$ & $\neg q$ & $p \implies q$ & $\neg q \implies \neg p$ \\ \hline
+        T & T & F & F & T & T \\
+        T & F & F & T & F & F \\
+        F & T & T & F & T & T \\
+        F & F & T & T & T & T
+    \end{tabular}\end{center}
+\end{exbox}
+
+As we can see, no matter what the truth values of the hypothesis and conclusion are, an implication and its contrapositive always have the same truth values.
+
+\begin{notebox}
+    When constructing a truth table, we must include \textbf{all} intermediate statements, not just the final statement.
+\end{notebox}
+
+% TODO: add truth table for contrapositive
+
+
+\section{Proofs and Proof Techniques}
+While truth tables are a quick way to gauge whether simple statements hold, they become impractical once we involve more complicated statements. Furthermore, truth tables don't really show intuition behind complicated statements whereas proofs should ultimately fuel our intuition.
+
+Very often, we will have to prove some implication like $p \implies q$. Recall how an implication is only false if $p$ is true but $q$ is false. Therefore, we would only have to consider that case where $p$ is true but $q$ is false. We can prove an implication is true by simply showing that such a case could never happen. There are three simple proof techniques for doing so:
+
+\begin{enumerate}
+    \item \dfntxt{Direct Proof:} Assume $p$ is true, then reason that $q$ must be true as well.
+    \item \dfntxt{Proof by Contradiction:} Assume both $p$ and $\neg q$ are true, then logically derive some contradiction.
+    \item \dfntxt{Proof by Contrapositive:} Assume $\neg q$ is true, then reason that $\neg p$ must be true as well.
+\end{enumerate}
+
+In a direct proof, the reasoning to get from $p$ to $q$ provides a lot of insight about the context of $p$ and the surrounding mathematics. Similarly, the direct reasoning in proof by contrapositive provides context surrounding $\neg q$. However, the reasoning done in a proof by contradiction is based on a contradictory hypothesis. Thus, it is often less insightful and is typically avoided when a direct proof is readily available.\footnote{\url{https://math.stackexchange.com/a/1688}}
+
+That being said, it is sometimes easier to find a proof by contradiction than a direct proof. Whereas direct proof needs to deduce the correct path that leads to the conclusion, a proof by contradiction only needs to deduce any contradictory statement.
+
+%It's hard to decide which proof technique is easiest for any given problem. Direct proofs are often more ``enlightening'', but it can be difficult to find the appropriate logic to reach the conclusion. It may be easier to try proof by contradiction or contrapositive.
+
+\begin{tecbox}{Proof by Contradiction}{contradiction}
+    To prove $p \implies q$ by contradiction, we carry out the following steps:
+    \begin{enumerate}
+        \item Assume $p$ is true, and suppose for the sake of contradiction $\neg q$ is true.
+        \item Logically derive a statement that contradicts something we know to be true.
+        \item Ultimately conclude that $q$ must be true.
+    \end{enumerate}
+\end{tecbox}
+
+In terms of logic notation, proof by contradiction follows:
+\[ \left[ \left( p \land (\neg q) \right) \implies \text{Contradiction} \right] \implies \left[ p \implies q \right]\]
+
+\begin{exbox}{Truth Table of \nameref{tec:contradiction}}{}
+    \begin{center}\begin{tabular}{c | c || c | c | c | c }
+        $p$ & $q$ & $p \implies q$ & $\neg q$ & $p \land (\neg q)$ & $\neg \left[ p \land (\neg q) \right]$ \\ \hline
+        T & T & T & F & F & T \\
+        T & F & F & T & T & F \\
+        F & T & T & F & F & T \\
+        F & F & T & T & F & T
+    \end{tabular}\end{center}
+\end{exbox}
+
+By the above truth table, we can safely assume the following logical equivalence:
+\[ (p \implies q) \iff \neg \left[ p \land (\neg q) \right] \]
+
+\begin{tecbox}{Proof by Contrapositive}{}
+    To prove $p \implies q$ by contrapositive, we carry out the following steps:
+    \begin{enumerate}
+        \item Assume $\neg q$ is true.
+        \item Directly prove that $\neg p$ is true.
+    \end{enumerate}
+\end{tecbox}
+
+In terms of logic notation, proof by contrapositive follows:
+\[ (\neg q \implies \neg p) \iff (p \implies q) \]
+We can actually prove this using proof by contradiction!
+\begin{exbox}{Logical Equivalence of Contrapositive}{}
+    Given statements $p$ and $q$, $p \implies q$ and $\neg q \implies \neg p$ are equivalent.
+    \tcblower
+    \begin{proof}
+        Assume $p \implies q$. To prove $\neg q \implies \neg p$, we can suppose for contradiction that $\neg q$ and $p$ are both true. But $p \implies q$, so $q$ is true which contradicts $\neg q$. Hence, the assumption that $p$ is true was incorrect. Thus, $\neg q \implies \neg p$.
+
+        Assume $\neg q \implies \neg p$. From above, we have $\neg ( \neg p ) \implies \neg (\neg q)$, so $p \implies q$.
+    \end{proof}
+\end{exbox}
+
+\begin{exbox}{Proving Simple Logic Statements}{}
+    Let $p$, $q$, and $r$ be arbitrary statements. Prove that $\left[ p \implies (q \lor r) \right] \iff \left[ (p \land \neg q) \implies r \right]$.
+    \tcblower
+    \begin{proof}
+        Assume $p \implies (q \lor r)$. Suppose $p \land \neg q$. Then $p$ is true, so $q \lor r$ is true by assumption. Also, $\neg q$ is true, so $r$ must be true from $q \lor r$.
+
+        Assume $(p \land \neg q) \implies r$. Suppose $p$ is true. There are two possibilities:
+        \begin{enumerate}
+            \item If $q$ is true, then $q \lor r$ is true.
+            \item If $\neg q$ is true, then $p \land \neg q$ is true. Thus, $r$ is true by assumption. Hence, $q \lor r$ is true.
+        \end{enumerate}
+    \end{proof}
+\end{exbox}
+
+% When we prove an implication $p \implies q$ directly, we assume $p$, and then make some intermediate conclusions, before finally deducing $q$. Those intermediate conclusions provide insight about the context of $p$ and the surrounding mathematics. Similarly, when we prove the contrapositive, we assume $\neg q$, and make some valuable intermediate conclusions, before finally deducing $\neg p$.
+
+% In contrast, a proof by contradiction carries little of this extra value. We make intermediate conclusions under a contradictory hypothesis where $p$ and $\neg q$ hold. Since those intermediate conclusions are built on false logic, they provide less insight about logically sound mathematics.
