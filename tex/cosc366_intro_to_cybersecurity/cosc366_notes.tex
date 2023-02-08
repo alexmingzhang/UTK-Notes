@@ -477,7 +477,13 @@ calculatedMAC.SequenceEqual(receivedMAC);
 \end{codebox}
 
 \section{Passwords}
-In regard to passwords, we usually have an associated account with a username, public or secret. The password is a string of enterable characters, most commonly ASCII. We are more concerned with the bits of the password, not necessarily the characters. As such, we need to have a deterministic way of converting characters to bits, whether it be ASCII or UTF-8.
+
+\begin{dfnbox}{Username, Password}{}
+    A \dfntxt{password} is a piece of secret information, typically a string of easily-typed characters, that is used to authenticate a user.
+\end{dfnbox}
+
+
+Passwords usually have an associated account with a username, public or secret. We are more concerned with the bits of the password, not necessarily the characters. As such, we need to have a deterministic way of converting characters to bits, whether it be ASCII or UTF-8.
 
 Advantages of passwords:
 \begin{itemize}[noitemsep]
@@ -496,10 +502,10 @@ Disadvantages:
 \end{itemize}
 
 \begin{dfnbox}{Password Composition Policies (PCP)}{}
-    Specifies minimum and maximum password length; specifies character requirements and restrictions
+    A \dfntxt{password composition policy} specifies requirements about creating a password, such as minimum and maximum password length, or character requirements and restrictions.
 \end{dfnbox}
 
-Although intended to improve password strength, PCPs often backfire.
+Although intended to improve password strength, PCPs often backfire. It makes a lot of users recycle the same passwords. Similarly, forced password changes often backfire as most users, tech-savvy or not, will increment their password like ``hello1'', ``hello2''. This predictable pattern allows attackers to easily guess passwords whenever the next forced change happens.
 
 \begin{dfnbox}{Passkey}{}
     Passwords can be changed into cryptographic keys called \dfntxt{passkeys}.

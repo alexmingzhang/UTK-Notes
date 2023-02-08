@@ -206,7 +206,7 @@ For complicated languages, it is difficult to create a completely deterministic 
 To introduce nondeterminism, we need more choices for the next state and allow state change without any input.
 
 \begin{dfnbox}{Nondeterministic Finite Automaton (NFA)}{}
-    A \dfntxt{nondeterministic finite automaton} is a finite automaton where each state transition can lead to an arbitrary number of states.
+    A \dfntxt{nondeterministic finite automaton} is a finite automaton where each state transition can lead to an arbitrary number of states, chosen by the machine.
     \tcblower
     We can formally define an NFA as a 5-tuple $(Q, \Sigma, \delta, q_0, F)$ where:
     \begin{itemize}[noitemsep]
@@ -251,6 +251,77 @@ The ambiguity in an NFA lies in the state transitions. We can convert an NFA int
         \item For all $R \subseteq Q$, define $E(R)$ to be the collection of all states that can be reached from $R$ by going along $\epsilon$ transitions, including members of $R$ themselves.
         \item Modify $\delta\prime$ to place additional edges on all states that can be reached by going along $\epsilon$ edges after every step.
         \item Set $q_0\prime = E(\{q_0\})$ and $F\prime = \{ R \in Q\prime : R\ \text{contains an accept state of}\ N \}$.
+    \end{enumerate}
+\end{tecbox}
+
+\chapter{Irregular Languages}
+\begin{dfnbox}{Regular Expression (RE)}{}
+    We say that $R$ is a \dfntxt{Regular expression} if $R$ is one of the following:
+    \begin{itemize}[noitemsep]
+        \item $a$ for some $a \in \Sigma$ (a symbol of the alphabet)
+        \item $\epsilon$ (language contains only the empty string)
+        \item $\emptyset$ (language contains no strings)
+        \item $(R_1 \cup R_2)$, where $R_1$ and $R_2$ are regular expressions
+        \item $(R_1 \circ R_2)$, where $R_1$ and $R_2$ are regular expressions
+        \item $R_1^*$, where $R_1$ is a regular expression
+    \end{itemize}
+\end{dfnbox}
+
+\begin{thmbox}{}{}
+    A language is regular if and only if some regular expression describes it.
+    \tcblower
+    \begin{proof}
+        If a language $R$ is described by a regular expression, then $A$ is recognized by an NFA. Thus, $A$ must be regular. If the language $R$ is regular, then it is recognized by a DFA from which a regular expression can be deduced.
+    \end{proof}
+\end{thmbox}
+
+\begin{exbox}{Irregular Languages}{}
+    Consider the following languages:
+    \begin{itemize}[noitemsep]
+        \item $B = \{ 0^n 1^n : n \geq 0\}$ is not regular.
+        \item $C = \{ w : w\ \text{has an equal number of 0s and 1s} \}$ is not regular. We would need infinite states to account for all possible inputs.
+        \item $D = \{ w : w\ \text{has an equal number of 01 and 10 substrings} \}$ is regular. We can think of this as recording transitions between 0s and 1s, and vice versa. In this sense, every 01 must be eventually followed by a 10, and every 10 must be eventually followed by a 01.
+    \end{itemize}
+\end{exbox}
+
+\section{Pumping Lemma}
+How do we prove that a language is irregular? We would have to prove that there does not exist any machine that recognizes that language.
+
+\begin{dfnbox}{Pumping, Pumping Length}{}
+    All strings in a language can be \dfntxt{pumped} if they are as long or longer than a specified \dfntxt{pumping length}.
+\end{dfnbox}
+
+In other words, every string contains a section that can be repeated any number of times, and the resulting string is still in the language. For example, we can write sqrt(sqrt(sqrt($\ldots$($x$)$\ldots$))) in C, and it's still valid.
+
+\begin{thmbox}{Pumping Lemma}{}
+    Let $A$ be a regular language. There exists a pumping length $p$ such that, for any string $s$ of length $p$ or more, $s$ may be divided into three pieces, $s = x \circ y \circ z$ where all the following hold:
+    \begin{enumerate}[noitemsep]
+        \item $x \circ y^* \circ z \in A$
+        \item $\abs{y} > 0$
+        \item $\abs{x \circ y} \leq p$
+    \end{enumerate}
+    \tcblower
+    \begin{proof}[Proof sketch]
+        As a guide, the proof follows this general form:
+        \begin{itemize}[noitemsep]
+            \item Let $M \coloneq (Q, \Sigma, \delta, q_1, F)$ be a DFA that recognizes $A$. Let $p$ be the number of states.
+            \item Show that any string $s \in A$ where $\abs{s} \geq p$ can be broken into $x \circ y \circ z$ satisfying the three conditions.
+            \item If there are no strings in $A$ of length $p$ or more, then the lemma is true because all three conditions hold for all strings of length $p$ or more.
+        \end{itemize}
+    \end{proof}
+
+    A formal proof is as follows:
+    \begin{proof}
+        Let $M \coloneq  (Q, \Sigma, \delta, q_1, F)$ be a DFA that recognizes $A$. Let $p \coloneq \abs{Q}$. Let $s \coloneq s_1 s_2 \ldots s_n$ be a string over $\Sigma$ with $n \geq p$ and $r = r_1 r_2 \ldots r_{n+1}$ be the sequence of states encountered while processing $s$.
+        TODO: finish proof
+    \end{proof}
+\end{thmbox}
+
+\begin{tecbox}{Proving a Language is Irregular}{}
+    To prove that a language $A$ is not regular, we:
+    \begin{enumerate}
+        \item Suppose for contradiction $A$ is regular
+        \item Find $s \in A$ where $\abs{s} \geq p$ that cannot be pumped
     \end{enumerate}
 \end{tecbox}
 
