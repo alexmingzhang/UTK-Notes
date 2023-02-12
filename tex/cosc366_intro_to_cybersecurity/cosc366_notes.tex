@@ -427,15 +427,16 @@ Security properties:
 \end{exbox}
 
 \section{Message Authentication Codes}
-\begin{itemize}
-    \item Symetric-key equivalent to digital signatures
-    \item Provides data origin authentication and data integrity (Only for two people)
+
+\begin{dfnbox}{Message Authentication Code, Tag}{}
+    A \dfntxt{message authentication code} or \dfntxt{tag} is a short piece of information used for authenticating a message (i.e. came from the right person).
+\end{dfnbox}
+
+\begin{itemize}[noitemsep]
+    \item Symmetric-key equivalent to digital signatures
+    \item Provides data origin authentication and data integrity (only for two people)
     \item Does NOT provide non-repudiation (at least two people will have the symmetric key)
 \end{itemize}
-
-\begin{dfnbox}{Tag}{}
-
-\end{dfnbox}
 
 \begin{dfnbox}{Hash-Based Message Authentication Code (HMAC)}{}
     Can be used with any cryptographic hash function, only use with safe functions (e.g. HMAC-SHA256)
@@ -542,14 +543,160 @@ PBKDF2 is a common function. Modern algorithms like Argon2id can also be used.
     Registration:
     \begin{itemize}[noitemsep]
         \item User sends a username and password to the website
-        \item Website hashes the info, then stores the info
+        \item Website hashes the password, then stores the info
     \end{itemize}
     Authentication:
     \begin{itemize}[noitemsep]
         \item User sends a username and password to the website
-        \item Website compares the sent values with the stored values
+        \item Website hashes the received password and compares the calculated hash
+    \end{itemize}
+    \tcblower
+    Some flaws:
+    \begin{itemize}
+        \item Offline guessing: an attacker steals the database, then can guess passwords until it matches one of the hashed passwords with no rate limit.
+        \item Rainbow Table Attack: create a table of password hashes for common passwords
     \end{itemize}
 \end{exbox}
+
+\begin{exbox}{Salted Hashing}{}
+    Registration:
+    \begin{itemize}[noitemsep]
+        \item User sends a username and password to website
+        \item Website generates a random \dfntxt{salt}
+        \item Website hashes the received password along with the salt (Similar to padding)
+        \item Website stores username, salt, and hash
+    \end{itemize}
+    Authentication:
+    \begin{itemize}[noitemsep]
+        \item User sends a username and apssword to website
+        \item Website retrieves the salt for the username
+        \item Website hashes the received password along with salt
+        \item Website compares the calculated hash with the stored hash
+    \end{itemize}
+\end{exbox}
+
+Good practices:
+\begin{itemize}[noitemsep]
+    \item Iterated Hashing: Repeatedly hash the salt and password a large number of times; slows down brute force guessing; has minimal impact on legitimate authentications
+    \item Specialized Functions: Use memory-intense and cache-intense functions; makes it hard to accelerate, reducing password guessing rate significantly (e.g. Argon2id, bcrypt/scrypt)
+    \item Keyed Hash Function: Use a hash function that requires a cryptographic key (e.g. HMAC); if key isn't stolen, it will be impossible to conduct offline guessing
+\end{itemize}
+
+\begin{codebox}{Password Authentication in C\#}{}{}
+    \begin{amzcode}{csharp}
+using System.Security.Cryptography;
+using System.Text;
+
+var password = "hello";
+var passwordBytes = Encoding.ASCII.GetBytes(password);
+
+var salt = RandomNumberGenerator.GetBytes(32);
+
+// hash for 100000 iterations
+var hash = Rfc2898DeriveBytes.Pbkdf2(password, salt, 100000, HashAlgorithmName.SHA256, 32);
+
+using BCrypt.Net;
+
+// Returns a crazy string
+var temp = BCrypt.Net.BCrypt.HashPassword(password);
+
+// Should return true
+BCrypt.Net.Bcrypt.Verify(password, temp);
+    \end{amzcode}
+\end{codebox}
+
+\section{Account Recovery}
+
+Password Recovery -- Retrieving a lost password; means password is storing passwords in plaintext or encrypting them
+
+Account Recovery -- regaining access to the account, requires a password reset
+
+\begin{itemize}
+    \item Email-Based Recovery: Send a link to the email account; makes accounts only as strong as the email
+    \item SMS-based recovery: similar to email-based recovery; prone to sim swapping
+    \item Security Questions: in practice, it's easy for attacker to learn answers to these questions
+\end{itemize}
+
+\begin{itemize}
+    \item Single Sign-On (SSO): Single identity provider handles authentication for multiple websites; less accounts and passwords to remember, but creates a single point of failure.
+    \item CAPTCHA: Differentiate between humans and robots using some test
+    \item reCAPTCHA: measures all of your interactions with the website as well as other data to determine if you're a human
+\end{itemize}
+
+In the Single Sign-On, there are three parties: the user, relying party, and identifying party. When trying to authenticate with the relying party, we first request an authentication token from the identifying party. We then send that token to the relying party, who verifies the token is correct by asking the identifying party.
+
+\section{Authentication Factors}
+Authentication factors are used to verify you are who you say you are. They rely on something one or more of the following:
+\begin{itemize}[noitemsep]
+    \item something you \dfntxt{know} (like a secret PIN or password)
+    \item something you \dfntxt{have} (like a phone or credit card)
+    \item something you \dfntxt{are} (fingerprints, behaviors)
+\end{itemize}
+
+\begin{dfnbox}{Multi-Factor Authentication}{}
+    \dfntxt{Single factor authentication} authenticates users using only one factor. \dfntxt{Two-factor authentication (2FA)} authenticates using two distinct factors, most commonly a password and something you have. \dfntxt{Three-factor authentication (3FA)} is the most secure but usually not practical.
+\end{dfnbox}
+
+2FA substantially increases the security of accounts, but it needs to be carefully implemented to avoid usability issues.
+
+Something you have:
+\begin{itemize}[noitemsep]
+    \item In your possession, trivial to authenticate
+    \item Nothing to remember
+    \item If you don't have the item, you can't authenticate
+    \item If someone steals the item, you have immediate access
+    \item If you lose item, account recovery is difficult
+\end{itemize}
+
+We can use the thing you have by sending that thing a secret value.
+\begin{itemize}[noitemsep]
+    \item Service sends a secret value to your device (one-time password)
+    \item You authenticate by entering the secret value
+    \item Problem: easy to phish
+\end{itemize}
+
+Alternatively, we can just have some way to synchronize the secret value generation, so we only need to send a secret once.
+\begin{itemize}[noitemsep]
+    \item Service sends you a secret during account registration
+    \item Secret is stored on your device
+    \item The secret is used to generate the same one-time password on both the server and dev
+    \item Authenticate by entering the value generated by your device.
+    \item Problem: still easy to phish, but attacker would have a one-time window
+\end{itemize}
+
+We could use some dedicated device for this.
+\begin{itemize}[noitemsep]
+    \item Dedicated device generates a public-key private-key pair
+    \item Public key is sent to service during registration
+    \item Device uses its private key to sign authentication requests
+    \item Can be designed to avoid phishing and require presence
+    \item Usually comes with some backup codes in case the device is broken; those can be prone to phishing
+\end{itemize}
+
+When it comes to something you are:
+\begin{itemize}[noitemsep]
+    \item Nothing to remember
+    \item Nothing to carry
+    \item Difficult to steal
+    \item Usually requires specialized hardware; bad hardware is prone to error and/or security issues
+    \item If you lose your biometric, how do you recover your account?
+    \item Sharing biometrics is risky in the first place
+\end{itemize}
+
+Some examples include:
+\begin{itemize}[noitemsep]
+    \item Fingerprints -- lots of poorly designed hardware prone to fingerprint lifting or forging
+    \item Facial Recognition -- similar looking people like siblings can log in too
+    \item Iris Recognition -- specialized hardware costs a lot
+    \item Brainwave Recognition --
+    \item Behavior Biometrics -- e.g reCAPTCHA
+    \item Walking Cadence -- how you walk
+    \item Travel Patterns -- used by gov't to identify suspicious people
+\end{itemize}
+
+When using biometrics for an app, it's usually not being sent to the server. Instead, the OS will only decrypt shared secret after authenticating using biometrics.
+
+
 
 \amzindex
 \end{document}

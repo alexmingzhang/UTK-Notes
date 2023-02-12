@@ -1,0 +1,78 @@
+\begin{dfnbox}{Infimum}{}
+    Let $F$ be an ordered field, and let $A \subseteq F$. $s$ is the \dfntxt{infimum} of $A$ if:
+    \begin{enumerate}[noitemsep]
+        \item $s$ is a lower bound for $A$, and
+        \item $s$ is greater than every other lower bound for $A$.
+    \end{enumerate}
+\end{dfnbox}
+
+We can prove that the existence of infima is already implied by completeness.
+
+\begin{thmbox}{Existence of Infima in $\R$}{}
+    Let $A \subseteq \R$ be nonempty and bounded below. Then $A$ has an infimum in $\R$.
+    \tcblower
+    \begin{proof}
+        Let $A \subseteq \R$ be nonempty and bounded below. Let $B$ be the set of all lower bounds for $A$. In other words, $B \coloneq \left\{ b \in \R : \forall(a \in A)(b < a) \right\}$. Since $A$ is bounded below, then $B$ is nonempty. Note also that $B$ is bounded above by element of $A$. By completeness, $s \coloneq \sup B$ exists. Now, we need to show that $\sup B = \inf A$.
+        \begin{enumerate}
+            \item Every $a \in A$ is an upper bound for $B$, and $\sup B$ is the least upper bound for $B$. Then, $\sup B \leq a$. That is, $\sup B$ is a lower bound for $A$.
+            \item Let $t$ be a lower bound for $A$. Then, by definition of $B$, it follows that $t \in B$. Then $t \leq \sup B$ as required.
+        \end{enumerate}
+        Therefore, $\sup B = \inf A$ in $\R$.
+    \end{proof}
+\end{thmbox}
+
+\begin{thmbox}{Well-Ordering Principle}{}
+    Every non-empty subset of $\N$ has a minimum.
+    \tcblower
+    \begin{proof}
+        We will use induction. For convenience, let $P(n)$ represent the following statement: ``If $A \subseteq \N$ and $A \cap \{1,2,\ldots,n \} \neq \emptyset$, then $A$ has a minimum.''
+
+        \textbf{Base Case:} First, we will prove $P(1)$. If $A \subseteq \N$ and $A \cap \{1\} \neq \emptyset$, then $1 \in A$, so $A$ has a minimum.
+
+        \textbf{Induction Step:} Assume that $P(n)$ holds for some $n \in N$. Suppose $A \subseteq \N$ and $A \cap \{1,2,\ldots,n+1\} \neq \emptyset$.
+        \begin{enumerate}
+            \item If $A \cap \{ 1,2,\ldots,n \} \neq \emptyset$, then $A$ has a minimum by $P(n)$.
+            \item If $A \cap \{1,2,\ldots,n\} = \emptyset$, then $n+1 \in A$, so $\min A = n+1$.
+        \end{enumerate}
+        By induction, $P(n)$ holds for all $n \in \N$. If $A \subseteq \N$ and $A \neq \emptyset$, then there exists $m \in A$ such that $m \in \N$. By $P(m)$ (which is true by induction), the set $A$ has a minimum.
+    \end{proof}
+\end{thmbox}
+
+\begin{thmbox}{Pushing Supremum}{push}
+    Let $A$ be a nonempty subset of $\R$, and let $b,c$ be real numbers.
+    \begin{enumerate}[noitemsep, label=(\alph*)]
+        \item If $a \leq b$ for all $a \in A$, then $\sup A \leq b$.
+        \item If $c \leq a$ for all $a \in A$, then $c \leq \inf A$.
+    \end{enumerate}
+    \tcblower
+    \textbf{Intuition:} Consider the interval $A \coloneq (0,1)$. Because $a \leq 1$ for all $a \in (0,1)$, we have $\sup A \leq 1$. Because $0 \leq a$ for all $a \in (0,1)$,we have $0 \leq \inf A$.
+    \begin{proof}[Proof of (a)]
+        Since $a \leq b$ for all $a \in A$, then $b$ is an upper bound for $A$. By completeness, $A$ has a supremum, and $s \coloneq \sup A$ is the least upper bound for $A$. Thus, $s \leq b$.
+    \end{proof}
+    \begin{proof}[Proof of (b)]
+
+    \end{proof}
+\end{thmbox}
+
+\begin{exbox}{}{}
+    Suppose $A,B \subseteq \R$, $A \neq \emptyset$, $A \subseteq B$, and $B$ is bounded above. Prove that $A$ is bounded above and $\sup A \leq \sup B$.
+    \tcblower
+    \begin{proof}
+        Since $A \subseteq B$ and $A \neq \emptyset$, then $B \neq \emptyset$. Also, $B$ is bounded above, so $B$ has a supremum (by completeness). Let $a \in A$ be arbitrary. Then $a \in B$, so $a \leq \sup B$. Thus, $A$ is bounded above, so $A$ has a supremum (by completeness). By \nameref{thm:push}, $\sup A \leq \sup B$.
+    \end{proof}
+\end{exbox}
+
+\begin{thmbox}{Approximation Property of Suprema and Infima}{approx}
+    Suppose $A$ is a nonempty subset of $\R$, and $s,r \in \R$. Then:
+    \begin{enumerate}[label=(\alph*)]
+        \item $s = \sup A$ if and only if (i) $s$ is an upper bound for $A$, and (ii) for all $\epsilon > 0$, there exists $a \in A$ such that $s - \epsilon < a$.
+        \item $r = \inf A$ if and only if (i) $r$ is a lower bound for $A$, and (ii) for all $\epsilon > 0$, there exists $a \in A$ such that $a < r + \epsilon$.
+    \end{enumerate}
+    \tcblower
+    \textbf{Intuition:} If we nudge the supremum ever so slightly to the left, then we must have moved past something in $A$.
+    \begin{proof}[Proof of (a)]
+        Let $s \coloneq \sup A$. Then (i) holds by definition of suprema. To prove (ii), let $\epsilon > 0$. Since $s - \epsilon < s$, then $s - \epsilon$ is not an upper bound for $A$. Therefore, there exists $a \in A$ such that $s - \epsilon < a$.
+
+        Conversely, suppose that (i) and (ii) hold. We need to show $s = \sup A$. From (i), we know that $s$ is an upper bound for $A$. Now, we need to show that $s$ is the least upper bound. Let $t$ be an upper bound for $A$. Suppose for contradiction that $t < s$. Let $\epsilon \coloneq s - t > 0$. Then $t = s - \epsilon$. By (ii), there exists $a \in A$ such that $a > s - \epsilon = t$. This contradicts $t$ being an upper bound for $A$. Thus, there is no upper bound less than $s$. Therefore, $s = \sup A$.
+    \end{proof}
+\end{thmbox}

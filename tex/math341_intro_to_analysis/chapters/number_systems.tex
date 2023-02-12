@@ -139,7 +139,7 @@ If $n = kp$ and $m = kq$, where $k,p,q \in \Z$, $k \neq 0$, $q \neq 0$, then:
 \[ \frac{n}{m} = \frac{kp}{kq} = \frac{k}{p}, \quad \text{because}\ kpq = kqp \]
 If $n$ and $m$ have no common factor (except $\pm 1$), then we say that $\sfrac{n}{m} \in \Q$ is in the ``lowest terms'' or ``reduced terms''. The set $(Q, +, \cdot)$ forms a field. However, we cannot write $x = \sfrac{n}{m}$ where $x^2 = 2$.
 
-\begin{thmbox}{$\sqrt{2}$ is not a Rational Number}{}
+\begin{thmbox}{$\sqrt{2}$ is not a Rational Number}{root-2-irrational}
     $\sqrt{2} \notin \Q$
     \tcblower
     \begin{proof}
@@ -342,16 +342,15 @@ We can think of $\abs{a-b}$ as the distance between $a$ and $b$. More egnerally,
 
 Note that from the above example, $(0,1)$ has neither a maximum nor a minimum. However, 3 is the minimum of $[3,\infty)$.
 
-\begin{dfnbox}{Supremum, Infimum}{}
-    Let $F$ be an ordered field, and let $A \subseteq F$. If there exists $s \in F$ such that:
+\begin{dfnbox}{Supremum}{}
+    Let $F$ be an ordered field, and let $A \subseteq F$. $s \in F$ is a \dfntxt{supremum} of $A$ if:
     \begin{enumerate}
         \item $s$ is an upper bound for $A$, and
-        \item $s < t$ for any upper bound $t$ for $A$,
+        \item if $t$ is an upper bound for $A$, then $s \leq t$.
     \end{enumerate}
-    then $s$ is the \dfntxt{supremum} of $A$, denoted $s = \sup A$.
 \end{dfnbox}
 
-If $A$ has a supremum, then that supremum is unique. ()
+In other words, the supremum is the least upper bound for $A$. If $A$ has a supremum, then that supremum is unique. (TODO: Prove this)
 
 \begin{thmbox}{Maximum is the Supremum}{}
     Let $F$ be an ordered field, and let $A \subseteq F$. If $A$ has a maximum $M$, then $M = \sup A$.
@@ -373,8 +372,46 @@ If $A$ has a supremum, then that supremum is unique. ()
     An ordered field $F$ is \dfntxt{complete} if every nonempty subset of $F$ that is bounded above has a supremum in $F$.
 \end{dfnbox}
 
-
-
 \begin{thmbox}{$\Q$ is not complete}{}
+    \begin{proof}[Proof sketch]
+        Let $A \coloneq \left\{ x \in \Q : x^2 < 2 \right\}$. In other words, $A = \left(-\sqrt{2}, \sqrt{2}\right) \subseteq \Q$. Then $A$ is nonempty and bounded above. Suppose for contradiction that $\Q$ is complete. Then $A$ has a supremum, say $s = \sup(A)$. Consider the following cases:
+        \begin{enumerate}
+            \item If $s^2 < 2$, let $n \in \N$ such that $\left( s + \sfrac{1}{n} \right)^2 < 2$. Then $s + \sfrac{1}{n} \in A$, contradicting $s$ being an upper bound for $A$.
+            \item If $s^2 > 2$, let $n \in \N$ such that $\left( s - \sfrac{1}{n} \right)^2 > 2$. Then $s - \sfrac{1}{n}$ is an upper bound smaller than $s$, contradicting $s$ being the least upper bound (supremum).
+            \item If $s^2 = 2$, then $s \notin \Q$ (Theorem \ref{thm:root-2-irrational}).
+        \end{enumerate}
+        Thus, $A \subseteq \Q$ does not have a supremum. Therefore, $\Q$ is not complete.
+    \end{proof}
+\end{thmbox}
 
+% TODO: elaborate on notation of mathematical structures
+
+\begin{dfnbox}{Real Numbers $\R$}{}
+    The \dfntxt{real numbers} are a set $\R$ with two operations, $+$ and $\cdot$, and order relation $<$ such that:
+    \begin{enumerate}[noitemsep]
+        \item $(R, +, \cdot)$ is a field,
+        \item $(\R, +, \cdot, <)$ is an ordered field, and
+        \item $(\R, +, \cdot, <)$ is complete.
+    \end{enumerate}
+\end{dfnbox}
+
+Alternatively, $\R$ can be constructed explicitly using ``Dedekind cuts''. Either way, $\R$ is the \textbf{only} unique complete ordered field up to isomorphism. That is, if there is some other imposter complete ordered field $\R\prime$, we can map every element of $\R$ to $\R\prime$ such that we preserve all the operations and relations between things in $\R$. More formally, there exists an isomorphism $T : \R \to \R\prime$ where $T$ is bijective, and:
+\begin{itemize}[noitemsep]
+    \item $T(x+y) = T(x) + T(y)$
+    \item $T(xy) = T(x)T(y)$
+    \item $x < y \iff T(x) < T(y)$
+\end{itemize}
+
+Additionally, $\N \subseteq \R$ where $\N$ satisfies the Peano axioms.
+
+\begin{thmbox}{$\sqrt{2}$ is a Real Number}{}
+    \begin{proof}[Proof sketch]
+        Let $A \coloneq \left\{ x \in \R : x^2 < 2 \right\}$.
+        \begin{itemize}[noitemsep]
+            \item Show $A \neq \emptyset$ and $A$ is bounded above
+            \item Completeness says $s \coloneq \sup A$ exists
+            \item Show $s^2 = 2 \implies s = \sqrt{2} \in \R$.
+        \end{itemize}
+        More generally, if $n,m \in \N$, then $\sqrt[n]{m} \in \R$.
+    \end{proof}
 \end{thmbox}

@@ -2,6 +2,7 @@
 
 \usepackage[margin=1in]{geometry}
 \usepackage[code]{amznotes}
+\usepackage{enumitem}
 
 \title{\textbf{Systems Programming}\\
 \large UT Knoxville, Spring 2023, COSC 360}
@@ -117,7 +118,49 @@ All \texttt{malloc}'ed memory is deallocated either by calling \texttt{free()} o
 %Whereas \texttt{new} in C++ specifies an amount of a certain type, \texttt{malloc()} only accepts a number of bytes. It does not know how the memory is being used. As a consequence, we have to keep track of every array's size.
 
 \section{Strings}
-In C and C++, a string is a contiguous sequence of characters whose last character is the null character (ASCII value 0). While C++ has \texttt{std::string} which handles the memory of the characters for us, we don't have such luxury in C. Instead, we have to explicitly use an array of \texttt{char}, handling it just as we would any other array.
+
+\begin{dfnbox}{String, Null Character}{}
+In C and C++, a string is a contiguous sequence of characters whose last character is the null character (ASCII value 0).
+\end{dfnbox}
+
+While C++ has \texttt{std::string} which handles the memory of the characters for us, we don't have such luxury in C. Instead, we have to explicitly use an array of \texttt{char}, handling it just as we would any other array.
+
+When using a function like \texttt{printf("\%s", str)}, we are only passing a pointer to the first character of \texttt{str}. Then, \texttt{printf} iteratively prints each byte in its ASCII representation, stopping once it reaches the null character.
+
+\section{Libfdr}
+To ease the transition between C++ and C, Dr. Plank has created a library for formatting input doubly-linked lists, and red-black trees (hence, fdr).\footnote{Documentation is available on \url{https://web.eecs.utk.edu/\~jplank/plank/classes/cs360/lecture_notes.html}.}
+\begin{itemize}
+    \item The \dfntxt{fields} library helps parse input from stdin and files
+    \item The \dfntxt{dllist} library provides doubly-linked lists
+    \item The \dfntxt{JRB} library provides red-black trees, similar to \texttt{std::multimap}
+\end{itemize}
+
+\chapter{File System}
+
+\begin{dfnbox}{File System}{}
+    A \dfntxt{file system} is a hierarchy of files and directories.
+\end{dfnbox}
+
+In the UNIX file system, every user has a home directory, aliased by ``\textasciitilde''.
+
+\begin{dfnbox}{Signal}{}
+    A \dfntxt{signal} is an interruption in a running program.
+\end{dfnbox}
+
+\begin{dfnbox}{System Call}{}
+    \dfntxt{System calls} allow programs to directly interface with the operating system. In C, system calls appear just as regular procedure calls.
+\end{dfnbox}
+
+Unlike creating a frame for regular procedures, system calls interrupt the program and are expensive.
+
+In C, there are five system calls defined in \texttt{fcntl.h} for file I/O:
+\begin{itemize}[noitemsep]
+    \item \texttt{open()} -- opens a handle to a file for I/O; specifies read and/or write permission
+    \item \texttt{close()} -- close a handle to a file
+    \item \texttt{read()} --
+    \item \texttt{write()}
+    \item \texttt{lseek()}
+\end{itemize}
 
 \amzindex
 \end{document}

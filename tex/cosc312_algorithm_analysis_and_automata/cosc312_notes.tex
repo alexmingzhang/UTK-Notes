@@ -291,9 +291,9 @@ How do we prove that a language is irregular? We would have to prove that there 
     All strings in a language can be \dfntxt{pumped} if they are as long or longer than a specified \dfntxt{pumping length}.
 \end{dfnbox}
 
-In other words, every string contains a section that can be repeated any number of times, and the resulting string is still in the language. For example, we can write sqrt(sqrt(sqrt($\ldots$($x$)$\ldots$))) in C, and it's still valid.
+In other words, every string contains a section that can be repeated any number of times, and the resulting string is still in the language. For example, we can write sqrt(sqrt(sqrt($\ldots$(sqrt($x$))$\ldots$))) in C, and it's still valid.
 
-\begin{thmbox}{Pumping Lemma}{}
+\begin{thmbox}{Pumping Lemma}{pl}
     Let $A$ be a regular language. There exists a pumping length $p$ such that, for any string $s$ of length $p$ or more, $s$ may be divided into three pieces, $s = x \circ y \circ z$ where all the following hold:
     \begin{enumerate}[noitemsep]
         \item $x \circ y^* \circ z \in A$
@@ -321,9 +321,36 @@ In other words, every string contains a section that can be repeated any number 
     To prove that a language $A$ is not regular, we:
     \begin{enumerate}
         \item Suppose for contradiction $A$ is regular
-        \item Find $s \in A$ where $\abs{s} \geq p$ that cannot be pumped
+        \item Find $s \in A$ where $\abs{s} \geq p$ that cannot be pumped; consider all the ways of dividing $s$ into $x \circ y \circ z$, and show that for each division, at least one of the conditions fail.
     \end{enumerate}
 \end{tecbox}
+
+\begin{exbox}{Simple Pumping Lemma Example}{}
+    Prove that the language $B \coloneq \{ 0^n 1^n : n \geq 0 \}$ is not regular.
+    \tcblower
+    We can show that any substring of $B$ cannot be pumped by contradicting the first condition of the \nameref{thm:pl}.
+    \begin{proof}
+        Suppose for contradiction $B$ is regular. Let $p$ be the pumping length for $B$. Let $s \coloneq 0^p1^p \in B$. Then $\abs{s} = 2p > p$. By the \nameref{thm:pl}, we can partition $s$ into three substrings, say $x,y,z$, such that $x \circ y^* \circ z \in B$. Let $s\prime \coloneq x \circ y \circ y \circ z$. WE will show $s\prime \notin B$. Consider the three possible cases for the contents of $y$:
+        \begin{enumerate}
+            \item $y \in 0^+$. Then. $s\prime$ has more $0$s than $1$s. Thus, $s\prime \notin B$, contradicting the first condition of the \nameref{thm:pl}.
+            \item $y \in 1^+$. Then, following the logic from the first case, this is not possible.
+            \item $y$ consists of $0$s and $1$s. Then $y \circ y \notin 0^n1^n$, so $s \prime \notin B$.
+        \end{enumerate}
+    \end{proof}
+
+    We can simplify the above proof by targeting condition 3 instead:
+    \begin{proof}
+        By the third condition of the \nameref{thm:pl}, we have $\abs{x \circ y} \leq p$. Hence, $y$ could only contain $0$s.
+    \end{proof}
+\end{exbox}
+
+\begin{exbox}{Another Pumping Lemma Example}{}
+    Prove that the language $E \coloneq \left\{ 0^i 1^j : i > j \right\}$ is not regular.
+    \tcblower
+    \begin{proof}
+        Suppose for contradiction $$E$$ is regular. Let $$p$$ be the pumping length for $$E$$, and let $$s \coloneq 0^{p+1}1^p \in E$$. Then $$\abs{s} = (p+1) + p > p$$. By the \nameref{thm:pl}, we can partition $$s$$ into three substrings, say $$x,y,z$$, such that $$x \circ y^* \circ z \in E$$. Then, by the third condition, we have $$\abs{x \circ y} \leq p$$. Note that there are $$p+1$$ number of $$0$$s at the beginning of $$s$$. Thus, $$x \in 0^*$$ and $$y \in 0^+$$. Consider the case when $$i = 0$$. Then $$x \circ y^+ \circ z \notin E$$, leaving only $$x \circ z$$. However, $$\abs{y} > 0$$ by the second condition, so $$x \circ z$$ would lose at least one $$0$$. Thus, $$x \circ z \notin E$$, so $$x \circ y^* \circ z \notin E$$. Therefore, $$E$$ is not regular.
+    \end{proof}
+\end{exbox}
 
 \amzindex
 \end{document}
