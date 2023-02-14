@@ -4,6 +4,8 @@
 \usepackage{amzmath}
 \usepackage{enumitem}
 \usepackage{xfrac}
+\usepackage{tikz}
+\usetikzlibrary{calc, 3d}
 
 \title{\textbf{Calculus III}\\
 \large UT Knoxville, Spring 2023, MATH 341}
@@ -61,19 +63,6 @@ Note that all the points of the sphere are equidistant to the center of the sphe
         \implies \left( x + \frac12 \right)^2 + y^2 &= \frac14
     \end{align*}
 \end{exbox}
-
-\begin{dfnbox}{Cylinder}{}
-    Given a planar curve $c$, the surface in $\R^3$ defined by all parallel lines crossing the curve $c$ is called a \dfntxt{cylinder}.
-\end{dfnbox}
-
-Similarly, the set of all points $(x,y,z)$ such that $x$ and $y$ satisfy $(x-h)^2 + (y-k)^2 = r^2$ forms a circular cylinder. Note that our broad definition of cylinder does not require the cylinder to be circular.
-
-Regarding the quadrants:
-\begin{align*}
-    Q1 &= \left\{ (x,y) \in \R^2 : x > 0, y > 0 \right\} \\
-    Q4 &= \left\{ (x,y) \in \R^2 : x > 0, y < 0 \right\}
-\end{align*}
-
 
 \section{Vectors}
 
@@ -288,7 +277,63 @@ Let $\vec{a} \coloneq \alg{a_1, a_2, a_3}$ and $\vec{b} \coloneq \alg{b_1, b_2, 
     \[ \vec{\Tau} \coloneq \vec{r} \times \vec{F} \]
 \end{dfnbox}
 
+\section{Cylinders and Quadratic Surfaces}
 
+\begin{dfnbox}{Planar Curve}{}
+    A \dfntxt{planar curve} is any curve that lies on a single plane.
+\end{dfnbox}
+
+\begin{dfnbox}{Cylinder}{}
+    Given a planar curve $c$, the surface in $\R^3$ defined by all parallel lines crossing the curve $c$ is called a \dfntxt{cylinder}.
+\end{dfnbox}
+
+Note that our broad definition of cylinder does not require the cylinder to be circular, nor does it require it to be straight. For example, we could have a planar curve defined by $x^2 + y^2 = 1$ and create a circular cylinder with radius $1$. We could also have a planar curve defined by $y = x^2$ and create a \dfntxt{parabolic cylinder}.
+
+\begin{exbox}{}{}
+    Consider the curve $x^2+y^2=z^2$. For every $z_0$ at $x=y=0$, we have a point, say $p \coloneq (0,0,0)$yh
+\end{exbox}
+
+\begin{dfnbox}{Cone}{}
+
+\end{dfnbox}
+
+\begin{dfnbox}{Conic Surface}{}
+    A \dfntxt{conic surface} is a surface that is attained by taking a cross-section of a cone.
+\end{dfnbox}
+
+There are four types of conic surfaces:
+\begin{enumerate}[noitemsep]
+    \item The cross-section parallel to the $xy$-plane is a \dfntxt{circle}.
+    \item The cross-section slightly angled from the $xy$-plane is a \dfntxt{ellipse}.
+    \item The cross-section parallel to a generating line is a \dfntxt{parabola}.
+    \item The cross-section parallel to the $z$ axis is a \dfntxt{hyperbola}.
+\end{enumerate}
+
+\begin{dfnbox}{Quadratic Surface}{}
+    A \dfntxt{quadratic surface} in $\R^3$ is the set of points whose coordinates satisfy a quadratic polynomial in the variables $x,y,z$.
+\end{dfnbox}
+
+For example, the standard equation for a sphere is a quadratic surface.
+
+\begin{dfnbox}{Ellipsoid}{}
+    An \dfntxt{ellipsoid} is a shape in $\R^3$ defined by the equation:
+    \[ \frac{(x-h)^2}{a^2} + \frac{(y-k)^2}{b^2} + \frac{(z-l)^2}{c^2} = 1 \]
+\end{dfnbox}
+
+The cross-sections of an ellipsoid with each coordinate plane ($xy$-plane, $xz$-plane, $yz$-plane) is just an ellipse. In other words:
+\begin{itemize}[noitemsep]
+    \item If we set $z = l$, we get an ellipse in the $xy$-plane
+    \item If we set $y = k$, we get an ellipse in the $xz$-plane
+    \item If we set $x = h$, we get an ellipse in the $yz$-plane
+\end{itemize}
+
+We can also have \dfntxt{hyperboloids}:
+\begin{itemize}
+    \item Type 1: $\frac{x^2}{a^2} + \frac{y^2}{b^2} - \frac{z^2}{c^2} = 1$
+    \item Type 2: $\frac{x^2}{a^2} - \frac{y^2}{b^2} - \frac{z^2}{c^2} = 1$
+\end{itemize}
+
+For type 2 hyperboloids, its cross-section with the $xy$ and $xz$ plane is a hyperbola. Note that there is no cross-section with the $yz$ plane. This is because the equation $- \frac{y^2}{b^2} - \frac{z^2}{c^2} = 1$ has no solution in the real numbers.
 
 \makeamzindex
 \end{document}

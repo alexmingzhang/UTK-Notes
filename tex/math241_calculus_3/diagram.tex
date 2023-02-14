@@ -1,0 +1,28 @@
+\documentclass{article}
+\usepackage{tikz}
+\usetikzlibrary{calc,3d}
+
+\begin{document}
+
+\begin{tikzpicture}
+\def\R{2} % cone radius
+\def\H{3} % cone height
+
+% coordinate system
+\draw[->] (-3,0,0) -- (3,0,0) node[right]{$x$};
+\draw[->] (0,-3,0) -- (0,3,0) node[right]{$y$};
+\draw[->] (0,0,-3) -- (0,0,3) node[above]{$z$};
+
+% cone
+\draw[surface,yellow!50, opacity = 0.6, draw=yellow!80!black, fill=yellow!20, fill opacity=0.5] (0,0,0) -- (\R,0,0) -- (\R,\R,\H) -- cycle;
+\draw[surface,yellow!50, opacity = 0.6, draw=yellow!80!black, fill=yellow!20, fill opacity=0.5] (0,0,0) -- (\R,0,0) -- (0,\R,\H) -- cycle;
+\draw[surface,yellow!50, opacity = 0.6, draw=yellow!80!black, fill=yellow!20, fill opacity=0.5] (0,0,0) -- (0,\R,0) -- (0,\R,\H) -- cycle;
+\draw[surface,yellow!50, opacity = 0.6, draw=yellow!80!black, fill=yellow!20, fill opacity=0.5] (0,0,0) -- (\R,0,0) -- (0,0,\H) -- cycle;
+
+% cross sections
+\draw[surface,blue!50, opacity = 0.6, draw=blue!80!black, fill=blue!20, fill opacity=0.5] (0,0,0) -- (\R,0,0) -- (\R,\R,0) -- (0,\R,0) -- cycle;
+\draw[surface,red!50, opacity = 0.6, draw=red!80!black, fill=red!20, fill opacity=0.5] (\R,0,0) -- (\R,0,\H) -- (\R,\R,\H) -- (\R,\R,0) -- cycle;
+\draw[surface,green!50, opacity = 0.6, draw=green!80!black, fill=green!20, fill opacity=0.5] (0,0,0) -- (0,\R,0) -- (0,\R,\H) -- (0,0,\H) -- cycle;
+\end{tikzpicture}
+
+\end{document}
