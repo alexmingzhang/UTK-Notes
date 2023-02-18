@@ -18,7 +18,7 @@ How do we define the natural numbers? Listing every natural number is definitely
     Note that there is not one ``prescribed'' way to do define the natural numbers. This is just the most popular approach.
 \end{notebox}
 
-From the fifth axiom, we can derive a new proof technique for proving an arbitrary statement for all natural numbers.
+From the fifth Peano axiom, we can derive a new proof technique for proving statements about consecutive natural numbers.
 
 \begin{thmbox}{Principle of Induction}{induction}
     Let $P(n)$ be a statement for each $n \in \N$. Suppose that:
@@ -33,15 +33,17 @@ From the fifth axiom, we can derive a new proof technique for proving an arbitra
     \end{proof}
 \end{thmbox}
 
-A proof by induction kind of has a ``domino effect''. We set up the dominoes by proving $P(n) \implies P(n+1)$ and knock over the first domino by proving $P(1)$. The result is that all the dominoes will topple each other, leaving no domino standing.
+A proof by induction has a ``domino effect''. Imagine a domino for each natural number $1$, $2$, $3$, and so on, arranged in an infinite row. Knocking the 1st domino will knock them all down.
+
+%We set up the dominoes by proving $P(n) \implies P(n+1)$ and knock over the first domino by proving $P(1)$. The result is that all the dominoes will topple each other, leaving no domino standing.
 
 \[ \underbracket{P(1)}_{\text{by 1.}} \implies \underbracket{P(2)}_{\text{by 2.}} \implies \underbracket{P(3)}_{\text{by 2.}} \implies \cdots \]
 
 \begin{tecbox}{Proof by Induction}{induction}
-    To prove a statement $P(n)$ for all $n \in \N$, we need two things:
+    To prove a statement $P(n)$ for all $n \in \N$, we need to prove two statements:
     \begin{enumerate}
-        \item \dfntxt{Base Case}: Prove $P(1)$.
-        \item \dfntxt{Induction Step}: Assume $P(n)$ is true from some $n \in \N$, then prove $P(n) \implies P(n+1)$.
+        \item \dfntxt{Base Case:} Prove $P(1)$.
+        \item \dfntxt{Induction Step:} Assume $P(n)$ is true from some $n \in \N$, then prove $P(n) \implies P(n+1)$.
     \end{enumerate}
 \end{tecbox}
 
@@ -75,6 +77,7 @@ From the natural numbers, we can easily construct the integers. First, we assume
     \tabitem\dfntxt{Distributivity} & $a \cdot (b+c) = a \cdot b + a \cdot c$ \\
     \tabitem\dfntxt{Identity} & $1 \cdot n = n$
 \end{tabular}\end{center}
+\todo{Sort out this wonky formatting}
 
 We can expand this number system by including:
 \begin{enumerate}
@@ -85,7 +88,7 @@ From this, we can construct the set of integers.
 
 \begin{dfnbox}{Integers $\Z$}{}
     The set of \dfntxt{integers} is defined as:
-    \[ Z \coloneq \N \cup \{0\} \cup \{ -n : n \in \N \} \]
+    \[ \Z \coloneq \N \cup \{0\} \cup \{ -n : n \in \N \} \]
 \end{dfnbox}
 
 \begin{dfnbox}{Even, Odd, Parity}{}
@@ -100,7 +103,7 @@ From this, we can construct the set of integers.
 \begin{thmbox}{Parity Exclusivity}{}
     Every integer is either even or odd, never both.
     \tcblower
-    TODO: prove this
+    \todo[inline]{TODO: prove this}
 \end{thmbox}
 
 \begin{exbox}{Parity of Square}{square-parity}
@@ -137,13 +140,15 @@ We say $\frac{m_1}{n_1} = \frac{m_2}{n_2}$ if and only if $m_1n_1 = m_2n_2$ wher
 
 If $n = kp$ and $m = kq$, where $k,p,q \in \Z$, $k \neq 0$, $q \neq 0$, then:
 \[ \frac{n}{m} = \frac{kp}{kq} = \frac{k}{p}, \quad \text{because}\ kpq = kqp \]
-If $n$ and $m$ have no common factor (except $\pm 1$), then we say that $\sfrac{n}{m} \in \Q$ is in the ``lowest terms'' or ``reduced terms''. The set $(Q, +, \cdot)$ forms a field. However, we cannot write $x = \sfrac{n}{m}$ where $x^2 = 2$.
+If $n$ and $m$ have no common factor (except $\pm 1$), then we say that $\sfrac{n}{m} \in \Q$ is in the ``lowest terms'' or ``reduced terms''. The set $(Q, +, \cdot)$ forms a field. However, we cannot write $x = \sfrac{n}{m}$ where $x^2 = 2$. \todo{Fix this whole section up. Very confusing.}
 
 \begin{thmbox}{$\sqrt{2}$ is not a Rational Number}{root-2-irrational}
     $\sqrt{2} \notin \Q$
     \tcblower
     \begin{proof}
-        Suppose for contradiction $\sqrt{2}$ is a rationa number. Then, there exist $n,m \in \Z$ such that $(\sfrac{n}{m})^2 = 2$. If $n = kp$ and $m = kq$, then we can ``cancel'' the common factor $k$ to write $\sfrac{n}{m} = \sfrac{p}{q}$. That is, we can assume that $n$ and $m$ have no (non-trivial) common factors. Now, $\sfrac{n^2}{m^2} = 2$, so by multiplying both sides by $m^2$, we get $n^2 = 2m^2$. Thus, $n^2$ is an even number, so $n$ is also even (Example \ref{ex:square-parity}). Then, we can write $n = 2k$ where $k \in \Z$. Then:
+        Suppose for contradiction $\sqrt{2}$ is a rational number. Then, there exist $n,m \in \Z$ such that $(\sfrac{n}{m})^2 = 2$. If $n = kp$ and $m = kq$, then we can ``cancel'' the common factor $k$ to write $\sfrac{n}{m} = \sfrac{p}{q}$. That is, we can assume that $n$ and $m$ have no (non-trivial) common factors.
+        % The above explanation feels kind of insubstantial.
+        Now, $\sfrac{n^2}{m^2} = 2$, so by multiplying both sides by $m^2$, we get $n^2 = 2m^2$. Thus, $n^2$ is an even number, so $n$ is also even (Example \ref{ex:square-parity}). Then, we can write $n = 2k$ where $k \in \Z$. Then:
             \begin{alignat*}{2}
                 & \implies \quad & (2k)^2 &= 2m^2 \\
                 & \implies \quad & 4k^2 &= 2m^2 \\
@@ -164,6 +169,7 @@ Does there exist $r \in \Q$ such that $r^2 = 3$?
 \begin{thmbox}{Division Algorithm}{}
     Suppose $a,b \in \Z$. Then $a = kb + r$ where $k \in \Z$ and $r \in \Z$ where $0 \leq r < a$.
 \end{thmbox}
+\todo{Need proof here}
 
 \begin{exbox}{}{}
     If $p \in \N$ and $3 \mid p^2$, then $3 \mid p$.
@@ -277,7 +283,7 @@ $\R$ and $\Q$ are ordered fields.
     \[ \abs{a} \coloneq \begin{cases} a, & a \geq 0 \\ -a, & a < 0 \end{cases} \]
 \end{dfnbox}
 
-We can think of $\abs{a-b}$ as the distance between $a$ and $b$. More egnerally, $\abs{a-b} = d(a,b)$ is the metric we are using.
+We can think of $\abs{a-b}$ as the distance between $a$ and $b$. More generally, $\abs{a-b} = d(a,b)$ is the metric we will be using throughout real analysis.
 
 \begin{thmbox}{Properties of Absolute Value}{}
     \begin{itemize}
@@ -350,7 +356,7 @@ Note that from the above example, $(0,1)$ has neither a maximum nor a minimum. H
     \end{enumerate}
 \end{dfnbox}
 
-In other words, the supremum is the least upper bound for $A$. If $A$ has a supremum, then that supremum is unique. (TODO: Prove this)
+In other words, the supremum is the least upper bound for $A$. If $A$ has a supremum, then that supremum is unique. \todo{Prove this}
 
 \begin{thmbox}{Maximum is the Supremum}{}
     Let $F$ be an ordered field, and let $A \subseteq F$. If $A$ has a maximum $M$, then $M = \sup A$.

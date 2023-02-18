@@ -1,8 +1,12 @@
-Our goal is to understand the theory of real functions in one variable. Specifically, we will deal with functions, limits, sequences, convergence, continuity, differentiation, and integration. The same ideas, concepts, and techniques are used to study more complicated mathematics.
+% Our goal is to understand the theory of real functions in one variable. Specifically, we will deal with functions, limits, sequences, convergence, continuity, differentiation, and integration. The same ideas, concepts, and techniques are used to study more complicated mathematics.
 
-We will primarily focus on the idea of \textbf{convergence}. Many computational techniques and algorithms rely on iteration---successive approximations getting closer to an actual solution. In order for those algorithms to work, they need to converge towards an actual solution.
+% We will primarily focus on the idea of \textbf{convergence}. Many computational techniques and algorithms rely on iteration---successive approximations getting closer to an actual solution. In order for those algorithms to work, they need to converge towards an actual solution.
 
-To motivate our quest to learn about convergence, let's look at some classic iterative methods.
+% To motivate our quest to learn about convergence, let's look at some classic iterative methods.
+
+Real analysis is the branch of mathematics concerned with the study of functions, limits, and continuity of real numbers. It encompasses a wide range of concepts and techniques, including differentiation and integration. Real analysis serves as a foundation for many areas of mathematics and science, and its principles are used extensively in various computational techniques and algorithms.
+
+In this course, we will focus on the central idea of convergence, which is fundamental to many of these concepts and techniques. To motivate our exploration of convergence, we will examine classic iterative methods that rely on the concept of convergence to approximate solutions.
 
 \begin{exbox}{Newton's Method}{}
     Given $c > 0$, suppose we want to calculate $\sqrt{c}$. Start with some initial guess $x_1 > 0$.
@@ -31,16 +35,17 @@ The above calculation only makes sense if we know the sequence converges. Consid
 % TODO: add reference for monotone convergence theorem
 % TODO: explain what a bounded monotone sequence even is
 
-Since this sequence does not converge, there is no limit when $n \to \infty$! In chapter 14, we will cover the Monotone Convergence Theorem, which states that any bounded monotone sequence converges.
+Since this sequence does not converge, there is no limit when $n$ approaches infinity.
+% In chapter 14, we will cover the Monotone Convergence Theorem, which states that any bounded monotone sequence converges.
 
-\begin{exbox}{Monotone Convergence Theorem}{}
-    Suppose that $c > 0$ and $x_1 > 0$. Then, for $n \geq 2$, the sequence $x_{n+1} = \frac{1}{2} \left( x-N + \frac{c}{x_n} \right)$ is:
-    \begin{itemize}
-        \item \textbf{bounded below} because $x_n > \sqrt{c}$ when $n \geq 2$, and
-        \item \textbf{decreasing} because $x_n+1 < x_n$ for $n \geq 2$.
-    \end{itemize}
-    Therefore, $x_n$ converges by the Monotone Convergence Theorem, and $\lim_{n\to\infty} x_n = \sqrt{c}$.
-\end{exbox}
+% \begin{exbox}{Monotone Convergence Theorem}{}
+%     Suppose that $c > 0$ and $x_1 > 0$. Then, for $n \geq 2$, the sequence $x_{n+1} = \frac{1}{2} \left( x-N + \frac{c}{x_n} \right)$ is:
+%     \begin{itemize}
+%         \item \textbf{bounded below} because $x_n > \sqrt{c}$ when $n \geq 2$, and
+%         \item \textbf{decreasing} because $x_n+1 < x_n$ for $n \geq 2$.
+%     \end{itemize}
+%     Therefore, $x_n$ converges by the Monotone Convergence Theorem, and $\lim_{n\to\infty} x_n = \sqrt{c}$.
+% \end{exbox}
 
 Let's look at a more complicated iterative method.
 
@@ -53,7 +58,7 @@ Let's look at a more complicated iterative method.
     Provided that $f$ and $y_0$ are ``well-behaving'', then the sequence of functions $y_n(x)$ converges to the solution $y(x)$.
 \end{exbox}
 
-The idea that an infinite sequence of functions can converge suggests some notion of ``distance'' between functions. We can use a number of metrics for distance, some possibilities including:
+This idea that an infinite sequence of functions can converge suggests some notion of ``distance'' between functions. We can use a number of metrics for distance, some possibilities including:
 \begin{itemize}
     \item \( \displaystyle \int_a^b \abs{f(x) - g(x)}\ dx \quad \) (total area between the two functions)
     \item \( \displaystyle \sup \left\{ x : x = \abs{f(x) - g(x)} \right\} \quad \) (max possible ``vertical'' distance between the two curves)

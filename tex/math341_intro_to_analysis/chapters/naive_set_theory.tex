@@ -1,4 +1,4 @@
-Set theory is a whole other can of worms that really isn't that meaningful right now. Instead of constructing an axiomatic basis for sets, we will just take a naive approach and define sets informally. That way, we can avoid the chicanery and get to what really matters.
+Instead of forming a rigorous, axiomatic basis for sets, we will simply take an informal approach to sets guided by our intuition. Ultimately, our introduction to real analysis does not fiddle with the fine details of set theory, so it's safe to take a naive approach to set theory.
 
 \section{Sets}
 
@@ -34,7 +34,7 @@ chapter, we will use $A$ and $B$ to represent arbitrary sets.
 In other words, $A$ is a proper subset of $B$ if everything in $A$ is also in $B$, but $B$ has something that $A$ does not.
 
 \begin{notebox}
-    Among mathematics textbook, the generic subset symbol $\subset$ has no standardized definition. Some use it to represent subset or equal; others use it to represent proper subset. We will simply avoid using $\subset$ to avoid any ambiguity.
+    Among mathematical texts, the generic subset symbol $\subset$ has no standardized definition. Some use it to represent subset or equal; others use it to represent proper subset. We will simply not use $\subset$ to avoid any ambiguity.
 \end{notebox}
 
 \begin{dfnbox}{Empty Set ($\emptyset$)}{}
@@ -43,7 +43,7 @@ In other words, $A$ is a proper subset of $B$ if everything in $A$ is also in $B
     \[ \emptyset \coloneq \{ \} \]
 \end{dfnbox}
 
-As a convention, we will assume that $\emptyset$ is a subset of any set, including itself.
+As convention, we assume that $\emptyset$ is a subset of every set, including itself.
 
 % A useful way of visualizing set relations is with venn diagrams.
 
@@ -135,7 +135,7 @@ More generally, we can apply union and intersection to an arbitrary number of se
 \end{thmbox}
 
 \section{Functions}
-We generally think of functions as a ``map'' or ``rule'' that assigns numbers to other numbers. For example, $f(x) = 2x$ maps $1 \mapsto 2$, $2 \mapsto 4$, etc. In formal mathematics, it's conventional to actually define functions in terms of sets.
+We generally think of functions as a ``map'' or ``rule'' that assigns numbers to other numbers. For example, $f(x) = 2x$ maps $1 \mapsto 2$, $2 \mapsto 4$, etc. More formally, we define functions in terms of sets.
 
 
 \begin{dfnbox}{Cartesian Product}{}
@@ -145,11 +145,11 @@ We generally think of functions as a ``map'' or ``rule'' that assigns numbers to
 \end{dfnbox}
 
 \begin{dfnbox}{Relation}{relation}
-    Let $X$ and $Y$ be sets. A \dfntxt{relation} between $A$ and $B$ is a subset of the Cartesian product $A \times B$.
+    Let $X$ and $Y$ be sets. A \dfntxt{relation} between $X$ and $Y$ is a subset of the Cartesian product $X \times Y$.
 \end{dfnbox}
 
 \begin{dfnbox}{Function}{function}
-    Let $X$ and $Y$ be sets. A \dfntxt{function} from $X$ to $Y$ is a subset of $X \times Y$ such that for every $x \in X$, there exists a unique $y \in Y$ where $(x,y) \in f$.
+    Let $X$ and $Y$ be sets. A \dfntxt{function} from $X$ to $Y$ is a relation from $X$ to $Y$ such that for every $x \in X$, there exists a unique $y \in Y$ where $(x,y) \in f$.
     \tcblower
     More formally, a \dfntxt{function} $f : X \to Y$ is a subset of $X \times Y$ satisfying:
     \begin{enumerate}[noitemsep]
@@ -204,8 +204,8 @@ Note the following logical equivalence:
 
 \section{Injective and Surjective}
 
-\begin{dfnbox}{Injective}{}
-    A function $f : X \to Y$ is \dfntxt{injective} if no two inputs in $X$ have the same output in $Y$.
+\begin{dfnbox}{Injective, One-to-one}{}
+    A function $f : X \to Y$ is \dfntxt{injective} or \dfntxt{one-to-one} if no two inputs in $X$ have the same output in $Y$.
     \tcblower
     \[ \forall (x_1, x_2 \in X) \left[ x_1 \neq x_2 \implies f\left(x_1\right) \neq f\left(x_2\right) \right] \]
 \end{dfnbox}
@@ -234,8 +234,8 @@ Note the following logical equivalence:
     \end{proof}
 \end{exbox}
 
-\begin{dfnbox}{Surjective}{}
-    A function $f : X \to Y$ is \dfntxt{surjective} if everything in $Y$ has a corresponding input in $X$.
+\begin{dfnbox}{Surjective, Onto}{}
+    A function $f : X \to Y$ is \dfntxt{surjective} or \dfntxt{onto} if everything in $Y$ has a corresponding input in $X$.
     \tcblower
     \[ \forall (y \in Y) \left[ \exists (x \in X) (f(x) = y) \right] \]
 \end{dfnbox}

@@ -1,4 +1,6 @@
-Logic is the backbone of all formal mathematics. When building a logically sound model of mathematics, we start with a small collection of axioms. We then work with those axioms to deduce other logically sound statements, reaffirming what we already knew and discovering new ideas along the way.
+% Logic is the backbone of all formal mathematics. When building a logically sound model of mathematics, we start with a small collection of axioms. We then work with those axioms to deduce other logically sound statements, reaffirming what we already knew and discovering new ideas along the way.
+
+Formal logic is the foundation of mathematics. It enables us to construct logically consistent models by starting with a set of axioms and systematically deducing new statements from them. This process not only helps us to prove known results but also to uncover new mathematical concepts and theorems.
 
 \section{Basic Logic}
 \begin{dfnbox}{Statement}{}
@@ -10,14 +12,13 @@ Logic is the backbone of all formal mathematics. When building a logically sound
 We usually denote statements with a letter like $p$. For example, we can write ``$p: x > 2$'', which means $p$ represents the statement ``$x$ is greater than $2$''. Throughout this chapter, we will use $p$ and $q$ to represent arbitrary statements.
 
 \begin{dfnbox}{Conjunction}{conjunction}
-    The \dfntxt{conjunction} of two statements is itself a statement, which is true if and only if the two statements are both true.
+    Logical \dfntxt{conjunction} is an operation that takes two statements and produces a new statement that is true only when both input statements are true.
     \tcblower
     \[ p \land q : p\ \text{is true \textbf{and}}\ q\ \text{is true} \]
 \end{dfnbox}
 
 \begin{dfnbox}{Disjunction}{disjunction}
-    The \dfntxt{disjunction} of two statements is itself a statement, which is true if and only if at least one of the statements is true.
-    \tcblower
+    Logical \dfntxt{disjunction} is an operation that takes two statements and produces a new statement that is true when at least one of the input statements is true.    \tcblower
     \[ p \lor q : p\ \text{is true \textbf{or}}\ q\ \text{is true} \]
 \end{dfnbox}
 
@@ -146,19 +147,22 @@ As we can see, no matter what the truth values of the hypothesis and conclusion 
 
 
 \section{Proofs and Proof Techniques}
-While truth tables are a quick way to gauge whether simple statements hold, they become impractical once we involve more complicated statements. Furthermore, truth tables don't really show intuition behind complicated statements whereas proofs should ultimately fuel our intuition.
+While truth tables are a useful tool for evaluating simple statements, they quickly become impractical when dealing with more complex propositions. Moreover, they do not offer insights into the reasoning behind such statements. In contrast, proofs can provide us with a deeper understanding of logical relationships and help us reason about complex statements.
 
-Very often, we will have to prove some implication like $p \implies q$. Recall how an implication is only false if $p$ is true but $q$ is false. Therefore, we would only have to consider that case where $p$ is true but $q$ is false. We can prove an implication is true by simply showing that such a case could never happen. There are three simple proof techniques for doing so:
-
+In particular, we often need to prove implications of the form $p \implies q$, where the truth of $p$ guarantees the truth of $q$. To do so, we can use a variety of proof techniques:
 \begin{enumerate}
     \item \dfntxt{Direct Proof:} Assume $p$ is true, then reason that $q$ must be true as well.
     \item \dfntxt{Proof by Contradiction:} Assume both $p$ and $\neg q$ are true, then logically derive some contradiction.
     \item \dfntxt{Proof by Contrapositive:} Assume $\neg q$ is true, then reason that $\neg p$ must be true as well.
 \end{enumerate}
 
-In a direct proof, the reasoning to get from $p$ to $q$ provides a lot of insight about the context of $p$ and the surrounding mathematics. Similarly, the direct reasoning in proof by contrapositive provides context surrounding $\neg q$. However, the reasoning done in a proof by contradiction is based on a contradictory hypothesis. Thus, it is often less insightful and is typically avoided when a direct proof is readily available.\footnote{\url{https://math.stackexchange.com/a/1688}}
+In mathematical proofs, there are two main types of reasoning: direct and indirect. A direct proof shows a clear path from the premises to the conclusion, providing valuable insights into the underlying mathematics. In contrast, indirect proofs rely on a contradictory hypothesis to establish the truth of the conclusion. While indirect proofs can be useful when a direct proof is not readily available, they may be less insightful since they do not provide much context surrounding the premises.
 
-That being said, it is sometimes easier to find a proof by contradiction than a direct proof. Whereas direct proof needs to deduce the correct path that leads to the conclusion, a proof by contradiction only needs to deduce any contradictory statement.
+However, it is worth noting that an indirect proof may be easier to find than a direct proof in certain cases. While a direct proof requires identifying the correct path that leads to the conclusion, an indirect proof only needs to deduce any contradictory statement. Despite this advantage, indirect proofs should be used sparingly and only when a direct proof is not feasible.
+
+% In a direct proof, the reasoning to get from $p$ to $q$ provides a lot of insight about the context of $p$ and the surrounding mathematics. Similarly, the direct reasoning in proof by contrapositive provides context surrounding $\neg q$. However, the reasoning done in a proof by contradiction is based on a contradictory hypothesis. Thus, it is often less insightful and is typically avoided when a direct proof is readily available.\footnote{\url{https://math.stackexchange.com/a/1688}}
+
+% That being said, it is sometimes easier to find a proof by contradiction than a direct proof. Whereas direct proof needs to deduce the correct path that leads to the conclusion, a proof by contradiction only needs to deduce any contradictory statement.
 
 %It's hard to decide which proof technique is easiest for any given problem. Direct proofs are often more ``enlightening'', but it can be difficult to find the appropriate logic to reach the conclusion. It may be easier to try proof by contradiction or contrapositive.
 
