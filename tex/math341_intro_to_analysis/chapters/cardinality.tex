@@ -1,0 +1,146 @@
+\begin{dfnbox}{Cardinality}{cardinality}
+    \dfntxt{Cardinality} is a measure of the amount of elements in a set, denoted $\abs{A}$. We say two sets have the same cardinality if there exists a bijection between them.
+\end{dfnbox}
+
+For finite sets, we can think of cardinality as the number of elements in that set. For infinite sets, cardinality can sometimes go against our intuition.     For any sets $A,B,C$:
+\begin{enumerate}[noitemsep]
+    \item $\abs{A} = \abs{A}$
+    \item if $\abs{A} = \abs{B}$, then $\abs{B} = \abs{A}$
+    \item if $\abs{A} = \abs{B}$ and $\abs{B} = \abs{C}$, then $\abs{A} = \abs{C}$.
+\end{enumerate}
+Hence, cardinality is an equivalence relation.
+
+
+\begin{exbox}{Cardinality of $\N$ and $2\N$}{}
+    Let $2\N \coloneq \{ 2n : n \in \N \}$ (i.e. the set of even natural numbers). Then $\abs{\N} = \abs{2\N}$.
+    \tcblower
+    \begin{proof}
+        To show that these two sets have the same cardinality, we need to find some bijection between the sets. Let $f : \N \to 2\N$ be a function defined by $f(n) = 2n$. Note that $f$ is well-defined (i.e. is actually a function) because $f(n) \in 2 \N$ for all $n \in \N$. To prove that $f$ is a bijection, we need to prove it is both injective and surjective.
+        \begin{enumerate}
+            \item Let $n_1, n_2 \in \N$ such that $f(n_1) = f(n_2)$. Then $2n_1 = 2n_2$, so $n_1 = n_2$. Thus, $f$ is injective.
+            \item Let $m \in 2\N$. Then $m = 2k$ for some $k \in \N$, so $m = 2k = f(k)$ for some $k \in \N$. Thus, $f$ is surjective.
+        \end{enumerate}
+        Therefore, $f$ is a bijection, so $\abs{\N} = \abs{2\N}$.
+    \end{proof}
+\end{exbox}
+
+\begin{exbox}{Cardinality of Intervals}{}
+    Let $a,b \in \R$ where $a < b$. Then $\abs{(0,1)} = \abs{(a,b)}$.
+    \tcblower
+    \begin{proof}
+        We need to find a bijection from $(0,1)$ to $(a,b)$. We need to ``scale'' the interval $(0,1)$ to the width of $(a,b)$, then translate it to match $(a,b)$. Define $f : (0,1) \to (a,b)$ by $f(x) = a + (b-a)x$. (We need to check $f$ is well-defined). Let $x \in (0,1)$. Then $0<x<1$, so multiplying by $(b-a)$ which is positive gives $0 < (b-a)x < b-a$. Adding $a$, we get $a < a+(b-a)x < b$. Now we need to show $f$ is a bijection:
+        \begin{enumerate}
+            \item Let $x_1, x_2 \in (0,1)$ such that $f(x_1) = f(x_2)$. Then $a + (b-a)x_1 = a+ (b-a)x_2$. Subtracting $a$ from both sides, we get $(b-a)x_1 = (b-a)x_2$. Since $(b-a) \neq 0$, we can divide both side by $(b-a)$ to get $x_1 = x_2$.
+            \item Let $y \in (a,b)$.
+            \begin{notebox}
+                \textbf{Scratchwork:} We want to find some $x \in (0,1)$ where $y = f(x) = a + (b-a)x$. Using some algebra to solve for $x$, we have $x = \frac{y-a}{b-a}$
+            \end{notebox}
+            Let $x = \frac{y-a}{b-a}$. First, we show $x \in (0,1)$:
+            \begin{alignat*}{2}
+                && a < y < b \\
+                & \implies \quad & 0 < y-a < b-a \\
+                & \implies & 0 < \frac{y-a}{b-a} < 1
+            \end{alignat*}
+            Thus, $x \in (0,1)$. Also:
+            \[ f(x) = a + (b-a) \left( \frac{y-a}{b-a} \right) = a + (y-a) = y \]
+            Thus, $f$ is surjective.
+        \end{enumerate}
+        Therefore, $f$ is a bijective, so $\abs{(0,1)} = \abs{(a,b)}$.
+    \end{proof}
+\end{exbox}
+
+\begin{dfnbox}{Power Set}{}
+    Let $A$ be a set. The \dfntxt{power set} of $A$ is the set of all subsets of $A$.
+    \tcblower
+    \[ \mathcal{P}(A) = \{ B : B \subseteq A \} \]
+\end{dfnbox}
+
+For example, the power set of $\{1,2,3\}$ is $\left\{\emptyset, \{1\}, \{2\}, \{3\}, \{1,2\}, \{1,3\}, \{2,3\}, \{1,2,3\} \right\}$. For any finite set with $n$ elements in it, its power set has $2^n$ elements in it.
+
+\begin{exbox}{Cardinality of $\N$ and $\mathcal{P}(N)$}{powerset-card}
+    $\abs{\N} \neq \abs{\mathcal{P}(\N)}$
+    \tcblower
+    \begin{proof}
+        We will show that any function $f : \N \to \mathcal{P}(\N)$ cannot be surjective, and thus not bijective. Let $f : \N \to \mathcal{P}(\N)$ be any function defined by $f(n) = A_n$. Note $A_n \subseteq \N$, so $A_n \in \mathcal{P}(A)$. Now we will define a set that isn't in $f[\N]$. For each $n \in \N$, if $n \in A_n$, then $n \notin A$, and if $n \notin A_n$, then $n \in A$. More formally, $A \coloneq \{ n \in \N : n \notin A_n \}$. For all $k \in \N$, note that:
+        \begin{itemize}[noitemsep]
+            \item if $k \in A_k$, then $k \notin A$, so $A \neq A_k$, and
+            \item if $k \notin A_k$, then $k \in A_k$, so $A \neq A_k$.
+        \end{itemize}
+        Hence, $A \subseteq \N$, but $f(k) \neq A$ for any $k \in \N$. Thus, $f$ is not surjective.
+    \end{proof}
+\end{exbox}
+
+\begin{dfnbox}{Finite, Countably Infinite, Countable, Uncountable}{}
+    Let $A$ be a set. We say $A$ is:
+    \begin{itemize}[noitemsep]
+        \item \dfntxt{finite} if $A \neq \emptyset$ or $\abs{A} = \abs{\{1, 2, \ldots, n\}}$ for some $n \in \N$.
+        \item \dfntxt{countably infinite} if $\abs{A} = \abs{N}$.
+        \item \dfntxt{countable} if $A$ is finite or countably infinite
+        \item \dfntxt{uncountable} if $A$ is not countable
+    \end{itemize}
+\end{dfnbox}
+
+\begin{thmbox}{$\mathcal{P}(\N)$ is uncountable.}{}
+    \begin{proof}
+        We know from Example \ref{ex:powerset-card} that $\mathcal{P}(\N)$ is not countably infinite. We need to show that $\mathcal{P}(\N)$ is not finite. Since $\{1\} \in \mathcal{P}(\N)$, then it cannot be empty. Suppose for contradiction $\abs{\{1,2,\ldots,n\}} = \abs{\mathcal{P}(\N)}$ for some $n \in \N$, then there exists a bijection $f : \{1,2,\ldots,n\} \to \mathcal{P}(\N)$. Define $g : \N \to \{1,2,\ldots,n\}$ by:
+        \[ g(k) = \begin{cases} k, & 1\leq k \leq n \\ 1, & k > n \end{cases} \]
+        Then $g$ is surjective, so $f \circ g : \N \to \mathcal{P}(\N)$ is surjective. This contradicts the fact that no such function exists (by Example \ref{ex:powerset-card}).
+    \end{proof}
+\end{thmbox}
+
+Generally, there is never a bijection from a set to its power set.
+
+\begin{notebox}
+    \textbf{Intuition:} A set is countable if its elements can be ``listed'' or ``counted''. That is, for finite sets:
+    \[ X = \{x_1, x_2, \ldots, x_n\} = \{x_k\}_{k=1}^{n}\]
+    For infinitely countable sets:
+    \[ X = \{x_1, x_2, \ldots \} = \{x_k\}_{k=1}^\infty \]
+    If $X$ is finite, then there exists a bijection $f : \{1,2,\ldots,n\} \to X$ . Thus, $X = \{f(1), f(2), \ldots, f(n) \}$. If $X$ is countably infinite, then there exists a bijection $f : \N \to X$. Thus, $X = \{f(1), f(2), \ldots\}$.
+\end{notebox}
+
+\begin{thmbox}{Subsets of Countable Sets are Countable}{card-subset}
+    The subset of a countable set is still countable. (i.e. a countable set cannot contain an uncountable subset).
+    \tcblower
+    \begin{proof}
+        Let $X$ be a countable set, and let $A \subseteq X$. We will consider two cases. First, if $A$ is finite, then $A$ is countable, and we are done. Otherwise, $A$ is infinite, and hence $X$ is infinite. Then $X$ is countably infinite, so $X = \{x_1, x_2, \ldots\} = \{x_k\}_{k=1}^\infty$.
+        \begin{notebox}
+            \textbf{Idea:} Our set $A$ might look something like $\{x_3, x_4, x_6, \ldots\}$. We need to align these indices to $1$, $2$, $3$, and so on. We'll let $k_1 = \min\{3,4,6,\ldots\}$, let $k_2 = \min\{4,6,\ldots\}$, and so on.
+        \end{notebox}
+        Let $k_1 \coloneq \min\{k \in \N : x_k \in A\}$. Let $a_1 \coloneq x_{k_1}$. For all $j \in \N$ such that $j > 1$, we define $k_j \coloneq \min\{k \in \N : (x_k \in A) \land (k > k_{j-1}) \}$. Let $a_j \coloneq x_{k_j}$. Then $1 \leq k_1 < k_2 < k_3 < \ldots$, so $k_j$ approaches infinity. Let $g : \N \to A$ be a function defined by $g(j) = a_j$. We need to show that $g$ is both injective and surjective, and thus a bijection.
+        \begin{itemize}
+            \item Suppose that $g(j_1) = g(j_2)$ for some $j_1, j_2 \in \N$. Then $a_{j_1} = a_{j_2}$, so $x_{k_{j_1}} = x_{k_{j_2}}$. Then $k_{j_1} = k_{j_2}$, so $j_1 = j_2$. Thus, $g$ is injective.
+            \item Let $a \in A$ Since $A \subseteq X$, then $a \in X$. Thus, $a = x_l$ for some $l \in \N$. Let $m \coloneq \min\{ j \in \N : k_j \geq l \}$. Since $m \in \{ j \in \N : j_k \geq l \}$, then $k_m \geq l$. Also, $m-1 \notin \{j \in \N : k_j \geq l \}$, so $k_{m-1} < l$. Now, $k_m = \min\{k \in \N : (x_k \in A) \land (k > k_{m-1})\}$. But $x_l \in A$, and $l > k_{m-1}$, so $l \in \{k \in \N : (x_k \in A) \land (k > k_{m-1}) \}$. Thus, $k_m \leq l$, because $k_m$ is the minimum of the set containing $l$. By trichotomy, $k_m = l$. Therefore:
+            \[ g(m) = a_m = x_{k_m} = x_l = a \]
+            So $g$ is surjective.
+        \end{itemize}
+        Since $g$ is a bijection, then $\abs{\N} = \abs{A}$, so $\abs{A}$ is countable.
+    \end{proof}
+\end{thmbox}
+
+\begin{thmbox}{Injectivity and Cardinality}{}
+    Suppose $A = \emptyset$. Then $A$ is countable if and only if there exists an injective function $f : A \to \N$.
+    \tcblower
+    \begin{proof}
+        First, suppose $A$ is a countable set. We consider two cases:
+        \begin{itemize}
+            \item If $A$ is countably infinite, then there exists a bijection $f : A \to \N$.
+            \item If $A$ is finite, then there exists a bijection $f : A \to \{1,2,\ldots,n\}$ for some $n \in \N$. Let $g : \{1,2,\ldots,n\} \to \N$ be a function defined by $g(x) = x$ (i.e. an inclusion mapping). Then $f$ and $g$ are both injective, so $g \circ f : A \to \N $ is injective.
+        \end{itemize}
+
+        Conversely, suppose $f : A \to \N$ is an injection. Then $f[A] \subseteq \N$, so $f[A]$ is countable by Theorem \ref{thm:card-subset}. Define $g : A \to f[A]$ by $g(a) = f(a)$. Then $g$ is injective because $f$ is injective, and $g$ is surjective because $g[A] = f[A]$. Thus, $g$ is a bijection, so $\abs{A} = \abs{f[A]}$. Therefore, $A$ is countable.
+    \end{proof}
+\end{thmbox}
+
+\begin{thmbox}{$\abs{\N \times \N} = \abs{\N}$}{}
+    $\N \times \N$ is countable.
+    \tcblower
+    \begin{proof}
+        Let $f : \N \times \N \to \N$ be a function defined by $f(n,m) = 2^n 3^m$. We now show that $f$ is bijective. To prove surjectivity, suppose $f(n_1, m_1) = f(n_2, n_2)$. Then $2^{n_1} 3^{m_1} = 2^{n_2} 3^{m_2}$.
+        \begin{itemize}
+            \item If $n_1 > n_2$, then $2^{n_1 - n_2} = 3^{m_2 - m_1}$. Since $n_1 > n_2$, we have $n_1 - n_2 > 0$, so $2^{n_1 - n_2} \in \N$. Then also $3^{m_2 - m_1} \in \N$. But $2^{n_1 - n_2}$ is even, and $3^{m_2 - m_1}$ is odd. This contradicts the fact that $2^{n_1 - n_2} = 3^{m_2 - m_1}$.
+            \item If $n_2 > n_1$, then $3^{m_1 - m_2} = 2^{n_2 - n_1}$. By a similar argument, $2^{n_2 - n_1}$ is even and $3^{m_1 - m_2}$ is odd, producing the same contradiction.
+            \item If $n_1 = n_2$, then $2^{n_1} = 2^{n_2}$, so cancelling gives $3^{m_1} = 3^{m_2}$. Thus, $m_1 = m_2$.
+        \end{itemize}
+        Hence, $(n_1, m_1) = (n_2, m_2)$, so $f$ is injective.
+    \end{proof}
+\end{thmbox}

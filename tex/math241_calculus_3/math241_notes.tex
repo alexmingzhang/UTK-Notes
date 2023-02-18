@@ -1,7 +1,7 @@
 \documentclass[12pt]{report}
 
 \usepackage[margin=1in]{geometry}
-\usepackage{amzmath}
+\usepackage[math]{amznotes}
 \usepackage{enumitem}
 \usepackage{xfrac}
 \usepackage{tikz}
@@ -316,7 +316,7 @@ There are four types of conic surfaces:
 For example, the standard equation for a sphere is a quadratic surface.
 
 \begin{dfnbox}{Ellipsoid}{}
-    An \dfntxt{ellipsoid} is a shape in $\R^3$ defined by the equation:
+    An \dfntxt{ellipsoid} is a quadratic surface in $\R^3$ defined by the equation:
     \[ \frac{(x-h)^2}{a^2} + \frac{(y-k)^2}{b^2} + \frac{(z-l)^2}{c^2} = 1 \]
 \end{dfnbox}
 
@@ -335,5 +335,81 @@ We can also have \dfntxt{hyperboloids}:
 
 For type 2 hyperboloids, its cross-section with the $xy$ and $xz$ plane is a hyperbola. Note that there is no cross-section with the $yz$ plane. This is because the equation $- \frac{y^2}{b^2} - \frac{z^2}{c^2} = 1$ has no solution in the real numbers.
 
-\makeamzindex
+The standard form equation for a parabola is:
+\[ z - l = \pm c \left[ (x-l)^2 + (y-k)^2 \right] \]
+
+TODO: more quadratic surfaces here
+
+\chapter{Vector Functions}
+
+\begin{dfnbox}{Vector Function}{}
+    A \dfntxt{vector function} $\vec{r}(t)$ is a function that maps each $t \in \R$ to a corresponding vector in $\R^n$. In other words:
+    \[ \vec{r} : \R \to \R^n \]
+\end{dfnbox}
+
+For example, we can have $\vec{r}(t) = \alg{2-3t, 5-7t, t}$. Then $\vec{r}(t)$ is a vector function that parameterizes a line that passes through $(2,5,0)$ and with vector direction $\vec{v} = \alg{-3, -7, 1}$.
+
+\begin{exbox}{Circle Vector Function}{}
+    Let $\vec{r}_1(t) = \alg{ \cos t, \sin t}$ where $0 \leq t < 2\pi$. This function's graph is a circle of radius $1$. We can think of this as $\cos^2 t + \sin^2 t = 1$.
+
+    Similarly, consider $\vec{r}_2(t) = \alg{ 5 \cos t, 8 \sin t }$. Thus, $\sfrac{x}{5} = \cos t$ and $\sfrac{y}{8} = \sin{t}$. Using the equation $cos^2 t + sin^2 t = 1$, we now have $(\sfrac{x}{5})^2 + (\sfrac{y}{8})^2 = 1$. It's an ellipse.
+\end{exbox}
+
+If a vector function is given by $\vec{r}(t) = \alg{f(t), g(t), h(t)}$, then the domain of $\vec{r}(t)$ is the intersection of the domains of $f,g,h$. This is denoted as $\text{Dom}(\vec{r}(t))$.
+
+\section{Limits and Continuity}
+If $\vec{r}(t) = \alg{f(t), g(t), h(t)}$ is a vector function, we say that:
+\[ \lim_{t \to a} \vec{r}(t) = \alg{ \lim_{t \to a} f(t), \lim_{t \to a} g(t), \lim_{t \to a} h(t) } \]
+
+\begin{notebox}
+    Recall L'Hopital's rule:
+    \[ \lim_{x \to c} \frac{f(x)}{g(x)} = \lim_{x \to c} \frac{f\prime(x)}{g\prime(x)} \]
+    Only applies if the left-hand side is an indeterminate form (i.e. a fraction whose denominator is $0$).
+\end{notebox}
+
+\begin{dfnbox}{Continuity}{}
+    We say a function $f : X \to Y$ is \dfntxt{continuous} at some value $a$ if:
+    \begin{enumerate}[noitemsep]
+        \item $a \in X$,
+        \item $\lim_{x \to a} f(x)$ exists, and
+        \item $f(a) = \lim_{x \to a} f(x)$
+    \end{enumerate}
+\end{dfnbox}
+
+Similarly, a vector function is continuous if it satisfies the above conditions.
+
+Recall that for a function $f : \R \to \R$, the derivative at some value $x$ can be generalized by:
+\[ f\prime(x) = \lim_{h \to 0} \frac{f(x + h) - f(x)}{h} \]
+Similarly, the derivative of a vector function at some value $x$ can be generalized as:
+\[ \vec{r}(t) = \lim_{h \to 0} \frac{\vec{r}(x+h) - \vec{r}(x)}{h} \]
+Thus, if $\vec{r}(t) = \alg{f(t), g(t), h(t)}$, we have:
+\[ \vec{r}\prime(t) = \alg{f\prime(t), g\prime(t), h\prime(t)} \]
+
+\begin{thmbox}{Properties of the differentials of vector functions}{}
+    Let $\vec{u}(t) = \alg{f_1(t), g_1(t), h_1(t)}$ and $\vec{v}(t) = \alg{f_2(t), g_2(t), h_2(t) }$ where $f_1, g_1, h_1, f_2, g_2, h_2$ are differentiable. Let $c$ be a scalar. Then:
+    \begin{itemize}
+        \item $\frac{d}{dt} \vec{u}(t) = \alg{f_1\prime(t), g_1\prime(t), h_1\prime(t)}$
+        \item $\frac{d}{dt} \left( \vec{u}(t) + \vec{v}(t) \right) = \frac{d}{dt} \vec{u}(t) + \frac{d}{dt} \vec{v}(t)$
+        \item $\frac{d}{dt} c \vec{v}(t) = c \frac{d}{dt} \vec{v}(t)$
+        \item $\frac{d}{dt} f(t) \vec{v}(t) = f\prime(t) \vec{v}(t) + f(t) \vec{v}\prime(t)$
+        \item $\frac{d}{dt} \vec{u}(t) \cdot \vec{v}(t) = \vec{u}\prime(t) \cdot \vec{v}(t) + \vec{u}(t) \cdot \vec{v}\prime(t)$
+        \item $\frac{d}{dt} \vec{u}(t) \times \vec{v}(t) = \vec{u}\prime(t) \times \vec{v}(t) + \vec{u}(t) \times \vec{v}\prime(t) \quad$ (note that order here is sensitive)
+        \item $\frac{d}{dt} \vec{u}(f(t)) = \vec{u}\prime(f(t)) f\prime(t)$
+    \end{itemize}
+\end{thmbox}
+
+If we consider the curve $C$ formed by all the terminal points of the graph of a continuous vector function $\vec{r}(t) = \alg{x(t), y(t), z(t)}$, we call $\vec{r}(t)$ a \dfntxt{parameterization} of the curve $C$, and we call $\vec{r}(t) = \alg{x(t), y(t), z(t)}$ the \dfntxt{displacement vector}.
+
+\begin{exbox}{}{}
+    Find the parametric equations of the tangent line to the helix with parameterization $\vec{r}(t) \coloneq \alg{2 \cos t, \sin t, t}$ at the point $(0,1,\sfrac{\pi}{2})$
+    \tcblower
+    \begin{align*}
+        \vec{r}\prime \left( \frac{\pi}{2} \right)
+        &= \alg{-2 \sin \frac{\pi}{2}, \cos \frac{\pi}{2}, 1}
+    \end{align*}
+    Then the parameterized line is:
+    \[ \alg{0,1,\frac{\pi}{2}} + t\alg{-2,0,1} \]
+\end{exbox}
+
+\amzindex
 \end{document}

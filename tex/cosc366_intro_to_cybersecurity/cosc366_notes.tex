@@ -1,8 +1,9 @@
 \documentclass[12pt]{report}
 
 \usepackage[margin=1in]{geometry}
-\usepackage[code]{amznotes}
+\usepackage[code,fastcompile]{amznotes}
 \usepackage{enumitem}
+\usepackage{tabularx}
 
 \title{\textbf{Introduction to Cybersecurity}\\
 \large UT Knoxville, Spring 2023, COSC 366}
@@ -24,19 +25,19 @@
 The goal of \nameref{dfn:computer-security} is to help users complete their desired task safely, without short or long term risks.  To do this, we support computer-based services by providing essential security properties.
 
 \begin{dfnbox}{Confidentiality, Integrity, Availablity (CIA)}{cia}
-    The \dfntxt{CIA triad} is a pneumonic device that includes three essential security properties:
     \begin{itemize}[noitemsep]
-        \item \dfntxt{Confidentiality}: only authorized parties can access data; applies at rest and in motion (data being transmitted)
-        \item \dfntxt{Integrity}: data, software or hardware remaining unchanged, except by authorized parties
-        \item \dfntxt{Availability}: information, services and computing resources are available for authorized use
+        \item \dfntxt{Confidentiality}: only authorized parties can access data, whether at rest or in motion (i.e. being transmitted)
+        \item \dfntxt{Integrity}: data, software, or hardware remaining unchanged, except by authorized parties
+        \item \dfntxt{Availability}: information, services, and computing resources are available for authorized use
     \end{itemize}
+    Together, these form the \dfntxt{CIA triad}.
 \end{dfnbox}
 
 \begin{dfnbox}{Principal, Privilege}{}
     A \dfntxt{principal} is an entity with a given identity, such as a user, service, or system process. A \dfntxt{privilege} defines what a principal can do, such as read/write/execute permissions.
 \end{dfnbox}
 
-In addition to the \nameref{dfn:cia}, we also have three security properties relating to principals.
+In addition to the CIA triad, we also have three security properties relating to principals.
 \begin{dfnbox}{Authentication, Authorization, Auditability (Golden Principles)}{}
     The \dfntxt{Golden Principles} are three security properties regarding principals:
 
@@ -72,15 +73,13 @@ Note that asset can refer to any tangible or intangible resources.
 \end{dfnbox}
 
 \begin{dfnbox}{Adversary}{}
-    An \dfntxt{adversary} is an entity who wants to violate a security policy to harm an asset.
-    \tcblower
-    Can also be called ``threat agents'' or ``threat actors''.
+    An \dfntxt{adversary} is an entity who wants to violate a security policy to harm an asset. Can also be called ``threat agents'' or ``threat actors''.
 \end{dfnbox}
 
 A formal security policy should precisely define each possible system state as either authorized (secure) or unauthorized (non-secure). Non-secure states raise the potential for attacks to happen.
 
 \begin{dfnbox}{Threat}{}
-    A \dfntxt{threat} is any combination of circumstances and entities allow harm to assets or cause security violations.
+    A \dfntxt{threat} is any combination of circumstances and/or entities that allow harm to assets or cause security violations.
 \end{dfnbox}
 
 \begin{dfnbox}{Attack, Attack Vector}{attack}
@@ -92,11 +91,11 @@ A formal security policy should precisely define each possible system state as e
     \dfntxt{Mitigation} describes countermeasures to reduce the chance of a threat being actualized or lessen the cost of a successful attack.
 \end{dfnbox}
 
-\nameref{dfn:mitigation} includes operational and management processes, software controls, and other security mechanisms.
+\nameref{dfn:mitigation} can include operational and management processes, software controls, and other security mechanisms.
 
 \begin{exbox}{House Security Policy}{house}
     Consider this simple security policy for a house: no one is allowed in the house unless accompanied by a family member, and only family members are authorized to take things out of the house.
-    \begin{itemize}
+    \begin{itemize}[noitemsep]
         \item The presence of someone who wants to steal an asset from our house is a \textbf{threat}.
         \item An unaccompanied stranger in the house is a \textbf{security violation}.
         \item An unlocked door is a \textbf{vulnerability}.
@@ -117,7 +116,7 @@ There are two ways we assess risk: \dfntxt{quantitative} and \dfntxt{qualitative
     \item \dfntxt{Qualitative} risk assessment compares risks relative to each other
 \end{itemize}
 
-Quantitative risk assessment is more suited for incidents that occur regularly, with historical data and stable statistics to generate probability estimates. However, computer security incidents occur so infrequently that any estimate of probability likely isn't precise. In contrast, qualitative risk assessment is usually more practical. For each asset or asset class, their relevant threats are categorized based on probability of happening and impact if it happened.
+Quantitative risk assessment is more suited for incidents that occur regularly, with historical data and stable statistics to generate probability estimates. However, computer security incidents occur so infrequently that any estimate of probability likely isn't precise. Thus, qualitative risk assessment is usually more practical. For each asset or asset class, their relevant threats are categorized based on probability of happening and impact if it happened.
 
 Precise estimates of risk are rarely possible in practice, so qualitative risk assessment is usually yields more informed decisions. A popular equation for modeling risk is:
 \[ R = T \cdot V \cdot C \]
@@ -154,7 +153,7 @@ In answering these questions, it becomes apparant we cannot employ strictly quan
     The final DREAD score takes the average of all five attributes.
 \end{dfnbox}
 
-A common criticism of \nameref{dfn:dread} is that rating discoverability might reward security through obscurity. Often, people will omit discoverability, or simply assign it the maximum value all the time.
+A common criticism of \nameref{dfn:dread} is that rating discoverability might reward security through obscurity. People will sometimes omit discoverability, or simply assign it the maximum value all the time.
 
 
 \[ ALE = \sum_{i=1}^{n} F_i \cdot C_i \]
@@ -178,20 +177,17 @@ where:
     \end{itemize}
 \end{dfnbox}
 
-In designing computer security mechanisms, it is important to identify traits about potential adversaries. Some attributes may include:
-
-
-Different adversaries can have wildly different objectives, methods, and capabilities.
+In designing computer security mechanisms, it is important to think like an adversary. Try to enumerate what methods might they use, and design around them. Different adversaries can have wildly different objectives, methods, and capabilities.
 
 \begin{dfnbox}{Security Analysis}{}
     \dfntxt{Security analysis} aims to identify vulnerabilities and overlooked threats, as well as ways to improve defense against such threats
 \end{dfnbox}
 
-Types of analysis:
-\begin{itemize}
-    \item Formal security evaluation: standardized testing to ensure essential features and security
-    \item Internal vulnerability testing: internal team trying to find vulnerabilities
-    \item External penetration testing: third-party audits to find vulnerabilities; often the most effective
+Types of analysis include:
+\begin{itemize}[noitemsep]
+    \item \dfntxt{Formal security evaluation}: standardized testing to ensure essential features and security
+    \item \dfntxt{Internal vulnerability testing}: internal team trying to find vulnerabilities
+    \item \dfntxt{External penetration testing}: third-party audits to find vulnerabilities; often the most effective
 \end{itemize}
 
 Security analysis is a heavily involved process that may employ a variety of methodologies. For example, manual source code review, review of design documents, and various penetration testing techniques. It's important to be aware of potential vulnerabilities as we are writing code.
@@ -202,20 +198,20 @@ A threat model will identify possible adversaries, threats, and attack vectors. 
 \paragraph{Diagram-Driven Threat Model}
 Threat model diagrams include assets, infrastructure, and defenses/mitigations, making apparent the possible attack vectors. Popular examples include:
 \begin{itemize}[noitemsep]
-    \item \dfntxt{Data Flow Diagrams} -- models all possible data routes
-    \item \dfntxt{User Workflow Diagram} -- models how users interact with the program, both frontend and backend
-    \item \dfntxt{Attack Trees} -- models all possible attack vectors like a flow chart; leaf nodes are initial actions
+    \item \dfntxt{Data Flow Diagrams:} models all possible data routes
+    \item \dfntxt{User Workflow Diagram:} models how users interact with the program, both frontend and backend
+    \item \dfntxt{Attack Trees:} models all possible attack vectors like a flow chart; leaf nodes are initial actions
 \end{itemize}
 
 \begin{dfnbox}{STRIDE}{stride}
     \dfntxt{STRIDE} is a model for identifying computer security threats.
     \begin{itemize}[noitemsep]
-        \item \dfntxt{Spoofing} -- attacker impersonates another user, or malicious server posing as a legitimate server
-        \item \dfntxt{Tampering} -- altering data without proper authorization; can occur when data is stored, processed
-        \item \dfntxt{Repudiation} -- lying about past actions (e.g. denying/claiming that something happened)
-        \item \dfntxt{Information Disclosure} -- exposure of confidential information without authorization
-        \item \dfntxt{Denial of Service} -- render service unusable or unreliable for users
-        \item \dfntxt{Elevation of Privilege} -- an unprivileged user gains privileges
+        \item \dfntxt{Spoofing:} attacker impersonates another user, or malicious server posing as a legitimate server
+        \item \dfntxt{Tampering:} altering data without proper authorization; can occur when data is stored, processed
+        \item \dfntxt{Repudiation:} lying about past actions (e.g. denying/claiming that something happened)
+        \item \dfntxt{Information Disclosure:} exposure of confidential information without authorization
+        \item \dfntxt{Denial of Service:} render service unusable or unreliable for users
+        \item \dfntxt{Elevation of Privilege:} an unprivileged user gains privileges
     \end{itemize}
 \end{dfnbox}
 
@@ -243,8 +239,9 @@ CIA Triad, Golden principles, trusted vs. trustworthy, confidentialty vs. privac
 TODO: add more review stuff from slides here; flesh out notes to reflect review
 
 \chapter{Cryptography}
+
 \paragraph{Cryptographic Rules to Remember}
-\begin{enumerate}
+\begin{enumerate}[noitemsep]
     \item Do not design your own cryptographic protocols or algorithms.
     \item \dfntxt{Kerckhoff's Principle} -- security should only come from the secrecy of the crytographic key, NOT the algorithm or code.
     \item Encryption only provides confidentiality, not integrity.
@@ -256,20 +253,20 @@ TODO: add more review stuff from slides here; flesh out notes to reflect review
     A \dfntxt{cipher} is any encryption or decryption algorithm. A \dfntxt{plaintext} message is vulnerable, usually prior to cipher. A \dfntxt{ciphertext} message is secure, usually after cipher is applied.
 \end{dfnbox}
 
-\begin{dfnbox}{Cryptographic Key}{}
-    A \dfntxt{cryptographic key} is a value which is used to decrypt cipher text; should be relatively large and remain private.
+\begin{dfnbox}{Cryptographic Key, Key Space}{}
+    A \dfntxt{cryptographic key} is a value which is used to decrypt cipher text. It should be relatively large and remain private. The \dfntxt{key space} is the set of all possible cryptographic keys in a cipher. It should be large enough such that it would be impractical to try every possible key.
 \end{dfnbox}
 
-The \dfntxt{key space} is the set of all possible cryptographic keys. It should be large enough such that it would be impractical to try every possible key. For example, AES-256 uses 256 bit keys. Even a thermodynamically perfect computer with the power of the sun could not even count through $2^{256}$ keys, much less guess and check them.
+ For example, AES-256 uses 256 bit keys. The key space of AES-256 is $2^{256}$. Even a thermodynamically perfect computer with the power of the sun could not even count through $2^{256}$ keys, much less guess and check them.
 
 Some possible threats to encryption may be:
-\begin{itemize}
+\begin{itemize}[noitemsep]
     \item Brute force attack -- guess and check all keys
     \item Algorithmic break -- some flaw in the algorithm
 \end{itemize}
 
 Some possible adversaries include:
-\begin{itemize}
+\begin{itemize}[noitemsep]
     \item Passive -- just listens to communications
     \item Active -- can modify data
 \end{itemize}
@@ -293,7 +290,7 @@ Some possible adversaries include:
 \end{dfnbox}
 
 \begin{dfnbox}{One-Time Pad (OTP)}{}
-    The \dfntxt{one-time pad} is a symmetric stream cipher that XOR's a message with a key. The resulting ciphertext is information theoretic so long as the following are met:
+    The \dfntxt{one-time pad} is a symmetric stream cipher that simply XOR's a message with a key. The resulting ciphertext is information theoretic so long as the following are met:
     \begin{itemize}[noitemsep]
         \item Key must be as long as the plaintext
         \item Key must be random
@@ -303,7 +300,6 @@ Some possible adversaries include:
 \end{dfnbox}
 
 Many modern cryptographic algorithms work by taking a small cryptographic key and expanding it into a sufficiently large one-time pad key.
-
 
 \begin{dfnbox}{Advanced Encryption Standard (AES)}{}
     \dfntxt{AES} is the most common symmetric block cipher, providing computational security.
@@ -322,7 +318,7 @@ Many modern cryptographic algorithms work by taking a small cryptographic key an
     \dfntxt{Asymmetric encryption} utilizes two cryptographic keys: a \dfntxt{public key} which encrypts plaintext, and a \dfntxt{private key} which decrypts ciphertext.
 \end{dfnbox}
 
-Unfortunately, public key encryption is orders of magnitude slower than symmetric key encryption. We can circumvent this through hybrid encryption.
+Unfortunately, public key encryption is orders of magnitude slower than symmetric key encryption. We can incorporate both using hybrid encryption, providing the best of both worlds.
 
 \begin{dfnbox}{Hybrid Encryption, Key Wrap}{}
     \dfntxt{Hybrid encryption} incorporates both symmetric key and public key encryption. We encrypt our plaintext using a symmetric key, and we send both the encrypted ciphertext and the symmetric key encrypted using the other party's public key. This encrypted key is called a \dfntxt{key wrap}.
@@ -362,7 +358,7 @@ There are many ways to pad a message. Generally, we want to use the optimal asym
 \section{Digital Signatures}
 
 \begin{dfnbox}{Digital Signature}{}
-    We can \dfntxt{digitally sign} information to verify that we made it. In this context, we use the \dfntxt{private key} to sign data, and others use the \dfntxt{public key} to verify a signature.
+    \dfntxt{Digital signatures} verify that data came from the right person. The \dfntxt{private key} is used to sign data, and the \dfntxt{public key} to verify a signature.
 \end{dfnbox}
 
 Digital signatures provide three security properties:
@@ -372,7 +368,7 @@ Digital signatures provide three security properties:
     \item Non-repudiation -- the sender cannot later claim to have not sent the data
 \end{enumerate}
 
-We avoid using the same key for signing and for cryptography because:
+It is \textbf{crucial} to avoid using the same key for signing and for cryptography because:
 \begin{enumerate}[noitemsep]
     \item If our private key gets stolen, someone can then decrypt our data \textbf{and} forge digital signatures.
     \item There can be mathematical interactions between encryption and signing that can reveal information about our key.
@@ -488,27 +484,32 @@ calculatedMAC.SequenceEqual(receivedMAC);
 
 Passwords usually have an associated account with a username, public or secret. We are more concerned with the bits of the password, not necessarily the characters. As such, we need to have a deterministic way of converting characters to bits, whether it be ASCII or UTF-8.
 
-Advantages of passwords:
-\begin{itemize}[noitemsep]
-    \item Simple and easy to learn
-    \item Free
-    \item No physical load to carry
-    \item Usually easy to recover lost access
-    \item Easily delegated (e.g. sharing Netflix passwords)
-\end{itemize}
+\begin{tabularx}{\linewidth}{| X | X |}
+    \hline
+    Advantages of passwords:
+    \begin{itemize}[noitemsep,leftmargin=*]
+        \item Simple and easy to learn
+        \item Free
+        \item No physical load to carry
+        \item Usually easy to recover lost access
+        \item Easily delegated (e.g. sharing Netflix passwords)
+    \end{itemize}
+    &
+    Disadvantages of passwords:
+    \begin{itemize}[noitemsep,leftmargin=*]
+        \item Hard to create random passwords (theoretical key space is large, but practical key space is small)
+        \item Hard to remember good passwords
+        \item Easy to reuse passwords
+    \end{itemize}
+    \\ \hline
+\end{tabularx}
 
-Disadvantages:
-\begin{itemize}
-    \item Hard to create random passwords (theoretical key space is large, but practical key space is small)
-    \item Hard to remember good passwords
-    \item Easy to reuse passwords
-\end{itemize}
 
-\begin{dfnbox}{Password Composition Policies (PCP)}{}
+\begin{dfnbox}{Password Composition Policies}{}
     A \dfntxt{password composition policy} specifies requirements about creating a password, such as minimum and maximum password length, or character requirements and restrictions.
 \end{dfnbox}
 
-Although intended to improve password strength, PCPs often backfire. It makes a lot of users recycle the same passwords. Similarly, forced password changes often backfire as most users, tech-savvy or not, will increment their password like ``hello1'', ``hello2''. This predictable pattern allows attackers to easily guess passwords whenever the next forced change happens.
+Although intended to improve password strength, these composition policies often backfire. It makes a lot of users recycle the same passwords. Similarly, forced password changes often backfire as most users, tech-savvy or not, will increment their password like ``hello1'', ``hello2''. This predictable pattern allows attackers to easily guess passwords whenever the next forced change happens.
 
 \begin{dfnbox}{Passkey}{}
     Passwords can be changed into cryptographic keys called \dfntxt{passkeys}.
@@ -518,29 +519,28 @@ PBKDF2 is a common function. Modern algorithms like Argon2id can also be used.
 
 \section{Password Authentication}
 
-\begin{exbox}{Most Basic Password Authentication}{}
+\begin{exbox}{Simplest (and worst) password authentication}{}
     Registration:
     \begin{itemize}[noitemsep]
         \item User sends a username and password to the website
-        \item Website stores the info
+        \item Website stores the username and password in plaintext
     \end{itemize}
     Authentication:
     \begin{itemize}[noitemsep]
         \item User sends a username and password to the website
         \item Website compares the sent values with the stored values
     \end{itemize}
-    \tcblower
-    Some flaws:
-    \begin{itemize}
-        \item Data can be intercepted when sending to the server; need to encrypt communication between user and server
-        \item Phishing: attacker tricks user into giving the attacker their info; hard to mitigate, could use password managers or hardware security tokens
-        \item Online password guessing; have to rate limit authentication attempts, can also require strong passwords
-        \item Password database theft
-    \end{itemize}
 \end{exbox}
 
+Some of the major flaws include:
+\begin{itemize}[noitemsep]
+    \item Data can be intercepted when sending to the server; need to encrypt communication between user and server
+    \item \dfntxt{Phishing:} attacker tricks user into giving the attacker their info; hard to mitigate, could use password managers or hardware security tokens
+    \item Online password guessing; have to rate limit authentication attempts, can also require strong passwords
+    \item Password database theft
+\end{itemize}
 
-\begin{exbox}{Most Basic Password Authentication}{}
+\begin{exbox}{Simple but better password authentication}{}
     Registration:
     \begin{itemize}[noitemsep]
         \item User sends a username and password to the website
@@ -551,39 +551,41 @@ PBKDF2 is a common function. Modern algorithms like Argon2id can also be used.
         \item User sends a username and password to the website
         \item Website hashes the received password and compares the calculated hash
     \end{itemize}
-    \tcblower
-    Some flaws:
-    \begin{itemize}
-        \item Offline guessing: an attacker steals the database, then can guess passwords until it matches one of the hashed passwords with no rate limit.
-        \item Rainbow Table Attack: create a table of password hashes for common passwords
-    \end{itemize}
 \end{exbox}
+
+This is much better, but there are still some pretty serious flaws:
+\begin{itemize}[noitemsep]
+    \item \dfntxt{Offline guessing:} if an attacker steals the database, then they can guess passwords until it matches one of the hashed passwords with no rate limit.
+    \item \dfntxt{Rainbow Table Attack:} someone can simply create a table of password hashes for common passwords
+\end{itemize}
 
 \begin{exbox}{Salted Hashing}{}
     Registration:
     \begin{itemize}[noitemsep]
         \item User sends a username and password to website
-        \item Website generates a random \dfntxt{salt}
-        \item Website hashes the received password along with the salt (Similar to padding)
-        \item Website stores username, salt, and hash
+        \item Website generates some random bytes called a \dfntxt{salt}
+        \item Website hashes the received password concatenated with the salt (similar to padding)
+        \item Website stores username, and salt in plaintext as well as the hashed password
     \end{itemize}
     Authentication:
     \begin{itemize}[noitemsep]
-        \item User sends a username and apssword to website
+        \item User sends a username and password to website
         \item Website retrieves the salt for the username
         \item Website hashes the received password along with salt
         \item Website compares the calculated hash with the stored hash
     \end{itemize}
 \end{exbox}
 
-Good practices:
+This defeats generalized rainbow table attacks. In extreme situations, a motivated adversary can steal the database and use the salt to create a specialized rainbow table targeted against one person.
+
+We can add more features for stronger security, such as:
 \begin{itemize}[noitemsep]
-    \item Iterated Hashing: Repeatedly hash the salt and password a large number of times; slows down brute force guessing; has minimal impact on legitimate authentications
+    \item \dfntxt{Iterated Hashing:} Repeatedly hash the salt and password a large number of times; slows down brute force guessing; has minimal impact on legitimate authentications
     \item Specialized Functions: Use memory-intense and cache-intense functions; makes it hard to accelerate, reducing password guessing rate significantly (e.g. Argon2id, bcrypt/scrypt)
     \item Keyed Hash Function: Use a hash function that requires a cryptographic key (e.g. HMAC); if key isn't stolen, it will be impossible to conduct offline guessing
 \end{itemize}
 
-\begin{codebox}{Password Authentication in C\#}{}{}
+\begin{codebox}{Passwords with Salted Hashing in C\#}{}{}
     \begin{amzcode}{csharp}
 using System.Security.Cryptography;
 using System.Text;
@@ -608,23 +610,36 @@ BCrypt.Net.Bcrypt.Verify(password, temp);
 
 \section{Account Recovery}
 
-Password Recovery -- Retrieving a lost password; means password is storing passwords in plaintext or encrypting them
+When a user forgets their password or their account gets compromised, it's important that the user can still recover that account. It's also important to not let the account recovery method be easier for an adversary than password authentication. Security is only as strong as its weakest link.
 
-Account Recovery -- regaining access to the account, requires a password reset
+\begin{dfnbox}{Password Recovery, Account Recovery}{}
+    \dfntxt{Password recovery} retrieves a user's lost password. \dfntxt{Account recovery} lets a user regain access to their account, requiring a password reset.
+\end{dfnbox}
 
-\begin{itemize}
+Password recovery is a sign that the server is storing passwords in plaintext, or they are simply encrypting them without hashing. Either way, pretty shit.
+
+That's why account recovery should be the only way to restore an account. Some methods include:
+\begin{itemize}[noitemsep]
     \item Email-Based Recovery: Send a link to the email account; makes accounts only as strong as the email
     \item SMS-based recovery: similar to email-based recovery; prone to sim swapping
     \item Security Questions: in practice, it's easy for attacker to learn answers to these questions
 \end{itemize}
 
-\begin{itemize}
-    \item Single Sign-On (SSO): Single identity provider handles authentication for multiple websites; less accounts and passwords to remember, but creates a single point of failure.
-    \item CAPTCHA: Differentiate between humans and robots using some test
-    \item reCAPTCHA: measures all of your interactions with the website as well as other data to determine if you're a human
-\end{itemize}
+\begin{dfnbox}{Single Sign-On (SSO)}{}
+    \dfntxt{Single Sign-On} lets a single identity provider handle authentication for multiple websites.
+\end{dfnbox}
+
+While SSO creates a single point of failure, most users already reuse the same password for multiple sites. If one of those sites has a breach, then the rest of their accounts are screwed. Why not just have one identity provider that handles authentication for multiple websites. It's easier for the user (don't have to create as many accounts), and in practice, most SSO providers have top-class security.
 
 In the Single Sign-On, there are three parties: the user, relying party, and identifying party. When trying to authenticate with the relying party, we first request an authentication token from the identifying party. We then send that token to the relying party, who verifies the token is correct by asking the identifying party.
+
+
+\begin{dfnbox}{CAPTCHA}{}
+    \dfntxt{CAPTCHA} refers to any online test used to differentiate human and computer entities. It's a loose acronym of ``completely automated public Turing test to tell computers and humans apart''.
+\end{dfnbox}
+
+A popular and modern approach to CAPTCHA is \dfntxt{reCAPTCHA}. It measures all of your interactions with the website as well as other metrics to determine if you're a human. If it's not sure, it makes you do the traffic light clicking thing.
+
 
 \section{Authentication Factors}
 Authentication factors are used to verify you are who you say you are. They rely on something one or more of the following:
@@ -705,20 +720,20 @@ When using biometrics for an app, it's usually not being sent to the server. Ins
 \section{Reference Monitor}
 
 \begin{dfnbox}{Subject, Action, Object}{}
-    A \dfntxt{subject} is any entity (such as a user or process) trying to take some \dfntxt{action} such as read, write, execute, start, shutdown, etc. The \dfntxt{object} receives some action, such as some memory, files, services, or devices.
+    A \dfntxt{subject} is any entity (such as a user or process) trying to take some \dfntxt{action} such as read, write, execute, start, shutdown, etc. The \dfntxt{object} receives the action, such as some memory, files, services, or devices.
 \end{dfnbox}
 
 The subject is usually authenticated, but not necessarily. We can sometimes have an unknown subject.
 
 \begin{dfnbox}{Policy, Reference Monitor}{}
-    \dfntxt{Policies} define what is allowed, usually parameterized by subject, action, and object. \dfntxt{Reference monitors} enforce a policy. It only allows a subject to execute an action on an object if that action conforms with the policy.
+    \dfntxt{Policies} define what is allowed, usually parameterized by subject, action, and object. \dfntxt{Reference monitors} enforce a policy by checking actions, allowing subjects to execute an action if it conforms with the policy.
 \end{dfnbox}
 
-The reference monitors first look at an action, then refers to its policy to decide whether to allow it. The reference monitor has to require:
+Whenever a subject tries to make an action, the reference monitor gets to decide whether it should be allowed. The reference monitor has to require:
 
 \begin{itemize}
-    \item \dfntxt{Complete Mediation} -- the only way to access objects is through the reference monitor; ensures access logs are complete
-    \item \dfntxt{Tamper-proof} -- also includes tamper-proof logs
+    \item \dfntxt{Complete Mediation} -- all actions must go through the reference monitor (also ensures complete logs)
+    \item \dfntxt{Tamper-proof} -- users can't just manipulate the reference monitor; also includes tamper-proof logs
     \item \dfntxt{Verifiable} -- reference monitor must be easily analyzable (means its source code has to be small!)
     \item \dfntxt{Reliable Authentication and/or Authorization} -- authentication for subject identfication; authorization for bearer tokens
 \end{itemize}
@@ -727,8 +742,8 @@ The reference monitors first look at an action, then refers to its policy to dec
     A \dfntxt{permission} is a pair of (action, object). The list of all permissions associated with a subject can be called a \dfntxt{capability list}.
 \end{dfnbox}
 
-\begin{dfnbox}{Capability-Based Access Control}{}
-    \dfntxt{Capability-Based Access Control} reference monitor issues bearer tokens for given permissions. Anyone with the bearer token can take the action on the given object.
+\begin{dfnbox}{Capability-Based Access Control, Bearer Token}{}
+    \dfntxt{Capability-Based Access Control} reference monitor issues \dfntxt{bearer tokens} which let anyone with the token take specific action(s).
 \end{dfnbox}
 
 An example of a bearer token would be the link-sharing system on Google Docs. The document creator can easily delegate links which allow those with the link to view or edit our document. Another example would be API tokens.
@@ -745,17 +760,94 @@ Some other access control paradigms include:
 \end{itemize}
 
 \section{Memory Protection}
-Early machines only ran a single process at a time. We care about memory protection because of concurrent execution: multiple users and multiple processes at the same time. We need to isolate resources from each process and user.
+We care about memory protection because of concurrent execution: multiple users and multiple processes at the same time. We need to isolate resources from each process and user.
 
 \begin{dfnbox}{Virtual Memory}{}
 The OS kernel mediates access to system memory, acting as a reference monitor. The kernel allocates memory using virtual addressing. The kernel also limits who can access what memory, preventing users/processes from accessing other memory. It also protects OS memory and provides mechanisms for shared memory access.
 \end{dfnbox}
 
 \begin{dfnbox}{Kenel Memory Segmentation}{}
-    The kernel divides memory into segments, contiguous regions of memory. Each segment is assigned one or more modes (read, write, execute, mode, fault).
+    The kernel divides memory into segments---contiguous regions of memory. Each segment is assigned one or more modes (read, write, execute, mode, fault).
 \end{dfnbox}
 
-The latter two modes are used by the OS for specific uses. The kernel sets default modes when allocating memory. Memory segments with code is marked as executable. Memory segments with the heap and stack are marked as readable and writeable, not executable (prevents arbitrary code execution). In accordance with the principle of least privilege, the process and further restrict their own permissions.
+The latter two modes are used by the OS for specific uses. The kernel sets default modes when allocating memory. Memory segments with code is marked as executable. Memory segments with the heap and stack are marked as readable and writable, not executable (prevents arbitrary code execution). In accordance with the principle of least privilege, the process can further restrict its own permissions.
+
+\section{Filesystem Access Control}
+
+\begin{dfnbox}{Filesystem}{}
+    A \dfntxt{filesystem} is a hierarchical structuring of directories and folders. It maintains per-file meta-data, including permissions.
+\end{dfnbox}
+
+In the context of filesystems, subjects are users, groups or processes; actions are read/write/execute, modify metadata, etc.; objects are files, directories, etc.
+
+A filesystem categorizes subjects as such:
+\begin{itemize}[noitemsep]
+    \item Users are identified by a user id (UID)
+    \item Groups are identified by a group id (GID) (for role-based access control)
+    \item Processes are identified by a process id (PID)
+\end{itemize}
+
+\begin{dfnbox}{Special Actions}{}
+
+\end{dfnbox}
+
+Actions involving the filesystem include basic ones like read, write, execute, and list folder contents. Some special actions include:
+\begin{itemize}[noitemsep]
+    \item Execute a binary as the owning user (e.g. sudo)
+    \item Execute as the primary group of the owning user
+    \item Set ``sticky bit'' (disables changing name or file deletion)
+\end{itemize}
+
+Advanced actions include:
+\begin{itemize}[noitemsep]
+    \item Take ownership
+    \item Change permissions
+    \item Write attributes
+    \item Inspect or modify memory (debugging permission)
+\end{itemize}
+
+\begin{exbox}{Linux Access Control}{}
+    Linux uses the \dfntxt{user-group-others} (UGO) permission model which uses a highly condensed ACL. This:
+    \begin{itemize}[noitemsep]
+        \item limits subjects to either the owning user, primary group of the owning user, and everyone else, and
+        \item limits actions to read, write, execute, and special permissions (directory travel is controlled by read, modify and write are considered the same)
+    \end{itemize}
+    When determining permissions for actions, Linux checks the following in order, letting the action happen if any one of these is true:
+    \begin{enumerate}[noitemsep]
+        \item Is the subject the owning user?
+        \item Is the subject a member of the owning group?
+        \item Do the file's default permissions allow this action?
+    \end{enumerate}
+    Note that permissions are not inherited (i.e. every object has its own permission list). Also, it's possible to let a subject access an object inside a directory that the subject cannot access (i.e. they can't discover the path, but can access the object if they know the path).
+
+    In contrast to traditional ACLs which specifies every allowed subject action pairs associated with an object, UGO only cares about one user, one group, and lumps everyone else into ``other''.
+\end{exbox}
+
+\begin{exbox}{Windows Access Control}{}
+    Windows follows role-based access control (RBAC) with the roles being groups. When an object is created, it inherits the permissions of the parent folder.
+\end{exbox}
+
+\section{Additional Topics}
+
+\begin{dfnbox}{Hidden File}{}
+    A \dfntxt{hidden file} has an attribute that indicates files which should be ignored when listing the contents of a directory.
+\end{dfnbox}
+
+On Linux, this is done be prepending a file name with a period. On Windows, it's part of the file metadata. This does not change any permissions regarding the file.
+
+\begin{dfnbox}{inode}{}
+    An \dfntxt{inode} is a chunk of data that contains file name, metadata, and where the actual data is stored on the hard drive.
+\end{dfnbox}
+
+Filenames are a reference to an inode. The inode is only deleted when all filename references to it are deleted.
+
+\begin{dfnbox}{Filesystem Links}{}
+    \dfntxt{Filesystem links} are data that directly associate a filename with an inode. It allows for more than one file to refer to the same data on the hard drive.
+    \begin{itemize}[noitemsep]
+        \item A \dfntxt{hard link} is an additional filename reference to an inode, managed by the underlying file system.
+        \item A \dfntxt{symbolic link} (or symlink) is a text file that contains a single filename. The OS provides file utilities that will read and handle symlinks. It does not reference the inode, so it does not prevent the inode from being deleted.
+    \end{itemize}
+\end{dfnbox}
 
 \amzindex
 \end{document}

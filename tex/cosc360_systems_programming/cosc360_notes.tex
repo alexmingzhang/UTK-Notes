@@ -1,7 +1,7 @@
 \documentclass[12pt]{report}
 
 \usepackage[margin=1in]{geometry}
-\usepackage[code]{amznotes}
+\usepackage[fastcompile,code]{amznotes}
 \usepackage{enumitem}
 
 \title{\textbf{Systems Programming}\\
@@ -151,16 +151,29 @@ In the UNIX file system, every user has a home directory, aliased by ``\textasci
     \dfntxt{System calls} allow programs to directly interface with the operating system. In C, system calls appear just as regular procedure calls.
 \end{dfnbox}
 
-Unlike creating a frame for regular procedures, system calls interrupt the program and are expensive.
+Whereas regular procedures (functions) create a stack frame, system calls incur a signal to the program, interrupting it. Hence, they are very expensive and should be used sparingly. By design, system calls do not produce segmentation faults, allowing for some potential memory errors.
 
 In C, there are five system calls defined in \texttt{fcntl.h} for file I/O:
 \begin{itemize}[noitemsep]
     \item \texttt{open()} -- opens a handle to a file for I/O; specifies read and/or write permission
     \item \texttt{close()} -- close a handle to a file
-    \item \texttt{read()} --
-    \item \texttt{write()}
-    \item \texttt{lseek()}
+    \item \texttt{read()} -- reads a specified number of bytes; return number of bytes read
+    \item \texttt{write()} -- writes specified bytes to the file
+    \item \texttt{lseek()} -- repositions the file pointer
 \end{itemize}
+
+\begin{notebox}
+    We generally avoid using these system calls and instead use the \texttt{stdio} equivalents: \texttt{fopen()}, \texttt{fclose()}, \texttt{fread()}, \texttt{fwrite()}, \texttt{fseek()}. For example, \texttt{fread()} still calls \texttt{read()}, but it will store read bytes into a buffer to sparingly call \texttt{read()}.
+\end{notebox}
+
+Every file has three distinct parts:
+\begin{enumerate}[noitemsep]
+    \item The actual data of the file
+    \item The \dfntxt{metadata} (information about the file)
+    \item The directory entry
+\end{enumerate}
+
+In UNIX, the file has a directory entry and an associated \dfntxt{inode} that stores the metadata and the location of the actual bytes of the file.
 
 \amzindex
 \end{document}
