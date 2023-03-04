@@ -1,0 +1,198 @@
+\chapter{Sequences and Convergence}
+
+\begin{dfnbox}{Sequence}{}
+    A \dfntxt{sequence} is an ordered list of real numbers.
+    \[ s = (s_1, s_2, s_3, s_4, \ldots) \]
+    \tcblower
+    Formally, a \dfntxt{sequence} is a function $s : \N \to \R$. We write $s_n$ to denote $s(n)$.
+\end{dfnbox}
+
+We can define a sequence using an expression, like $s_n \coloneq n^2$. Then $s = (1,4,9,16,\ldots)$. Also, we can informally define a sequence in terms of its elements, like $s = (3,1,4,1,5,9,\ldots)$. We could just have a random sequence like $s \coloneq (12.3, e^2, 1 - \pi, 10000. \ldots)$.
+
+Let's consider how we can formalize the definitions of limits and convergence. Consider the sequence $s_n \coloneq \sfrac{1}{n}$, then $(s_n) = \left( 1, \sfrac12, \sfrac13, \sfrac14, \ldots \right)$. We have an intuitive idea that, as $n$ gets bigger, then $\sfrac{1}{n}$ gets closer to $0$. We can say that this sequence ``converges'' to $0$.
+
+Now consider the sequence $s \coloneq (1,0,1,0,0,1,0,0,0,1,0,0,0,0,\ldots)$. Does this sequence converge? This really depends on our definition of convergence. We might define this as, ``$s_n$ gets close to $l$ as $n$ gets large''. It certainly matches our intuition, but what exactly does ``close to $l$'' mean? Maybe we could say, ``$\abs{s_n - l}$ gets small as $n$ gets large''. More precisely, this might be ``for all $\epsilon > 0$, $\abs{s_n -l} < \epsilon$ when $n$ is large''. That ``$n$ is large'' is still imprecise. Fixing that part, we get the formal definition for convergence:
+%Instead, we can write ``for all $\epsilon > 0$, there exists $N \in \N$ such that $\abs{s_n - l} < \epsilon$ for all $n > N$''.
+
+\begin{dfnbox}{Convergence}{}
+    Let $s \coloneq (s_n)_{n\in\N}$ be a sequence of real numbers, and let $l \in \R$. We say $s_n$ \dfntxt{converges} to $l$ if, for all $\epsilon > 0$, there exists $N \in \N$ such that $\abs{s_n - l} < \epsilon$ for all $n > N$.
+    \tcblower
+    \[ \forall(\epsilon > 0) \exists(N \in \N) \forall (n > N) (\abs{s_n - l} < \epsilon) \]
+\end{dfnbox}
+
+Like in the approximation property, we use $\epsilon$ to denote some arbitrarily tiny value that's really really close to $0$, but not actually $0$. We can also write $\lim_{n \to \infty} s_n = l$ or $s_n \to l$ to mean $s_n$ converges to $l$.
+
+\begin{tecbox}{Proving Convergence}{}
+    To prove that a sequence $s$ converges to $l$, we carry out the following steps:
+    \begin{enumerate}
+        \item As some scratch work, solve the inequality $\abs{s_n - l} < \epsilon$ for $n$.
+        \item In the formal proof, let $\epsilon > $, and let $N$ be greater than the solved thing. Let $n > N$, then work towards $\abs{s_n - l} < \epsilon$.
+    \end{enumerate}
+\end{tecbox}
+\todo{Make this explanation better}
+
+\begin{exbox}{$\sfrac{1}{n}$ converges to $0$}{}
+    Prove that $\lim_{n \to \infty} \frac{1}{n} = 0$.
+    \tcblower
+    \textbf{Intuition:} Since we're proving something for all $\epsilon > 0$, let's start by choosing some arbitrary $\epsilon > 0$. Next, we need to choose some $N \in \N$ where $\abs{s_n - l} < \epsilon$ for all $n > N$. Thus:
+    \begin{align*}
+        \abs{s_n - l} &< \epsilon \\
+        \abs*{\frac{1}{n} - 0} &< \epsilon \\
+        \frac{1}{n} &< \epsilon \\
+        n &> \frac{1}{\epsilon}
+    \end{align*}
+    So we choose $N > \frac{1}{\epsilon}$.
+
+    \begin{proof}
+        Let $\epsilon > 0$. Let $N \in \N$ where $N > \sfrac{1}{\epsilon}$. If $n > N > \sfrac{1}{\epsilon}$, then $\sfrac{1}{n} < \epsilon$. Thus:
+        \[ \abs{s_n - l} = \abs{\sfrac{1}{n} - 0} = \sfrac{1}{n} < \epsilon \]
+        Therefore, $s$ converges to $0$.
+    \end{proof}
+\end{exbox}
+
+\begin{exbox}{}{}
+    Prove that $\lim_{n \to \infty} \frac{2n+3}{3n+7} = \frac{2}{3}$.
+    \tcblower
+    \textbf{Intuition:} This time, we want to choose some $N \in \N$ such that $\abs{s_n - l} < \epsilon$. Thus:
+    \begin{align*}
+        \abs*{\frac{2n+3}{3n+7} - \frac{2}{3}} &< \epsilon \\
+        \abs*{\frac{6n+9-6n-14}{9n+21}} &< \epsilon \\
+        \frac{5}{9n+21} &< \epsilon \\
+        \frac{5}{\epsilon} &< 9n + 21 \\
+        \frac{1}{9}\left( \frac{5}{\epsilon} - 21 \right) &< n
+    \end{align*}
+    Thus, we want to choose $N >  \sfrac{1}{9}\left( \sfrac{5}{\epsilon} - 21 \right)$.
+    \begin{proof}
+        Let $\epsilon > 0$. Let $N \in \N$ such that $N > \sfrac{1}{9}\left( \sfrac{5}{\epsilon} - 21 \right)$. If $n > N > \sfrac{1}{9}\left( \sfrac{5}{\epsilon} - 21 \right)$, then:
+        \begin{align*}
+            9n &> \sfrac{5}{\epsilon} - 21 \\
+            9n &> \frac{5}{\epsilon} - 21 \\
+            9n + 21 &> \frac{5}{\epsilon} \\
+            \frac{5}{9n+21} < \epsilon
+        \end{align*}
+        Thus:
+        \begin{align*}
+            \abs{s_n-l} &= \abs*{\frac{2n+3}{3n+7} - \frac{2}{3}} \\
+            &= \abs*{\frac{6n+9-6n-14}{9n+21}} \\
+            &= \frac{5}{9n+21} \\
+            &< \epsilon
+        \end{align*}
+    \end{proof}
+
+    The above proof chooses a sort of ``optimal'' or ``best possible'' $N$. We could have thrown away the $21$ in the denominator, and the inequality we're aiming for will still be the same.
+    \begin{proof}[Alternate proof]
+        Let $\epsilon > 0$. Let $N \in \N$ such that $N > \frac{5}{9\epsilon}$. If $n > N > \frac{5}{9\epsilon}$, then $\frac{5}{9n} < \epsilon$, so $\frac{5}{9n+21} < \frac{5}{9n} < \epsilon$. Then:
+        \[ \abs{s_n -l } = \abs*{\frac{2n+3}{3n+7} - \frac{2}{3}} = \frac{5}{9n+21} < \epsilon \]
+    \end{proof}
+\end{exbox}
+
+\begin{exbox}{}{}
+    Prove that $\lim_{n \to \infty} \frac{2n+3}{3n-7} = \frac{2}{3}$.
+    \tcblower
+    \textbf{Intuition:} Here, we have to be careful about throwing away terms.
+    \begin{align*}
+        \abs{s_n - l} &< \epsilon \\
+        \abs*{\frac{2n+3}{3n-7} - \frac{2}{3}} &< \epsilon \\
+        \abs*{\frac{6n+9-6n+14}{9n-21}} &< \epsilon \\
+        \frac{23}{\abs{9n-21}} &< \epsilon
+    \end{align*}
+    We want $9n-21 > 0$, so we must have $n \geq 3$. We can apply this restriction on $n$ to get rid of the absolute value:
+    \begin{align*}
+        \frac{23}{9n-21} &< \epsilon \\
+        \frac{23}{\epsilon} &< 9n - 21 \\
+        \frac{1}{9} \left( \frac{23}{\epsilon} + 21 \right) &< n
+    \end{align*}
+    Thus, we want to choose some $N > \frac{1}{9} \left( \frac{23}{\epsilon} + 21 \right) $ and $N \geq 3$.
+    \begin{proof}
+        Let $\epsilon > 0$. Let $N \in \N$ such that $N > \frac{1}{9} \left( \frac{23}{\epsilon} + 21 \right)$. Then $N > \frac{21}{9}$, and since $N$ is a natural number, then $N \geq 3$. Let $n \in \N$ where $n > N$. Then:
+        \begin{align*}
+            9n &> \frac{23}{\epsilon} + 21 \\
+            9n - 21 &> \frac{23}{\epsilon} \\
+            \epsilon &> \frac{23}{9n - 21}
+        \end{align*}
+        Thus:
+        \[ \abs{s_n - l} = \abs*{\frac{2n+3}{3n-7} - \frac{2}{3}} = \abs*{\frac{23}{9n-21}} = \frac{23}{9n-21} < \epsilon \]
+
+    \end{proof}
+\end{exbox}
+
+\begin{dfnbox}{Divergence}{}
+    A sequence \dfntxt{diverges} if it does not converge.
+    \tcblower
+    \[ \exists(\epsilon > 0) \forall(N \in \N) \exists(n > N) (\abs{s_n -l} \geq \epsilon) \]
+\end{dfnbox}
+
+\begin{exbox}{Diverging Sequence}{}
+    Prove that $s = (1,0,1,0,0,1,0,0,0,\ldots)$ does not converge to $0$.
+    \tcblower
+    \begin{proof}
+        Let $\epsilon = \sfrac{1}{2}$. Then for all $N \in \N$, there exists $n > N$ such that $s_n = 1$. Then:
+        \[ \abs{s_n - 0} = \abs{1-0} > \epsilon \]
+        Therefore, $s$ does not converge.
+    \end{proof}
+\end{exbox}
+
+\section{Properties of Limits}
+
+A sequence can only converge to one value, not more. That is, if a sequence has a limit, then that limit is unique.
+
+\begin{lembox}{}{approximating-zero}
+    Let $x \in \R$. If $x < \epsilon$ for all $\epsilon > 0$, then $x \leq 0$.
+    \tcblower
+    \begin{proof}
+        We proceed by contraposition. Suppose $x > 0$. Let $\epsilon \coloneq \sfrac{x}{2} > 0$. Then $x \geq \epsilon = \sfrac{x}{2}$.
+    \end{proof}
+\end{lembox}
+
+\begin{thmbox}{Uniqueness of Limits}{}
+    Let $s_n$ be a sequence of real numbers. If $s_n$ converges to $l_1$ and converges to $l_2$, then $l_1 = l_2$.
+    \tcblower
+    \begin{proof}
+        Let $\epsilon > 0$. Since $s_n$ converges to $l_1$, then there exists $N_1 \in \N$ such that $\abs{s_n - l_1} < \sfrac{\epsilon}{2}$ for all $n > N_1$. Similarly, since $s_n$ converges to $l_2$, then there exists $N_2 \in \N$ such that $\abs{s_n - l_2} < \sfrac{\epsilon}{2}$ for all $n > N_2$.
+
+        Let $n \in \N$ where $n > N_1$ and $n > N_2$. Then:
+        \[ \abs{l_1 - l_2} = \abs{l_1 - s_n + s_n - l_2} \leq \underbrace{\abs{l_1 - s_n} + \abs{s_n - l_2}}_\text{\nameref{thm:triangle-inequality}} < {\frac{\epsilon}{2} + \frac{\epsilon}{2}} = \epsilon \]
+        Hence, $\abs{l_1 - l_2} < \epsilon$ for all $\epsilon > 0$. Thus, by Lemma \ref{lem:approximating-zero}, $\abs{l1-l2} \leq 0$. However, we know that $\abs{l1-l2} \geq 0$ since it's an absolute value. Thus, we have $\abs{l1-l2} = 0$, so $l1 = l2$.
+    \end{proof}
+\end{thmbox}
+
+\todo[inline]{Definitions of bounds for sequences, show that convergent implies boundedness}
+
+
+
+\begin{thmbox}{}{}
+    Suppose $(s_n)$ and $(t_n)$ are sequences of real numbers, and $s,t \in \R$ such that $s_n$ converges to $s$ and $t_n$ converges to $t$. Then:
+    \begin{enumerate}
+        \item $cs_n$ converges to $s$.
+        \item $s_n + t_n$ converges to $s+t$.
+        \item $s_nt_n$ converges to $st$
+        \item If $t_n \neq 0$, then for all $n$ and $t \neq 0$, $\frac{s_n}{t_N}$ converges to $\frac{s}{t}$.
+    \end{enumerate}
+    \tcblower
+    \begin{proof}[Proof of 1]
+        Let $\epsilon > 0$. Since $(s_n)$ converges to $s$, then there exists $N \in \N$ such that $\abs{s_n - s} < \frac{\epsilon}{1 + \abs{c}}$ for all $n > N$. Then, for all $n > N$, we have:
+        \[ \abs{cs_n - cs} = \abs{c(s_n-s)} = \abs{c}\abs{s_n-s} < \abs{c} \frac{\epsilon}{1+\abs{c}} = \frac{\abs{c}}{1+\abs{c}} \epsilon < \epsilon \]
+    \end{proof}
+
+    \begin{proof}[Proof of 2]
+        Let $\epsilon > 0$. Since $(s_n)$ converges to $s$, then there exists $N_1 \in \N$ such that $\abs{s_n - s} < \sfrac{\epsilon}{2}$ for all $n > N$. Similarly, since $t_n$ converges to $t$, then there exists $N_2 \in \N$ such that $\abs{t_n - t} < \sfrac{\epsilon}{2}$. Let $N \in \N$ where $N \geq N_1$ and $N \geq N_2$. Then:
+        \[ \abs{(s_n + t_n) - (s + t)} = \abs{s_n - s + t_n - t} \leq \abs{s_n - s} + \abs{t_n - t} < \frac{\epsilon}{2} + \frac{\epsilon}{2} = \epsilon \]
+        That is, $s_n + t_n$ converges to $s + t$.
+    \end{proof}
+
+    \begin{proof}[Proof of 3]
+        Let $\epsilon > 0$. Since $s_n$ converges to $s$, then there exists $N_1 \in \N$ such that $\abs{s_n - s} < \sfrac{\epsilon}{2(\abs{t} + 1)}$ for all $n > N$. Also, $(s_n)$ converges, so $(s_n)$ is bounded. That is, there exists $M \in \R$ such that $\abs{s_n} \leq M$ for all $n \in \N$. Since $t_n$ converges to $t$, there exists $N_2 \in \N$ such that $\abs{t_n - t} < \frac{\epsilon}{2(M+1)}$ for all $n > N$. Let $N \in \N$ such that $N \geq N_1$ and $N \geq N_2$. If $n > N$, then:
+        \begin{align*}
+            \abs{s_nt_n - st}
+            &= \abs{s_nt_n - s_nt + s_nt - st} \\
+            &= \abs{s_n(t_n-t) + (s_n-s)t} \\
+            &\leq \abs{s_n(t_n-t)} + \abs{(s_n-s)t} \\
+            &= \abs{s_n} \abs{t_n-t} + \abs{s_n-s}\abs{t} \\
+            &< M \frac{\epsilon}{2(1+M)} + \frac{\epsilon}{2(1+\abs{t})} \abs{t} \\
+            &= \frac{M}{1+M} \frac{\epsilon}{2} + \frac{\epsilon}{2} \frac{abs{t}}{1 + \abs{t}} \\
+            &< \frac{\epsilon}{2} + \frac{\epsilon}{2} \\
+            &= \epsilon
+        \end{align*}
+    \end{proof}
+\end{thmbox}
+\todo{Explain new notation}

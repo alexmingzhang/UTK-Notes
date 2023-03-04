@@ -1,10 +1,4 @@
-\documentclass[12pt]{report}
-
-\usepackage[margin=1in]{geometry}
-\usepackage[math]{amznotes}
-\usepackage{enumitem}
-\usepackage{xfrac}
-\usepackage[textsize=scriptsize]{todonotes}
+\documentclass[math]{amznotes}
 
 \title{\textbf{Introduction to Analysis}\\
 \large UT Knoxville, Spring 2023, MATH 341}
@@ -14,33 +8,15 @@
 \maketitle
 \tableofcontents
 
-\addcontentsline{toc}{chapter}{Preface}
-\chapter*{Preface}
-These are my notes for the \textbf{Introduction to Analysis} course at the University of Tennessee (MATH 341). It is compiled from several sources including lecture notes by Dr. Michael Frazier and Dr. Peter Humphries, as well as online resources such as the Mathematics Stack Exchange.
-
-% These notes attempt to strike a good balance between brevity and depth. As such, they are intended to provide a comprehensive and accessible resource for those looking to understand the fundamental concepts of real analysis.
-
-The first few weeks of the course are spent reviewing the material taught in \textbf{Introduction to Abstract Mathematics} (MATH 300): logic, set theory, number systems, and cardinality. They serve as a ``primer'' for the following material on real analysis.
-
-\chapter{Introduction}
+\input{chapters/preface.tex}
 \input{chapters/analysis_intro.tex}
-
-\chapter{Logic and Proofs}
 \input{chapters/logic_and_proofs.tex}
-
-\chapter{Naive Set Theory}
 \input{chapters/naive_set_theory.tex}
-
-\chapter{Number Systems}
 \input{chapters/number_systems.tex}
-
-\chapter{Suprema and Infima}
 \input{chapters/suprema_and_infima.tex}
-\section{Consequences of Completeness}
 \input{chapters/consequences_of_completeness.tex}
-
-\chapter{Cardinality}
 \input{chapters/cardinality.tex}
+\input{chapters/sequences.tex}
 
 \amzindex
 \end{document}

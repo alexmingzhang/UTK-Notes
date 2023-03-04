@@ -1,18 +1,13 @@
-\documentclass[12pt]{report}
-
-\usepackage[margin=1in]{geometry}
-\usepackage[math]{amznotes}
-\usepackage{enumitem}
-\usepackage{xfrac}
-\usepackage{tikz}
-\usetikzlibrary{calc, 3d}
+\documentclass[math]{amznotes}
 
 \title{\textbf{Calculus III}\\
 \large UT Knoxville, Spring 2023, MATH 341}
 \author{Stella Thistlethwaite, Alex Zhang}
 
 \begin{document}
+\todo[inline]{These notes suck}
 \maketitle
+
 \tableofcontents
 
 \chapter{Three-Dimensional Space}
@@ -129,9 +124,11 @@ Like scalar multiplication, dot product is also associative, commutative, and di
     \end{itemize}
 \end{dfnbox}
 
-\begin{dfnbox}{Orthogonal}{}
-    $\vec{a}$ and $\vec{b}$ are \dfntxt{orthogonal} if $\vec{a} \cdot \vec{b} = 0$.
+\begin{dfnbox}{Vector Orthogonality}{}
+    We say two vectors are \dfntxt{orthogonal} if their dot product is $0$.
 \end{dfnbox}
+
+In other words, $\vec{a}$ and $\vec{b}$ are \dfntxt{orthogonal} if $\vec{a} \cdot \vec{b} = 0$.
 
 Given a vector $\vec{a} = \alg{a_1, a_2, a_3}$, we have:
 
@@ -405,6 +402,120 @@ If we consider the curve $C$ formed by all the terminal points of the graph of a
     Then the parameterized line is:
     \[ \alg{0,1,\frac{\pi}{2}} + t\alg{-2,0,1} \]
 \end{exbox}
+
+\section{Integrability}
+
+If $\vec{r}(t) = \alg{x(t), y(t), z(t)}$ for $t \in \R$, and $x(t)$, $y(t)$, and $z(t)$ are integrable on the interval $[a,b]$, then:
+\begin{align*}
+     \int_a^b \vec{r}(t)\ dt
+     &= \int_a^b \alg{x(t), y(t), z(t)}\ dt \\
+     &= \alg{ \int_a^b x(t)\ dt, \int_a^b y(t)\ dt, \int_a^b z(t)\ dt}
+\end{align*}
+
+If $\vec{r}(t) = \alg{x(t), y(t), z(t)}$ where $t \in [a,b]$, and if $\vec{r}$ is a parameterization of a curve $C$, then $\vec{v}(t) = \vec{r}\prime(t)$ is the \dfntxt{velocity} vector, and $\vec{a}(t) = \vec{r}\dprime (t)$ is the \dfntxt{acceleration vector}. Also, $\norm{ \vec{r}\prime(t) }$ is the \dfntxt{speed}, and $\norm{ \vec{r}\dprime(t) }$ is the \dfntxt{acceleration}.
+
+\begin{dfnbox}{Unit Tangent Vector}{}
+    Given $\vec{r}(t) = \alg{x(t), y(t), z(t)}$, the \dfntxt{unit tangent vector} is a unit vector that is tangent to the curve defined by $\vec{r}(t)$.
+    \tcblower
+    \[ T(t) \coloneq \frac{\vec{r}\prime(t)}{\norm{ \vec{r}\prime(t) }} \]
+\end{dfnbox}
+
+\begin{dfnbox}{Normal Vector}{}
+    Given $\vec{r}(t) = \alg{x(t), y(t), z(t)}$, the \dfntxt{normal vector} is a unit vector that
+    \todo[inline]{finish definition}
+    \tcblower
+    \[ N(t) \coloneq  \frac{\vec{r}\dprime(t)}{\norm{ \vec{r}\dprime(t)} } \]
+\end{dfnbox}
+
+\begin{dfnbox}{Osculating Plane, Binormal Vector}{}
+    At each point $t$, $T(t)$ and $N(t)$ determine a plane called the \dfntxt{osculating plane}. An equation of the osculating plane to $C$ at $P_0 = \vec{r}(t)$ has a normal direction $B(t) \coloneq T(t) \times N(t)$ called the \dfntxt{binormal vector} to the curve $C$ at $p_0$. The plane determined by $N(t)$ and $B(t)$ is called the \dfntxt{normal plane} to the curve $C$ at terminal point of $\vec{r}(t) = p_0$, and it has normal direction given by $T(t)$.
+\end{dfnbox}
+
+\section{Arc Length and Curvature}
+If a curve in the $xy$-plane is parameterized by $x=f(t)$ and $y=g(t)$ for $t \in [a,b]$, and $f$ and $g$ are differentiable on $[a,b]$, then the total arc length of the curve is given by:
+\[ \int_a^b \sqrt{f\prime(t)^2 + g\prime(t)^2}\ dt\]
+Similarly, if $C$ is a curve in $\R^3$ parameterized by a vector function $\vec{r}(t) = \alg{f(t), g(t), h(t)}$ for $t \in [a,b]$. Then the total arc length of the curve is given by:
+\begin{genbox}{Arc Length of a Curve in $\R^3$}
+\[ \int_a^b \sqrt{f\prime(t)^2 + g\prime(t)^2 + h\prime(t)^2}\ dt \]
+\end{genbox}
+
+
+\begin{dfnbox}{Curvature, Osculating Circle}{}
+    The \dfntxt{curvature} of a curve at some point is how much it curves at that point. More specifically, it's the inverse of the radius of the \dfntxt{osculating circle}, tangent to the point that most closely ``matches'' the curve. This circle is called the \dfntxt{osculation circle}, and it lies in the osculating plane.
+    \tcblower
+    Formally, if $C$ is a curve parameterized by $\vec{r}(t) = \alg{f(t), g(t), h(t)}$ for $t \in [a,b]$, and $f,g,h$ are differentiable twice on $[a,b]$, then the \dfntxt{curvature} of $C$ is given by:
+    \[ k(t) \coloneq \norm{\frac{d}{ds} \vec{T}(t)} = \frac{\norm{\vec{T}\prime(t)}}{\norm{\vec{r}\prime(t)}} \]
+\end{dfnbox}
+
+A lower curvature at some point actually means that it curves more.
+
+\begin{thmbox}{}{}
+    The curvature given by a vector function $\vec{r}(t) : \R \to \R^3$ is given by:
+    \[ k(t) = \frac{\norm{\vec{r}\prime(t) \times \vec{r}\dprime(t)}}{\norm{\vec{r}\prime(t)}^3} \]
+    If $C$ is a planar curve given by $y = f(x)$, then $k(t) = \frac{\norm{f\dprime(t)}}{\left( 1+[f\prime(t)]^2 \right)^{\sfrac{3}{2}}}$
+\end{thmbox}
+
+\begin{dfnbox}{Torsion}{}
+    The \dfntxt{torsion} of a curve $C$ at a point $\bar{r}(t)$ (the endpoint of $\vec{r}(t)$) is a measure of how much $C$ departs from the osculating plane.
+    \[ \tau \coloneq \frac{d}{ds} \vec{B}(t) \cdot \vec{N}(t) \]
+\end{dfnbox}
+
+\begin{thmbox}{}{}
+    If $C$ is a ``smooth'' curve parameterized by $\vec{r}(t)$, then the torsion is given by:
+    \[ \tau \coloneq \frac{ \left[ \vec{r}\prime(t) \times \vec{r}\dprime(t) \right] \cdot \vec{r}\prime\prime\prime(t)}{\norm{\vec{r}\prime(t) \times \vec{r}\dprime(t)}} \]
+\end{thmbox}
+
+Tangential component of $\vec{a}$ is given by:
+\[ a_T = \frac{\vec{r}\prime(t) \cdot \vec{r}\dprime(t)}{\norm{\vec{r}\prime(t)}} \]
+
+\section{Projectile Motion}
+
+Suppose we launch some projectile from an initial position $(0,0)$, initial angle $\theta$, and initial velocity $\vec{v}_0$. Disregarding air resistance, the only force acting on this projectile is gravity. Thus, the force vector is given by $\vec{F} = \alg{0, -g, 0}$ where $g$ is a gravitational constant. Then, the velocity at any time $t$ is given by:
+\[ \vec{t} = Q1RFSDA \]
+
+\chapter{Partial Derivatives}
+
+\section{Functions of Several Variables}
+
+We will only be concerned with functions in the real numbers.
+
+\begin{dfnbox}{Function of $n$ Variables}{}
+A \dfntxt{function of $n$ variables} is a function $f : X \to Y$ where $X \subseteq \R^n$ and $Y \subseteq \R$. In other words, it maps ordered pairs of real numbers $(x_1, x_2, \ldots, x_n) \in \R^2$ to some real number $y \in \R$. In this context, we call $x_1, \ldots, x_n$ \dfntxt{independent variables} and call $y$ a \dfntxt{dependent variable}.
+\end{dfnbox}
+
+We will mostly be concerned with functions of two variables, mapping ordered pairs of real numbers to a unique real number. These functions exist in a three-dimensional space, and are thus relatively easy to visualize.
+
+\begin{dfnbox}{Graph}{}
+    Let $f$ be a function of two variables with domain $D$. The \dfntxt{graph} of $f$ is the set of points $(x,y,z) \in \R^3$ such that $(x,y) \in D$ and $z = f(x,y)$
+\end{dfnbox}
+
+The graph of a function gives us a really nice visualization of three-dimensional functions. Take for instance a function in two variables defined as $f(x,y) = 6 - 3x - 2y$. \todo{finish example}
+
+% A function $f : \R^n \to \R$ defined by $f(x_1, x_2, \ldots, x_n) = y$ is called a real-valued function of $n$ variables. It is also called a \dfntxt{scalar function} on $\R^n$.
+
+% The domain of $f(x,y)$ is the set of all points $(x,y) \in \R^2$ for which the function is defined. We write this as:
+% \[ \text{Dom}(f(x,y)) = \{ (x,y) \in \R : f(x,y)\ \text{is defined} \} \]
+
+% \begin{dfnbox}{Level Curve}{}
+%     If $z = f(x,y)$, then the \dfntxt{level curve} or level set for the graph of $f(x,y)$ are the sets defined as:
+%     \[ C_k \coloneq \{ (x,y,z) \in \R^3 : (x,y) \in D \land k = f(x,y) \} \]
+% \end{dfnbox}
+
+\begin{dfnbox}{Level Curve}{}
+    Let $f$ be a function of two variables. A \dfntxt{level curve} of $f$ is a curve with equation $f(x,y) = k$ for a fixed $k$ in the range of $f$.
+    \tcblower
+    Formally, let $f : A \to B$ be a function where $A \subseteq \R^2$ and $B \subseteq \R$. Let $z \in f[A]$ (the image of $A$ under $f$). A \dfntxt{level curve} is the set of all $(x,y,z)$ such that $f(x,y) = z$.
+\end{dfnbox}
+
+We call a collection of level curves a \dfntxt{contour map}. Contour maps are most descriptive when the level curves are equally spaced; that is, we choose equally spaced $z$ values.
+
+\section{Limits and Continuity}
+
+\begin{dfnbox}{Limits for functions of two variables}{}
+    Let $f$ be a function of two variables with domain $D$. We say the \dfntxt{limit} as $f$ approaches $(a,b)$ is $L$ if, for all $\epsilon > 0$, there exists some $\delta > 0$ such that for all $(x,y) \in D$, if $0 < \sqrt{(x-a)^2 + (y-b)^2} < \delta$, then $\abs{f(x,y) - L} < \epsilon$.
+    \tcblower
+    \[ \forall(\epsilon > 0) \exists(\delta > 0) \forall \left( (x,y) \in D \right) \left(0 < \sqrt{(x-a)^2 + (y-b)^2} < \delta \implies \abs{f(x,y) - L} < \epsilon\right) \]
+\end{dfnbox}
 
 \amzindex
 \end{document}

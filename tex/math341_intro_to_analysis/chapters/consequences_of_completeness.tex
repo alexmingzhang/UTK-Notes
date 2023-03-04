@@ -1,3 +1,4 @@
+\chapter{Consequences of Completeness}
 \begin{thmbox}{$\N$ is not Bounded Above}{}
     \begin{proof}
         Suppose for contradiction $\N$ is bounded above. Since $\N$ is not empty, then $\N$ has a supremum in $\R$. Let $s \coloneq \sup \N \in \R$. Then $n \leq s$ for all $n \in \N$. By the Peano axioms, $n$ has a successor $n+1 \in \N$, so $n+1 \leq s$ for all $n \in \N$. Therefore, $n \leq s - 1$ for all $n \in \N$. This contradicts $s$ being the least upper bound for $\N$.
@@ -68,7 +69,7 @@
     \end{proof}
 \end{thmbox}
 
-\begin{thmbox}{Nested Interval Property}{}
+\begin{thmbox}{Nested Interval Property}{nested-interval-property}
     Suppose that for each $n \in \N$, $a_n, b_n \in \R$ with $a_n \leq b_n$, and $a_n \leq a_{n+1} \leq b_{n+1} \leq b_n$ for all $n \in \N$. Then $\bigcap_{n=1}^\infty [ a_n, b_n ] \neq \emptyset$.
     \tcblower
     \textbf{Intuition:} We can move the two borders of an open interval closer and closer to each other, and it won't be empty.

@@ -1,8 +1,9 @@
+\chapter{Cardinality}
 \begin{dfnbox}{Cardinality}{cardinality}
     \dfntxt{Cardinality} is a measure of the amount of elements in a set, denoted $\abs{A}$. We say two sets have the same cardinality if there exists a bijection between them.
 \end{dfnbox}
 
-For finite sets, we can think of cardinality as the number of elements in that set. For infinite sets, cardinality can sometimes go against our intuition.     For any sets $A,B,C$:
+For finite sets, we can think of cardinality as the number of elements in that set. For infinite sets, cardinality can sometimes go against our intuition. For any sets $A,B,C$:
 \begin{enumerate}[noitemsep]
     \item $\abs{A} = \abs{A}$
     \item if $\abs{A} = \abs{B}$, then $\abs{B} = \abs{A}$
@@ -117,8 +118,8 @@ Generally, there is never a bijection from a set to its power set.
     \end{proof}
 \end{thmbox}
 
-\begin{thmbox}{Injectivity and Cardinality}{}
-    Suppose $A = \emptyset$. Then $A$ is countable if and only if there exists an injective function $f : A \to \N$.
+\begin{thmbox}{Injectivity and Cardinality}{injectivity-cardinality}
+    A set $A$ is countable if and only if there exists an injective function $f : A \to \N$.
     \tcblower
     \begin{proof}
         First, suppose $A$ is a countable set. We consider two cases:
@@ -131,16 +132,96 @@ Generally, there is never a bijection from a set to its power set.
     \end{proof}
 \end{thmbox}
 
-\begin{thmbox}{$\abs{\N \times \N} = \abs{\N}$}{}
+\begin{thmbox}{$\abs{\N \times \N} = \abs{\N}$}{nxn-countable}
     $\N \times \N$ is countable.
     \tcblower
     \begin{proof}
-        Let $f : \N \times \N \to \N$ be a function defined by $f(n,m) = 2^n 3^m$. We now show that $f$ is bijective. To prove surjectivity, suppose $f(n_1, m_1) = f(n_2, n_2)$. Then $2^{n_1} 3^{m_1} = 2^{n_2} 3^{m_2}$.
+        Let $f : \N \times \N \to \N$ be a function defined by $f(n,m) = 2^n 3^m$. We now show that $f$ is bijective. To prove $f$ is injective, suppose $f(n_1, m_1) = f(n_2, n_2)$. Then $2^{n_1} 3^{m_1} = 2^{n_2} 3^{m_2}$.
         \begin{itemize}
             \item If $n_1 > n_2$, then $2^{n_1 - n_2} = 3^{m_2 - m_1}$. Since $n_1 > n_2$, we have $n_1 - n_2 > 0$, so $2^{n_1 - n_2} \in \N$. Then also $3^{m_2 - m_1} \in \N$. But $2^{n_1 - n_2}$ is even, and $3^{m_2 - m_1}$ is odd. This contradicts the fact that $2^{n_1 - n_2} = 3^{m_2 - m_1}$.
             \item If $n_2 > n_1$, then $3^{m_1 - m_2} = 2^{n_2 - n_1}$. By a similar argument, $2^{n_2 - n_1}$ is even and $3^{m_1 - m_2}$ is odd, producing the same contradiction.
             \item If $n_1 = n_2$, then $2^{n_1} = 2^{n_2}$, so cancelling gives $3^{m_1} = 3^{m_2}$. Thus, $m_1 = m_2$.
         \end{itemize}
         Hence, $(n_1, m_1) = (n_2, m_2)$, so $f$ is injective.
+        By Theorem \ref{thm:injectivity-cardinality}, $\N \times \N$ is countable. Also, $\N \times \N$ is infinite, so $\abs{\N \times \N} = \abs{\N}$.
     \end{proof}
 \end{thmbox}
+
+\begin{thmbox}{Collection of Countable Sets}{}
+    Suppose that for all $k \in \N$, $A_k$ is a countable set. Then $\cup_k A_k \in \N$ is countable. (i.e. a countable union of countable sets is countable)
+    \tcblower
+    \begin{proof}
+        Let $k \in \N$. $A_k$ is countable, so $A_k$ can be listed as such:
+        \begin{align*}
+            A_1 &= \{a_{11}, a_{12}, a_{13}, a_{14}, \ldots\} = \{a_j\}_{j \in \N} \\
+            A_2 &= \{a_{21}, a_{22}, a_{23}, a_{24}, \ldots\} \\
+            &\vdots \\
+            A_k &= \{a_{k1}, a_{k2}, a_{k3}, a_{k4}, \ldots\}
+        \end{align*}
+
+        \begin{notebox}
+            We want to define some function $f : \bigcup_{k \in \N}A_k \to \N \times \N$ where $f(a_{kj}) = (k,j) \in \N \times \N$.
+            However, we need to consider the possibility that the sets $A_k$ are not disjoint. If $a_{12} = a_{34}$, then $a(_{12}) = (1,2)$ and $f(a_{34}) = (3,4)$.
+        \end{notebox}
+        Given $a \in \bigcup_{k \in \N}A_k$, let $k(a) \coloneq \min\{ k \in \N : a \in A_k \}$. If $a \in A_{k(a)}$, then there is a unique $j(a) \in \N$ such that $a = a_{k(a)j(a)}$. Now define $f : \bigcup_{k \in \N} A_k \to \N \times \N$ by $f(a) = (k(a), j(a))$. We must show that $f$ is injective. Let $x,y \in \bigcup_{k \in \N}A_k$ such that $f(x) = f(y)$. That is, $(k(x),j(x)) = (k(y),j(y))$. Then $x = a_{k(x)j(x)} = a_{k(y)j(y)} = y$. By Theorem $\ref{thm:nxn-countable}$, there exists some injection $g : \N \times \N \to \N$. Hence, $g \circ f : \bigcup_{k \in \N}A_k \to \N$ is injective. By Theorem \ref{thm:injectivity-cardinality}, $\bigcup_{k \in \N} A_k$ is countable.
+    \end{proof}
+\end{thmbox}
+
+This theorem shows that, in order to prove a countable union of countable sets is countable, we just need to show that each set in the union is countable. We'll use this in our proof that the set of rational numbers is a countable set.
+
+\begin{thmbox}{$\Q$ is Countable}{}
+    \begin{proof}
+        Let $\Q^+ \coloneq \{r \in \Q : r > 0\}$, and let $\Q^- \coloneq \{ r \in \Q : r < 0 \}$. First, we'll prove that $\Q^+$ is countable. Let $f : \Q^+ \to \N \times \N$ be a function defined as $f(r) = (p,q)$ such that $r = \sfrac{p}{q}$ where $p,q \in \N$ and $p$ shares no common factors with $q$. To show $f$ is injective, let $r_1, r_2 \in \Q$ where  $f(r_1) = f(r_2)$. Then $r_1 = \sfrac{p_1}{q_1}, r_2 = \sfrac{p_2}{q_2}$ where $p_1, q_1 \in \N$ with no common factors, and $p_2, q_2 \in \N$ with no common factors. Thus, $(p_1,q_1) = (p_2, q_2)$, so $p_1 = p_2$ and $q_1 = q_2$. Thus, $r_1 = \sfrac{p_1}{q_1} = \sfrac{p_2}{q_2} = r_2$, so $f$ is injective. Since there exists an injection $g \in \N \times \N \to \N$, then $g \circ f : \Q^+ \to \N$ is injective. Thus, $\Q^+$ is countable.
+
+        Next, we'll prove that $\Q^-$ is countable. Let $h : \Q^- \to \Q^+$ by $h(r) = -r$. We show $h$ is injective. If $h(r_1) = h(r_2)$ where $r_1, r_2 \in \Q^-$, then $-r_1 = -r_2$, so $r_1 = r_2$. Thus, $h$ is injective. From above, there exist an injection $\phi : \Q^+ \to \N$. Hence, $h \circ \phi : \Q^{-1} \to \N$ is injective.
+
+        Finally, $\{0\}$ is countable because it is finite. Since $\Q = \Q^+ \cup \{0\} \cup \Q^-$ is a countable union of countable sets, then $\Q$ is countable.
+    \end{proof}
+\end{thmbox}
+
+This means we can ``list'' the rational numbers (disregarding order) as $\Q = \{r_1, r_2, \ldots\} = \{r_n\}_{n \in \N}$.
+
+\begin{thmbox}{$\R$ is Uncountable}{}
+    \begin{proof}
+        Suppose for contradiction $\R$ is countable. Then $\R$ can be ``listed'' as $\R = \{x_1, x_2, \ldots\} = \{x_n\}_{n \in \N}$. We will define a sequence of non-empty closed intervals $\{I_k\}_{k \in \N}$ such that $I_{k+1} \subseteq I_k$ and $x_k \notin I_k$ for all $k \in \N$. Let $I_0 \coloneq [0,1]$. Divide $I_0$ into three equal closed intervals. Then, at least one of these three intervals does not contain $x_1$. Choose such an interval and call it $I_1$. Divide $I_1$ into there equal closed intervals. Then, at least one of these three intervals does not contain $x_2$. Choose such an interval and call it $I_2$. Given $I_k$ for some $k \in \N$, divide $I_k$ into three equal closed intervals, then choose the interval that does not contain $x_{k+1}$ and call it $I_{k+1}$. By induction, we have $\{I_k\}_{k=1}^\infty$ where each $I_k$ is a (nonempty) closed interval, and $I_{k+1} \subseteq I_k$ for each $k \in \N$. By the \nameref{thm:nested-interval-property}, $\bigcap_{k \in \N} I_k$ is not empty, so there exists $x \in \R$ such that $x \in \bigcap_{k \in \N} I_k$. Since $x \in \R$, we have $x = x_n$ for some $n \in \N$ (by our supposition that $\R$ is countable). However, we constructed $I_n$ such that $x_n \notin I_n$, so $x_n \notin \bigcap_{k \in \N} I_k$. This contradiction renders our initial supposition false. Therefore, $\R$ is uncountable.
+    \end{proof}
+\end{thmbox}
+
+\begin{thmbox}{Irrational Numbers are Uncountable}{}
+    \begin{proof}
+        Suppose for contradiction $\R \setminus \Q$ is countable. Then $\R = (\R \setminus \Q) \cup \Q$, so $\R$ is a countable union of countable sets, making $\R$ countable. This contradicts the fact that $\R$ is uncountable, so $\R \setminus \Q$ is uncountable.
+    \end{proof}
+\end{thmbox}
+
+\section{Additional Remarks}
+
+\begin{dfnbox}{Algebraic Number, Transcandental Number}{}
+    If $\alpha$ is a root of the polynomial $a_nx^n + a_{n-1} x^{n-1} + \cdots + a_1 x + a_0 = 0$ where each $a_i \in \Z$, then $\alpha$ is called an \dfntxt{algebraic number}. If $\alpha$ is not algebraic, then we call it a \dfntxt{transcendental number}.
+\end{dfnbox}
+ The set of all algebraic numbers is countable, so ``most'' real numbers are transcendental.
+
+\begin{itemize}
+    \item Even though $\Q$ is dense in $\R$, there are ``more'' irrational numbers than rational numbers
+    \item The set $\{\sqrt[n]{m} : n,m \in \N\}$ is countable, so ``most'' real numbers are not radicals.
+    \item The set of algebraic numbers is countable, so ``most'' real numbers are transcendental.
+    \item $\abs{\mathcal{P}(\N)} = \abs{\R}$, but the set $\{ A \subseteq \N : A\ \text{is finite} \}$ is countable.
+    \item If there exists an injection $f : A \to B$, then we say $\abs{A} \leq \abs{B}$. If there exists an injection from $A$ to $B$, but there does not exist an injection from $B$ to $A$, then we say $\abs{A} < \abs{B}$.
+\end{itemize}
+
+\begin{thmbox}{Schroeder-Bernstein}{}
+    If there exists an injection $f : A \to B$ and an injection $g : B \to A$, then there exists a bijection $h : A \to B$.
+\end{thmbox}
+
+\begin{thmbox}{Continuum Hypothesis}{}
+    There is no cardinality between $\abs{\N}$ and $\abs{\R}$.
+\end{thmbox}
+
+In Zermelo-Fraenkel with Choice (ZFC) set theory, the continuum hypothesis cannot be proven to be true nor false. In 1938, Godel proved that the continuum hypothesis is consistent with ZFC. In 1963, Colen proved that the negation of the continuum hypothesis is also consisten with ZFC.
+
+\begin{notebox}
+    Just because you can write a description of a set does not mean that the set exists nor makes sense.
+    \begin{itemize}
+        \item For example, let $A \coloneq \left\{ \bigcup \{ B : B\ \text{is a set} \} \right\}$. Then $\mathcal{P}(A) \subseteq A$, so $\abs{\mathcal{P}(A)} \leq A < \abs{\mathcal{P}(A)}$.
+        \item Another example: let $B \coloneq \{\text{all sets}\}$. Let $C \coloneq \{ A : A \notin A \}$. Is $C \in C$?
+    \end{itemize}
+\end{notebox}

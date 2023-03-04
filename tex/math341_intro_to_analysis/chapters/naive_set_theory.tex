@@ -1,4 +1,5 @@
-Instead of forming a rigorous, axiomatic basis for sets, we will simply take an informal approach to sets guided by our intuition. Ultimately, our introduction to real analysis does not fiddle with the fine details of set theory, so it's safe to take a naive approach to set theory.
+\chapter{Naive Set Theory}
+Instead of forming a rigorous, axiomatic basis for sets, we will simply take an informal approach to sets guided by our intuition. Ultimately, our introduction to real analysis does not fiddle with the fine details of set theory, so it's safe to take a naive approach.
 
 \section{Sets}
 
@@ -202,13 +203,18 @@ Note the following logical equivalence:
     \end{proof}
 \end{exbox}
 
-\section{Injective and Surjective}
+\section{Injectivity and Surjectivity}
 
 \begin{dfnbox}{Injective, One-to-one}{}
     A function $f : X \to Y$ is \dfntxt{injective} or \dfntxt{one-to-one} if no two inputs in $X$ have the same output in $Y$.
     \tcblower
     \[ \forall (x_1, x_2 \in X) \left[ x_1 \neq x_2 \implies f\left(x_1\right) \neq f\left(x_2\right) \right] \]
 \end{dfnbox}
+
+We can also think of injectivity as, ``if two inputs have the same output, then the two inputs must be the same''. It's really just the contrapositive of our initial definition, which we know must be logically equivalent.
+\[ \forall (x_1, x_2 \in x) \left[ f(x_1) = f(x_2) \implies x_1 = x_2 \right] \]
+
+For example, the function $f(x) = x^2$ is not injective, because $f(-1) = 1$ and $f(1) = 1$. We have two distinct inputs that map to the same output.
 
 \begin{tecbox}{Proving a Function is Injective}{}
     To prove a function $f : X \to Y$ is injective:

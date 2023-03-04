@@ -1,8 +1,4 @@
-\documentclass[12pt]{report}
-
-\usepackage[margin=1in]{geometry}
-\usepackage[fastcompile,code]{amznotes}
-\usepackage{enumitem}
+\documentclass[code]{amznotes}
 
 \title{\textbf{Systems Programming}\\
 \large UT Knoxville, Spring 2023, COSC 360}
@@ -174,6 +170,44 @@ Every file has three distinct parts:
 \end{enumerate}
 
 In UNIX, the file has a directory entry and an associated \dfntxt{inode} that stores the metadata and the location of the actual bytes of the file.
+
+% \chapter{Assembler}
+% The CPU has several components:
+% \begin{itemize}
+%     \item The \dfntxt{ALU} - Arithmetic and logic unit
+%     \item Instruction decoder
+%     \item A fixed number of \dfntxt{registers} that can store one 32/64 bit value
+%     \item Clock
+% \end{itemize}
+
+% To help us learn, we will consider a make-believe reduced instruction set architecture with 32-bit pointers and 8 general purpose registers:
+% \begin{itemize}
+%     \item r0--r4
+%     \item sp: stack pointer
+%     \item fp
+%     \item pc: program counter (a pointer to the instruction being executed)
+% \end{itemize}
+
+% In normal operation, each clock cycle increments the program counter by four. We will also have three read-only register:
+% \begin{itemize}
+%     \item g0: contains the value 0
+%     \item g1: contains the value 1
+%     \item gm1: contains the value -1
+% \end{itemize}
+
+% And two special registers:
+% \begin{itemize}
+%     \item IR: the current instruction
+%     \item CSR: the result of the previous instruction
+% \end{itemize}
+
+% Our instructions will consist of:
+% \begin{itemize}
+%     \item \texttt{ld mem reg} ($\text{reg} \coloneq \text{mem}$)
+%     \item \texttt{st reg mem} ($\text{mem} \coloneq \text{reg}$)
+%     \item
+% \end{itemize}
+
 
 \amzindex
 \end{document}
