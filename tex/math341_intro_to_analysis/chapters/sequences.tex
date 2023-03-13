@@ -159,11 +159,12 @@ A sequence can only converge to one value, not more. That is, if a sequence has 
 \todo[inline]{Definitions of bounds for sequences, show that convergent implies boundedness}
 
 
+\todo[inline]{Split the theorem below into four separate theorems?}
 
 \begin{thmbox}{}{}
     Suppose $(s_n)$ and $(t_n)$ are sequences of real numbers, and $s,t \in \R$ such that $s_n$ converges to $s$ and $t_n$ converges to $t$. Then:
     \begin{enumerate}
-        \item $cs_n$ converges to $s$.
+        \item $cs_n$ converges to $cs$.
         \item $s_n + t_n$ converges to $s+t$.
         \item $s_nt_n$ converges to $st$
         \item If $t_n \neq 0$, then for all $n$ and $t \neq 0$, $\frac{s_n}{t_N}$ converges to $\frac{s}{t}$.
@@ -194,5 +195,230 @@ A sequence can only converge to one value, not more. That is, if a sequence has 
             &= \epsilon
         \end{align*}
     \end{proof}
+
+    \begin{proof}[Proof of 4]
+        We will prove that $\frac{1}{t_n}$ converges to $\frac{1}{t}$. Let $\epsilon > 0$. Since $t_n$ converges to $t$ and $t \neq 0$, then there exists $N_1 \in \N$ such that $\abs{t_n - t} < \frac{\epsilon t^2}{2}$. By \nameref{lem:14.6}, there exists $N_2 \in \N$ such that $\abs{t_n} > \frac{\abs{t}}{2}$ for all $n > N_2$. Let $N \in \N$ such that $N > N_1$ and $N > N_2$. Let $n \in \N$ be arbitrary. Then:
+        \begin{align*}
+            \abs{\frac{1}{t_n} - \frac{1}{t}} &= \abs{\frac{t-t_n}{t_nt}} \\
+            &= \frac{1}{\abs{t_n}} \frac{1}{\abs{t}} \abs{t-t_n} \\
+            &< \frac{2}{\abs{t}} \frac{1}{\abs{t}} \frac{\epsilon t^2}{2} \\
+            &= \epsilon
+        \end{align*}
+        By 3, if $s_n$ converges to $s$, then $\frac{s_n}{t_n} = s_n \left( \frac{1}{t_n} \right) $ converges to $s \left( \frac{1}{t} \right) = \frac{s}{t}$.
+    \end{proof}
 \end{thmbox}
+\todo{lemma 14.6 for bounding in proof of 4.}
 \todo{Explain new notation}
+
+\begin{lembox}{Limit of a Constant Sequence}{}
+    If $s_n$ is a constant sequence $(l, l, l, \ldots)$, then $s_n$ converges to $l$.
+    \tcblower
+    \begin{proof}
+        Let $\epsilon > 0$. For all $n \in \N$, $\abs{s_n - l} = 0 < \epsilon$.
+    \end{proof}
+\end{lembox}
+\todo{better}
+
+\begin{exbox}{Using the Properties}{}
+    Prove $\lim_{n \to \infty} \frac{5n^3 - 8n^2 + 15}{7n^3 + 19n + 4} = \frac{5}{7}$.
+    \tcblower
+    \begin{proof}
+        \begin{align*}
+            \lim_{n \to \infty} \frac{5n^3 - 8n^2 + 15}{7n^3 + 19n + 4}
+            &= \lim_{n \to \infty} \frac{5 - \sfrac{8}{n} + \sfrac{15}{n^3}}{7 + \sfrac{19}{n^2} + \sfrac{4}{n^3}} \\
+            &= \frac{\lim_{n \to \infty} 5 - \sfrac{8}{n} + \sfrac{15}{n^3} }{\lim_{n \to \infty} 7 + \sfrac{19}{n^2} + \sfrac{4}{n^3}} \\
+            &= \frac{ \lim_{n \to \infty} 5 - \lim_{n \to \infty} \sfrac{8}{n} + \lim_{n \to \infty} \sfrac{15}{n^3} }{ \lim_{n \to \infty} 7 + \lim_{n \to \infty} \sfrac{19}{n^2} + \lim_{n \to \infty} \sfrac{4}{n^3} }
+        \end{align*}
+        Now we can work with each limit independently. Note that $\lim_{n \to \infty} \frac{1}{n^2} = \left( \lim_{n \to \infty} \frac{1}{n} \right) \left( \lim_{n \to \infty} \frac{1}{n} \right)$, so:
+        \[ \lim_{n \to \infty} \frac{5n^3 - 8n^2 + 15}{7n^3 + 19n + 4} = \frac{5}{7} \]
+    \end{proof}
+\end{exbox}
+
+\begin{dfnbox}{Increasing, Decreasing, Monotonic}{}
+    A sequence $(s_n)$ is:
+    \begin{itemize}[noitemsep]
+        \item \dfntxt{increasing} if $s_n \leq s_{n+1}$ for all $n \in \N$.
+        \item \dfntxt{strictly increasing} if $s_n < s_{n+1}$ for all $n \in \N$.
+        \item \dfntxt{decreasing} if $s_n \geq s_{n+1}$ for all $n \in \N$.
+        \item \dfntxt{strictly decreasing} if $s_n > s_{n+1}$ for all $n \in \N$.
+    \end{itemize}
+    If $(s_n)$ satisfies any of these properties, then we say $(s_n)$ is \dfntxt{monotonic}.
+\end{dfnbox}
+
+For example, $(s_n) = \left( \frac{1}{n} \right) = \left(1, \frac12, \frac13, \frac14, \ldots \right)$ is strictly decreasing and thus monotonic.
+
+\begin{thmbox}{Monotone Sequence Theorem}{monotone}
+    Let $(s_n)$ be a sequence of real numbers.
+    \begin{enumerate}
+        \item If $(s_n)$ is increasing and bounded above, then $(s_n)$ converges to $\sup \{ s_n : n \in \N \}$.
+        \item If $(s_n)$ is decreasing and bounded below, then $(s_n)$ converges to $\inf\{s_n : n \in \N \}$.
+    \end{enumerate}
+    \tcblower
+    \textbf{Idea:} Assuming $s$ is our limit, we want to find $N \in \N$ such that $\abs{s - s_n} < \epsilon$, or $s - \epsilon < s_n$ for all $n > N$. Then $s - \epsilon < s_n \leq s$ for all $n > N$.
+    \begin{proof}[Proof of 1.]
+        Let $\epsilon > 0$. Because $\{s_n : n \in \N\}$ is non-empty and bounded above, then it has a supremum. Let $s \coloneq \sup\{s_n : n \in \N \}$. Thus, there exists $N \in \N$ such that $s_N > s - \epsilon$ (by the approximation property). Since $(s_n)$ is increasing, we have:
+        \[ \forall (n > N) \left(s - \epsilon < s_N \leq s_n \leq s \quad \right) \]
+        Hence, $\epsilon < s_n - s \leq 0$, so $\abs{s_n - s} < \epsilon$.
+    \end{proof}
+
+    \begin{proof}[Proof of 2]
+        Suppose $(s_n)$ is decreasing and bounded below. Then $s_{n+1} \leq s_n$ for all $n \in \N$. Moreover, there exists $m \in \R$ such that $s_n \geq m$ for all $n \in \N$. That is, $- s_{n+1} \geq - s_n$ for all $n \in \N$, and $- s_n \leq -m$ for all $n \in \N$. Therefore, $(-s_n)$ is increasing and bounded above. By the first part, we know $(-s_n)$ converges to $\sup\{ -s_n : n \in \N\} = - \inf\{s_n : n \in \N\}$. Hence, $(s_n)$ converges to $\inf\{s_n : n \in \N\}$.
+    \end{proof}
+\end{thmbox}
+
+\section{Subsequences}
+
+So far, we've only looked at well-behaving sequences that converge. What about sequences that don't converge? Can will still find some nice properties that describe their behavior?
+\[ (s_n) = (0,1,0,1,0,1,\ldots) \]
+Consider a sequence $(t_n)$ where $t_n = s_{2n}$. That is:
+\[ (t_n) = (s_2, s_4, s_6, \ldots) = (1, 1, 1, \ldots) \]
+Inside this diverging sequence, we can find a convergent \dfntxt{subsequence}! Intuitively, we can make a subsequence by ``throwing away'' terms but keeping the same order. We can formally define a subsequence as follows:
+
+\begin{dfnbox}{Subsequence}{}
+    Given a sequence $(s_n)$, a \dfntxt{subsequence} is any sequence of the form $(t_k)_{k \in \N}$ where $t_k = s_{n_k}$ for all $k \in \N$, $n_k \in \N$ for all $k \in \N$, and $n_k < n_{k+1}$ for all $k \in \N$.
+\end{dfnbox}
+
+For example, if we had $s = (s_1, s_2, s_3, s_4, s_5, s_6, s_7, \ldots, s_{213}, s_{214}, s_{215}, \ldots)$, we can have a subsequence like:
+\[ (t_n) = (s_3, s_5, s_{213}, \ldots) \]
+Here, we would have $n_1 = 3$, $n_2 = 5$, $n_3 = 213$, and so on.
+
+\begin{exbox}{Subsequences}{}
+    Let $(s_n) \coloneq \left( 1, \sfrac12, \sfrac13, \sfrac14, \sfrac15, \sfrac16, \ldots \right)$
+    \begin{enumerate}
+        \item $(t_n) \coloneq \left( 1, \sfrac14, \sfrac19, \sfrac{1}{16}, \sfrac{1}{25} \right)$ is a subsequence of $(s_n)$ where $t_n = \sfrac{1}{n^2}$, or $t_n = s_{n^2}$.
+        \item $(t_n) \coloneq \left( \sfrac{1}{5}, \sfrac{1}{25}, \sfrac{1}{125}, \ldots \right)$ is also a subsequence of $(s_n)$ with $t_n = \frac{1}{5^n}$ or $t_n = s_{5^n}$.
+        \item $(t_n) \coloneq \left( \sfrac17, \sfrac12, \sfrac{1}{12}, \sfrac16 \right)$ is \textbf{not} a subsequence of $(s_n)$ because the indices in $s_n$ are not strictly increasing. We have $n_1 = 7$, but $n_2 = 2$.
+    \end{enumerate}
+\end{exbox}
+
+\begin{notebox}
+    \textbf{In general:}
+    \[ (s_n) = (s_1, s_2, s_3, \ldots) \]
+    \[ (t_n) = (s_{n_k}) = (s_{n_1}, s_{n_2}, s_{n_3}) \]
+\end{notebox}
+
+\begin{lembox}{Indices of Subsequences}{indices-of-subsequences}
+    If $(s_{n_k})_{k \in \N}$ is a subsequence of $(s_n)_{n \in \N}$, then $n_k \geq k$ for all $k \in \N$.
+    \tcblower
+    We will use induction.
+
+    \textbf{Base Case:} Since $n_1 \in \N$, then $n_1 \geq 1$.
+
+    \textbf{Induction Step:} Suppose $n_k \geq k$ for some $k \in \N$. Since $n_{k+1} > n_k$, we have $n_{k+1} \geq n_k + 1 \geq k + 1$.
+
+    Hence, $n_k \geq k$ for all $k \in \N$.
+\end{lembox}
+
+\begin{thmbox}{Limits of Subsequences}{}
+    Suppose $(s_n)$ is a sequence of real numbers, and $s_n$ converges to $s$ for some $s \in \R$. If $(s_{n_k})$ is a subsequence of $(s_n)$, then $s_{n_k}$ converges to $s$.
+    \tcblower
+    \begin{proof}
+        Let $\epsilon > 0$. Since $s_n$ converges to $s$, then there exists $N \in \N$ such that $\abs{s_n - s} < \epsilon$ for all $n > N$. Suppose $k > N$. By lemma \ref{lem:indices-of-subsequences}, $n_k \geq k > N$, so $\abs{s_{n_k} - s} < \epsilon$.
+    \end{proof}
+\end{thmbox}
+
+\section{Limit Superior and Inferior}
+
+Suppose $(s_n)$ is a bounded sequence. Then there exists $M \in \R$ such that $-M \leq s_n \leq M$ for all $n \in \N$. Let:
+\begin{align*}
+    t_1 &\coloneq \sup\{s_1, s_2, s_3, \ldots\} = \sup\{ s_k : k \geq 1 \} \\
+    t_2 &\coloneq \sup\{s_2, s_3, s_4, \ldots\} = \sup\{ s_k : k \geq 2\} \\
+    t_3 &\coloneq \sup\{s_3, s_4, s_5, \ldots\} = \sup\{ s_k : k \geq 3\} \\
+    &\vdots \\
+    t_n &\coloneq \sup\{s_n, s_{n+1}, s_{n+2}, \ldots\} = \sup\{s_k : k \geq n\} \\
+    t_{n+1} &\coloneq \sup\{s_{n+1}, s_{n+2}, s_{n+3}, \ldots\} = \sup\{s_k : k \geq n + 1\} \\
+\end{align*}
+
+Then:
+\[ -M \leq s_n \leq t_n \]
+and:
+\[ t_{n+1} \leq t_n \]
+so $(t_n)$ is bounded below and decreasing. Hence, $(t_n)$ converges by the \nameref{thm:monotone}.
+
+\begin{dfnbox}{Limit Superior, Limit Inferior}{}
+    Let $(s_n)$ be a bounded sequence of real numbers. The \dfntxt{limit superior} is defined as:
+    \[ \limsup s_n \coloneq \lim_{n \to \infty} \sup\{s_k : k \geq n \} \]
+    Similarly, the \dfntxt{limit inferior} is defined as:
+    \[ \liminf s_n \coloneq \lim_{n \to \infty} \inf\{s_k : k \geq n \} \]
+\end{dfnbox}
+
+\begin{exbox}{}{}
+    Define $s_n \coloneq \begin{cases}
+        3+\frac1n, & n\ \text{is even} \\
+        1 - \frac1n & n\ \text{is odd}
+    \end{cases}$
+
+    $(s_n) = (0, 3 + \sfrac12, \sfrac23, 3 + \sfrac14, \sfrac45, 3 + \sfrac16)$
+
+    Let's try to calculate the limit superior of $s_n$. Define $(t_n)$ as follows:
+    \begin{align*}
+        t_1 &\coloneq \sup\{s_1, s_2, s_3, \ldots\} = 3 + \frac12 \\
+        t_2 &\coloneq \sup\{s_2, s_3, s_4, \ldots\} = 3 + \frac12 \\
+        t_3 &\coloneq \sup\{s_3, s_4, s_5, \ldots\} = 3 + \sfrac14 \\
+        t_4 &\coloneq \sup\{s_4, s_5, s_6, \ldots\} = 3 + \sfrac14 \\
+        t_5 &\coloneq \sup\{s_5, s_6, s_7, \ldots\} = 3 + \sfrac16 \\
+            &\vdots
+    \end{align*}
+    We can see that $\limsup s_n = \lim_{n \to \infty} \sup\{s_k : k \geq n\} = 3$. We might refer to $3$ as the ``largest limit point''.
+
+    Now let's try to calculate the limit inferior of $s_n$. Define $(r_n)$  as follows:
+    \begin{align*}
+        r_1 &\coloneq \inf\{s_1, s_2, s_3, \ldots\} = 0 \\
+        r_2 &\coloneq \inf\{s_2, s_3, s_4, \ldots\} = \frac23 \\
+        r_3 &\coloneq \inf\{s_3, s_4, s_5, \ldots\} = \frac23 \\
+        r_4 &\coloneq \inf\{s_4, s_5, s_6, \ldots\} = \frac45 \\
+        &\vdots
+    \end{align*}
+    We can see that $\liminf s_n = \lim_{n \to \infty} \inf\{s_k : k \geq n\} = 1$. We might refer to $1$ as the ``smallest limit point''.
+\end{exbox}
+
+\begin{thmbox}{}{}
+    Suppose $(s_n)$ is a bounded sequence of real numbers, and suppose that $(s_{n_k})$ is a convergent subsequence of $(s_n)$. Then $\liminf s_n \leq \lim_{k \to \inf} s_{n_k} \leq \limsup s_n$.
+    \tcblower
+    \begin{proof}
+        Let $r_n \coloneq \inf\{s_k : k \geq n\}$ and $t_n \coloneq \sup\{s_k : k \geq n\}$. Then $r_n \leq s_n \leq t_n$ for all $n \in \N$. In particular, $r_{n_k} \leq s_{n_k} \leq t_{n_k}$ for all $k \in \N$. By (todo: theroem), $\lim_{k \to \infty} r_{n_k} = \lim_{n \to \infty} r_n$ . Note that $\lim_{n \to \infty} r_n = \liminf s_n$, and $\lim_{k \to \infty} t_{n_k} = \lim_{n \to \infty} t_n = \limsup s_n$. By the (todo: problem set squeeze theorem), we have:
+        \[ \liminf s_n = \lim_{k \to \infty} r_{n_k} \leq lim_{k\ to \infty} s_{n_k} \leq \lim_{k \to \infty} t_{n_k} = \limsup s_n \]
+    \end{proof}
+\end{thmbox}
+
+\begin{thmbox}{Bolzano-Weierstrass Theorem}{bw}
+    Suppose $(s_n)$ is a bounded sequence of real numbers. The $(s_n)$ has a subsequence that coverges to $\limsup s_n$, and $(s_n)$ has a subsequence that converges to $\liminf s_n$.
+    \tcblower
+    \textbf{Intuition:}
+    \begin{itemize}[noitemsep]
+        \item Let $t_k \coloneq \sup \{ s_k, s_{k+1}, s_{k+2}, \ldots\}$, so $\limsup s_n = \lim_{k \to \infty} t_k$.
+        \item For each $k \in \N$ we can find some $n_k \geq k$ such that $t_k - \sfrac{1}{k} < s_{n_k}$.
+        \item Thus, $-\sfrac{1}{k} < s_{n_k} - t_k \leq 0$, so $\abs{s_{n_k} - t_k} < \sfrac{1}{k}$
+        \item By (todo: problem set), $s_{n_k} - t_k \to 0$, so $s_{n_k} = s_{n_k} - t_k + t_k \to \limsup s_n$.
+        \item But: we need $n_1 < n_2 < \cdots < n_k < n_{k+1} < \cdots$. So we need to choose $n_k$ inductively!
+    \end{itemize}
+    \begin{proof}[Proof for limsup.]
+        We will choose a subsequence of $(s_n)$ that converges to $\limsup s_n$. For each $k \in \N$, let $t_k \coloneq \sup \{ s_k, s_{k+1}, s_{k+2}, \ldots\}$ For convenience, let $P(n)$ be the statement ``there exists $n_k \in \N$ such that $n_k > n_{k-1}$ and $\abs{s_{n_k} - t_{1 + n_{k-1}}} < \frac{1}{k}$.'' We define $n_0 \coloneq 0$.
+
+        \textbf{Base Case:} Let $t_1 \coloneq \sup \{s_1, s_2, \ldots\}$. By the approximation property (todo ref), there exists $n_1 \in \N$ such that $t_1 - 1 < s_{n_1} \leq t_1$. Subtracting across by $t_1$, we have $-1 < s_{n_1} - t_1 \leq 0$. Thus, $\abs{s_{n_1} - t_1} < 1$.
+
+        \textbf{Induction Step:} Now we aim to prove $P(k-1) \implies P(k)$. There exists $n_k \in \N$ such that $n_k > n_{k-1}$, and:
+
+        \begin{alignat*}{2}
+            && t_{1 + n_{k-1}} - \frac{1}{k} &< s_{n_k} \leq t_{1+n_{k-1}} \\
+            & \implies \quad & -\frac{1}{k} &< s_{n_k} - t_{1 + n_{k-1}} \leq 0 \\
+            & \implies \quad & \abs{s_{n_k} - t_{1 + n_{k-1}}} &< \frac{1}{k}
+        \end{alignat*}
+
+        That is, $\lim_{k \to \infty} \left( s_{n_k} - t_{1+ n_{k-1}} \right) = 0$. Since $n_k > n_{k-1}$ for all $k \in \N$, $(s_{n_k})$ is a subsequence of $(s_n)$. But $(t_{1 + n_{k-1}})$ is a subsequence of $(t_k)$, so:
+        \[ \lim_{k \to \infty} t_{1 + n_{k-1}} = \lim_{k \to \infty} t_k = \limsup s_n \]
+        Thus:
+        \[ s_{n_k} = s_{n_k} - t_{1 + n_{k-1}} + t_{1 + n_{k-1}} \]
+        so:
+        \[ \lim_{k \to \infty} s_{n_k} = \lim_{k \to\infty} \left( s_{n_k} - t_{1 + n_{k-1}} \right) + \lim_{k \to \infty} t_{1 + n_{k-1}} = 0 + \limsup s_n \]
+        Therefore, $(s_{n_k})$ is a subsequence of $(s_n)$ that converges to $\limsup s_n$.
+    \end{proof}
+\end{thmbox}
+
+\begin{thmbox}{Convergence iff $\limsup = \liminf$}{}
+    Let $(s_n)$ be a bounded sequence of real numbers. Then $(s_n)$ converges if and only if $\liminf s_n = \limsup s_n$
+    \tcblower
+    \begin{proof}
+        First, suppose $s_n$ converges to some $s \in \R$. By the \nameref{thm:bw}, there exists a subsequence $(s_{n_k})$ of $(s_n)$ such that $\lim_{k \to \infty} s_{n_k} = \limsup s_n$. But $s_n$ converges to $s$, so $s_{n_k}$ also converges to $s$. That is, $s = \lim_{k \to \infty} s_{n_k} = \limsup s_n$. By the same reasoning, we have $s = \liminf s_n$. Hence, $\liminf s_n = \lim s_n = \limsup s_n$.
+    \end{proof}
+\end{thmbox}

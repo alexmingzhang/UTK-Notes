@@ -361,9 +361,13 @@ Once we have this expanded set of states, we can create deterministic transition
 \end{exbox}
 
 \section{Pumping Lemma}
-The pumping lemma is a powerful tool in the theory of computation that helps us reason about the limitations of regular languages. Regular languages are those that can be recognized by a finite automaton, but not all languages are regular. The pumping lemma provides a way to prove that certain languages are not regular by demonstrating that they cannot satisfy certain conditions.
+The pumping lemma is a powerful tool that helps us reason about the limitations of regular languages. Recall that a language is \dfntxt{regular} if there exists a DFA that recognizes the language. The pumping lemma provides a way to prove that certain languages are not regular by demonstrating that they cannot satisfy certain conditions.
 
-The pumping lemma works by breaking a long string in a language into smaller parts in a way that exposes its structure. If the language is regular, then we should be able to divide the string into substrings in such a way that the middle substring can be repeated or removed to create a new string that is still in the language. However, if the language is not regular, then at some point we will reach a part that cannot be repeated or removed without breaking the rules of the language.
+\begin{notebox}
+    In this context, \dfntxt{pumping} refers to repeating a string. If we had the string ``abc'', we can pump ``b'' to be ``abbbbc'', or \dfntxt{pump down} to get ``ac''.
+\end{notebox}
+
+The pumping lemma works by partitioning a long string in such a way that exposes its structure. If the language is regular, then there should be a way to partition the string into three substrings such that the middle substring can be pumped up or down and still be in the language. However, if the language is not regular, then at some point we will reach a part that cannot be pumped without breaking the rules of the language.
 
 % \begin{dfnbox}{Pumping, Pumping Length}{}
 %     All strings in a language can be \dfntxt{pumped} if they are as long or longer than a specified \dfntxt{pumping length}.
@@ -371,23 +375,23 @@ The pumping lemma works by breaking a long string in a language into smaller par
 
 % In other words, every string contains a section that can be repeated any number of times, and the resulting string is still in the language. For example, we can write sqrt(sqrt(sqrt($\ldots$(sqrt($x$))$\ldots$))) in C, and it's still valid.
 
-\begin{dfnbox}{Pump}{}
-    Given some string $s$, \dfntxt{pumping} the string means concatenating more copies of $s$ onto itself. \dfntxt{Pumping down} means to remove copies of $s$.
-\end{dfnbox}
+% \begin{dfnbox}{Pump}{}
+%     Given some string $s$, \dfntxt{pumping} the string means concatenating more copies of $s$ onto itself. \dfntxt{Pumping down} means to remove copies of $s$.
+% \end{dfnbox}
 
 \begin{thmbox}{Pumping Lemma}{pl}
-    If $L$ is a regular language, then there exists some $p \in \N$ (the pumping length) such that, for any string $s$ of length $p$ or more, $s$ may be divided into three substrings, $s = x y z$, satisfying the three following conditions:
+    If $L$ is a regular language, then there exists some $p \in \N$ (the pumping length) such that for all $s \in L$ where $\abs{s} \geq p$, $s$ may be divided into three substrings, $s = x y z$, satisfying the three following conditions:
     \begin{enumerate}[noitemsep]
-        \item $\forall (n \geq 0) \left( x y^n z \in L \right)$
-        \item $\abs{y} > 0$
-        \item $\abs{x y} \leq p$
+        \item $\forall (n \geq 0) \left( x y^n z \in L \right)$,
+        \item $\abs{y} > 0$, and
+        \item $\abs{x y} \leq p$.
     \end{enumerate}
     \tcblower
     %\textbf{Intuition:} Consider some pumping length $p \geq \abs{Q}$. By the Pigeonhole Principle, any string of length $p$ or longer will have at least two states repeated by the DFA. Hence, some substring must begin on that state and repeat it at the end. Thus, we can pump that substring any number of times and still get to the accept state.
     \begin{proof}
         Let $M \coloneq  (Q, \Sigma, \delta, q_1, F)$ be a DFA that recognizes $L$, and let $p$ be the number of states in $M$ (i.e. $p \coloneq \abs{Q})$.
 
-        Let $s \coloneq s_1 s_2 \cdots s_n$ be a string in $L$ where $n \geq p$. Let $r_1, \ldots, r_{n+1}$ be the sequence of states that $M$ enters when processing $s$ (i.e. $r_1 = q_1$, and $r_{i+1} = \delta(r_i, s_i)$ for $1 \leq i \leq n$). By the Pigeonhole Principle, then two of the first $p+1$ elements of the sequence must be the same. Let $r_a$ be the first of these, and let $r_b$ be the second of these.
+        Let $s \coloneq s_1 s_2 \cdots s_n \in L$ where $n \geq p$. Let $r_1, \ldots, r_{n+1}$ be the sequence of states that $M$ enters when processing $s$ (i.e. $r_1 = q_1$, and $r_{i+1} = \delta(r_i, s_i)$ for $1 \leq i \leq n$). By the Pigeonhole Principle, then two of the first $p+1$ elements of the sequence must be the same. Let $r_a$ be the first of these, and let $r_b$ be the second of these.
 
         Now, let $x \coloneq s_1 \cdots s_{a-1}$, $y \coloneq s_a \cdots s_{b-1}$, and $z \coloneq s_b \cdots s_n$. Then $x$ takes $M$ from $r_1$ to $r_a$, $y$ takes $M$ from $r_a$ to $r_a$, and $z$ takes $M$ from $r_a$ to $r_{n+1}$ (the accept state).
         \begin{enumerate}
@@ -395,7 +399,7 @@ The pumping lemma works by breaking a long string in a language into smaller par
             \item Since $a \neq b$, then $\abs{y} > 0$.
             \item Since $r_a$ occurs within the first $p+1$ places in the sequence of states, then $b \leq p+1$. Thus, $\abs{xy} \leq p$.
         \end{enumerate}
-        Thus, any string $s$ in $L$ whose length is $p$ or greater satisfies these three conditions.
+        Therefore, these conditions hold for any $s \in L$ where $\abs{s} \geq p$.
     \end{proof}
 \end{thmbox}
 
