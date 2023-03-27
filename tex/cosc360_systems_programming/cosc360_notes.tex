@@ -208,6 +208,29 @@ In UNIX, the file has a directory entry and an associated \dfntxt{inode} that st
 %     \item
 % \end{itemize}
 
+\chapter{Memory}
+We can think of memory as just a really long array. In 32-bit systems, we can have up to $2^{32}$ bytes of memory available to us.
+
+For each process, UNIX declares four regions of memory:
+\begin{enumerate}[noitemsep]
+    \item \dfntxt{Text:} your executable instructions (assembler compiled down to bytes), typically read-only
+    \item \dfntxt{Global variables:} these are determined at compile time
+    \begin{itemize}[noitemsep]
+        \item ``data'' -- initialized globals
+        \item ``BSS'' -- uninitalized globals
+    \end{itemize}
+    \item \dfntxt{Heap:} This memory is retrieved by \texttt{sbrk()} or \texttt{mmap()} -- typically, we see \texttt{malloc()}
+    \item \dfntxt{Stack:} Local variables, function call overhead, etc. \todo{more}
+\end{enumerate}
+This is set up by the operating system in conjunction with the hardware.
+
+\begin{dfnbox}{Memory Page}{}
+Memory is partitioned into fixed-size intervals called \dfntxt{pages}. These are typically 4 or 8 kibibytes.
+\end{dfnbox}
+
+Whenever we reference some memory, the OS looks at the \dfntxt{page table} to find the page it is stored in. If it is an invalid page, the system incurs a segmentation fault.
+
+C has special variables that mark the end of the memory segments for each region (not POSIX standard).
 
 \amzindex
 \end{document}

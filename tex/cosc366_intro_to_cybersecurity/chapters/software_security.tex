@@ -1,0 +1,357 @@
+\chapter{Software Security}
+
+\section{TOCTOU Race}
+
+\begin{dfnbox}{Time-of-check (TOC), Time-of-use (TOU)}{}
+    \dfntxt{Time-of-check (TOC)} is when a reference monitor checks the permission for an action. \dfntxt{Time-of-use (TOU)} is when a reference monitor uses the previous check to allow an action.
+\end{dfnbox}
+
+A common assumption is that the permission condition being checked does not change from the time-of-check to time-of-use. However, in multi-threaded systems where processes can be interrupted or temporarily suspended, permission conditions can change between TOC and TOU (e.g. file permissions or arguments passed to routines).
+
+\begin{dfnbox}{Race Condition, TOCTOU Race}{}
+    A \dfntxt{race condition} is a software vulnerability that occurs when the timing or sequence of events affects a program's behavior. A \dfntxt{TOCTOU race} is a specific race condition where the state of a resource or condition changes between time-of-check and time-of-use.
+\end{dfnbox}
+
+
+File operations are especially vulnerable to TOCTOU race because they rely on an external device. This means the process has to wait on I/O to and from the device. As explained by Chat-GPT:
+
+\begin{notebox}
+    File operations often require interactions with external devices, such as a hard disk, to read or write data. These interactions can take a non-negligible amount of time and can lead to vulnerabilities related to TOCTOU race conditions. Specifically, if a process checks the state of a file, such as its existence or permissions, and then performs an operation on it, such as reading or writing data, it can be vulnerable to race conditions if the state of the file changes during the interval between the check and the operation. This can occur because the external device may be shared by multiple processes or may have a time delay due to its physical nature. As a result, if the process does not properly synchronize or control access to the file, it may lead to unexpected or unintended behavior. Therefore, it is important to implement appropriate locking or synchronization mechanisms when accessing files in a concurrent or multi-process environment to prevent TOCTOU race conditions.
+\end{notebox}
+
+% TOCTOU Race:
+% \begin{itemize}
+%     \item Time-of-check (TOC): when you check whether an action is allowed
+%     \item Time-of-use (TOU): when you execute the action
+%     \item TOCTOU race: potential that action becomes disallowed between checking and executing the action; often caused by multi-threading allowing concurrent execution
+% \end{itemize}
+
+% \begin{itemize}
+%     \item File-based TOCTOU
+%     \item TOC: Check if file exists; check if necessary permissions
+%     \item TOU: create/access file
+%     \item Although code is written in sequence, not guaranteed to run in sequence (OS can interrupt our process)
+% \end{itemize}
+
+Some common ways of fixing TOCTOU race conditions:
+\begin{itemize}
+    \item Thread-locking: ensuring only one thread runs a procedure at a time
+    \item Use calls that do both the check and action in one call; guarantees OS will run it right
+    \item \todo{slides}
+\end{itemize}
+
+\section{Integer-Based Vulnerabilities}
+
+C is ``weakly-typed'', meaning it will implicitly typecast between different integral types. It won't throw exceptions for arithmetic errors. Other languages are more likely to check for these issues and throw exceptions when they happen.
+
+Lots of the issues come from the choice to use fixed-precision data types.
+\begin{itemize}
+    \item \dfntxt{Overflow:} the result of an arithmetic operation is too large to store; excess bits get truncated (usually the most-significant bits get truncated)
+    \item \dfntxt{Underflow:} the result of an arithmetic operation is too small to store; again, excess bits gets truncated
+\end{itemize}
+
+Casting Issues:
+\begin{itemize}
+    \item When casting between signed and unsigned numbers, the underlying bits don't change
+    \item When casting to smaller data types, bits get truncated
+    \item Sign problems: compare signed and unsigned variables causes both to cast to unsigned numbers; sometimes treats negative numbers are being larger than positive numbers
+\end{itemize}
+
+C Type Coercion:
+\begin{itemize}
+    \item If any operand is unsigned, then all operands are treated as unsigned
+    \item The size of the resulting data type is either the size of an integer or the size of the biggest operand
+    \item \todo{slides}
+\end{itemize}
+
+\section{Memory}
+
+When an x86-64 system loads a binary, it stores some things into memory:
+\begin{itemize}
+    \item \dfntxt{Text:} Machine code for the executing binary
+    \item \dfntxt{Shared libraries:} machine code for common libraries; only loaded into memory once to save space (shared by all processes); read and execute permissions
+    \item \dfntxt{Data:} statically allocated data like global and static variables, as well as string constants; read and write permissions
+    \item \dfntxt{Stack:} stack frames and associated data; 8MB by default; read and write permissions
+    \item \dfntxt{Heap:} dynamically allocated objects (e.g. malloc'ed data); read and write permissions
+\end{itemize}
+
+\begin{dfnbox}{Stack}{}
+    The \dfntxt{stack} is a contiguous piece of memory allocated to a program when it runs. Since it's a fixed size, it starts from the highest address and ``grows'' towards the lower address.
+\end{dfnbox}
+
+A CPU register tracks the memory address of the top of the stack (sometimes called a stack pointer). Each function call allocates some memory from the stack called a \dfntxt{stack frame}. It stores the data needed to execute the function such as:
+\begin{itemize}
+    \item the seventh or higher argument
+    \item variadic arguments (from a function that takes a variable number of arguments)
+    \item local variables
+    \item data needed to return to the calling function such as the return address and stored CPU state (e.g. register before the fuction call)
+\end{itemize}
+
+\begin{dfnbox}{Buffer, Buffer Overflow}{}
+    A \dfntxt{buffer} is an array used to read in data. It's usually a fixed size but can be dynamically allocated. A \dfntxt{buffer overflow} occurs when we write past the end of the buffer.
+\end{dfnbox}
+
+\begin{notebox}
+    Many compilers will give a procedure's stack frame some extra unused bytes or padding to prevent buffer overflows reaching important memory like the return address.
+\end{notebox}
+
+Effects of buffer overflow can widely vary, including:
+\begin{itemize}
+    \item nothing: overflow into the padding or some unused data
+    \item minor issues: overwriting the return address to jump to another benign part of the program, or overwrites data that is still used but does not significantly modify behavior
+    \item serious issues: changing the return address to an invalid address (SEGFAULT), or change program data to modify the program's behavior
+    \item catastrophic issues: change return address to jump to attacker control code; can cause full machine compromise
+\end{itemize}
+
+Possible places for an attacker to inject malicious code include the stack (e.g. buffer), shared libraries (e.g. DLLs), local/global variables, environment variables, heap, and command-line arguments (\texttt{argv}). Attacking the stack is most common because the return address is right there.
+
+\section{Buffer Overflow Defenses}
+
+\begin{tabularx}{\linewidth}{| X | X |} \hline
+    \textbf{Technique} & \textbf{Limitations} \\ \hline
+
+    Mark the stack and heap as non-executable &
+    \begin{itemize}[leftmargin=*]
+        \item Loss of functionality like reflection
+        \item Can be circumvented by using code from other parts of memory (called return-oriented programming)
+        \item Code snippets found in \texttt{libc} are Turing complete!
+    \end{itemize} \\ \hline
+
+    \dfntxt{Stack canary:} have some random value between the return address and local variables that changes every function call. If it unexpectedly changed, then we know a buffer overflow happened. &
+    \begin{itemize}[leftmargin=*]
+        \item Can be worked around if the canary can be learned
+    \end{itemize} \\ \hline
+
+    \dfntxt{ASLR:} randomize the location of the stack &
+    \begin{itemize}[leftmargin=*]
+        \item Can be worked around using a NOP sled
+        \item Other vulnerabilties can be used can be used to locate the stack
+    \end{itemize} \\ \hline
+
+    Simply use the safe C library functions (e.g. \texttt{strlcpy} instead of \texttt{strcpy}) &
+    \begin{itemize}[leftmargin=*]
+        \item Requires competency from the developer to know about these functions and use them correctly
+        \item Easy to make a mistake and allow attacks to still happen
+    \end{itemize} \\ \hline
+
+    Just use another language that does bounds-checking on buffers, pointers, and type casting. These checks can happen at runtime or compile time. &
+    \begin{itemize}[leftmargin=*]
+        \item This can still be circumvented in rare edge cases
+    \end{itemize} \\ \hline
+\end{tabularx}
+
+% Firstly, we could mark the stack and heap as non-executable, preventing code injection attacks in the stack. This could cause a loss of functionality like reflection. This defense can be circumvented by using code snippets from other parts of memory, referred to as return-oriented programming. (code snippets found in \texttt{libc} are Turing complete!)
+
+% \begin{dfnbox}{Stack Canary}{}
+% Some architectures implement a \dfntxt{stack canary}---a memory address squished between the return address and local variables. It is set to a random value for each function call, and the canary is checked before jumping to the return address.
+% \end{dfnbox}
+
+% The stack canary is an application of defense in depth. This can be worked around if the canary can be learned. This would require finding and exploiting a vulnerability to read the stack.
+
+% \begin{dfnbox}{Address Space Layout Randomization (ASLR)}{}
+%     \dfntxt{ASLR} randomizes the location of the stack.
+% \end{dfnbox}
+
+% Now, if the attacker uploads a malicious payload to the stack, they don't know what to change the return address to. This again is an application of defense in depth. An attacker would have to find and exploit a vulnerability to read the stack. It can be worked around using a NOP sled. In addition, there are other vulnerabilities to let us know where the stack is.
+
+% We could simply \textbf{use the appropriate C library functions}. Many default C functions don't provide bounds checking for the sake of efficiency. There are equivalent functions that provide bounds checking. It does require competency on the developers' part, so it's still easy to make a mistake and allow an attack to still happen.
+
+% We could just develop in other languages that perform bounds checking for the developer. These checks may happen at runtime or compile time. This can still be circumvented in some edge cases not anticipated by the language designers.
+
+Ultimately, there is no absolute defense for buffer overflows. The best approach is to simply apply defense in depth---use as many techniques as possible to deter attacks.
+
+\section{Privilege Escalation}
+
+Why do we care about vulnerabilities? An attacker's permissions are initially quite limited. Most often, an attacker starts with no direct access to a system, and thus must access it through public interfaces. The services an attacker interacts with often have greater permissions. If an attacker can compromise the service, they can acquire that service's permissions.
+
+Most of the time, these attacks only result in minor privilege escalation. Attackers will use privilege escalation and pivot to attacking another target with greater permissions. This involves a lot of \dfntxt{lateral movement}, slowly moving throughout an organization's resources until they reach their desired target. This may take months or even years.
+
+\section{Malicious Software}
+
+There are several types of software:
+\begin{itemize}[noitemsep]
+    \item \dfntxt{Legitimate software:} software that is designed for legitimate use
+    \item \dfntxt{Harmful software:} software that is designed for legitimate use, but can cause unintentional harm due to poor design or implementation
+    \item \dfntxt{Malicious software:} software designed to cause harm
+    \item \dfntxt{Potentially Unwanted Software (PUS):} software bundled with other software; usually annoying or unwanted, but not necessarily harmful
+\end{itemize}
+
+How does malware get on computers?
+\begin{itemize}[noitemsep]
+    \item \dfntxt{Phishing:} tricking users to use harmful software
+    \item \dfntxt{Repackaged software:} a legitimate program bundled with some malware; especially common in software piracy
+    \item \dfntxt{Drive-by download:} non-consensual downloads from exploits in web browser, usually a result of dynamic content
+    \item \dfntxt{Self-propagation:} once on a machine, malware can search for other ways to spread like through the local network or email
+\end{itemize}
+
+When describing the structure of malware, we focus on four distinct attributes:
+\begin{enumerate}[noitemsep]
+    \item \dfntxt{Dormancy period:} the time between the malware being on the machine and its first run
+    \item \dfntxt{Propagation strategy:} how the malware spreads to other users and machines
+    \item \dfntxt{Trigger condition:} what controls when the payload is executed (how long the malware waits to take effect)
+    \item \dfntxt{Payload:} what does the malware actually do?
+\end{enumerate}
+
+\begin{dfnbox}{Computer Virus}{}
+    A \dfntxt{computer virus} is malware that can infect other programs or files by modifying them to include a possibly mutated copy of itself.
+\end{dfnbox}
+
+Viruses were the first type of malicious software. Most of the early viruses were actually benign---early hackers were just goofing around. Now, most viruses are designed with the specific intent to cause harm.
+
+\begin{enumerate}[noitemsep]
+    \item Dormancy period: dormant until its infected executable runs
+    \item Propagation strategy: propagates by tricking users into downloading and running the virus; often focused on social engineering
+    \item Trigger condition: often triggers immediately, but can be delayed to avoid detection
+    \item Payload: functionality of the actual malware; often compromises existing software, services, and files; impacts can vary drastically
+\end{enumerate}
+
+\begin{dfnbox}{Computer Worm}{}
+    A \dfntxt{computer worm} is malware that can propagate on its own, usually through the network.
+\end{dfnbox}
+
+\begin{enumerate}
+    \item Dormancy period: executes immediately
+    \item Propagation strategy: automatically and continuously attacks other systems; spreads between machines on the same computer network
+    \item Trigger condition: same as a computer virus
+    \item Payload: varies greatly
+\end{enumerate}
+
+More specifically, worms automatically scan the network for vulnerable machines. When they find one, they will exploit a vulnerability on that machine and replicate the worm. The machine then joins in on the process of finding new vulnerable machines on the network.
+
+Worms have two goals which are often at odds with each other. First, the worm wants to replicate as fast and far as possible to make it harder to remove them. However, the worm also wants to stay undetected.
+
+Techniques for spreading include:
+\begin{itemize}
+    \item Hit-list scanning: before deploying the malware, the attacker predetermines a set of potentially vulnerable targets, or select servers to avoid servers where attacks could be correlated and detected
+    \item Internet-scale hit lists: large hit list of every server on the internet; not particularly stealthy, but very fast and wide-reaching
+    \item Permutation scanning: every instance of the worm scans random points in the address space; if it detects an infected machine, choose a new random point; avoids localized detection
+\end{itemize}
+
+\begin{dfnbox}{Trojan Horse}{}
+    A \dfntxt{trojan horse} is a virus that pretends to be legitimate software.
+\end{dfnbox}
+
+This can be fully malicious software that pretends to be legitimate software, or legitimate software that has an additional malicious payload. Its malicious functionality may be immediately apparent, or may take some time to notice. Trojan horses are common in piracy and pornography software.
+
+\begin{dfnbox}{Backdoor}{}
+    A \dfntxt{backdoor} is software that allows an adversary to access a machine while bypassing authentication.
+\end{dfnbox}
+
+Reverse shell and remote desktop tools are common examples. Often, attackers use tools that are legitimate, but install socially engineer the user to install it.
+
+\begin{dfnbox}{Keylogger}{}
+    A \dfntxt{keylogger} is a program that hooks into the operating system API for getting keyboard events.
+\end{dfnbox}
+
+With a keylogger, an  attacker can steal sensitive information like passwords or credit card numbers. Also applicable to other I/O devices like the mouse and monitor.
+
+\section{Detecting Viruses}
+
+\begin{dfnbox}{Malware Signature, Behavioral Signature}{}
+    A \dfntxt{malware signature} is a sequence of bytes known to be malicious. A \dfntxt{behavioral signature} refers to a sequence of actions used to identify malware.
+\end{dfnbox}
+
+These signatures are especially helpful in identifying known malware. However, they are limited in incurring false positives, viruses using previously unknown code or behaviors (zero-day), attackers can create code to avoid detection.
+
+Malware signatures
+\begin{itemize}
+    \item Byte sequences known to be malicious
+    \item Search binaries for these signatures
+\end{itemize}
+
+Behavioral signatures
+\begin{itemize}
+    \item Sequence of actions are known to be malicious
+    \item Watch binaries as thy execute to detect these sequences of actions; can test binaries automatically in a VM when downloaded
+    \item Related to intrusion detection
+\end{itemize}
+
+
+
+Preventing viruses:
+\begin{itemize}
+    \item Integrity-checking: create a whitelist of allowed software binary hashes; more effective than signatures, but it's easy to block legitimate software
+    \item Code signing: allow developers to digitally sign their exectuables; check that a binary is signed by a trusted developer; more flexible type of integrity checking
+\end{itemize}
+
+The most common type of malware detection is signature detection. A common way to circumvent this is by encrypting the payload, prepended with some code that will decrypt it whenever it runs.
+\begin{itemize}
+    \item \dfntxt{Encrypted payload:} we encrypt the actual payload, and bundle a decryptor that that decrypts the payload when run
+    \item \dfntxt{Polymorphic encrypted payloads:} we use the same encryption, but the virus changes its decryptor for each infection using a \dfntxt{mutation engine}. More advanced, it could use a compiler to create new decryptor implementations on-the-fly.
+    \item \dfntxt{External decryption key:} Same as above, but the key is stored externally, not in the binary
+    \item \dfntxt{Metamorphic Viruses:} no encryption is used, but the entire payload is recompiled with same functionality but different machine code.
+\end{itemize}
+
+\begin{dfnbox}{Rootkit}{}
+    A \dfntxt{rootkit} replaces part of the kernel's functionality, able to run as root and side-step the kernel's reference monitors.
+\end{dfnbox}
+
+This means rootkits have arbitrary access to memory, files, devices, and the network. This can be very hard to detect, as the rootkit could just overwrite the functionality used to scan for the rootkit. This often means the only way to remove it is to completely reinstall the machine.
+
+\begin{itemize}
+    \item \dfntxt{System Call Hijacking:} completely replace a legitimate function call
+    \item \dfntxt{Inline Hooking:} add a malicious payload to a legitimate function's precall or postcall methods
+\end{itemize}
+
+Installing rootkits:
+\begin{itemize}
+    \item Superusers can simply install kernel modules
+    \item Exploit a vulnerability in the kernel (will already be running with maximum permissions)
+    \item Modify bootloader to load a modified kernel
+    \item Improper memory handling for the kernel  (page files written to disk, direct memory access)
+\end{itemize}
+
+There are legitimate uses for rootkits, including virus scanners, debuggers, anti-cheat, and anti-piracy software.
+
+\todo[inline]{web stuff}
+
+Supplychain attack: Web widgets (third party code running on trusted websites) might get attacked; affecting everyone that uses that widget
+
+Cross-site scripting: \todo{do this}
+
+\begin{dfnbox}{Ransomware}{}
+    \dfntxt{Ransomware} holds files or computers for ransom, whether it be deleting or leaking files.
+\end{dfnbox}
+
+\begin{itemize}
+    \item \dfntxt{Encrypting ransomware:} encrypts all the user's personal files; upon payment, the attacker (hopefully) provides software to decrypt the files
+    \item \dfntxt{Non-encrypting ransomware:} Can simply modify access control rules, disable OS functionality,
+\end{itemize}
+
+Encrypting ransomware is hard to fix because, if we choose to remove the ransomware before paying, the files are still encrypted. Non-encrypting ransomware is relatively easy to fix. We can just access the files through a different OS, or reinstall the OS without harming the files.
+
+Backups can be used to mitigate ransomware.
+
+\begin{dfnbox}{Botnet}{}
+    A \dfntxt{botnet} is a set of compromised networked computer (bots), coordinated by an attacker (the botmaster).
+\end{dfnbox}
+
+This greatly increases the attacker's ability to conduct large-scale attacks. It also helps avoid detection, since it's a more distributed attack.
+
+\begin{enumerate}
+    \item Infect: attacker seeds the botnet by manually targeting some computers
+    \item Connect: after infection, bots connect to command and control server(s) to receive further orders (referred to as a C\& C or C2 server)
+    \item Control: the C2 infrastructure sends commands to the bots
+    \item Multiply: bots automatically target other machines, attempting to infect them
+\end{enumerate}
+
+Botnets are commonly used for:
+\begin{itemize}
+    \item Distributed denial-of-service (DDoS) attacks
+    \item Spamming and phishing emails
+    \item Computational power for brute-force attacks, like cracking password databases
+    \item Money laundering: use computers to transfer funds
+    \item Data theft
+    \item Cryptocurrency mining
+\end{itemize}
+
+\section{Categorizing Malware}
+Objectives:
+\begin{itemize}
+    \item Damage to the host or its data
+    \item Data theft
+    \item Direct financial gain
+    \item Ongoing surveillance
+    \item Spread of malware (lateral movement)
+    \item Control of resources
+\end{itemize}

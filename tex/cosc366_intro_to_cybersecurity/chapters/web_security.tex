@@ -1,0 +1,83 @@
+\chapter{Web and Browser Security}
+
+\section{Introduction}
+
+\begin{dfnbox}{Domain Name}{}
+    A \dfntxt{domain name} is a human-readable name for an internet service.
+\end{dfnbox}
+
+For simplicity, we will assume that a domain name can only have one associated service/server, and vice versa (i.e. a one-to-one mapping between domain names and servers).
+
+\begin{dfnbox}{Domain Name System (DNS)}{}
+    A \dfntxt{Domain Name System} maps domain names to their corresponding server's IP address. We say the DNS \dfntxt{resolves} a domain name to mean the DNS converts a domain name into an IP address.
+\end{dfnbox}
+
+It's common for computers to store the IP addresses for one or two DNS services. By default, a DNS has no integrity (that is, an attacker on the network could \todo{what could they do tho}). DNSSEC solves this issue but has low adoption.
+
+\begin{dfnbox}{Top-Level Domain (TLD), Second-Level Domain, Subdomain, Fully-Qualified Domain Name (FQDN)}{}
+    Consider the following domain name:
+    \[ \texttt{userlab.utk.edu} \]
+    \begin{itemize}[noitemsep]
+        \item \texttt{edu} constitutes the \dfntxt{top-level domain (TLD)}
+        \item \texttt{utk} constitutes the \dfntxt{second-level domain}
+        \item \texttt{userlab} constitutes the \dfntxt{subdomain} which provides further naming specification for the server. It can have several ``levels'' and is assumed to be controlled by its parent (sub)domain.
+        \item \texttt{userlab.utk.edu} consitutes the \dfntxt{fully-qualified domain name (FQDN)}, which is sent to the DNS to be resolved into an IP address
+    \end{itemize}
+
+    In addition, a domain name is the combination of a second-level domain and a top-level domain.
+\end{dfnbox}
+
+Machines typically parse domain names from right to left, starting from the most broad identifiers and working towards the most specific ones.
+
+\begin{notebox}
+    \texttt{www} is a common subdomain which is sort of an artifact of the internet's inception. In the early days, people wanted to separate the website from other services from the domain name. There is no guarantee that \texttt{www.website.com} hosts the same data as \texttt{website.com}. Now, most websites specify \texttt{website.com} to simply redirect to \texttt{www.website.com}.
+\end{notebox}
+
+\begin{tecbox}{Resolving Domain Names}{}
+    Suppose we have some servers with domain name \texttt{amazon.com} and Alice who wants to connect to the servers.
+    \begin{itemize}
+        \item Alice connects to her intermediate access point that actually connects to the internet (most commonly a router).
+        \item Alice prompts the DNS for the IP to \texttt{amazon.com}.
+        \item The DNS resolves the IP address and gives it to Alice.
+        \item Alice connects to the resolved IP address.
+    \end{itemize}
+\end{tecbox}
+
+\begin{dfnbox}{Uniform Resource Locator (URL)}{}
+    A \dfntxt{URL} identifies specific resources on a server. This contrasts from a domain which only specifies which server to connect to.
+\end{dfnbox}
+
+\begin{dfnbox}{Scheme, Host, Port, Pathname, Query}{}
+    Consider the following URL:
+    \[ \texttt{scheme://host[:port]/pathname[?query]} \]
+    The square brackets denote optional fields.
+    \begin{itemize}
+        \item The \dfntxt{scheme} is the protocol used to communicate with the server (e.g. http, https, ftp, ftps, ws, etc.).
+        \item The \dfntxt{host} is usually the domain name or IP address of the server.
+        \item The \dfntxt{port} specifies the port to connect to. If omitted, it uses default values for known schemes (e.g. 80 for http, 443 for https).
+        \item The \dfntxt{pathname} identifies a specific resource on the server. It resembles a UNIX file system path, but it does not actually need to map to the underlying file system.
+        \item The \dfntxt{query} is addition data that further specifies the requested resource. It always starts with \texttt{?} and is a collection of key-value pairs, separated by \texttt{\&}.
+    \end{itemize}
+\end{dfnbox}
+
+When encoding URLs, there are only a certain set of characters that is allowed. Non-allowed characters are encoded as their hexadecimal representation prepended with a \texttt{\%}.
+
+\begin{dfnbox}{Hypertext Transfer Protocol (HTTP)}{}
+    \dfntxt{HTTP} is a common request-response protocol for serving web content. It is built on TCP (ensures reliable data transfer) and is a stateless protocol (that is, connections are all independent of each other at the protocol level; no data is stored about the request itself).
+\end{dfnbox}
+
+HTTP was originally designed to only serve Hypertext Markup Language (HTML), but is now used to serve general content.
+
+\begin{dfnbox}{HTTP Methods}{}
+    HTTP requests are sent similar to the following string:
+    \[ \texttt{METHOD /pathname?query HTTP VER Host:} \] \[ \texttt{hostname:port} <keyword>:<value> <request body> \]
+    \todo[inline]{format this properly like an actual HTTP request}
+    \begin{itemize}[noitemsep]
+        \item \dfntxt{GET:} retrieve data from the URL
+        \item \dfntxt{POST:} push data to the URL
+        \item Others include HEAD, PUT, DELETE, TRACE, CONNECT, OPTIONS, PATCH
+        \item The \dfntxt{request body} is the data needed to fulfill the request.
+    \end{itemize}
+\end{dfnbox}
+
+Although the HTTP spec specifies the intended uses of each method, servers can implement and handle these methods however they choose. So there is generally no standardization of these methods between different servers.

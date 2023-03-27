@@ -1,0 +1,190 @@
+\chapter{Partial Derivatives}
+
+\section{Functions of Several Variables}
+
+We will only be concerned with functions in the real numbers.
+
+\begin{dfnbox}{Function of $n$ Variables}{}
+A \dfntxt{function of $n$ variables} is a function $f : X \to Y$ where $X \subseteq \R^n$ and $Y \subseteq \R$. In other words, it maps ordered pairs of real numbers $(x_1, x_2, \ldots, x_n) \in \R^2$ to some real number $y \in \R$. In this context, we call $x_1, \ldots, x_n$ \dfntxt{independent variables} and call $y$ a \dfntxt{dependent variable}.
+\end{dfnbox}
+
+We will mostly be concerned with functions of two variables, mapping ordered pairs of real numbers to a unique real number. These functions exist in a three-dimensional space, and are thus relatively easy to visualize.
+
+\begin{dfnbox}{Graph}{}
+    Let $f$ be a function of two variables with domain $D$. The \dfntxt{graph} of $f$ is the set of points $(x,y,z) \in \R^3$ such that $(x,y) \in D$ and $z = f(x,y)$
+\end{dfnbox}
+
+The graph of a function gives us a really nice visualization of three-dimensional functions. Take for instance a function in two variables defined as $f(x,y) = 6 - 3x - 2y$. \todo{finish example}
+
+% A function $f : \R^n \to \R$ defined by $f(x_1, x_2, \ldots, x_n) = y$ is called a real-valued function of $n$ variables. It is also called a \dfntxt{scalar function} on $\R^n$.
+
+% The domain of $f(x,y)$ is the set of all points $(x,y) \in \R^2$ for which the function is defined. We write this as:
+% \[ \text{Dom}(f(x,y)) = \{ (x,y) \in \R : f(x,y)\ \text{is defined} \} \]
+
+% \begin{dfnbox}{Level Curve}{}
+%     If $z = f(x,y)$, then the \dfntxt{level curve} or level set for the graph of $f(x,y)$ are the sets defined as:
+%     \[ C_k \coloneq \{ (x,y,z) \in \R^3 : (x,y) \in D \land k = f(x,y) \} \]
+% \end{dfnbox}
+
+\begin{dfnbox}{Level Curve}{}
+    Let $f$ be a function of two variables. A \dfntxt{level curve} of $f$ is a curve with equation $f(x,y) = k$ for a fixed $k$ in the range of $f$.
+    \tcblower
+    Formally, let $f : A \to B$ be a function where $A \subseteq \R^2$ and $B \subseteq \R$. Let $z \in f[A]$ (the range of $f$). A \dfntxt{level curve} is the set of all $(x,y,z)$ such that $f(x,y) = z$.
+\end{dfnbox}
+
+We call a collection of level curves a \dfntxt{contour map}. Contour maps are most descriptive when the level curves are equally spaced; that is, we choose equally spaced $z$ values.
+
+\section{Limits and Continuity}
+
+\begin{dfnbox}{Limits for functions of two variables}{}
+    Let $f$ be a function of two variables with domain $D$. We say the \dfntxt{limit} as $f$ approaches $(a,b)$ is $L$ if, for all $\epsilon > 0$, there exists some $\delta > 0$ such that for all $(x,y) \in D$, if $0 < \sqrt{(x-a)^2 + (y-b)^2} < \delta$, then $\abs{f(x,y) - L} < \epsilon$.
+    \tcblower
+    \[ \forall(\epsilon > 0) \exists(\delta > 0) \forall \left( (x,y) \in D \right) \left(0 < \sqrt{(x-a)^2 + (y-b)^2} < \delta \implies \abs{f(x,y) - L} < \epsilon\right) \]
+\end{dfnbox}
+\todo{make sure this definition is correct}
+
+In other words, for any arbitrarily small distance $\epsilon$, there is some disc of points around $(x,y)$ such that every point in that disc maps to something within $\epsilon$ distance of the limit $L$.
+
+\begin{exbox}{Proving the Limit}{}
+    Let $f(x,y) = \frac{3x^2}{x^2+y^2}$. Prove that $\lim_{(x,y) \to (0,0)} f(x,y) = 0$.
+    \tcblower
+    \textbf{Intuition:} We may be tempted to try a bunch of curves approaching $(0,0)$ and show that those curves follow the limit. However, this would have to work for every possible curve, so this method is not exhaustive. Instead, we need to leverage the formal definition of the limit.
+
+    Note that $x^2 \leq x^2 + y^2$. If $(x,y) \neq (0,0)$, then we can divide both sides by $x^2 + y^2$ to attain $\frac{x^2}{x^2 + y^2} \leq 1$. Multiplying both sides by $3$, we get $\frac{3x^2}{x^2 + y^2} \leq 3$. Also, since $y \neq 0$, then $\abs{y} > 0$. Thus, we can multiply both sides by $\abs{y}$ to get:
+    \[ \abs{f(x,y)} = \abs*{\frac{3x^2 y}{x^2+y^2}} = \frac{3x^2 \abs{y}}{x^2 + y^2} \leq 3 \abs{y} \]
+    Also note that the distance between $(0,0)$ and $(x,y)$ is given by $\sqrt{x^2 + y^2}$. Thus, we also have:
+    \[ 3\abs{y} \leq 3\sqrt{x^2 + y^2} < 3 \delta < \epsilon \]
+    Thus, we want to choose some $\delta \leq \frac{\epsilon}{3}$.
+    \begin{proof}
+        Let $\epsilon > 0$. Let $\delta \leq \frac{\epsilon}{3}$. Then, for all $\sqrt{x^2 + y^2} < \delta  = \frac{\epsilon}{3}$, we have:
+        \begin{alignat*}{2}
+            && \sqrt{x^2 + y^2} &< \frac{\epsilon}{3} \\
+            & \implies \quad & \abs{y} &< \frac{\epsilon}{3} \\
+            & \implies & 3\abs{y} < \epsilon \\
+            & \implies & \frac{3x^2\abs{y}}{x^2 + y^2} &< \epsilon \\
+            & \implies & \abs*{\frac{3x^2 y}{x^2 + y^2}} &< \epsilon \\
+            & \implies & \abs*{\frac{3x^2 y}{x^2 + y^2} - 0} &< \epsilon \\
+            & \implies & \abs{f(x,y) - 0} &< \epsilon
+        \end{alignat*}
+        Therefore, $\lim_{(x,y) \to (0,0)} f(x,y) = 0$.
+    \end{proof}
+\end{exbox}
+
+The calculation of limits can be greatly simplified by using the properties of limits:
+\begin{thmbox}{Properties of Limits}{}
+    Suppose we had had:
+    \[ \lim_{(x,y,z) \to (a,b,c)} f(x,y,z) = l_f \quad \textbf{and} \quad \lim_{(x,y,z) \to (a,b,c)} g(x,y,z) = l_g \]
+    Then:
+    \begin{enumerate}[noitemsep]
+        \item $\lim_{(x,y,z) \to (a,b,c)} \left[ f(x,y,z) + g(x,y,z) \right] = l_f + l_g$
+        \item For a constant $c \in \R$, $\lim_{(x,y,z) \to (a,b,c)} \left[ cf(x,y,z) \right] = cl_f$
+        \item $\lim_{(x,y,z) \to (a,b,c)} \left[ f(x,y,z) \cdot g(x,y,z) \right] = l_f \cdot l_g$
+        \item If $l_g \neq 0$, then $\lim_{(x,y,z) \to (a,b,c)} \left[ \frac{f(x,y,z)}{g(x,y,z)} \right] = \frac{l_f}{l_g}$.
+    \end{enumerate}
+\end{thmbox}
+
+\begin{dfnbox}{Continuity}{}
+    Let $f$ be a function of two variables with domain $D$. We say that $f$ is \dfntxt{continuous} at a point $(a,b) \in D$ if:
+    \[ \lim_{(x,y) \to (a,b)} f(x,y) = f(a,b) \]
+    We say that $f$ is \dfntxt{continuous} on $D$ if $f$ is continuous at every point $(a,b) \in D$.
+\end{dfnbox}
+
+Intuitively, we can think of a function being continuous if it has no gaps or sudden breaks.
+
+\begin{notebox}
+    All polynomials are continuous on $\R^2$, and all rational functions are continuous on their domains.
+\end{notebox}
+
+Consider the function $f(x,y) = \frac{3x^2y}{x^2+y^2}$. This function is defined every except at $(0,0)$. Thus, we have a gap discontinuity at $(0,0)$. We could define a function like:
+
+\[ g(x) = \] \todo{piecewise function where g(x) = 0}
+
+\section{Partial Derivatives}
+
+Let's first consider a function $f$ in one variable. In Calculus I, we define the derivative of $f$ at some point $x$ as:
+
+\[ f\prime(x) \coloneq \lim_{h \to 0} \frac{f(x+h) - f(x)}{h} \]
+
+We are usually taught to think of this as the ``slope of the line tangent to $f$ at the point $x$''
+
+Now let $f$ be a function in two variables. If $f(x,y) = z$, we define the \dfntxt{partial derivative with respect to} $x$ as follows.
+
+\[ \frac{\partial}{\partial x} f(x,y) \coloneq \lim_{h \to 0} \frac{f(x+h, y) - f(x,y)}{h} \]
+
+In the above, we treat $y$ as a constant and only care about how $f$ changes as $x$ changes. If instead we wanted the partial derivative with respect to $y$, we would have:
+
+\[ \frac{\partial}{\partial y} f(x,y) \coloneq \lim_{h \to 0} \frac{f(x, y+h) - f(x,y)}{h} \]
+
+\begin{dfnbox}{Partial Derivative}{}
+    Let $f : A \to B$ where $A \subseteq \R^n$ and $B \subseteq \R$ be defined by $f(x_1, \ldots, x_n) = z$ for some $z \in B$. The \dfntxt{partial derivative} with respect to $x_k$ is defined as:
+
+    \[ \frac{\partial}{\partial x_k} f(x_1, \ldots, x_n) \coloneq \lim_{h \to 0} \frac{f(x_1, \ldots, x_k + h, \ldots, x_n) - f(x_1, \ldots, x_n)}{h} \]
+\end{dfnbox}
+
+
+\todo[inline]{Maybe add a neat image here for the geometric interpretation of partial derivatives}
+
+We can also write $\frac{\partial}{\partial x} f(x,y)$ as $f_x$ or $D_x f$. If we wanted to take the partial derivative with respect to $x$ twice, we write that as:
+
+\[ \frac{\partial^2}{\partial x^2} f(x,y) \]
+
+We can also take a partial derivative with respect $x$ first, then partial derivative respect to $y$. This is written as:
+
+\[ \frac{\partial^2}{\partial y \partial x} f(x,y) \]
+
+\begin{thmbox}{Clairaut's Theorem}{}
+    Suppose that $f$ is a function in two variables that is defined on some disk $D$ containing the point $(a,b)$. If $f_{xy}$ and $f_{yx}$ are both continuous on $D$, then $f_{xy}(a,b) = f_{yx}(a,b)$.
+\end{thmbox}
+
+\section{Tangent Planes}
+
+If $z = f(x,y)$ defines a surface $S$ in $\R^3$ by \todo{finish this part}
+
+Let $\vec{n}$ denote the normal direction of the tangent plane. Given $f(x,y)$ and some point $(x_0, y_0)$, then:
+\[ \vec{n} = \alg{f_x(x_0, y_0), f_y(x_0, y_0), -1} \]
+Thus, the equation of the tangent plane at $(x_0, y_0)$ is:
+\[ f_x(x_0, y_0) (x - x_0) + f_y(x_0, y_0) (y - y_0) - (z - f(x_0, y_0)) = 0 \]
+
+Another way to describe the normal direction is to first define $F(x,y,z) = f(x,y) - z$. Then, we have:
+\[ \vec{n} = \nabla F(x,y,z) = \alg{ \frac{\partial f}{\partial x} (x,y) , \frac{\partial f}{\partial y} (x,y), -1 } \]
+
+\begin{dfnbox}{Differentiable}{}
+    A
+    \tcblower
+    Formally, let $f$ be a function of two variables defined as $f(x,y) = z$. $f$ is \dfntxt{differentiable} at $(a,b)$ if:
+    \todo[inline]{Finish definition}
+\end{dfnbox}
+
+Intuitively, a function is differentiable at $(x_0, y_0)$ if its tangent plane is always a ``pretty good'' approximation for the function near $(x_0, y_0)$.
+
+\begin{thmbox}{Differentiability}{}
+    If partial derivatives $f_x$ and $f_y$ exist near $(x_0, y_0)$ and are continuous at $(x_0, y_0)$, then $f$ is differentiable at $(x_0, y_0)$.
+\end{thmbox}
+
+More generally, if partial derivatives $f_x$ and $f_y$ exist and are continuous for every point $(x,y)$, then $f$ is differentiable.
+
+\section{Chain Rule}
+
+From Calculus I, if $f$ and $g$ are functions that are differentiable on their domains, and the output of $g$ is always in the domain of $f$, then $f \circ g$ is also differentiable on its domain. By the Chain Rule, we have:
+\[ \frac{d}{dx} f(g(x)) = f \prime (g(x)) g\prime(x) = \frac{df}{dy} \cdot \frac{dy}{dx} \]
+
+The above only applies to functions of the form $f : \R \to \R$. We can generalize the chain rule for any function $f : \R^n \to \R$ as follows:
+
+\begin{thmbox}{Generalized Chain Rule}{}
+    Let $f : \R^n \to \R$ be a differentiable function. So, $f(x_1, x_2, \ldots, x_n) \in \R$. Suppose that each $x_j$ is a differentiable function in $m$ variables, so $x_j(t_1, t_2, \ldots, t_m) \in \R$. The partial derivative of $f$ with respect to $t_k$ is as follows:
+    \[ \pdv{f}{t_k} = \sum_{i = 1}^{n} \left( \pdv{f}{x_i} \cdot \pdv{x_i}{t_k} \right) \]
+\end{thmbox}
+
+We can also write:
+\todo{jacobian matrix, chain rule in terms of gradients}
+
+\section{Directional Derivatives}
+
+\begin{dfnbox}{Directional Derivative}{}
+    The \dfntxt{directional derivative} of a function $f$ at $(x_0, y_0)$ in the direction of a unit vector $\vec{u} \coloneq \alg{a,b}$ is defined as:
+    \[ D_{\vec{u}} f(x_0, y_0) \coloneq \lim_{h \to 0} \frac{f(x_0 + ha, y_0 + hb) - f(x_0, y_0)}{h} \]
+\end{dfnbox}
+
+\begin{thmbox}{}{}
+    If $f$ is differentiable at $(x_0, y_0)$, then $D_{\vec{u}} f (x_0, y_0) = \nabla f(x_0, y_0) \cdot \vec{u}$.
+\end{thmbox}

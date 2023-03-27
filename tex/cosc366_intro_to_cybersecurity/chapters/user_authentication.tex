@@ -1,0 +1,253 @@
+\chapter{User Authentication}
+
+\dfntxt{Authentication} is the process of verifying an identity is legitimate by some supporting evidence. In contrast, \dfntxt{identification} establishes an identity using contextual information, not necessarily having an explicit identity asserted.
+
+\section{Passwords}
+
+\begin{dfnbox}{Username, Password}{}
+    A \dfntxt{password} is a piece of secret information, typically a string of easily-typed characters, that is used to authenticate a user.
+\end{dfnbox}
+
+
+Passwords usually have an associated account with a username, public or secret. We are more concerned with the actual bits of the password, not necessarily the characters themselves. As such, we need to have a deterministic way of converting characters to bits, whether it be ASCII or UTF-8.
+
+\begin{tabularx}{\linewidth}{| X | X |}
+    \hline
+    Advantages of passwords:
+    \begin{itemize}[noitemsep,leftmargin=*]
+        \item Simple and easy to learn
+        \item Free for users
+        \item No physical load to carry
+        \item Usually easy to recover lost access
+        \item Easily delegated (e.g. sharing Netflix passwords)
+    \end{itemize}
+    &
+    Disadvantages of passwords:
+    \begin{itemize}[noitemsep,leftmargin=*]
+        \item Hard to create random passwords (theoretical space is large, but practical space is small)
+        \item Hard to remember good passwords
+        \item Users often reuse passwords
+    \end{itemize}
+    \\ \hline
+\end{tabularx}
+
+To address the problem that the practical space of passwords is relatively small, some systems use \dfntxt{system-assigned passwords} that maximize the space of passwords.
+
+\begin{dfnbox}{Password Composition Policies}{}
+    A \dfntxt{password composition policy} specifies requirements about creating a password, such as minimum and maximum password length, or character requirements and restrictions.
+\end{dfnbox}
+
+Although intended to improve password strength, these composition policies often backfire. It makes a lot of users recycle the same passwords. Similarly, forced password changes often backfire as most users, tech-savvy or not, will increment their password like ``hello1'', ``hello2''. This predictable pattern allows attackers to easily guess passwords whenever the next forced change happens.
+
+\begin{dfnbox}{Passkey}{}
+    A \dfntxt{passkey} is a cryptographic key derived from a password.
+\end{dfnbox}
+
+PBKDF2 is a common function. Modern algorithms like Argon2id can also be used.
+
+\section{Password Authentication}
+
+Password authentication can be defeated by techniques such as:
+\begin{enumerate}[noitemsep]
+    \item \dfntxt{Online password guessing:} guesses are sent to the legitimate server
+    \item \dfntxt{Offline password guessing:} guesses are checked locally, usually accompanied by the password database itself
+    \item \dfntxt{Password capture:} attacker directly intercepts or observes the password (e.g. key logging, phishing, or simply looking over someone's shoulder as they type the password)
+    \item \dfntxt{Password interface bypass:} completely bypass the password system
+    \item \dfntxt{Defeating recovery mechanisms:} use account recovery methods to gain access to accounts
+\end{enumerate}
+
+\begin{exbox}{Simplest (and worst) password authentication}{}
+    Registration:
+    \begin{itemize}[noitemsep]
+        \item User sends a username and password to the website
+        \item Website stores the username and password in plaintext
+    \end{itemize}
+    Authentication:
+    \begin{itemize}[noitemsep]
+        \item User sends a username and password to the website
+        \item Website compares the sent values with the stored values
+    \end{itemize}
+\end{exbox}
+
+Some of the major flaws include:
+\begin{itemize}[noitemsep]
+    \item Data can be intercepted when sending to the server; need to encrypt communication between user and server
+    \item \dfntxt{Phishing:} attacker tricks user into giving the attacker their info; hard to mitigate, could use password managers or hardware security tokens
+    \item Online password guessing; have to rate limit authentication attempts, can also require strong passwords
+    \item Password database theft
+\end{itemize}
+
+\begin{exbox}{Simple but better password authentication}{}
+    Registration:
+    \begin{itemize}[noitemsep]
+        \item User sends a username and password to the website
+        \item Website hashes the password, then stores the info
+    \end{itemize}
+    Authentication:
+    \begin{itemize}[noitemsep]
+        \item User sends a username and password to the website
+        \item Website hashes the received password and compares the calculated hash
+    \end{itemize}
+\end{exbox}
+
+This is much better, but there are still some pretty serious flaws:
+\begin{itemize}[noitemsep]
+    \item \dfntxt{Offline guessing:} if an attacker steals the database, then they can guess passwords until it matches one of the hashed passwords with no rate limit.
+    \item \dfntxt{Rainbow Table Attack:} someone can simply create a table of password hashes for common passwords
+\end{itemize}
+
+\begin{exbox}{Salted Hashing}{}
+    Registration:
+    \begin{itemize}[noitemsep]
+        \item User sends a username and password to website
+        \item Website generates some random bytes called a \dfntxt{salt}
+        \item Website hashes the received password concatenated with the salt (similar to padding)
+        \item Website stores username, and salt in plaintext as well as the hashed password
+    \end{itemize}
+    Authentication:
+    \begin{itemize}[noitemsep]
+        \item User sends a username and password to website
+        \item Website retrieves the salt for the username
+        \item Website hashes the received password along with salt
+        \item Website compares the calculated hash with the stored hash
+    \end{itemize}
+\end{exbox}
+
+This defeats generalized rainbow table attacks. In extreme situations, a motivated adversary can steal the database and use the salt to create a specialized rainbow table targeted against one person.
+
+We can add more features for stronger security, such as:
+\begin{itemize}[noitemsep]
+    \item \dfntxt{Iterated Hashing:} Repeatedly hash the salt and password a large number of times; slows down brute force guessing; has minimal impact on legitimate authentications
+    \item \dfntxt{Specialized Functions:} Use memory-intense and cache-intense functions; makes it hard to accelerate, reducing password guessing rate significantly (e.g. Argon2id, bcrypt/scrypt)
+    \item \dfntxt{Keyed Hash Function:} Use a hash function that requires a cryptographic key (e.g. HMAC); if key isn't stolen, it will be impossible to conduct offline guessing
+\end{itemize}
+
+\begin{codebox}{Passwords with Salted Hashing in C\#}{}{}
+    \begin{amzcode}{csharp}
+using System.Security.Cryptography;
+using System.Text;
+
+var password = "hello";
+var passwordBytes = Encoding.ASCII.GetBytes(password);
+
+var salt = RandomNumberGenerator.GetBytes(32);
+
+// hash for 100000 iterations
+var hash = Rfc2898DeriveBytes.Pbkdf2(password, salt, 100000, HashAlgorithmName.SHA256, 32);
+
+using BCrypt.Net;
+
+// Returns a crazy string
+var temp = BCrypt.Net.BCrypt.HashPassword(password);
+
+// Should return true
+BCrypt.Net.Bcrypt.Verify(password, temp);
+    \end{amzcode}
+\end{codebox}
+
+\section{Account Recovery}
+
+When a user forgets their password or their account gets compromised, it's important that the user can still recover that account. It's also important to not let the account recovery method be easier for an adversary than password authentication. Security is only as strong as its weakest link.
+
+\begin{dfnbox}{Password Recovery, Account Recovery}{}
+    \dfntxt{Password recovery} retrieves a user's lost password. \dfntxt{Account recovery} lets a user regain access to their account, requiring a password reset.
+\end{dfnbox}
+
+Password recovery is a sign that the server is storing passwords in plaintext, or they are simply encrypting them without hashing. Either way, it's terrible security practice, and is a sign that the maintainers of the website have no idea how to implement good security.
+
+In practice, account recovery should be the only recovery method available. Some popular methods include:
+\begin{itemize}[noitemsep]
+    \item \dfntxt{Email-Based Recovery:} Send a link to the email account; makes accounts only as strong as the email
+    \item \dfntxt{SMS-based recovery:} similar to email-based recovery; prone to sim swapping
+    \item \dfntxt{Security Questions:} in practice, it's easy for attacker to learn answers to these questions
+\end{itemize}
+
+\begin{dfnbox}{Single Sign-On (SSO)}{}
+    \dfntxt{Single Sign-On} lets a single identity provider handle user authentication for multiple services.
+\end{dfnbox}
+
+For example, you have probably logged into websites using your Google account. While SSO creates a single point of failure, it can be argued it's not that bad because most users already reuse the same password for multiple sites. Hence, many services let identity providers handle authentication. It's easier for the user (who doesn't have to create as many accounts), and most identity providers have top-class security.
+
+In the Single Sign-On, there are three parties: the user, relying party, and identifying party. When trying to authenticate with the relying party, we first request an authentication token from the identifying party. We then send that token to the relying party, who verifies the token is correct by asking the identifying party.
+
+\begin{dfnbox}{CAPTCHA}{}
+    \dfntxt{CAPTCHA} refers to any online test used to differentiate human and computer entities. It's a loose acronym of ``completely automated public Turing test to tell computers and humans apart''.
+\end{dfnbox}
+
+A popular and modern approach to CAPTCHA is \dfntxt{reCAPTCHA}. It measures behavioral patterns such as interactions with the website as well as other metrics like IP address to determine if you're a human. If it's not sure, it makes you do the traffic light clicking thing. If it really thinks you're a robot, it makes you do those fading traffic light clicking things.
+
+
+\section{Authentication Factors}
+Authentication factors are used to verify you are who you say you are. They rely on one or more of the following:
+\begin{itemize}[noitemsep]
+    \item something you \dfntxt{know} (like a secret PIN or password)
+    \item something you \dfntxt{have} (like a phone or credit card)
+    \item something you \dfntxt{are} (fingerprints, behaviors)
+\end{itemize}
+
+\begin{dfnbox}{Multi-Factor Authentication}{}
+    \dfntxt{Single factor authentication} authenticates users using only one factor. \dfntxt{Two-factor authentication (2FA)} authenticates using two distinct factors, most commonly a password and something you have. \dfntxt{Three-factor authentication (3FA)} is the most secure but usually not practical.
+\end{dfnbox}
+
+2FA substantially increases the security of accounts, but it needs to be carefully implemented to avoid usability issues.
+
+Something you have:
+\begin{itemize}[noitemsep]
+    \item In your possession, trivial to authenticate
+    \item Nothing to remember
+    \item If you don't have the item, you can't authenticate
+    \item If someone steals the item, you have immediate access
+    \item If you lose item, account recovery is difficult
+\end{itemize}
+
+We can use the thing you have by sending that thing a secret value.
+\begin{itemize}[noitemsep]
+    \item Service sends a secret value to your device (one-time password)
+    \item You authenticate by entering the secret value
+    \item Problem: easy to phish
+\end{itemize}
+
+Alternatively, we can just have some way to synchronize the secret value generation, so we only need to send a secret once.
+\begin{itemize}[noitemsep]
+    \item Service sends you a secret during account registration
+    \item Secret is stored on your device
+    \item The secret is used to generate the same one-time password on both the server and dev
+    \item Authenticate by entering the value generated by your device.
+    \item Problem: still easy to phish, but attacker would only have a one-time window
+\end{itemize}
+
+We could use some dedicated device for this.
+\begin{itemize}[noitemsep]
+    \item Dedicated device generates a public-key private-key pair
+    \item Public key is sent to service during registration
+    \item Device uses its private key to sign authentication requests
+    \item Can be designed to avoid phishing and require presence
+    \item Usually comes with some backup codes in case the device is broken; those can be prone to phishing
+\end{itemize}
+
+When it comes to something you are:
+\begin{itemize}[noitemsep]
+    \item Nothing to remember
+    \item Nothing to carry
+    \item Difficult to steal
+    \item Usually requires specialized hardware; bad hardware is prone to error and/or security issues
+    \item If you lose your biometric, how do you recover your account?
+    \item Sharing biometrics is risky in the first place
+\end{itemize}
+
+Some examples include:
+\begin{itemize}[noitemsep]
+    \item Fingerprints -- lots of poorly designed hardware prone to fingerprint lifting or forging
+    \item Facial Recognition -- similar looking people like siblings can log in too
+    \item Iris Recognition -- specialized hardware costs a lot
+    \item Brainwave Recognition --
+    \item Behavior Biometrics -- e.g reCAPTCHA
+    \item Walking Cadence -- how you walk
+    \item Travel Patterns -- used by gov't to identify suspicious people
+\end{itemize}
+
+When using biometrics for an app, it's usually not being sent to the server. Instead, the OS will only decrypt shared secret after authenticating using biometrics.
+
+\begin{notebox}{}
+    When authentication with biometrics like fingerprints, we aren't actually sending biometric info to the server. When logging in, the website and local device create a secret passphrase, and the local device only sends the passphrase to the website when the local device verifies your biometric. This is not a form of 2FA. From the website's perspective, there's only a single factor of authentication.
+\end{notebox}

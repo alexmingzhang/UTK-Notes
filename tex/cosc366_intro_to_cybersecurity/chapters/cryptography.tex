@@ -1,0 +1,239 @@
+\chapter{Cryptography}
+Whenever working with cryptography, always remember:
+\begin{enumerate}[noitemsep]
+    \item Do not design your own cryptographic protocols or algorithms. Your design will almost always be flawed.
+    \item \dfntxt{Kerckhoff's Principle:} Security should only come from the secrecy of the crytographic key, NOT the algorithm or code. In other words, just assume that any adversary can view your source code.
+    \item Encryption only provides \dfntxt{confidentiality}, not integrity. That is, encryption only keeps your data secret, but an attacker could still modify the encrypted data.
+\end{enumerate}
+
+\section{Introduction}
+
+\begin{dfnbox}{Cipher, Plain Text, Cipher Text}{}
+    A \dfntxt{cipher} is any encryption or decryption algorithm. A \dfntxt{plaintext} message is a message prior to cipher and is thus vulnerable. A \dfntxt{ciphertext} message is after the cipher is applied.
+\end{dfnbox}
+
+Some possible threats to encryption may be:
+\begin{itemize}[noitemsep]
+    \item \dfntxt{Brute force attack:} guess and check all keys
+    \item \dfntxt{Algorithmic break:} some flaw in the encryption algorithm
+\end{itemize}
+
+\begin{dfnbox}{Cryptographic Key, Key Space}{}
+    A \dfntxt{cryptographic key} is a value which is used to decrypt cipher text. It should be relatively large and remain private. The \dfntxt{key space} is the set of all possible cryptographic keys in a cipher.
+\end{dfnbox}
+
+The key space for a cipher should be large enough such that it would be impractical for an attacker to perform a brute force attack. For example, AES-256 uses 256-bit keys. The key space of AES-256 contains $2^{256}$ distinct keys. Even a thermodynamically perfect computer with the power of the sun could not even count through $2^{256}$ keys, much less guess and check them!
+
+\begin{dfnbox}{Passive Adversary, Active Adversary}{}
+    A \dfntxt{passive adversary} only observes and records communications. An \dfntxt{active adversary} interacts with and/or modifies communications, possibly by injecting data, altering data, or starting new interactions with legitimate parties.
+\end{dfnbox}
+
+% Some possible adversaries include:
+% \begin{itemize}[noitemsep]
+%     \item Passive -- just listens to communications
+%     \item Active -- can modify data
+% \end{itemize}
+
+\begin{dfnbox}{Information-Theoretic Security}{}
+    We say ciphertext has \dfntxt{information-theoretic security} if given \textbf{unlimited} computer power and time, an attacker could not recover the plaintext from the ciphertext.
+\end{dfnbox}
+
+\begin{dfnbox}{Computational Security}{}
+    We say ciphertext has \dfntxt{computational security} if given \textbf{fixed} computer power and time, an attacker could not recover the plaintext from the ciphertext.
+\end{dfnbox}
+
+\begin{dfnbox}{Stream Cipher, Block Cipher}{}
+    A \dfntxt{stream cipher} encrypts information one bit at a time.     A \dfntxt{block cipher} encrypts information in blocks.
+\end{dfnbox}
+
+\section{Symmetric Encryption Model}
+
+\begin{dfnbox}{Symmetric-Key Encryption}{}
+    \dfntxt{Symmetric-key encryption} uses the same cryptographic key to encrypt plaintext and decrypt ciphertext.
+\end{dfnbox}
+
+\begin{dfnbox}{One-Time Pad (OTP)}{}
+    The \dfntxt{one-time pad} is a symmetric stream cipher that simply XOR's a message with a key of equal length. The resulting ciphertext is information theoretic so long as the cryptographic key is:
+    \begin{itemize}[noitemsep]
+        \item as long as the plaintext,
+        \item completely randomly generated,
+        \item never reused, and
+        \item kept completely secret between authorized parties.
+   \end{itemize}
+\end{dfnbox}
+
+Many modern cryptographic algorithms work by taking a small cryptographic key and expanding it into a sufficiently large one-time pad key.
+
+\begin{dfnbox}{Advanced Encryption Standard (AES)}{}
+    \dfntxt{AES} is the most common symmetric block cipher.
+    \begin{itemize}[noitemsep]
+        \item Messages are split into 128-bit blocks (with padding)
+        \item Cryptographic key is 128, 196, or 256 bits long
+        \item Provides computational security
+        \item A single bit changed should change (on average) 50\% of the ciphertext
+    \end{itemize}
+    In addition, different block modes help to remove patterns among blocks.
+\end{dfnbox}
+
+\section{Asymmetric Encryption Model}
+
+\begin{dfnbox}{Asymmetric Encryption, Public Key, Private Key}{}
+    \dfntxt{Asymmetric encryption} utilizes two cryptographic keys: a \dfntxt{public key} which encrypts plaintext, and a \dfntxt{private key} which decrypts ciphertext.
+\end{dfnbox}
+
+Unfortunately, public key encryption is orders of magnitude slower than symmetric key encryption. We can incorporate both using hybrid encryption, providing the best of both worlds.
+
+\begin{dfnbox}{Hybrid Encryption, Key Wrap}{}
+    \dfntxt{Hybrid encryption} incorporates both symmetric key and public key encryption. We encrypt our plaintext using a symmetric key, and we send both the encrypted ciphertext and the symmetric key encrypted using the other party's public key. This encrypted key is called a \dfntxt{key wrap}.
+\end{dfnbox}
+
+\begin{dfnbox}{Padding}{}
+    Many encryption algorithms \dfntxt{pad} messages to:
+    \begin{itemize}[noitemsep]
+        \item ensure the message is properly formatted
+        \item prevent attacks by adding random noise
+    \end{itemize}
+\end{dfnbox}
+
+To see why padding is important, suppose we only need to send a single integer. While the key space is large, the message space is small. Thus, an attacker could guess and check all possible messages until it matches the encrypted message.
+
+There are many ways to pad a message. Generally, we want to use the optimal asymmetric encryption padding (OAEP).
+
+\begin{dfnbox}{RSA}{}
+    \dfntxt{RSA} is a common and mathematically simple cryptographic algorithm that provides computational security.
+\end{dfnbox}
+
+\begin{codebox}{RSA Encryption using C\#}{}{}
+    \begin{amzcode}{csharp}
+        var message = "Hello World!";
+        var plaintext = Encoding.ASCII.GetString(ciphertext);
+        var rsa = RSA.Create(2048);
+        var public_key = rsa.ExportRSAPublicKeyPem();
+        var private_key = rsa.exportRSAPrivateKeyPem();
+
+        var ciphertext = rsa.Encrypt(plaintext, RSAEncryptionPadding.OaepSHA256);
+
+        var decrypted = rsa.Decrypt(ciphertext, RSAEncryptionPadding.OaepSHA256);
+        var decrypted_plaintext = Encoding.ASCII.GetString(decrypted);
+    \end{amzcode}
+\end{codebox}
+
+\section{Digital Signatures}
+
+\begin{dfnbox}{Digital Signature}{}
+    \dfntxt{Digital signatures} are tags (bitstrings) that accompany a message, verifying that data came from the right person. The \dfntxt{private key} is used to sign data, and the \dfntxt{public key} to verify a signature.
+\end{dfnbox}
+
+Digital signatures provide three security properties:
+\begin{enumerate}[noitemsep]
+    \item \dfntxt{Data origin authentication:} the data comes from the owner of the private key
+    \item \dfntxt{Data integrity:} the data has not changed since it was sent
+    \item \dfntxt{Non-repudiation:} the sender cannot later claim to have not sent the data
+\end{enumerate}
+
+In practice, digital signatures provide non-repudiation if and only if nobody besides the legitimate party has the private key for signing. They could try to deny ever signing something by saying ``someone must have stolen and used my private key.''
+
+It is \textbf{crucial} to avoid using the same key for signing and for cryptography because:
+\begin{enumerate}[noitemsep]
+    \item If our private key gets stolen, someone can then decrypt our data \textbf{and} forge our digital signatures.
+    \item There can be strange mathematical interactions between encryption and signing that might reveal information about our key.
+\end{enumerate}
+
+Similar to encryption algorithms, there are signing algorithms that create digital signatures and verification algorithms that verify digital signatures. In addition, we still pad our messages before signing to ensure the message is formatted and to prevent some (relatively esoteric) attacks.
+
+Data is often hashed before signed. Again, different key pairs should be used for encryption/decryption and signing/verification.
+
+\section{Cryptographic Hash Functions}
+
+\begin{dfnbox}{Hash Function}{}
+    A \dfntxt{hash function} takes a string of \textbf{any length} and outputs a (relatively) unique string of \textbf{fixed length}.
+    % \tcblower
+    % \[ H : 2^* \to 2^n \]
+\end{dfnbox}
+
+The output of a hash function can be called a \dfntxt{hash value}, \dfntxt{digest}, or simply \dfntxt{hash}. In practice, hash functions should always:
+\begin{enumerate}[noitemsep]
+    \item be applicable to data of any size,
+    \item output a fixed length data, and
+    \item be fast to compute.
+\end{enumerate}
+
+Hash functions should also guarantee three essential security properties:
+\begin{enumerate}[noitemsep]
+    \item \dfntxt{One-way property}: Theoretically impossible to find the original message from the hash; one hashed string maps to an infinite amount of input strings (sometimes called preimage resistance)
+    \item \dfntxt{Weak collision resistance}: Given an input, it's computationally impossible to find another input that produces the same hash.
+    \item \dfntxt{Strong collision resistance}: It's computationally impossible to find any pair of distinct inputs that produce the same hash.
+\end{enumerate}
+
+\begin{dfnbox}{SHA}{}
+    \dfntxt{SHA} is a common hash function.
+\end{dfnbox}
+
+\begin{exbox}{Data Integrity}{}
+    \begin{itemize}
+        \item When sending data, first hash it and send the hash along with the data
+        \item When receiving the data, first hash it and check that the calculated hash matches the one that was received
+        \item TODO: finish from slides
+    \end{itemize}
+\end{exbox}
+
+\begin{exbox}{Password Storage}{}
+    Instead of storing passwords in plaintext, the server stores the hashed passwords.
+
+    Hashing at client and then sending to server is flawed!
+    \begin{itemize}
+        \item If an attacker steals the hashed passwords, an attack can simply log in using the hashed passwords.
+    \end{itemize}
+\end{exbox}
+
+\section{Message Authentication Codes}
+
+\begin{dfnbox}{Message Authentication Code (MAC)}{}
+    A \dfntxt{message authentication code} is a tag (or bitstring) used for authenticating a message (i.e. came from the right person).
+\end{dfnbox}
+
+\begin{itemize}[noitemsep]
+    \item Symmetric-key equivalent to digital signatures
+    \item Provides data origin authentication and data integrity (only for two people)
+\end{itemize}
+
+In practice, message authentication codes \textbf{do not} provide non-repudiation. At least two people will have access to the key (which is used for signing and authenticating). Thus, a third party won't be able to tell who created the MAC.
+
+\begin{dfnbox}{Hash-Based Message Authentication Code (HMAC)}{}
+    Can be used with any cryptographic hash function, only use with safe functions (e.g. HMAC-SHA256)
+\end{dfnbox}
+
+\begin{dfnbox}{CMAC}{}
+    Based on symmetric encryption using CBC mode
+\end{dfnbox}
+
+
+\begin{dfnbox}{UMAC}{}
+    Based on universal hashing; pick a hash function based on the key, then encrypt the digest
+\end{dfnbox}
+
+Again, don't reuse the same key for encryption and decryption
+
+\begin{codebox}{Simple HMAC in C\#}{}{}
+    \begin{amzcode}{csharp}
+using System.Security.Cryptography;
+using System.Text;
+
+var message = "Hello World!";
+var plaintext = Encoding.ASCII.GetBytes(message);
+
+var digest = SHA256.HashData(plaintext);
+var digest2 = SHA256.HashData(plaintext);
+
+// Verify the two digests are the same
+digest.SequenceEqual(digest2)
+
+var receivedtext = "Gello World!";
+var key = RandomNumberGenerator.GetBytes(512);
+var calculatedMAC = HMACSHA256.HashData(key, plaintext);
+var receivedMAC = HMACSHA256.HashData(key, receivedtext);
+
+// This will be false
+calculatedMAC.SequenceEqual(receivedMAC);
+    \end{amzcode}
+\end{codebox}

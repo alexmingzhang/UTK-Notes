@@ -26,7 +26,7 @@ Like in the approximation property, we use $\epsilon$ to denote some arbitrarily
     To prove that a sequence $s$ converges to $l$, we carry out the following steps:
     \begin{enumerate}
         \item As some scratch work, solve the inequality $\abs{s_n - l} < \epsilon$ for $n$.
-        \item In the formal proof, let $\epsilon > $, and let $N$ be greater than the solved thing. Let $n > N$, then work towards $\abs{s_n - l} < \epsilon$.
+        \item In the formal proof, let $\epsilon > 0$, and let $N$ be greater than the solved thing. Let $n > N$, then work towards $\abs{s_n - l} < \epsilon$.
     \end{enumerate}
 \end{tecbox}
 \todo{Make this explanation better}
@@ -136,7 +136,7 @@ Like in the approximation property, we use $\epsilon$ to denote some arbitrarily
 
 A sequence can only converge to one value, not more. That is, if a sequence has a limit, then that limit is unique.
 
-\begin{lembox}{}{approximating-zero}
+\begin{lembox}{Approximating Zero}{approximating-zero}
     Let $x \in \R$. If $x < \epsilon$ for all $\epsilon > 0$, then $x \leq 0$.
     \tcblower
     \begin{proof}
@@ -158,16 +158,15 @@ A sequence can only converge to one value, not more. That is, if a sequence has 
 
 \todo[inline]{Definitions of bounds for sequences, show that convergent implies boundedness}
 
-
 \todo[inline]{Split the theorem below into four separate theorems?}
 
-\begin{thmbox}{}{}
-    Suppose $(s_n)$ and $(t_n)$ are sequences of real numbers, and $s,t \in \R$ such that $s_n$ converges to $s$ and $t_n$ converges to $t$. Then:
+\begin{thmbox}{Properties of Limits}{}
+    Let $(s_n)$ and $(t_n)$ be convergent sequences of real numbers, and let $s,t \in \R$ such that $s_n$ converges to $s$ and $t_n$ converges to $t$. Then:
     \begin{enumerate}
-        \item $cs_n$ converges to $cs$.
-        \item $s_n + t_n$ converges to $s+t$.
-        \item $s_nt_n$ converges to $st$
-        \item If $t_n \neq 0$, then for all $n$ and $t \neq 0$, $\frac{s_n}{t_N}$ converges to $\frac{s}{t}$.
+        \item For any $c \in \R$, $cs_n$ converges to $cs$,
+        \item $s_n + t_n$ converges to $s+t$,
+        \item $s_nt_n$ converges to $st$, and
+        \item if $t_n \neq 0$, then for all $n$ and $t \neq 0$, $\frac{s_n}{t_n}$ converges to $\frac{s}{t}$.
     \end{enumerate}
     \tcblower
     \begin{proof}[Proof of 1]
@@ -420,5 +419,77 @@ so $(t_n)$ is bounded below and decreasing. Hence, $(t_n)$ converges by the \nam
     \tcblower
     \begin{proof}
         First, suppose $s_n$ converges to some $s \in \R$. By the \nameref{thm:bw}, there exists a subsequence $(s_{n_k})$ of $(s_n)$ such that $\lim_{k \to \infty} s_{n_k} = \limsup s_n$. But $s_n$ converges to $s$, so $s_{n_k}$ also converges to $s$. That is, $s = \lim_{k \to \infty} s_{n_k} = \limsup s_n$. By the same reasoning, we have $s = \liminf s_n$. Hence, $\liminf s_n = \lim s_n = \limsup s_n$.
+
+        Conversely, suppose $\liminf s_n = \limsup s_n$. Let $r_n \coloneq \inf\{s_k : k \geq n\}$ and $t_n \coloneq \sup\{s_k : k \geq n\}$. Then $r_n \leq s_n \leq _n$ for all $n \in \N$. Then $\lim r_n = \liminf s_n = \limsup s_n = \lim t_n$. Therefore, by the Squeeze Theorem (todo: ref), $s_n$ converges to $\liminf s_n$.
     \end{proof}
 \end{thmbox}
+
+\section{Cauchy Sequences}
+
+To show that a sequence $(s_n)$ converges using the definition of limit, we need to know what limit is beforehand. Consider the following limit:
+\[ \lim_{n\to\infty} \sum_{k=1}^{n} \frac{1}{k^3} \]
+This sequence of partial sums converges, but its limit is unknown. Certainly we can get a decimal approximation for this value, but there is no known ``closed'' form of this value.
+
+\begin{dfnbox}{Cauchy Sequence}{}
+    We say a sequence is \dfntxt{Cauchy} if, for all $\epsilon > 0$, there exists $N \in \N$ such that $\abs{s_n - s_m} < \epsilon$ for all $n > N$ and $m > M$.
+    \tcblower
+    \[ \forall(\epsilon > 0) \exists(N \in \N) \forall(n > N, m > N) \left( \abs{s_n - s_m} < \epsilon \right) \]
+\end{dfnbox}
+
+In other words, a sequence is Cauchy if \textbf{all} terms in the tail can be made arbitrarily close to each other. Or, for any arbitrarily small distance, there exists some ``tail'' of the sequence that exists entirely within that distance. This definition circumvents any mention of a specific ``limit''. But we can prove that any Cauchy sequence of real numbers is convergent, and vice versa.
+
+\begin{lembox}{Convergent Sequences are Cauchy}{convergent-implies-cauchy}
+    If a sequence of real numbers converges, then that sequence is Cauchy.
+    \tcblower
+    \begin{proof}
+        Let $(s_n)$ be a convergent sequence of real numbers. Let $\epsilon > 0$. Since $(s_n)$ converges to some $s \in \R$, there exists $N \in \N$ such that $\abs{s_n - s} < \sfrac{\epsilon}{2}$ for all $n > N$. If $n > N$ and $m > N$, then:
+        \[ \abs{s_n - s_m} = \abs{s_n - s + s - s_m} \leq \abs{s_n - s} + \abs{s - s_m} < \frac{\epsilon}{2} + \frac{\epsilon}{2} = \epsilon \]
+        % \begin{align*}
+        %     \abs{s_n - s_m}
+        %     &= \abs{s_n - s + s - s_m} \\
+        %     &\leq \abs{s_n - s} + \abs{s - s_m} \\
+        %     &= \abs{s_n - s} + \abs{s_m - s} \\
+        %     &< \frac{\epsilon}{2} + \frac{\epsilon}{2} \\
+        %     &= \epsilon
+        % \end{align*}
+    \end{proof}
+\end{lembox}
+
+\begin{lembox}{}{cauchy-convergent-subsequence}
+    Suppose $(s_n)$ is a Cauchy sequence, and that $(s_{n_k})$ is a convergent subsequence of $(s_n)$ where $s_{n_k}$ converges to some $s \in \R$. Then $(s_n)$ converges, and $\lim s_n = s$.
+    \tcblower
+    \begin{proof}
+        Let $\epsilon > 0$. Since $(s_n)$ is Cauchy, then there exists some $N \in \N$ such that $\abs{s_n - s_m} < \sfrac{\epsilon}{2}$ for all $n > N$ and $m > N$. Since $(s_{n_k})$ converges to $s$, there exists $N_1 \in \N$ such that $\abs{s_{n_k} - s} < \frac{\epsilon}{2}$ for all $k > N_1$. Let $k \in \N$ where $k > N$ and $k > N_1$. Since $n_k \geq k$, then $n_k > N$ and $n_k > N_1$. For all $n > k$, we have:
+        \[ \abs{s_n - s} = \abs{s_n - s_{n_k} + s_{n_k} - s} \leq \underbrace{\abs{s_n - s_{n_k}}}_{n_1, n_k > N} + \underbrace{\abs{s_{n_k} - s}}_{n_k > N_1} < \frac{\epsilon}{2} + \frac{\epsilon}{2} = \epsilon\]
+    \end{proof}
+\end{lembox}
+
+\begin{lembox}{Cauchy Sequences are Bounded}{cauchy-implies-bounded}
+    If a sequence of real numbers is Cauchy, then that sequence is bounded.
+    \tcblower
+    \begin{proof}
+        Let $(s_n)$ be a Cauchy sequence of real numbers. Then there exists $N \in \N$ such that $\abs{s_n - s_m} < 1$ for all $n > N$ and $m > N$. Let $m \coloneq N+1$. Then, for all $n > N$, we have:
+        \[ \abs{s_n} = \abs{s_n - s_m + s_m} \leq \abs{s_n - s_m} + \abs{s_m} < 1 + \abs{s_m} = 1 + \abs{s_{N+1}} \]
+        Thus, for all $n \in \N$, we have:
+        \[ \abs{s_n} \leq \max\{\abs{s_1}, \abs{s_2}, \ldots, \abs{s_N}, 1 + \abs{s_{N+1}} \} \]
+        Therefore, $(s_n)$ is bounded.
+    \end{proof}
+\end{lembox}
+
+\begin{thmbox}{Cauchy Criterion}{}
+    A sequence of real numbers converges if and only if it is Cauchy.
+    \tcblower
+    \begin{proof}
+        By Lemma \ref{lem:convergent-implies-cauchy}, we know that convergence implies Cauchy.
+
+        If $(s_n)$ is Cauchy, then by Lemma \ref{lem:cauchy-implies-bounded}, $(s_n)$ is bounded. By the \nameref{thm:bw}, $(s_n)$ has a convergent subsequence. By Lemma \ref{lem:cauchy-convergent-subsequence}, $(s_n)$ converges.
+    \end{proof}
+\end{thmbox}
+
+Our definition of completeness in $\R$ predicates on a notion of order between the elements. Specifically, we said $\R$ is complete because every subset of $\R$ that is bounded above has a supremum. What does it mean to say $\R^2$ is complete?
+
+\begin{dfnbox}{Completeness (in terms of Cauchy Sequences)}{}
+    A (metric) space is \dfntxt{complete} if every Cauchy sequence converges to a point in the space.
+\end{dfnbox}
+
+The intuition is the same: there are no points ``missing'' from the space.

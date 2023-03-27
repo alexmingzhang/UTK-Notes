@@ -1,0 +1,392 @@
+\chapter{Regular Languages}
+\begin{dfnbox}{Finite Automaton}{}
+    A \dfntxt{finite automaton} is a theoretical device that is designed to recognize patterns in input from a set of characters. It operates through a finite set of states, including a start state and one or more final or accept states, and transitions between these states based on the input it receives.
+\end{dfnbox}
+
+In essence, a finite automaton is a simplified machine that helps to identify patterns within data. Finite automata can be used to generalize tons of applications, ranging from parsers for compilers, pattern recognition, speech processing, and market prediction.
+
+\begin{exbox}{Simple Finite Automaton}{}
+    \begin{center}\begin{tikzpicture}[node distance=2cm, on grid, auto]
+        \node[state, initial] (q0) {$q_0$};
+        \node[state, accepting, right=of q0] (q1) {$q_1$};
+        \path[->]
+            (q0) edge node {$a$} (q1)
+                 edge [loop above] node {$b$} ()
+            (q1) edge [loop above] node {$a$,$b$} ();
+    \end{tikzpicture}\end{center}
+    Here, $q_0$ represents our start state, and $q_1$ represents our accept state. If we give the machine the character $a$, then it transitions to $q_1$ and is in an accept state. If we don't give it an $a$, then it will be stuck on $q_0$.
+\end{exbox}
+
+\section{Deterministic Finite Automata}
+
+\begin{dfnbox}{Deterministic Finite Automaton (DFA)}{dfa}
+    A \dfntxt{deterministic finite automaton} (DFA) is a type of finite automaton where every state transition corresponds to one and only one next state. In other words, a DFA is a finite-state machine that follows a single path of transitions for a given input.
+    \tcblower
+    We can formally define a DFA as a 5-tuple $(Q, \Sigma, \delta, q_0, F)$ where:
+    \begin{itemize}[noitemsep]
+        \item $Q$ is a finite set of all possible states
+        \item $\Sigma$ is a finite set of symbols called an \dfntxt{alphabet}
+        \item $\delta : Q \times \Sigma \to Q$ is the \dfntxt{transition function}
+        \item $q_0 \in Q$ is the \dfntxt{start state}
+        \item $F \subseteq Q$ is the set of \dfntxt{accept states} (or final states)
+    \end{itemize}
+\end{dfnbox}
+
+The determinism of a DFA ensures that, for any given state and input, there is a unique and well-defined next state. To explain the computation of a DFA, let's consider a simple example DFA called $M_1$. The process of running $M_1$ can be broken down into the following steps:
+\begin{itemize}[noitemsep]
+    \item $M_1$ begins at its initial state.
+    \item We give $M_1$ a sequence of characters from its alphabet.
+    \item With each input symbol, $M_1$ makes a state transition along the edge labeled with that symbol.
+    \item When $M_1$ reads the last symbol, it outputs whether it's in an accept state
+\end{itemize}
+
+In essence, the DFA computation involves moving from state to state based on the input symbols until the final state is reached, at which point it outputs whether the input is accepted or rejected.
+
+\begin{dfnbox}{String Acceptance, String Rejection}{}
+    We say a finite automaton \dfntxt{accepts} a string if, after reading that string, the machine ends on an accept state. Otherwise, the machine \dfntxt{rejects} the string.
+    % \tcblower
+    % More formally, let $M \coloneq (Q, \Sigma, \delta, q_0, F)$ be a DFA and $w \coloneq a_1 \ldots a_n$ be a string over $\Sigma$. We say $M$ \dfntxt{accepts} $w$ if there exists a sequence of states $r_0 \ldots r_n$ in $Q$ such that:
+    % \begin{itemize}[noitemsep]
+    %     \item $r_0 = q_0$
+    %     \item $\delta(r_i, a_{i+1}) = r_{i+1}$
+    %     \item $r_n \in F$
+    % \end{itemize}
+\end{dfnbox}
+
+\begin{dfnbox}{Language }{}
+    A \dfntxt{language} is simply a set of strings. We say $L$ is a language over an alphabet $\Sigma$ if every word in $L$ is a string over $\Sigma$. We say $L$ is the language of a machine $M$ if $L$ contains every string that $M$ accepts, denoted by $L(M)$.
+\end{dfnbox}
+
+\begin{tecbox}{Constructing a DFA}{}
+    Here's the general design approach for a DFA:
+    \begin{enumerate}[noitemsep]
+        \item Identify the possible states of the finite automaton
+        \item Identify the condition to change from one state to another
+        \item Identify initial and final states
+        \item Add missing transitions
+    \end{enumerate}
+\end{tecbox}
+
+Given a finite automaton, we can deduce the language of possible inputs.
+
+\begin{exbox}{Simple Finite Automaton}{}
+    Let $M_1 \coloneq (Q, \Sigma, \delta, q_1, F)$ where $Q = \{q_1, q_2, q_3\}$, $\Sigma = \{0, 1\}$, and $F = \{q_2\}$. Define a possible transition function $\delta$.
+    \tcblower
+    The transition function $\delta : Q \times \Sigma \to Q$ must map every ordered pair of a state and letter to another state.
+
+    \begin{center}\begin{tabular}{c | c | c }
+        & 0 & 1 \\ \hline
+        $q_1$ & $q_1$ & $q_2$ \\
+        $q_2$ & $q_3$ & $q_2$ \\
+        $q_3$ & $q_2$ & $q_2$
+    \end{tabular}\end{center}
+
+    Then, the language is:
+    \[ L(M_1) = \left\{ (w \in \Sigma^*: 1 \in w) \land (\text{has even number of 0s following the last 1}) \right\} \]
+\end{exbox}
+
+\begin{exbox}{Simple Finite Automaton}{}
+    Let $M_2 \coloneq (Q, \Sigma, \delta, q_1, F)$ where $Q = \{q_1, q_2\}$, $\Sigma = \{0, 1\}$, and $F = \{q_2\}$. Consider a possible transition function $\delta$ defined as such:
+
+    \begin{center}\begin{tabular}{c | c | c }
+        & 0 & 1 \\ \hline
+        $q_1$ & $q_1$ & $q_2$ \\
+        $q_2$ & $q_1$ & $q_2$ \\
+    \end{tabular}\end{center}
+
+    This time, our language is much simpler:
+    \[ L(M_2) = \{ w \in \Sigma^* : w\ \text{ends in a 1} \} \]
+
+    Now imagine if kept everything the same but made $F = \{q_1\}$. Because our finite automaton's initial state is $q_1$, we must now consider the possibility of the empty word. Then our language is:
+    \[ L(M_2) = \{ w \in \Sigma^* : w\ \text{ does not end in 1} \} \]
+\end{exbox}
+
+\begin{exbox}{Pattern Recognizing Finite Automaton}{}
+    Let $M_3 \coloneq (Q, \Sigma, \delta, q_1, F)$ where $Q = \{s, q_1, q_2, r_1, r_2\}$, $\Sigma = \{a, b\}$, and $F = \{q_1, r_1\}$. Consider a possible transition function $\delta$ defined as such:
+
+    \begin{center}\begin{tabular}{c | c | c }
+        & 0 & 1 \\ \hline
+        $s$ & $q_1$ & $r_1$ \\
+        $q_1$ & $q_1$ & $q_2$ \\
+        $q_2$ & $q_1$ & $q_2$ \\
+        $r_1$ & $r_2$ & $r_1$ \\
+        $r_2$ & $r_2$ & $r_1$ \\
+    \end{tabular}\end{center}
+
+    Now our machine encompasses two smaller machines. $s$ acts as a branch point where we must lock ourselves into either $q$ states or $r$ states.
+
+    % \begin{center}\begin{tikzpicture}
+    %     \begin{scope}[every node/.style={circle,thick,draw}]
+    %         \node (s) at (0,0) {s};
+    %         \node (q1) at (-2,-3) {q1};
+    %         \node (q2) at (-2, -6) {q2};
+    %         \node (r1) at (2,-3) {r1};
+    %         \node (r2) at (2, -6) {r2};
+    %     \end{scope}
+
+    %     \begin{scope}[>={Stealth[black]},
+    %           every node/.style={fill=white,circle},
+    %           every edge/.style={draw=red,very thick}]
+    %         \path [->] (s) edge node {$a$} (q1);
+    %         \path [->] (s) edge node {$b$} (r1);
+    %         \path [->] (q1) edge node {$b$} (q2);
+    %         \path [->] (r1) edge node {$a$} (r2);
+    %     \end{scope}
+    % \end{tikzpicture}\end{center}
+
+    Then our language is:
+    \[ L(M_3) = \{ w \in \Sigma^* : (w\ \text{starts and ends with}\ a) \lor (w\ \text{starts and ends with}\ b) \} \]
+\end{exbox}
+
+Now, let's start with a given language, then find an acceptable transition function $\delta$.
+\begin{exbox}{Finding $\delta$ from Language}{}
+    Suppose $\Sigma = \{a, b\}$. Let $F_1$ be a finite automaton that recognizes the language $A_1 \coloneq \{w : w\ \text{has at exactly two a's} \}$. Let $F_2$ be a finite automaton that recognizes the language $A_2 \coloneq \{w : w\ \text{has at least two b's} \}$.
+
+    % \begin{center}\begin{tikzpicture}
+    %     \begin{scope}[every node/.style={circle,thick,draw}]
+    %         \node (1) at (0,0) {};
+    %         \node (2) at (3,0) {};
+    %         \node (3) at (6,0) {};
+    %         \node (4) at (9,0) {};
+    %     \end{scope}
+
+    %     \begin{scope}[>={Stealth[black]},
+    %           every node/.style={fill=white,circle},
+    %           every edge/.style={draw=red,very thick}]
+    %         \path [->] (1) edge [loop above] node {$b$} (1);
+    %         \path [->] (1) edge node {$a$} (2);
+    %         \path [->] (2) edge [loop above] node {$b$} (2);
+    %         \path [->] (2) edge node {$a$} (3);
+    %         \path [->] (3) edge [loop above] node {$b$} (3);
+    %         \path [->] (3) edge node {$a$} (4);
+    %         \path [->] (4) edge [loop above] node {$a,b$} (4);
+    %     \end{scope}
+    % \end{tikzpicture}\end{center}
+\end{exbox}
+\todo{Finish example}
+
+\section{Regular Languages}
+
+\begin{dfnbox}{Language Recognition, Regular Language}{}
+    We say that a finite automaton $M$ \dfntxt{recognizes} a language $L$ if $L = \{ w : M\ \text{accepts}\ w \}$. We say a language is \dfntxt{regular} if there exists some finite automaton that recognizes it.
+
+\end{dfnbox}
+
+We can consider new languages derived from set operations such as union and intersection. There are also two special operations to consider: \dfntxt{concatenation} and \dfntxt{Kleene closure}.
+
+\begin{dfnbox}{Concatenation}{}
+    Let $L_1$ and $L_2$ be languages. The \dfntxt{concatenation} of $L_1$ and $L_2$ is defined as:
+    \[ L_1 \circ L_2 \coloneq \{ xy : (x \in L_1) \land (y \in L_2) \} \]
+\end{dfnbox}
+
+For example, if $L_1 = \{\text{bob}\}$ and $L_2 = \{\text{cat}\}$, then there is only one string in $L_1 \circ L_2$: bobcat.
+
+\begin{dfnbox}{Exponent, Kleene Star, Kleene Plus}{}
+    Let $L$ be a language, and let $n \in \N$. We define a language raised to some \dfntxt{exponent} as:
+    \begin{align*}
+        L^n &\coloneq \begin{cases}
+            \{\epsilon\}, & \text{if}\ n = 0  \\
+            L^{n-1} \circ L, & \text{otherwise}
+        \end{cases} \\
+        &= \underbrace{L \circ L \circ \cdots \circ L}_{n\ \text{times}}
+    \end{align*}
+    The \dfntxt{Kleene star} (or Kleene closure) on $L$ is defined as:
+    \begin{align*}
+        L^* &\coloneq \bigcup_{i = 0}^\infty L^i \\
+        &= L^0 \circ L^1 \circ L^2 \circ \cdots
+    \end{align*}
+    The \dfntxt{Kleene plus} on $L$ is defined as:
+    \begin{align*}
+        L^+ &\coloneq \bigcup_{i = 1}^\infty L^i \\
+        &= L^1 \circ L^2 \circ \cdots
+    \end{align*}
+    %\[ A^* \coloneq \{ x_1 \ldots x_k : k \geq 0, x_i \in A, 0 \leq i \leq k \} \]
+\end{dfnbox}
+
+For example, if we had a language like $L \coloneq \{a,b,c\}$:
+\begin{itemize}[noitemsep]
+    \item $L^5$ contains any combination of $a$, $b$, and $c$ of length 5.
+    \item $L^*$ contains any combination of $a$, $b$, and $c$, regardless of length, including the empty string.
+    \item $L^+$ contains any combination of $a$, $b$, and $c$ whose length is $1$ or more.
+\end{itemize}
+The key difference between the $L^*$ and $L^+$ is that $L^*$ includes the empty string.
+
+
+\begin{thmbox}{Closure of Regular Languages}{}
+    Class of regular languages is closed under intersection and closed under complementation.
+\end{thmbox}
+\todo{Need proof here!}
+
+\section{Nondeterminism}
+
+Designing a DFA that accepts a complex language can be a challenging task. To address this, we can introduce the concept of \dfntxt{nondeterminism}: allowing the machine to choose state transitions even without any input. By doing so, we create a more flexible automaton that can branch and handle complex languages.
+%Specifically, we can create a nondeterministic finite automaton (NFA) that can recognize languages beyond the capability of a DFA.
+
+% \begin{dfnbox}{Nondeterministic Computation}{}
+%     A machine that is \dfntxt{nondeterministic} is allowed to choose its next state.
+% \end{dfnbox}
+
+\begin{dfnbox}{Nondeterministic Finite Automaton (NFA)}{}
+    A \dfntxt{nondeterministic finite automaton} (NFA) is a finite automaton that can transition states without any input.
+    \tcblower
+    We can formally define an NFA as a 5-tuple $(Q, \Sigma, \delta, q_0, F)$ where:
+    \begin{itemize}[noitemsep]
+        \item $Q$ is a finite set of states
+        \item $\Sigma$ is a finite set of symbols called an \dfntxt{alphabet}
+        \item $\delta : Q \times (\Sigma \cup \{ \epsilon\}) \to \mathcal{P}(Q)$ is a \dfntxt{transition function} ($\mathcal{P}(Q)$ being the powerset of $Q$)
+        \item $q_0 \in Q$ is the \dfntxt{start state}
+        \item $F \subseteq Q$ is the set of \dfntxt{accept states}
+    \end{itemize}
+    In this context, the empty string $\epsilon \in \Sigma$ represents a state transition that was chosen by the machine.
+\end{dfnbox}
+
+With an NFA, a state can have multiple transitions for a given input symbol, creating multiple paths the machine can follow. This makes it easier to design an NFA that accepts a more complex language, as the machine can explore different paths to find the correct one. However, this flexibility comes at a cost: NFAs are more difficult to analyze and simulate than DFAs.
+
+% \begin{dfnbox}{Acceptance (NFA)}{}
+%     An NFA \dfntxt{accepts} a string if, after reading that string, the NFA ends on an accept state.
+%     \tcblower
+%     More formally, let $N \coloneq (Q, \Sigma, \delta, q_0, F)$ be an NFA and $w \coloneq y_1 \ldots y_n$ be a string over $\Sigma \cup \{\epsilon\}$. We say $N$ \dfntxt{accepts} $w$ if there exists a sequence of states $r_0, \ldots, r_m \in Q$ such that:
+%     \begin{enumerate}[noitemsep]
+%         \item $r_0 = q_0$
+%         \item $\delta(r_i, y_{i+1}) = r_{i+1}$ for $i = 0, \ldots, m-1$
+%         \item $r_m \in F$.
+%     \end{enumerate}
+% \end{dfnbox}
+
+\begin{thmbox}{Closure of Regular Languages}{}
+    The class of regular languages is closed under the union operation.
+    \tcblower
+    \begin{proof}[Proof sketch]
+    \end{proof}
+\end{thmbox}
+\todo{draw proof sketch here}
+
+
+\section{DFA/NFA Equivalence}
+
+An NFA can have multiple state transitions for a given input symbol, leading to ambiguity in the possible paths the machine can take. To overcome this ambiguity, we can ``blow up'' the set of possible states to its power set. This means creating a new state for every possible combination of states the NFA could be in at any given time.
+
+Once we have this expanded set of states, we can create deterministic transitions between the subsets of states. This means that for every input symbol, there is only one possible state the machine can transition to. By doing this, we shift the ambiguity from the transitions between states to the states themselves. The result is a DFA that is more predictable and easier to analyze.
+
+\begin{tecbox}{Converting NFA to DFA}{}
+    To convert an NFA to a DFA, we carry out the following steps:
+    \begin{enumerate}
+        \item Let $N \coloneq (Q, \Sigma, \delta, q_0, F)$ be an NFA that recognizes the language $A$.
+        \item Construct the DFA $M$ that also recognizes $A$. For convenience, define:
+        \[ M \coloneq (Q\prime, \Sigma, \delta\prime, q_0\prime, F\prime) \]
+        \item For all $R \subseteq Q$, define $E(R)$ to be the collection of all states that can be reached from $R$ by going along $\epsilon$ transitions, including members of $R$ themselves.
+        \item Modify $\delta\prime$ to place additional edges on all states that can be reached by going along $\epsilon$ edges after every step.
+        \item Set $q_0\prime = E(\{q_0\})$ and $F\prime = \{ R \in Q\prime : R\ \text{contains an accept state of}\ N \}$.
+    \end{enumerate}
+\end{tecbox}
+
+
+\todo{examples of NFA/DFA equivalence here, also this explanation sucks}
+
+\section{Irregular Languages}
+\begin{dfnbox}{Regular Expression (RE)}{}
+    We say that $R$ is a \dfntxt{regular expression} if $R$ is one of the following:
+    \begin{itemize}[noitemsep]
+        \item $\{a\}$ for some $a \in \Sigma$ (language of one symbol)
+        \item $\{\epsilon\}$ (language of only the empty string)
+        \item $\emptyset$ (language of no strings)
+        \item $(R_1 \cup R_2)$, where $R_1$ and $R_2$ are regular expressions
+        \item $(R_1 \circ R_2)$, where $R_1$ and $R_2$ are regular expressions
+        \item $R_1^*$, where $R_1$ is a regular expression
+    \end{itemize}
+\end{dfnbox}
+
+\begin{thmbox}{}{}
+    A language is regular if and only if some regular expression describes it.
+    \tcblower
+    \begin{proof}
+        If a language $R$ is described by a regular expression, then $A$ is recognized by an NFA. Thus, $A$ must be regular. If the language $R$ is regular, then it is recognized by a DFA from which a regular expression can be deduced.
+    \end{proof}
+\end{thmbox}
+
+\begin{exbox}{Irregular Languages}{}
+    Consider the following languages:
+    \begin{itemize}[noitemsep]
+        \item $B = \{ 0^n 1^n : n \geq 0\}$ is not regular.
+        \item $C = \{ w : w\ \text{has an equal number of 0s and 1s} \}$ is not regular. We would need infinite states to account for all possible inputs.
+        \item $D = \{ w : w\ \text{has an equal number of 01 and 10 substrings} \}$ is regular. We can think of this as recording transitions between 0s and 1s, and vice versa. In this sense, every 01 must be eventually followed by a 10, and every 10 must be eventually followed by a 01.
+    \end{itemize}
+\end{exbox}
+
+\section{Pumping Lemma}
+The pumping lemma is a powerful tool that helps us reason about the limitations of regular languages. Recall that a language is \dfntxt{regular} if there exists a DFA that recognizes the language. The pumping lemma provides a way to prove that certain languages are not regular by demonstrating that they cannot satisfy certain conditions.
+
+\begin{notebox}
+    In this context, \dfntxt{pumping} refers to repeating a string. If we had the string ``abc'', we can pump ``b'' to be ``abbbbc'', or \dfntxt{pump down} to get ``ac''.
+\end{notebox}
+
+The pumping lemma works by partitioning a long string in such a way that exposes its structure. If the language is regular, then there should be a way to partition the string into three substrings such that the middle substring can be pumped up or down and still be in the language. However, if the language is not regular, then at some point we will reach a part that cannot be pumped without breaking the rules of the language.
+
+% \begin{dfnbox}{Pumping, Pumping Length}{}
+%     All strings in a language can be \dfntxt{pumped} if they are as long or longer than a specified \dfntxt{pumping length}.
+% \end{dfnbox}
+
+% In other words, every string contains a section that can be repeated any number of times, and the resulting string is still in the language. For example, we can write sqrt(sqrt(sqrt($\ldots$(sqrt($x$))$\ldots$))) in C, and it's still valid.
+
+% \begin{dfnbox}{Pump}{}
+%     Given some string $s$, \dfntxt{pumping} the string means concatenating more copies of $s$ onto itself. \dfntxt{Pumping down} means to remove copies of $s$.
+% \end{dfnbox}
+
+\begin{thmbox}{Pumping Lemma}{pl}
+    If $L$ is a regular language, then there exists some $p \in \N$ (the pumping length) such that for all $s \in L$ where $\abs{s} \geq p$, $s$ may be divided into three substrings, $s = x y z$, satisfying the three following conditions:
+    \begin{enumerate}[noitemsep]
+        \item $\forall (n \geq 0) \left( x y^n z \in L \right)$,
+        \item $\abs{y} > 0$, and
+        \item $\abs{x y} \leq p$.
+    \end{enumerate}
+    \tcblower
+    %\textbf{Intuition:} Consider some pumping length $p \geq \abs{Q}$. By the Pigeonhole Principle, any string of length $p$ or longer will have at least two states repeated by the DFA. Hence, some substring must begin on that state and repeat it at the end. Thus, we can pump that substring any number of times and still get to the accept state.
+    \begin{proof}
+        Let $M \coloneq  (Q, \Sigma, \delta, q_1, F)$ be a DFA that recognizes $L$, and let $p$ be the number of states in $M$ (i.e. $p \coloneq \abs{Q})$.
+
+        Let $s \coloneq s_1 s_2 \cdots s_n \in L$ where $n \geq p$. Let $r_1, \ldots, r_{n+1}$ be the sequence of states that $M$ enters when processing $s$ (i.e. $r_1 = q_1$, and $r_{i+1} = \delta(r_i, s_i)$ for $1 \leq i \leq n$). By the Pigeonhole Principle, then two of the first $p+1$ elements of the sequence must be the same. Let $r_a$ be the first of these, and let $r_b$ be the second of these.
+
+        Now, let $x \coloneq s_1 \cdots s_{a-1}$, $y \coloneq s_a \cdots s_{b-1}$, and $z \coloneq s_b \cdots s_n$. Then $x$ takes $M$ from $r_1$ to $r_a$, $y$ takes $M$ from $r_a$ to $r_a$, and $z$ takes $M$ from $r_a$ to $r_{n+1}$ (the accept state).
+        \begin{enumerate}
+            \item Thus, $M$ must accept $xy^iz$ for any $i \in \Z$ where $i \geq 0$.
+            \item Since $a \neq b$, then $\abs{y} > 0$.
+            \item Since $r_a$ occurs within the first $p+1$ places in the sequence of states, then $b \leq p+1$. Thus, $\abs{xy} \leq p$.
+        \end{enumerate}
+        Therefore, these conditions hold for any $s \in L$ where $\abs{s} \geq p$.
+    \end{proof}
+\end{thmbox}
+
+\begin{tecbox}{Proving a Language is Irregular}{}
+    To prove that a language $L$ is not regular, we:
+    \begin{enumerate}
+        \item Suppose for contradiction $L$ is regular, and let $p$ be the pumping length for $L$.
+        \item Find some string $s \in L$ where $\abs{s} \geq p$ that cannot be pumped; consider all the ways of dividing $s$ into $xyz$, and show that for each division, at least one of the conditions fail.
+    \end{enumerate}
+\end{tecbox}
+
+\begin{exbox}{Simple Pumping Lemma Example}{}
+    Prove that the language $B \coloneq \{ 0^n 1^n : n \geq 0 \}$ is not regular.
+    \tcblower
+    We can show that any substring of $B$ cannot be pumped by contradicting the first condition of the \nameref{thm:pl}.
+    \begin{proof}
+        Suppose for contradiction $B$ is regular. Let $p$ be the pumping length for $B$. Let $s \coloneq 0^p1^p \in B$. Then $\abs{s} = 2p > p$. By the \nameref{thm:pl}, we can partition $s$ into three substrings, say $x,y,z$, such that $x  y^*  z \in B$. Let $s\prime \coloneq x  y  y  z$. WE will show $s\prime \notin B$. Consider the three possible cases for the contents of $y$:
+        \begin{enumerate}
+            \item $y \in 0^+$. Then. $s\prime$ has more $0$s than $1$s. Thus, $s\prime \notin B$, contradicting the first condition of the \nameref{thm:pl}.
+            \item $y \in 1^+$. Then, following the logic from the first case, this is not possible.
+            \item $y$ consists of $0$s and $1$s. Then $y  y \notin 0^n1^n$, so $s \prime \notin B$.
+        \end{enumerate}
+    \end{proof}
+
+    We can simplify the above proof by targeting condition 3 instead:
+    \begin{proof}
+        By the third condition of the \nameref{thm:pl}, we have $\abs{x  y} \leq p$. Hence, $y$ could only contain $0$s.
+    \end{proof}
+\end{exbox}
+
+\begin{exbox}{Another Pumping Lemma Example}{}
+    Prove that the language $E \coloneq \left\{ 0^i 1^j : i > j \right\}$ is not regular.
+    \tcblower
+    \begin{proof}
+        Suppose for contradiction $E$ is regular. Let $p$ be the pumping length for $E$, and let $s \coloneq 0^{p+1}1^p \in E$. Then $\abs{s} = (p+1) + p > p$. By the \nameref{thm:pl}, we can partition $s$ into three substrings, say $x,y,z$, such that $x  y^*  z \in E$. Then, by the third condition, we have $\abs{x  y} \leq p$. Note that there are $p+1$ number of $0$s at the beginning of $s$. Thus, $x \in 0^*$ and $y \in 0^+$. Consider the case when $i = 0$. Then $x  y^+  z \notin E$, leaving only $x  z$. However, $\abs{y} > 0$ by the second condition, so $x  z$ would lose at least one $0$. Thus, $x  z \notin E$, so $x  y^*  z \notin E$. Therefore, $E$ is not regular.
+    \end{proof}
+\end{exbox}

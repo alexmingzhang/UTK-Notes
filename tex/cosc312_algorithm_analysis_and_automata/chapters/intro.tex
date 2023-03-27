@@ -1,0 +1,27 @@
+\chapter{Introduction}
+Computer science is all about problem-solving, and as computer scientists, we have developed a method of abstracting problems into three key components: unknowns, data, and conditions. To further our understanding of this process, we have developed the Theory of Computation (TOC), which encompasses three main areas: Automata, Computability, and Complexity.
+
+Automata are problem-solving devices that help us model and solve problems. Computability provides a framework for categorizing these devices based on their computing power, while Complexity measures the space complexity of the tools we use to solve problems.
+
+When approaching problems, we think of the data as ``words'' in a given ``alphabet'', while conditions form a set of words known as a language. The unknowns in this equation are boolean values, which are true if a word is in the language and false if it is not.
+
+We can define these terms more formally:
+
+\begin{dfnbox}{Alphabet, Symbols}{}
+    An \dfntxt{alphabet} is any nonempty, finite set. Members of the alphabet are called the \dfntxt{symbols} of the alphabet.
+\end{dfnbox}
+
+We denote the alphabet using the Greek letter $\Sigma$.
+
+\begin{dfnbox}{String}{}
+    A \dfntxt{string} over an alphabet $\Sigma$ is a (finite) sequence of symbols in $\Sigma$.
+    \begin{itemize}[noitemsep]
+        \item The length of a string $w$ is denoted by $\abs{w}$.
+        \item $\epsilon$ represents the \dfntxt{empty string}, the string of length $0$
+        \item The \dfntxt{concatenation} of $w_1$ and $w_2$ is the string obtained from appending $w_2$ to the end of $w_1$. We denote concatenation either by juxtaposition $w_1w_2$, or with superscript notation $w_1^n$.
+    \end{itemize}
+\end{dfnbox}
+
+For example, if $w_1 = \text{hello}$ and $w_2 = \text{world}$, then $w_1w_2 = \text{helloworld}$.
+
+% Overall, the Theory of Computation provides a framework for understanding how we solve problems using computers. By breaking down problems into their component parts, we can use automata to model and solve them, and categorize these solutions based on their computing power and space complexity.

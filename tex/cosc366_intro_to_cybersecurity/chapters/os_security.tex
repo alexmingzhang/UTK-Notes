@@ -1,0 +1,168 @@
+\chapter{OS Security}
+\section{Reference Monitor}
+
+\begin{dfnbox}{Subject, Action, Object}{}
+    A \dfntxt{subject} is any entity (such as a user or process) trying to take some \dfntxt{action} such as read, write, execute, start, shutdown, etc. The \dfntxt{object} receives the action, such as some memory, files, services, or devices.
+\end{dfnbox}
+
+The subject is usually authenticated, but not necessarily. We can sometimes have an unknown subject.
+
+\begin{dfnbox}{Policy, Reference Monitor}{}
+    \dfntxt{Policies} define what is allowed, usually parameterized by subject, action, and object. \dfntxt{Reference monitors} enforce a policy by checking actions, allowing subjects to execute an action if it conforms with the policy.
+\end{dfnbox}
+
+Whenever a subject tries to make an action, the reference monitor gets to decide whether it should be allowed. The reference monitor has to require:
+
+\begin{itemize}
+    \item \dfntxt{Complete Mediation:} all actions must go through the reference monitor (also ensures complete logs)
+    \item \dfntxt{Tamper-proof:} users can't just manipulate the reference monitor; also includes tamper-proof logs
+    \item \dfntxt{Verifiable:} reference monitor must be easily analyzable (means its source code has to be small!)
+    \item \dfntxt{Reliable Authentication and/or Authorization:} authentication for subject identfication; authorization for bearer tokens
+\end{itemize}
+
+\begin{dfnbox}{Permission, Capability List}{}
+    A \dfntxt{permission} is a pair of (action, object). The list of all permissions associated with a subject can be called a \dfntxt{capability list}.
+\end{dfnbox}
+
+\begin{dfnbox}{Capability-Based Access Control, Bearer Token}{}
+    \dfntxt{Capability-Based Access Control} reference monitor issues \dfntxt{bearer tokens} which let anyone with the token take specific action(s).
+\end{dfnbox}
+
+An example of a bearer token would be the link-sharing system on Google Docs. The document creator can easily delegate links which allow those with the link to view or edit our document. Another example would be API tokens.
+
+\begin{dfnbox}{Access Control List (ACL)}{}
+    The \dfntxt{access control list} is the set of (subject, action) pairs associated with an object.
+\end{dfnbox}
+
+Some other popular access control paradigms include:
+\begin{itemize}
+    \item \dfntxt{Role-based access control (RBAC):} associates permissions with certain groups of users rather than users themselves.
+    \item \dfntxt{Attribute-based access control (ABAC):} incorporates contextual information to access control decisions (e.g. subject's behavioral patterns, current location; action's time of day, current threat level; object's location on network, creation date, size)
+    \item \dfntxt{Cryptographic access control:} use cryptography for access control without a reference monitor
+\end{itemize}
+
+\section{Memory Protection}
+We care about memory protection because of concurrent execution: multiple users and multiple processes at the same time. We need to isolate resources from each process and user.
+
+\begin{dfnbox}{Virtual Memory}{}
+    \dfntxt{Virtual memory} is an idealized abstraction of memory, mapping virtual addresses to physical memory addresses.
+\end{dfnbox}
+
+In virtual memory, the OS kernel acts as a reference monitor for memory, mediating access to system memory. The kernel allocates memory by giving processes virtual addresses that map to physical ones. The kernel also limits who can access what memory, preventing users/processes from accessing other memory. It also protects OS memory and provides safe mechanisms for shared memory access.
+
+\begin{dfnbox}{Kenel Memory Segmentation, Memory Segments}{}
+    The kernel divides memory into \dfntxt{memory segments}---contiguous regions of memory. Each segment is assigned one or more modes: read, write, execute, mode, fault.
+\end{dfnbox}
+
+The latter two modes are used by the OS for specific uses. The kernel sets default modes when allocating memory. Memory segments with code is marked as executable. Memory segments with the heap and stack are marked as readable and writable, not executable (prevents arbitrary code execution). In accordance with the principle of least privilege, the process can further restrict its own permissions.
+
+\section{File System Access Control}
+
+\begin{dfnbox}{File system}{}
+    A \dfntxt{file system} is a hierarchical structuring of directories and folders. It maintains per-file meta-data, including permissions.
+\end{dfnbox}
+
+In the context of file systems:
+\begin{itemize}[noitemsep]
+    \item The \dfntxt{subjects} are users, groups or processes (identified by some user id, group id, or process id).
+    \item The \dfntxt{actions} are read/write/execute, modify metadata, etc.
+    \item The \dfntxt{objects} are files, directories, links, and devices.
+\end{itemize}
+
+% The possible subjects in file system access control include:
+% \begin{itemize}[noitemsep]
+%     \item Users are identified by a user id (UID)
+%     \item Groups are identified by a group id (GID) (for role-based access control)
+%     \item Processes are identified by a process id (PID)
+% \end{itemize}
+
+We can classify file system actions by three distinct categories:
+\begin{enumerate}
+    \item \dfntxt{Basic actions} like read, write, and execution of files.
+    \item \dfntxt{Special actions} like:
+    \begin{itemize}[noitemsep]
+        \item Execute a binary as the owning user (e.g. sudo)
+        \item Execute as the primary group of the owning user
+        \item Set ``sticky bit'' (disables changing name or file deletion)
+    \end{itemize}
+    \item \dfntxt{Advanced actions} like:
+    \begin{itemize}[noitemsep]
+        \item Take ownership of a file
+        \item Change permissions
+        \item Write attributes
+        \item Inspect or modify memory (debugging permission)
+    \end{itemize}
+\end{enumerate}
+
+% Actions involving the file system include basic ones like read, write, execute, and list folder contents. Some special actions include:
+
+% Advanced actions include:
+
+
+\begin{exbox}{Linux Access Control (user-group-other or UGO)}{}
+    Linux uses the \dfntxt{user-group-others} (UGO) permission model which is a highly condensed ACL. This:
+    \begin{itemize}[noitemsep]
+        \item limits subjects to either the owning user, primary group of the owning user, and everyone else, and
+        \item limits actions to read, write, execute, and special permissions (directory travel is controlled by read; modify and write are considered the same)
+    \end{itemize}
+    When determining permissions for actions, Linux checks the following in order, letting the action happen if any one of these is true:
+    \begin{enumerate}[noitemsep]
+        \item Is the subject the owning user?
+        \item Is the subject a member of the owning group?
+        \item Do the file's default permissions allow this action?
+    \end{enumerate}
+    Note that permissions are not inherited (i.e. every object has its own permission list). Also, it's possible to let a subject access an object inside a directory that the subject cannot access (i.e. they can't discover the path, but can access the object if they know the path).
+
+    In contrast to traditional ACLs which specifies every allowed subject action pairs associated with an object, UGO only cares about one user, one group, and lumps everyone else into ``other''.
+\end{exbox}
+
+\begin{exbox}{Windows Access Control}{}
+    Windows follows role-based access control (RBAC) with the roles being groups. When an object is created, it inherits the permissions of the parent folder.
+\end{exbox}
+
+\section{Additional Topics}
+
+\begin{dfnbox}{Hidden File}{}
+    A \dfntxt{hidden file} has an attribute that indicates files which should be ignored when listing the contents of a directory.
+\end{dfnbox}
+
+On Linux, this is done be prepending a file name with a period. On Windows, it's part of the file metadata. This does not change any permissions regarding the file, so it should never be used as a security measure.
+
+\begin{dfnbox}{inode}{}
+    An \dfntxt{inode} is a chunk of data that contains file name, metadata, and where the actual data is stored on the hard drive.
+\end{dfnbox}
+
+In the UNIX file system, filenames are just a reference to an inode. The inode is only deleted when all filename references to it are deleted.
+
+\begin{dfnbox}{File System Links}{}
+    \dfntxt{File system links} are data that directly associate a filename with an inode. It allows for more than one file to refer to the same data on the hard drive.
+    \begin{itemize}[noitemsep]
+        \item A \dfntxt{hard link} is an additional filename reference to an inode, managed by the underlying file system.
+        \item A \dfntxt{symbolic link} (or symlink) is a text file that contains a single filename. The OS provides file utilities that will read and handle symlinks. It does not reference the inode, so it does not prevent the inode from being deleted.
+    \end{itemize}
+\end{dfnbox}
+
+\begin{dfnbox}{chroot jail}{}
+    In UNIX, the \texttt{chroot} command takes a specified directory and treats it as the root directory, thereby restricting file system access. This is referred to as a \dfntxt{chroot jail}.
+\end{dfnbox}
+
+The chroot jail is in-line with the principle of least privilege as it limits the impact of compromise. Nowadays, this is largely replaced by sandboxing and containerized app deployments.
+
+
+\texttt{chroot}: restricts file system access
+\begin{itemize}
+    \item  treats the specified directory as the root directory \texttt{/}
+    \item \dfntxt{chroot jail}: \todo{wht is this}
+\end{itemize}
+
+\begin{dfnbox}{Discretionary Access Control, Mandatory Access Control}{}
+    In \dfntxt{discretionary access control}, users are responsible for assigning access control rules for their files. In \dfntxt{mandatory access control}, a policy administrator sets all the access control rules.
+\end{dfnbox}
+
+Mandatory access control usually relies on role-based access control (RBAC).
+
+\begin{dfnbox}{Security-Enhanced Linux (SELinux)}{}
+    \dfntxt{Security-Enhanced Linux} is a kernel module found in most Linux distributions, supporting mandatory security policies and mandatory access control. It uses attribute-based access control (ABAC) for applications, processes, and files.
+\end{dfnbox}
+
+As a side effect, SELinux is often the cause of many issues when running software on Linux. \textbf{Never} disable SELinux; only ever reconfigure SELinux to make it work with your software.

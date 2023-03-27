@@ -1,0 +1,222 @@
+\chapter{Certificate Management and Use Cases}
+
+\dfntxt{Key management} is the foundation of most secure protocols. Managing them across their lifetime is critical to a secure system.
+\begin{enumerate}[noitemsep]
+    \item Creating a cryptographic key
+    \item Storing a key in a secure place
+    \item Replacing an old or stolen key
+    \item Destroying unused keys in a safe way
+\end{enumerate}
+We must also ensure their correct usage (e.g. dissemination, verification, synchronization, recovery).
+
+We address these problems using different key infrastructures.
+
+\begin{dfnbox}{Public Key Infrastructure (PKI)}
+    A \dfntxt{public key infrastructure} is a collection technologies and processes for managing public keys. It also manages their associated private keys and dictates how keys should be used by applications
+\end{dfnbox}
+
+\todo[inline]{Structure of PKI from slides}
+
+PKI is an incredibly general idea that is applicable to several kinds of systems, such as web PKI, email PKI, code signing PKI. Often, there is significant overlap in their design.
+
+\section{Web PKI}
+The core data structure in web PKI is the certificate.
+
+\begin{dfnbox}{Public-Key Certificate, Certificate Authority (CA)}{}
+    A \dfntxt{public-key certificate} associates a public key with a specific owner. In this context, the owner is referred to as the \dfntxt{subject}, and the association is referred to as a \dfntxt{binding}. Crucially, the certificate is digitally signed by a \dfntxt{certificate authority}---a trusted verifier of bindings between subjects and public keys.
+\end{dfnbox}
+
+ Certificates may also be self-signed, but this signature cannot be used to verify the binding.
+
+Certificates contain a ``signed portion'' which consist of:
+\begin{itemize}
+    \item \dfntxt{Version:} certificate definition version (highly standardized, usually x509 version 3)
+    \item \dfntxt{Serial Number:} uniquely identifies certificates
+    \item \dfntxt{Issuer:} name of the CA signing the certificate
+    \item \dfntxt{Validity:} date range in which the certificate is valid
+    \item \dfntxt{Subject:} name of the owner of the public and private key
+    \item \dfntxt{Subject Public Key Info:} the public key and its relevant information
+    \item \dfntxt{Extensions:} other optional/miscellaneous info that can add specific functionality
+\end{itemize}
+There are two unsigned fields:
+\begin{itemize}
+    \item \dfntxt{Signature Algorithm:} algorithm and its parameters
+    \item \dfntxt{Signature:} digital signature of the certificate from the CA
+\end{itemize}
+
+The subject and issuer fields are of type \texttt{name}, which is a dictionary of key value pairs, potentially including:
+\begin{itemize}[noitemsep]
+    \item Country (C)
+    \item Organization (O)
+    \item Organizational Unit (OU)
+    \item Common-nome (CN)
+\end{itemize}
+Collectively, these components are referred to as a \dfntxt{distinguished name}.
+
+Common extensions include:
+\begin{itemize}
+    \item \texttt{keyUsage}: specifies what the key is used for (e.g. signatures, encryption, key agreement, CRL signatures, etc.)
+    \item \texttt{extendedKeyUsage}: even more specification for usage (e.g. code signing, TLS server authentication, etc.)
+    \item \texttt{subjectAlternateName}: other identifiers for the subject, such as email, domain name, IP address, URI, etc.
+\end{itemize}
+
+\begin{tecbox}{Acquiring a Certificate from a CA}{}
+    \begin{enumerate}
+        \item An entity generates a public-private key pair
+        \item The entity sends a \dfntxt{certificate request} to a CA
+        \item The CA verifies the certificate request
+        \item The CA provides a signature of the certificate
+    \end{enumerate}
+\end{tecbox}
+
+\begin{tecbox}{Verifiying a Certificate Request}{}
+    \begin{enumerate}
+        \item Check that the request is well-formed
+        \item Verify that the entity actually knows the private key (usually by some zero-knowledge proof)
+        \item Check for evidence of ownership or control of the distinguished name identified in the \texttt{subject} field. On the web, this can include requiring the entity to host a cryptographic secret in a DNS record or on the website. Quality of verification varies wildly.
+    \end{enumerate}
+\end{tecbox}
+
+This only verifies that a binding is legitimate, not that the subject is a trusted entity!
+
+\begin{tecbox}{Validating a Certificate}{}
+    \begin{enumerate}
+        \item Verify the digital signature
+        \item Ensure the signature is from a trusted entity (usually a CA)
+        \item Check that the current date is within the validity period
+        \item Verify the certificate based on any recognized extensions
+        \item Check that the certificate hasn't been revoked
+    \end{enumerate}
+\end{tecbox}
+
+\section{Trust Models}
+How do we know that a certificate is signed by a trusted entity? Different PKI systems answer the question differently. Critically, there is no one ``right'' approach; each has their own strengths and weaknesses.
+
+Certificates predicate around some \dfntxt{trusted certificate store} that stores good, trusted certificates.
+
+\begin{exbox}{User-Controlled Trust Model}{}
+    The trusted certificate store contains self-signed certificates. Two approaches for adding a certificate to the trusted certificate store include:
+    \begin{enumerate}
+        \item \dfntxt{Out-of-band verification} of the certificate's fingerprint (i.e. digest of the certificate); the subject publishes fingerprint in a trusted out-of-band channel
+        \item \dfntxt{Trust on first use (TOFU):} trust the first certificate seen from that subject (e.g. SSH)
+    \end{enumerate}
+    More advanced versions of this use the concept of \dfntxt{trusted introducers} that can vouch for new keys.
+\end{exbox}
+
+\begin{exbox}{Single-CA}{}
+    The trusted certificate store contains one or more CAs for each application or domain. CAs only sign certificates for their associated application or domain. For example, many instant messaging services use this model.
+\end{exbox}
+
+\begin{exbox}{Strict Hierarchy}{}
+    The strict hierarchy imposes a hierarchy of roles in the certificate signing model:
+    \begin{itemize}[noitemsep]
+        \item \dfntxt{Root CA:} signs certificates for intermediate CAs
+        \item \dfntxt{Intermediate CA:} signs end-entity or leaf certificates; can also sign certificates for other intermediate CAs
+        \item \dfntxt{End-Entity:} receives certificates from root or intermediate CAs
+    \end{itemize}
+    \todo[inline]{More info about this}
+\end{exbox}
+
+\begin{exbox}{Forest of Hierarchical Trees}{}
+    Based on a collection of strict hierarchies with many root CAs. These root CAs are referred to as \dfntxt{trust anchors}. The list of trust anchors will be shipped with the application. This model is used for web and code signing.
+\end{exbox}
+
+\section{Transport Layer Security (TLS)}
+
+A problem with network communications is that anyone ``in range'' of our communications can listen to anything we receive and send. As such, we implement end-to-end encryption to prevent nefarious snoopers.
+
+\begin{dfnbox}{Transport Layer Security (TLS)}{}
+    \dfntxt{Transport Layer Security} is a security protocol that adds end-to-end encryption to network communication. Content is encrypted by the sender and is decrypted by the receiver.
+\end{dfnbox}
+
+TLS is used in HTTPS, FTPS, and general network traffic.
+
+\begin{itemize}
+    \item \dfntxt{Confidentiality:} prevents attackers from viewing the contents of your message, but does not protect metadata (e.g info about endpoints, content size, message frequency, etc.)
+    \item \dfntxt{Integrity:} prevents attackers from modifying or spoofing messages
+    \item \dfntxt{Authentication:} provided using signed certificates; authentication of the server is provided, but rarely is authentication of the client provided
+\end{itemize}
+
+Identity of the client is rarely ever established through TLS, but rather through the website's own authentication and user mechanisms.
+\begin{itemize}
+    \item Sits at the session layer, carried over TCP
+    \item Content is decrypted before being passed to the application
+\end{itemize}
+
+\begin{tecbox}{TLS Protocol}{}
+    There are two parts that make up TLS communication:
+    \begin{enumerate}
+        \item \dfntxt{Handshake:}
+        \begin{itemize}[noitemsep]
+            \item Negotiate an agreed upon cryptographic algorithm and key
+            \item Authenticate entities using certificates and appropriate PKI
+            \item Verify that both entities share the same cryptographic keys
+        \end{itemize}
+        \item \dfntxt{Data Protection:}
+        \begin{itemize}[noitemsep]
+            \item Add MAC using an HMAC algorithm; different key for each direction
+            \item Encrypt using different keys for each direction (typically AES)
+            \item If an IV is needed, it is created in the handshake (unique IV for each session)
+        \end{itemize}
+    \end{enumerate}
+\end{tecbox}
+
+TLS has gone through several iterations, first developed as a proprietary protocol in NetScape, then improved and standardized by others like Microsoft, IETF, and WAP Forum.
+
+\section{Web PKI}
+
+As it stands, Web PKI is incredibly fragile. There are anywhere between 100--200 root CAs, any of which can sign for any website. If any root CA gets compromised, then the whole system falls. Moreover, root CAs have notoriously bad security. Many had their private keys compromised, whether it be getting hacked or simply posting their private keys online. Some even sell intermediate CA certificates that can sign for any website.
+
+\section{Secure Email}
+Email is an inherently insecure system. As such, people have developed measures to protect email communications.
+\begin{enumerate}
+    \item Encrypting messages at rest: makes it difficult to steal messages from clients and/or mail servers
+    \item Using TLS: Prevents data being modified or intercepted during transmission; does not protect stored messages nor protect against forged messages
+    \item \dfntxt{Sender Policy Framework (SPF):} DNS record that whitelists IPs that can send emails; limited protection against forged emails; requires DNSSEC
+    \item \dfntxt{DomainKeys Identified Mail (DKIM):} DNS-based policy that specifies how to handle malicious messages; requires DNSSEC
+    \item
+\end{enumerate}
+
+It's common for these approaches to be used together, but they still have significant gaps.
+
+End-to-end encryption (alongside digital signatures) addresses the limitations of the approaches above. It is a must-have for modern email systems. It's impervious to most attacks, but the challenge here is a proper PKI system.
+
+\begin{exbox}{Email PKI: S/MIME}{}
+    \begin{itemize}[noitemsep]
+        \item Based on Enterprise PKI; used mostly in enterprise
+        \item Cross-certification is possible but rare in practice
+        \item Deployments work well within companies/organizations, but poorly everywhere else
+    \end{itemize}
+\end{exbox}
+
+\begin{exbox}{Email PKI: Pretty Good Privacy (PGP)}{}
+    \begin{itemize}[noitemsep]
+        \item Based on User-Control Trust Model
+        \item Everyone uploads their public key to some key server (e.g. MIT key server) for a key-signing party
+        \item Widely considered the best if key management is done right
+        \item Includes key servers and trusted interface where trusted introducers can vouch for new keys.
+    \end{itemize}
+\end{exbox}
+
+\begin{exbox}{Email PKI: Identity-Based Encryption (IBE)}{}
+    \begin{itemize}[noitemsep]
+        \item Based on Single-CA domain, but adds a trusted key server
+        \item Uses the string of the email address as the public key; inherently binds subject to public key
+        \item Supports attribute-based encryption (ABE)
+    \end{itemize}
+\end{exbox}
+
+\section*{Review}
+\begin{itemize}[noitemsep]
+    \item \textbf{What cryptographic guarantees are provided by TLS?}
+
+    Confidentiality and integrity is guaranteed. The server is (almost) always authenticated, but the client is only sometimes authenticated.
+
+    \item \textbf{Is it possible for an attacker to get a legitimate certificate?}
+
+    Yes! An attacker can defeat the CA's identification process (which can be widely varied), or they can register a copy-cat domain like \texttt{amozon.com}. Since they actually own that domain, they can get a certificate for their copy-cat domain.
+
+    \item \textbf{What attacks is email vulnerable to?}
+
+    Steal unencrypted emails at rest, steal emails in transmission (eavesdropping), forge messages \todo{more here}
+\end{itemize}
