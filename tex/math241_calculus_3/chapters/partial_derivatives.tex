@@ -166,7 +166,7 @@ More generally, if partial derivatives $f_x$ and $f_y$ exist and are continuous 
 \section{Chain Rule}
 
 From Calculus I, if $f$ and $g$ are functions that are differentiable on their domains, and the output of $g$ is always in the domain of $f$, then $f \circ g$ is also differentiable on its domain. By the Chain Rule, we have:
-\[ \frac{d}{dx} f(g(x)) = f \prime (g(x)) g\prime(x) = \frac{df}{dy} \cdot \frac{dy}{dx} \]
+\[ \odv{}{x} f(g(x)) = f \prime (g(x)) g\prime(x) = \odv{f}{g} \cdot \odv{g}{x} \]
 
 The above only applies to functions of the form $f : \R \to \R$. We can generalize the chain rule for any function $f : \R^n \to \R$ as follows:
 
@@ -181,10 +181,95 @@ We can also write:
 \section{Directional Derivatives}
 
 \begin{dfnbox}{Directional Derivative}{}
-    The \dfntxt{directional derivative} of a function $f$ at $(x_0, y_0)$ in the direction of a unit vector $\vec{u} \coloneq \alg{a,b}$ is defined as:
-    \[ D_{\vec{u}} f(x_0, y_0) \coloneq \lim_{h \to 0} \frac{f(x_0 + ha, y_0 + hb) - f(x_0, y_0)}{h} \]
+    % The \dfntxt{directional derivative} of a function $f$ at $(x_0, y_0)$ in the direction of a unit vector $\vec{u} \coloneq \alg{a,b}$ is defined as:
+    % \[ D_{\vec{u}} f(x_0, y_0) \coloneq \lim_{h \to 0} \frac{f(x_0 + ha, y_0 + hb) - f(x_0, y_0)}{h} \]
+    Let $f : \R^n \to \R$ be a differentiable function. The \dfntxt{directional derivative} of $f$ at a point $(x_1, \ldots, x_n)$ in the direction of a unit vector $\vec{u} \coloneq \alg{u_1, \ldots, u_n}$ is defined as:
+    \[ D_{\vec{u}} f(x_1, \ldots, x_n) = \lim_{h \to 0} \frac{f(x_0 + hu_1, \ldots, x_n + hu_n) - f(x_0, \ldots, x_n)}{h} \]
 \end{dfnbox}
 
 \begin{thmbox}{}{}
     If $f$ is differentiable at $(x_0, y_0)$, then $D_{\vec{u}} f (x_0, y_0) = \nabla f(x_0, y_0) \cdot \vec{u}$.
 \end{thmbox}
+
+If $w = F(x,y,z)$ is a differentiable function, then a level curve for $F$ at $k$ can be described as:
+\[ S_k \coloneq \{ (x,y,z) \in \R^3 : F(x,y,z) = k \} \]
+If a curve $C$ is contained in $S_k$, we write this as $C \subseteq S_K$, and has a vector function parameterization $\vec{r}(t) = \alg{x(t), y(t), z(t)}$. Then $w(t) = F(\overline{r}(t)) = F(x(t), y(t), z(t))$ where $\overline{r}(t)$ denotes the end point of $\vec{r}(t)$.
+
+\begin{dfnbox}{Gradient}{}
+    Let $f : \R^n \to \R$ be a function. The \dfntxt{gradient} of $f$ is a vector function $\nabla f: \R^n \to \R^n$ defined by:
+    \[ \nabla f(x_1, \ldots, x_n) = \alg{ \pdv{f}{x_1}, \ldots, \pdv{f}{x_n} } \]
+\end{dfnbox}
+
+\begin{itemize}
+    \item The directional derivative of $f$ at $\vec{x}$ in the direction of a unit vector $\vec{u}$ is given by $D_{\vec{u}}f(\vec{x}) = \nabla f(\vec{x}) \cdot \vec{u}$.
+    \item $\nabla f(\vec{x})$ points in the direction of maximum rate of increase of $f$ at $\vec{x}$, and that maximum rate of change is $\abs{\nabla f(\vec{x})}$.
+    \item $\nabla f(\vec{x})$ is perpendicular to the level curve or level surface of $f$ through $x$.
+\end{itemize}
+
+\begin{tecbox}{Finding Maximum Rate of Change at a Point}{}
+    Given a differentiable function $f : \R^n \to \R$, the maximum rate of change at a point $(x_1, \ldots, x_n)$ is given by:
+    \[ \norm*{\nabla f(x_1, \ldots, x_n)} \]
+\end{tecbox}
+
+\section{Maximum and Minimum Values}
+
+\begin{dfnbox}{Local Maximum, Local Minimum}{}
+    Let $f : A \to B$ be a function where $A \subseteq \R^n$ and $B \subseteq \R$, and let $p \coloneq (a_1, \ldots, a_n) \in A$. We say there is a:
+    \begin{itemize}
+        \item \dfntxt{local maximum} at $p$ if there exists some $r > 0$ such that, for all points $q \in A$ within $r$ distance of $p$, $f(p) \geq f(q)$. Then $f(p)$ is the \dfntxt{local maximum value}.
+        \item \dfntxt{local minimum} at $p$ if there exists some $r > 0$ such that, for all points $q \in A$ within $r$ distance of $p$, $f(p) \leq f(q)$. Then $f(p)$ is the \dfntxt{local minimum value}.
+    \end{itemize}
+\end{dfnbox}
+
+\begin{dfnbox}{Critical Point}{}
+    Let $f : A \to B$ be a function where $A \subseteq \R^n$ and $B \subseteq \R$, and let $p \coloneq (a_1, \ldots, a_n) \in A$. We say $p$ is a \dfntxt{critical point} of $f$ if  either:
+    \begin{itemize}
+        \item \textbf{all} of the partial derivatives at $p$ is 0, or
+        \item at least one partial derivative does not exist.
+    \end{itemize}
+\end{dfnbox}
+
+It can be proven that local maximums and minimums only happen at critical points; however, critical points are not guaranteed to be local minimums nor maximums.
+
+\begin{dfnbox}{Saddle Point}{}
+    Let $f : A \to B$ be a function where $A \subseteq \R^n$ and $B \subseteq \R$, and let $p \coloneq (a_1, \ldots, a_n) \in A$. We say $p$ is a \dfntxt{saddle point} if it is a critical point but is neither a local maximum nor local minimum.
+\end{dfnbox}
+
+To classify whether a critical point is a local minimum, local maximum, or saddle point, we can use the following theorem:
+
+\begin{thmbox}{Second Derivative Test}{}
+    Let $f$ be a function of two variables. Suppose $p$ is a critical point of $f$. Let:
+    \[ D \coloneq \pdv[order=2]{f(a,b)}{x} \cdot \pdv[order=2]{f(a,b)}{y} - \left( \pdv{f(a,b)}{x,y} \right)^2 \]
+\end{thmbox}
+
+\begin{dfnbox}{Absolute Maximum, Absolute Minimum}{}
+    Let $f : A \to B$ be a function where $A \subseteq \R^n$ and $B \subseteq \R$, and let $p \coloneq (a_1, \ldots, a_n) \in A$. Then $f(p)$ is the:
+    \begin{itemize}[noitemsep]
+        \item \dfntxt{absolute maximum} of $f$ if $f(p) \geq f(q)$ for all $q \in \R^n$.
+        \item \dfntxt{absolute minimum} of $f$ if $f(p) \leq f(q)$ for all $q \in \R^n$.
+    \end{itemize}
+\end{dfnbox}
+
+\section{Lagrange Multipliers}
+
+The Lagrange multipliers method is used to maximize or minimize a general function (say $f(x,y,z)$) subject to a constraint of the form $g(x,y,z) = k$.
+
+
+Recall that the directional derivative in the direction of a unit vector $\vec{u}$ is defined as:
+\[ D_{\vec{u}} f(x,y) = \nabla f(x,y) \cdot \vec{u} \]
+We can rewrite this as:
+\[  D_{\vec{u}} f(x,y) = \norm{\nabla f(x,y)} \norm{\vec{u}} \cos \theta \]
+where $\theta$ is the angle between the gradient and $\vec{u}$.
+
+\begin{tecbox}{Finding Extreme Values using Lagrange Multipliers}{}
+    Say we have a function $f(x,y)$ and some constraint $g(x,y) = z$, and wanted to find its extreme values. To apply the method, we:
+    \begin{enumerate}
+        \item Set up the equation $\nabla f(x,y) = \lambda \nabla g(x,y)$.
+        \item Solve for $\lambda$, $x$, and $y$.
+        \item Plug in the values you have found for $x$ and $y$ into the function $f$ to find the extreme values.
+    \end{enumerate}
+\end{tecbox}
+
+\begin{exbox}{}{}
+    Find the extreme values of $f$ \todo[inline]{Get examples from paper notes into here}
+\end{exbox}

@@ -1,0 +1,201 @@
+%todo: contained within v.s. "entirely" contained within
+
+\chapter{Compact Sets}
+
+In this chapter, we describe the idea of \dfntxt{compactness} for sets. This idea will prove tremendously useful in future chapters as it will enable us to bring a ``finite quality'' to an otherwise infinite set or idea. It turns out that, for metric spaces like the real numbers, compactness is equivalent to closed and bounded.
+
+However, we will approach this idea from two (seemingly different) notions: sequential compactness which deals closed sets, and open cover compactness (or simply ``compact'') that deals with open sets. Having these different approaches provides us with several avenues for proving things about compactness. We'll dedicate a section to either approach, and ultimately show that these two ideas are equivalent in the real numbers (this is not generally true in all topological spaces).
+
+\section{Sequential Compactness}
+\begin{dfnbox}{Sequential Compactness}{}
+    A set $K \subseteq \R$ is \dfntxt{sequentially compact} if every sequence contained within $K$ also has a subsequence that converges to an element of $K$.
+\end{dfnbox}
+
+\begin{exbox}{Closed Intervals are Sequentially Compact}{}
+    Let $a,b \in \R$ where $a \leq b$. Then $[a,b]$ is sequentially compact.
+    \tcblower
+    \textbf{Intuition:} We want to strictly use the definition of sequential compactness. So we will consider an arbitrary subsequence of $[a,b]$, and then find a subsequence that converges to something in $[a,b]$.
+    \begin{proof}
+        Let $(x_n)$ be an arbitrary sequence entirely contained within $[a,b]$. Then $(x_n)$ is bounded, so the \nameref{thm:bw} guarantees the existence of a subsequence $(x_{n_k})$ of $(x_n)$ that $x_{n_k}$ converges to some $x \in \R$. Since $[a,b]$ is a closed set, then every sequence contained in $[a,b]$ converges to a number in $[a,b]$. Then we know $(x_{n_k})$ converges to some number in $[a,b]$.
+    \end{proof}
+\end{exbox}
+
+\begin{exbox}{Open Sets are not Sequentially Compact}{}
+    $(0,1]$ is not sequentially compact.
+    \tcblower
+    \textbf{Intuition:} Our strategy is to find a sequence contained within $(0,1]$ that converges to something outside of $(0,1]$.
+    \begin{proof}
+        Consider the sequence $(x_n) \coloneq \sfrac{1}{n}$. Then the sequence is entirely contained within $(0,1]$, but it converges to $0$ which is not in $(0,1]$. Note that any arbitrary subsequence of $(x_n)$ also converges to $0$. \todo[inline]{Reference to therorem 8.2.4 limits of subsequences}
+    \end{proof}
+\end{exbox}
+
+\begin{thmbox}{Sequentially compact just means closed and bounded}{}
+    Let $E \subseteq \R$. Then $E$ is sequentially compact if and only if $E$ is both closed and bounded.
+    \tcblower
+    \begin{proof}
+        First, suppose $E$ is sequentially compact. Let $(x_n)$ be an arbitrary sequence contained within $E$ that converges to some $x \in \R$. Since $E$ is sequentially compact, then there exists a subsequence $(x_{n_k})$ of $(x_n)$ such that $(x_{n_k})$ converges to some $y \in E$. By (todo: Proposition 15.2 whatever this ref is), we have:
+        \[ \lim_{k \to \infty} x_{n_k} = x \]
+        Since limits are unique (as proven in todo), $x = y$. Thus, $(x_n)$ converges to $y \in E$, so $E$ is closed.
+
+        To prove $E$ is bounded, we proceed by contradiction. Suppose $E$ is not bounded. Then, for each $N \in \N$, there exists $x_n \in E$ such that $\abs{x_n} > n$. Since $E$ is sequentially compact, then there exists a subsequence $(x_{n_k})$ of $(x_n)$ such that $x_{n_k}$ converges to a point in $E$. Note that $\abs{x_{n_k}} > n_k \geq k$, so the sequence $(x_{n_k})$ is unbounded and thus is divergent. This contradicts the fact that $(x_{n_k})$ does converge. Thus, our supposition that $E$ is not bounded was false, so $E$ is in fact bounded.
+
+        Conversely, suppose that $E$ is both closed and bounded. Let $(x_n)$ be an arbitrary sequence entirely contained within $E$. Since $E$ is bounded, then there exists $M \in \R$ such that $\abs{x_n} \leq M$ for all $n \in \N$. By the \nameref{thm:bw}, there exists a subsequence $(x_{n_k})$ of $(x_n)$ where $(x_{n_k})$ converges to some $x \in \R$. Since $E$ is closed and $(x_{n_k})$ is contained within $E$, then its limit $x$ must be in $E$. Therefore, $E$ is sequentially compact.
+    \end{proof}
+\end{thmbox}
+
+\section{Open Cover Compactness}
+\begin{dfnbox}{Open Cover}{}
+    Let $A \subseteq \R$. An \dfntxt{open cover} of $A$ is a collection of open sets such that $A$ is a subset of the union of that collection. We say that the collection \dfntxt{covers} $A$.
+\end{dfnbox}
+
+In other words, every number in $A$ is in at least one of the open sets in the collection of open sets.
+
+\begin{exbox}{Open Cover Example \#1}{}
+    $[0,1]$ is covered by $\left\{ B(x, \sfrac{1}{10}) : x \in [0,1] \right\}$.
+    \tcblower
+    \begin{proof}
+        First note that $B(x, \sfrac{1}{10})$ is open for all $x \in [0,1]$. Let $a \in [0,1]$ be arbitrary. Then:
+        \[ a \in B(a, \sfrac{1}{10}) \in \left\{ B(x, \sfrac{1}{10}) : x \in [0,1] \right\} \]
+        So it covers $[0,1]$.
+    \end{proof}
+\end{exbox}
+
+\begin{exbox}{Open Cover Example \#2}{}
+    $(0,1)$ is covered by $\left\{ (\sfrac{x}{2}, 1) : x \in (0,1) \right\}$.
+    \tcblower
+    \begin{proof}
+        Note that $(\sfrac{x}{2}, 1)$ is open for all $x \in (0,1)$. Let $a \in (0,1)$. Then:
+        \[a \in (\sfrac{a}{2}, 1) \in \left\{ (\sfrac{x}{2}, 1) : x \in (0,1) \right\} \]
+        So it covers $(0,1)$.
+    \end{proof}
+\end{exbox}
+
+\begin{dfnbox}{Subcover}{}
+    Given an open cover of a set, a \dfntxt{subcover} is a subset of the open cover that covers the set.
+    \tcblower
+    More formally, let $A \subseteq \R$, and let $\{O_\lambda : \lambda \in \Lambda\}$ be an open cover of $A$. Then $\{ O_\lambda : \lambda \in \Lambda\prime \}$ is a \dfntxt{subcover} of $\{O_\lambda : \lambda \in \Lambda \}$ if $\Lambda\prime \subseteq \Lambda$ and $A \subseteq \bigcup_{\lambda \in \Lambda\prime} O_\lambda$.
+\end{dfnbox}
+
+In other words, a subcover is created by throwing away sets from the original cover, and the subcover still covers the original set. Also note that a cover is also one of its own subcovers. We say that a subcover is \dfntxt{finite} if there are only finitely many sets in the collection. Finiteness in this context does not refer to the cardinality of the open sets in the collection, but rather the collection itself.
+
+\begin{exbox}{Open Cover Example \#1 Revisited}{}
+    Then open cover $\left\{ (x - \sfrac{1}{10}, x + \sfrac{1}{10}) : x \in [0,1] \right\}$ of $[0,1]$ has a finite subcover.
+    \tcblower
+    For example, we can take $\{ B(0, \sfrac{1}{10}), B(\sfrac{1}{10}, \sfrac{1}{10}), \ldots, B(1, \sfrac{1}{10}) \}$ which only contains 11 open balls and is therefore a finite subcover of $[0,1]$.
+\end{exbox}
+
+\begin{exbox}{Open Cover Example \#2 Revisited}{01-not-compact}
+    The open cover $\left\{ (\sfrac{x}{2}, 1) : x \in (0,1) \right\}$ of $(0,1)$ does not have a finite subcover.
+    \tcblower
+    \begin{proof}
+        Suppose for contradiction that there exists a finite subcover. Then, for some $n \in \N$, there exists $x_1, x_2, \ldots, x_n \in (0,1)$. such that $(0,1) \subseteq \bigcup_{i = 1}^{n} (\sfrac{x_i}{2}, 1)$. Since there are finitely many ``$x$'s'', let $y \coloneq \min\{x_1, \ldots, x_n\}$. Then, for all $i \in \{1, 2, \ldots, n\}$, we have:
+        \[ 0 < \frac{y}{4} \leq \frac{x_i}{4} < \frac{x_i}{2} \]
+        so $\sfrac{y}{4} \notin (\sfrac{x_1}{2}, 1)$. Thus, we found some $y \in (0,1)$ that is not in the supposed finite subcover. This contradicts the fact that the subcover must cover the entirety of $(0,1)$. Therefore, there does not exist any finite subcover.
+    \end{proof}
+\end{exbox}
+
+\begin{dfnbox}{Open Cover Compactness}{}
+    A set $K \subseteq \R$ is \dfntxt{open cover compact} if every open cover of $K$ has a finite subcover.
+\end{dfnbox}
+
+For example, the interval $(0,1)$ is not compact by Example \ref{ex:01-not-compact}. We found an open cover of $(0,1)$ that does not have a finite subcover.
+
+\begin{exbox}{Any finite set of points in $\R$ is open cover compact}{}
+    \begin{proof}
+        Let $A \subseteq \R$ be a finite set. Then $A = \{x_1, x_2, \ldots, x_n\}$ for some $n \in \N$. Let $\{O_\lambda : \lambda \in \Lambda\}$ be an open cover of $A$. For each $i \in \{1, 2, \ldots, n\}$, we have $x_i \in A$. Also note that $A \subseteq \bigcup_{\lambda \in \Lambda} O_\lambda$, so $x_i$ is contained in some $O_{\lambda_i}$ for some $\lambda_i \in \Lambda$. Then $\{O_{\lambda_i} : i \in \{1, 2, \ldots, n\} \}$ is a finite subcover of $A$, so $A$ is compact.
+    \end{proof}
+\end{exbox}
+
+\begin{exbox}{Open Cover Compactness Example \#1}{}
+    Let $A \coloneq \left\{ \sfrac{1}{n} : n \in \{2,3,4,\ldots\} \right\}$. Then $A$ is not open cover compact.
+    \tcblower
+    \begin{proof}
+        Consider the open cover:
+        \[ \left\{ \left( \frac{1}{n+1}, \frac{1}{n-1} \right) : n \in \{2,3,4,\ldots\} \right\} \]
+        For each $n_o \in \{2,3,4,\ldots\}$, note that $\sfrac{1}{n_0} \in \left( \sfrac{1}{n_0 + 1}, \sfrac{1}{n_0 - 1} \right)$, but if $n \neq n_0$ then $\sfrac{1}{n_0} \notin \left( \sfrac{1}{n+1}, \sfrac{1}{n-1} \right)$. That is, we cannot remove any of the open intervals from the open cover, so there is no finite subcover. Therefore, $A$ is not open cover compact.
+    \end{proof}
+\end{exbox}
+
+Surprisingly, we can add a single point to the set in the above example and make it a compact set.
+
+\begin{exbox}{Open Cover Compactness Example \#2}{}
+    Let $A \coloneq \{0\} \cup \left\{ \sfrac{1}{n} : n \in \{2,3,4,\ldots\} \right\}$. Then $A$ is open cover compact.
+    \tcblower
+    \begin{proof}
+        Let $\{O_\lambda : \lambda \in \Lambda\}$ be an arbitrary open cover of $A$. Since $0 \in A$, then there must be some $\lambda_0 \in \Lambda$ such that $0 \in O_{\lambda_0}$. Since this $O_{\lambda_0}$ is an open set, then there exists some $r > 0$ such that $B(0, r) \subseteq O_{\lambda_0}$. Let $N \in \N$ such that $N > \sfrac{1}{r}$. Then for any $n > N$, we have $n > \sfrac{1}{r} > 0$. In particular, $0 < \sfrac{1}{n} < r$. That is, for any $n > N$, $\sfrac{1}{n} \in B(0,r) \subseteq O_{\lambda_0}$. For $n \in \{2,3,\ldots,N\}$, there exists some $\lambda_n \in \Lambda$ such that $\sfrac{1}{n} \in O_{\lambda_n}$. We can now create a finite subcover as follows:
+        \[ \left\{ O_{\lambda_0}, O_{\lambda_2}, O_{\lambda_3}, \ldots, O_{\lambda_N} \right\} \]
+        which is a finite subcover for $A$. Since our choice of the initial open cover was arbitrary, then every open cover of $A$ has such a finite subcover. Therefore, $A$ is open cover compact.
+    \end{proof}
+\end{exbox}
+
+\begin{thmbox}{Compactness implies boundedness}{}
+    If $K \subseteq \R$ is open cover compact, then $K$ is bounded.
+    \tcblower
+    \begin{proof}
+        Consider the following open cover of $K$:
+        \[ O \coloneq \left\{ (-n ,n) : n \in \N \right\} \]
+        Since $K$ is compact, there exists a finite subset of $O$ that still covers $K$ (i.e. a finite subcover), which can be of the form:
+        \[ \left\{ (-n_i, n_i) : i \in \{ 1,2,\ldots,m \} \right\} \quad \text{such that} \quad m, n_1, n_2, \ldots, n_m \in \N \]
+        Note $K \subseteq \bigcup_{i=1}^{m} (-n_i, n_i)$. Let $N \coloneq \max\{n_1, n_2, \ldots, n_m\}$. Then:
+        \[ K \subseteq \bigcup_{i = 1}^m \left( -n_i, n_i \right) \subseteq (-N, N) \]
+        Therefore, $K$ is bounded above by $N$ and bounded below by $-N$, so $K$ is bounded.
+    \end{proof}
+\end{thmbox}
+
+\begin{thmbox}{Compactness implies closedness}{}
+    If $K \subseteq \R$ is open cover compact, then $K$ is closed.
+    \tcblower
+    \begin{proof}
+        We will show that $\R \setminus K$ is open. Let $x \in \R \setminus K$. For all $r > 0$, define $O_r$ as:
+        \[O_r \coloneq \R \setminus [x-r, x+r]\]
+        Then for all $r > 0$, $O_r$ is open. Also, $\bigcup_{r>0} O_r = \R \setminus \{x\}$, so $K \subseteq \R \setminus \{x\} = \bigcup_{r>0}O_r$. That is, $\{O_r : r > 0\}$ is an open cover for $K$. Since $K$ is compact, there exists a finite subcover. Thus, for some $n \in \N$, there exists $r_1, r_2, \ldots, r_n$ such that $K \subseteq \bigcup_{i=1}^{n} O_{r_i}$. Let $r \coloneq \min\{r_1, r_2, \ldots, r_n\}$. Then $\bigcup_{i=1}^{n} O_{r_i} \subseteq O_r$. Since $K \subseteq O_r$, we have:
+        \[ \R \setminus K \supseteq O_r^c = [x-r, x+r] \supseteq (x-r, x+r) \]
+        so $\R \setminus K$ is open. Therefore, $K$ is closed.
+    \end{proof}
+\end{thmbox}
+
+\begin{thmbox}{Closed subsets of compact sets are compact}{}
+    Let $K \subseteq \R$. If $K$ is open cover compact and $E \subseteq K$ is closed, then $E$ is open cover compact.
+    \tcblower
+    \begin{proof}
+        Let $\{O_\lambda : \lambda \in \Lambda\}$ be an open cover for $E$. Since $E$ is closed, $\R \setminus E$ is open. Thus, the collection $\{ O_\lambda : \lambda \in \Lambda \} \cup \{ \R \setminus E \}$ is an open cover for $K$. Since $K$ is compact, there exists a finite subcover for $K$ from $\{ O_\lambda : \lambda \in \Lambda \} \cup \{ \R \setminus E \}$. This subcover can either be:
+        \begin{enumerate}
+            \item $\{O_{\lambda_i} : i \in \{1, 2, \ldots, n\}\}$ for some $n \in \N$, in which case we have $E \subseteq K \subseteq \bigcup_{i=1}^{n} O_{\lambda_i}$, so $E \subseteq \bigcup_{i=1}^{n}O_{\lambda_i}$, or
+            \item $\{O_{\lambda_i} : i \in \{1,2,\ldots,n\} \} \cup \{ \R \setminus E\}$, in which case we have $E \subseteq K \subseteq \left( \bigcup_{i=1}^{n} O_{\lambda_i} \right) \cup \R \setminus E$. If $x \in E$, then $x \notin \R \setminus E$, so $x \in \bigcup_{i=1}^{n} O_{\lambda_i}$. Thus, $E \subseteq \bigcup_{i=1}^{n} O_{\lambda_i}$.
+        \end{enumerate}
+        In either case, the collection $\{ O_{\lambda_i} : i \in \{1,2,\ldots,n\}\}$ is a finite subcover of $E$. Therefore, $E$ is compact.
+    \end{proof}
+\end{thmbox}
+
+\begin{thmbox}{Every closed interval is compact}{}
+    Let $a,b \in \R$ where $a < b$. Then $[a,b]$ is open cover compact.
+    \tcblower
+    \begin{proof}
+        Let $I \coloneq [a,b]$, and let $O \coloneq \{O_\lambda : \lambda \in \Lambda\}$ be an open cover of $I$. Suppose for contradiction there does not exist any finite subcover of $I$ from $O$. Let $I^l \coloneq \left[ a, \frac{a+b}{2} \right]$, and let $I^r \coloneq \left[ \frac{a+b}{2}, b \right]$. Then $I^l$ and/or $I^r$ do not have a finite subcover from $O$. Choose such an interval and call it $I_1$. Repeat indefinitely for all $n \in \N$.
+        \begin{notebox}
+            We claim there exists a sequence $(I_j)$ of closed intervals such that:
+            \begin{enumerate}
+                \item $I_j \subseteq I_{j-1} \subseteq I$, where $I_0 = I = [a,b]$,
+                \item $\mathscr{l}(I_j) = \frac{\mathscr{l}(I)}{2^j}$, where $\mathscr{l}([c,d]) = d - c$ (i.e. the ``length'' of the interval), and
+                \item each $I_j$ does not have a finite subcover from $O$.
+            \end{enumerate}
+        \end{notebox}
+        For each $j \in \N$, let $P(j)$ denote the statement: ``all three properties hold for $I_j$.'' Then the interval $I_1$ defined above satisfies the three properties. \todo[inline]{Maybe elaborate here}
+
+        Now suppose that $P(j)$ is true for some $j \in \N$. Then $I_j$ does not have a finite subcover from $O$.
+        %Split $I_j$ into $I_j^l$ and $I_j^r$ as we did above. Then $I_j^l$ and/or $I_j^r$ has no finite subcover from $O$.
+        Note that $I_{j+1}$ is one of $I_j^l$ or $I_j^r$ which does not have a finite subcover from $O$.
+        \begin{enumerate}
+            \item $I_{j+1} \subseteq I_j \subseteq I$, so the first property holds.
+            \item $\mathscr{l}(I_{j+1}) = \frac{1}{2} \mathscr{l}(I_j) = \frac{\mathscr{l}(I)}{2^{j+1}}$, so the second property holds.
+            \item $I_j$ does not have a finite subcover from $O$, so the third property holds.
+        \end{enumerate}
+        Thus, $P(j+1)$ is true. By the Principle of Induction, $P(n)$ is true for all $n \in \N$. By the Nested Interval Property (todo: ref), we have:
+        \[ \bigcap_{j \in \N} I_j \neq \emptyset \]
+        so there exists some $x \in \bigcap_{j \in \N} I_j \subseteq [a,b]$. Since $O$ is an open cover for $[a,b]$, there exists an index $\lambda_x \in \Lambda$ such that $x \in O_{\lambda_x}$. Since $O_{\lambda_x}$ is open, there exists some radius $r > 0$ such that $B(x,r) \subseteq O_{\lambda_x}$. Choose $n \in \N$ such that $\mathscr{l}(I_n) < r $
+    \end{proof}
+\end{thmbox}
+
+\begin{thmbox}{Heine-Borel Theorem}{}
+    A set $E \subseteq \R$ is open cover compact if and only if $E$ is both closed and bounded.
+\end{thmbox}

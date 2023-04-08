@@ -7,7 +7,7 @@ We will describe some concepts that generalize open/closed intervals. This chapt
 \begin{dfnbox}{Open Set}{}
     Intuitively, set is \dfntxt{open} if it does not contain any of its ``boundary points'', such as minimum or maximum.
     \tcblower
-    More formally,  $A \subseteq \R$. We say $A$ is \dfntxt{open} if, for all $x \in A$, there exists $r > 0$ such that $(x-r, x+r) \subseteq A$.
+    More formally, we say $A \subseteq \R$ is \dfntxt{open} if, for all $x \in A$, there exists $r > 0$ such that $(x-r, x+r) \subseteq A$.
     \[ \forall(x \in A) \exists (r > 0) \left( (x-r, x+r) \subseteq A \right) \]
 \end{dfnbox}
 
@@ -79,9 +79,7 @@ Note how the above theorem only works by taking the minimum radius of all the op
     \end{proof}
 \end{exbox}
 
-Note that this interval $(0, 1]$ is neither open nor closed! It is wrong to think of open/closed as strictly one or the other (i.e. openness and closedness are not mutually exclusive). Moreover, a set can be both open and closed, going against the intuition of open and closed sets.
-
-\todo[inline]{Example of set that is open and closed (clopen)}
+Note that this interval $(0, 1]$ is neither open nor closed! It is wrong to think of open/closed as strictly one or the other (i.e. openness and closedness are not mutually exclusive). Moreover, a set can be both open and closed (or \dfntxt{clopen}), going against the intuition of open and closed sets. There are only two clopen sets in the real numbers: $\R$ itself, and $\emptyset$.
 
 \begin{lembox}{Closed Intervals are Closed Sets}{}
     Let $a,b \in \R$ with $a<b$. Then $[a,b]$ is a closed set.
@@ -103,7 +101,7 @@ Note that this interval $(0, 1]$ is neither open nor closed! It is wrong to thin
 
 Similar to the intersection of open sets, the union of closed sets is guaranteed to be closed if it is a finite union. For example, the union $\left( \bigcup_{n \in \N} [\sfrac{1}{n}, 1]\right) = (0,1]$ is not closed!
 
-\begin{thmbox}{Finite Union of Closed Sets is Closed}{}
+\begin{thmbox}{Finite Union of Closed Sets is Closed}{finite-union-closed-sets}
     Let $n \in \N$, and let $E_1, E_2, \ldots, E_n$ be closed subsets of $\R$. Then $\bigcup_{k=1}^n E_k$ is a closed set.
     \tcblower
     A direct proof of this theorem can be found in the textbook.
@@ -120,29 +118,46 @@ The direct proof here is rather wordy and awkward. We will first establish a con
 \end{thmbox}
 
 \begin{thmbox}{Complement of a Closed Set is Open}{}
-    Let $E \subseteq \R$ be closed. Then $\R \setminus E$ is open.
+    Let $C \subseteq \R$ be closed. Then $\R \setminus C$ is open.
     \tcblower
     \begin{proof}
-        Let $x \in \R \setminus E$. We must prove the following statement:
-        \[ \exists (n \in \N) \left( B \left(x, \sfrac{1}{n} \right) \subseteq \R \setminus E \right) \]
+        Let $x \in \R \setminus C$. We must prove the following statement:
+        \[ \exists (n \in \N) \left( B \left(x, \sfrac{1}{n} \right) \subseteq \R \setminus C \right) \]
         Suppose for contradiction the negation of the previous statement holds. That is:
-        \[ \forall (n \in \N) \left( B \left(x, \sfrac{1}{n} \right) \not \subseteq \R \setminus E \right) \]
+        \[ \forall (n \in \N) \left( B \left(x, \sfrac{1}{n} \right) \not \subseteq \R \setminus C \right) \]
 
-        Then, for all $n \in \N$, there exists $x_n \in B(x, \sfrac{1}{n})$ such that $x_n \in E$. Hence, the sequence $(x_n)$ satisfies $x_n \in E$ for all $n \in \N$ and $\abs{x_n - x} < \sfrac{1}{n}$. \todo[inline]{Finish Proof}
+        In other words, for all $n \in \N$, there exists $x_n \in B(x, \sfrac{1}{n})$ such that $x_n \in C$. Hence, the sequence $(x_n)$ satisfies $x_n \in C$ for all $n \in \N$ and $\abs{x_n - x} < \sfrac{1}{n}$. Thus, $(x_n)$ converges to $x$. However, $C$ is closed, and $(x_n)$ is a sequence in $C$, so $x \in C$. This contradicts $x \in \R \setminus C$. Therefore, our original statement holds, so $\R \setminus C$ is open.
     \end{proof}
 \end{thmbox}
 
 Combining the two above theorems, we can infer a pretty useful relationship between open and closed sets.
 
-\todo[inline]{redo proof that union of closed sets is closed}
+\[ A\ \text{is open} \iff \R \setminus A\ \text{is closed} \]
+\[ B\ \text{is closed} \iff \R \setminus B\ \text{is open} \]
+
+We can apply this relationship to directly prove that the finite union of closed sets is closed (Theorem \ref{thm:finite-union-closed-sets}).
+
+\begin{proof}[Proof of Theorem \ref{thm:finite-union-closed-sets}]
+    By De Morgan's Laws, we have:
+    \[ \R \setminus \left( \bigcup_{k=1}^n E_k \right) = \bigcap_{k=1}^{n} \left( \R \setminus E_k \right) \]
+    Since each $\R \setminus E_k$ is open, the finite intersection $\bigcap_{k=1}^n (\R \setminus E_k)$ is also open. Hence, $\R \setminus \left( \bigcup_{k=1}^n E_k \right)$ is open, so $\bigcup_{k=1}^n E_k$ is closed.
+\end{proof}
 
 \section{Closure}
 
 \begin{dfnbox}{Closure of a Set}{}
-    For $A \subseteq \R$, the \dfntxt{closure} of $A$ is the set: %todo
+    Intuitively, the \dfntxt{closure} of a set is the set containing its elements and boundary points.
+    \tcblower
+    Formally, for $A \subseteq \R$, the \dfntxt{closure} of $A$ is the set:
+    \[ \overline{A} \coloneq \{ x \in \R : \exists\ (\text{sequence}\ (x_n)) \forall(n \in \N)(x_n \in A)\ \text{and}\ x_n \to x \} \]
 \end{dfnbox}
 
-For example, the closure of the interval $(0,1)$ is %todo
+For example, let's consider the closure the open interval $ A \coloneq (0,1)$.
+\begin{itemize}
+    \item We can take the constant sequence of $\sfrac{1}{2}$ contained in $(0,1)$ which converges to $\sfrac{1}{2}$, so $\sfrac{1}{2} \in \overline{A}$.
+    \item We can take the sequence $\sfrac{1}{n+1}$ contained in $(0,1)$ which converges to $0$, so $0 \in \overline{A}$.
+    \item We can take the sequence $1 - \sfrac{1}{n+1}$ contained in $(0,1)$ which converges to $1$, so $1 \in \overline{A}$.
+\end{itemize}
 
 \begin{thmbox}{Properties of Closures of Sets}{}
     Let $A \subseteq \R$. Then:
@@ -150,10 +165,24 @@ For example, the closure of the interval $(0,1)$ is %todo
         \item $A \subseteq \overline{A}$,
         \item $\overline{A}$ is closed,
         \item $A = \overline{A}$ if and only if $A$ is closed,
-        \item $\overline{\overline{A}} = \overline{A}$,
+        \item $\overline{A} = \overline{\overline{A}}$,
         \item if $F \subseteq \R$ is closed and $A \subseteq F$, then $\overline{A} \subseteq F$, and
         \item $\overline{A} = \bigcap \left\{ F \subseteq \R : F\ \text{is closed, and}\ A \subseteq F \right\}$
     \end{enumerate}
+    \tcblower
+    \begin{proof}[Proof] The proofs for i through vi are as follows:
+        \begin{enumerate}[label=(\roman*)]
+            \item Let $x \in A$, and let $(x_n) \coloneq (x, x, x, \ldots)$. Then $x_n \in A$ for all $n \in \N$, and $\lim_{n \to \infty} x_n = x$. Therefore, $x \in \overline{A}$.
+            \item Let $(x_n)$ be a sequence contained within $\overline{A}$ that converges to some $x \in \R$. For each $x_n \in \overline{A}$, there exists $y_n \in A$ such that $\abs{y_n - x_n} < \sfrac{1}{n}$. Then:
+            \[ \abs{y_n - x} = \abs{y_n - x_n + x_n - x} \leq \abs{y_n - x_n} + \abs{x_n - x} < \sfrac{1}{n} + \abs{x_n - x} \]
+            Thus, $y_n - x \to 0$, so $y_n \to x$. Therefore, $x \in \overline{A}$.
+            \item First, suppose $A = \overline{A}$. Then by (ii), $\overline{A}$ is closed, so $A$ is closed. Conversely, suppose $A$ is closed. Then by (i), $A \subseteq \overline{A}$. Now we show $\overline{A} \subseteq A$. Let $x \in \overline{A}$. By definition, there exists a sequence $(x_n)$ contained in $A$ that converges to $x$. Since $A$ is closed, then $x \in A$, so $\overline{A} \subseteq A$. Thus, $\overline{A} = A$.
+            \item By (ii), $\overline{A}$ is closed. By (iii), $\overline{A} = \overline{\overline{A}}$.
+            \item Let $x \in \overline{A}$. By definition, there exists a sequence $(x_n)$ contained in $A$ that converges to $x$. Since $A \subseteq F$, then $(x_n)$ is also contained in $F$. Since $F$ is closed, then $x \in F$.
+            \item By (v), if $F$ is closed and $A \subseteq F$, then $\overline{A} \subseteq F$. Therefore, $\overline{A} \subseteq \bigcap\{ F \subseteq \R : F\ \text{is closed, and}\ A \subseteq F \}$. By (ii), $\overline{A}$ is closed, and by (i), $A \subseteq \overline{A}$. Thus, we have:
+            \[ \bigcap \{ F \subseteq \R : F\ \text{is closed, and}\ A \subseteq F \} \subseteq \overline{A} \]
+        \end{enumerate}
+    \end{proof}
 \end{thmbox}
 
 These properties can make it easier to prove statements about closures.
@@ -162,7 +191,7 @@ These properties can make it easier to prove statements about closures.
     If $A \subseteq B$, then $\overline{A} \subseteq \overline{B}$.
     \tcblower
     \begin{proof}
-
+        By (i), $A \subseteq B \subseteq \overline{B}$, and by (ii), $\overline{B}$ is closed. Thus, by (v), $\overline{A} \subseteq \overline{B}$.
     \end{proof}
 \end{exbox}
 

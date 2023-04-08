@@ -1,0 +1,54 @@
+\chapter{Turing Machines}
+
+The \dfntxt{Turing machine} is a much more powerful and accurate model for describing general purpose computers. It can solve any problem that a real computer can do. However, there are still some problems that a Turing machine (and thus a computer) cannot solve.
+
+Turing machines model memory with a sequence of 0s and 1s called a \dfntxt{tape}. The machine has a ``tape head'' which can move across the tape, reading or writing one bit at a time.
+
+\begin{dfnbox}{Turing Machine (TM)}{}
+    A \dfntxt{Turing machine (TM)} is an abstract model that can generalize any computational problem or task.
+    \tcblower
+    More formally, a \dfntxt{Turing machine} is defined as a 7-tuple $(Q, \Sigma, \Gamma, \delta, q_0, q_a, q_r)$ where:
+    \begin{itemize}[noitemsep]
+        \item $Q$ is a finite set of states,
+        \item $\Sigma$ is the input alphabet not containing the \dfntxt{blank symbol} \textvisiblespace,
+        \item $\Gamma$ is the \dfntxt{tape alphabet} where $\textvisiblespace \in \Gamma$ and $\Sigma \subseteq \Gamma$,
+        \item $\delta : Q \times \Gamma \to Q \times \Gamma \times \{L, R\}$ is the transition function,
+        \item  $q_0 \in Q$ is the start state,
+        \item $q_a \in Q$ is the accept state, and
+        \item $q_r \in Q$ is the reject state where $q_a \neq q_r$.
+    \end{itemize}
+\end{dfnbox}
+
+A Turing machine $M$ computes as follows:
+\begin{enumerate}
+    \item $M$ receives an input string $w \coloneq w_1 \ldots w_n \in \Sigma^*$ on the leftmost $n$ squares of the tape, and the rest of the tape is blank.
+    \item The tape head starts on the leftmost square of the tape. Since $\Sigma$ does not contain the blank symbol, the first blank the machine sees marks the end of the input.
+    \item The machine computes according to the transition function $\delta$. If it tries to move the tape head left off the left-end of the tape, it just stays in the same place for that move.
+    \item Computation continues until it reachers either the accept or reject state, at which point it halts.
+\end{enumerate}
+
+As a Turing machine computes, three things may change: the current state, current tape contents, and current head location. These are collectively referred to as the \dfntxt{configuration} of the Turing machine.
+
+\begin{dfnbox}{Turing Machine Configuration}{}
+    Given a Turing machine, its \dfntxt{configuration} refers to its current state, current tape contents, and current head location. For a state $q$ and two strings $u$ and $v$, we write $u\ q\ v$ to denote the configuration where the current state is $q$, the current tape contents are $uv$, and the current head location is the first symbol of $v$.
+\end{dfnbox}
+
+\begin{dfnbox}{Yield}{}
+    Given a Turing machine and two configurations $C_1$ and $C_2$, we say $C_1$ \dfntxt{yields} $C_2$ if the machine can legally move from $C_1$ to $C_2$ in a single step.
+\end{dfnbox}
+
+\begin{itemize}
+    \item The \dfntxt{start configuration} using input $w$ and the initial state is $q_0$ is $\epsilon q_0w$.
+    \item A \dfntxt{accepting configuration} is any configuration with state $q_a$.
+    \item A \dfntxt{rejecting configuration} is any configuration with state $q_r$.
+    \item Accepting and rejecting configurations are called \dfntxt{halting configurations} and cannot yield further configurations.
+\end{itemize}
+
+\begin{dfnbox}{Decider}{}
+    We say a Turing machine is a \dfntxt{decider} if it halts on all possible inputs.
+\end{dfnbox}
+
+\begin{dfnbox}{Turing-decidable, Turing-recognizable}{}
+    We say a language is \dfntxt{Turing-decidable} if there exists some Turing machine that decides it. We say a language is \dfntxt{Turing-recognizable} if there exists some Turing machine that recognizes it.
+\end{dfnbox}
+\todo{elaboration on turing recognizable, difference between the two, why decideable is better}

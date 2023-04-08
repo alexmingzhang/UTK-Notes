@@ -78,6 +78,186 @@ HTTP was originally designed to only serve Hypertext Markup Language (HTML), but
         \item Others include HEAD, PUT, DELETE, TRACE, CONNECT, OPTIONS, PATCH
         \item The \dfntxt{request body} is the data needed to fulfill the request.
     \end{itemize}
+    An HTTP response follows the generic form:
+    \[ \texttt{HTTP/version status\textunderscore code <keyword>:<value> <response body>} \]
+    \begin{itemize}[noitemsep]
+        \item \dfntxt{Status code:} 100s informational, 200s successful, 300s redirection, 400s client error, 500s server error
+        \item \dfntxt{Response Headers:} metadata about response in key-value pairs, separated by \texttt{\textbackslash r\textbackslash n}
+        \item Response body: data returned from the request
+    \end{itemize}
 \end{dfnbox}
 
+\todo[inline]{HTTP Response}
+
 Although the HTTP spec specifies the intended uses of each method, servers can implement and handle these methods however they choose. So there is generally no standardization of these methods between different servers.
+
+\begin{dfnbox}{Hypertext Markup Language (HTML)}{}
+    \dfntxt{HTML} is a markup languages based on the Standard Generalized Markup (SGML). An HTML document is composed of elements described using \dfntxt{markup tags}, following a tree structure where each element can have a parent, sibling, or children elements.
+\end{dfnbox}
+
+In 1998, SGML was reworked into XML, after the creation of HTML. HTML and XML are very similar, but not the same.
+
+\begin{dfnbox}{HTML Element}{}
+    \[ \texttt{<tag [attribute='value']>[content]</tag>} \]
+    \begin{itemize}
+        \item Tag: \todo[inline]{This}
+        \item Attribute list: each element defines a set of attributes with well-defined behavior; HTML also supports arbitrary attributes but without well-defined behavior (up to your own implementation)
+        \item Content: can be composed of other elements (i.e. children), textual content, or a combination of the two
+        \item Closing tag: Only tags that can have contents need to be closed
+    \end{itemize}
+\end{dfnbox}
+
+\begin{exbox}{HTML Document}{}
+    \begin{itemize}
+        \item The \texttt{html} tag is the root element
+        \item \texttt{head} contains metadata elements
+        \item \texttt{body} contains the webpage's contents
+        \item Common content tags are \texttt{p} (paragraph), \texttt{h1} through \texttt{h6} (headers), \texttt{ol} (ordered list), \texttt{ul} (unordered list), etc.
+        \item HTML 5 now supports \dfntxt{frames} which are used to display another entirely different HTML document.
+    \end{itemize}
+\end{exbox}
+
+The \texttt{script} tag can be used to add client-side scripts to add interactivity to the webpage. These scripts are almost exclusively written in JavaScript.
+
+\begin{dfnbox}{HTTPS}{}
+    \dfntxt{HTTPS} is simply the HTTP protocol using TLS.
+\end{dfnbox}
+
+What happens if multiple domains are served by the same IP address?
+\begin{itemize}
+    \item This is referred to as \dfntxt{name-based virtual hosting}
+    \item For HTTP, the \texttt{host} header will identify how to route the request
+\end{itemize}
+The problem when usnig HTTPS is to figure out which certificate to provide when establishing TLS with the client. Also, what about routing after TLS is established? The HTTP request is encrypted and the host header will not be reachable.
+
+\begin{dfnbox}{Server Name Indication (SNI)}{}
+    \dfntxt{Server name indication (SNI)} is a TLS extension which allows clients to indicate which domain they want to communicate with.
+\end{dfnbox}
+
+All HTTPS requests in this TLS session will be routed to that domain. The downside here is that SNI clearly reveals who the user is communicating with, and it often breaks many corporate security tools. More recently, people have developed encrypted SNI where the client hello is encrypted using a public key for the domain. This public key is hosted in DNS but requires DNSSEC to be secure.
+
+\begin{dfnbox}{Document Object Model (DOM)}{}
+    The \dfntxt{document object model (DOM)} is the computer's interpretation of an HTML document which is used to actually render the HTML document. The DOM can be modified by scripts and will be immediately reflected.
+\end{dfnbox}
+
+The DOM is composed of several things, including:
+\begin{itemize}[noitemsep]
+    \item The HTML document itself
+    \begin{itemize}[noitemsep]
+        \item \texttt{document, document.head, document.body}
+        \item \texttt{document.location}
+        \item \texttt{document.scripts}
+        \item \texttt{document.getElementById()}
+        \item \texttt{document.querySelector()}, \texttt{document.querySelectorAll()}
+    \end{itemize}
+    \item The window displaying the document
+    \begin{itemize}[noitemsep]
+        \item \texttt{window}, \texttt{window.document}
+        \item \texttt{windodw.alert}
+        \item \texttt{window.cookieStore}
+        \item \texttt{window.localStorage}, \texttt{window.sessionStorage}
+        \item \texttt{window.location}
+    \end{itemize}
+    \item The console, typically used by developers
+    \item \texttt{fetch()}: used to retrieve new content from the server; much of the modern web is based on \texttt{fetch()}, starting by sending a bare-bones webpage and fetching content as required
+\end{itemize}
+
+\begin{notebox}
+    \textbf{As a developer, never trust client-side code.} Clients can arbitrarily access, modify, and injects scripts. Big takeaway: \textbf{important data should never be stored on the client.}
+\end{notebox}
+
+Originally, the web was purely static HTML webpages. As such, each request was independent of one another. At most, the \texttt{referer} header was used to link requests. In order to create more fully-featured web applications, web developers have created mechanisms for storing session data to be associated with HTTP requests, allowing HTTP requests to be linked to users.
+
+\todo[inline]{missing notes}
+
+\begin{dfnbox}{Cookies}{}
+    \dfntxt{Cookies} refer to data stored on the web client that is used for additional functionality and/or as a means of identifying users. They usually exist between webpages and sessions on the same website.
+\end{dfnbox}
+
+\begin{dfnbox}{Origin, Same-Origin Policy (SOP)}{}
+    An \dfntxt{origin} refers to the scheme (e.g. HTTP), host (fully-qualified domain name or IP address), and port. The \dfntxt{same-origin policy} guarantees that content from one origin will have limited access to content from another origin.
+\end{dfnbox}
+
+For example, \texttt{http://site.com/asdf} and \texttt{http://site.com:80/asdfzxcv} have the same origin.
+
+\begin{notebox}
+ The same-origin policy is widely regarded the most important security feature for web documents.
+\end{notebox}
+
+For example, same-origin policy is applied to:
+\begin{itemize}
+    \item Frames: scripts in one frame are only allowed access to the DOM of another frame if they share the same origin.
+    \item Web requests: scripts from one origin are only allowed to make \texttt{GET}, \texttt{POST}, and \texttt{HEAD} requests to another origin, and even then have limited headers and cannot view the response bodies.
+\end{itemize}
+
+There are some circumstance to loosen SOP protections. Regardless of the intent, extreme precaution must be taken when doing so.
+\begin{itemize}
+    \item \texttt{document.domain} can be used to override the fully-qualified domain name in the origin. This allows pages from two distinct subdomains to change their domain to the same parent domain, allowing cross-page domain access. This feature is now deprecated.
+    \item Channel messaging API allows frames to send messages to each other. The sender explicitly identifies the domain(s) they send messages to. The receiver explicitly identifies the domains they are receiving from.
+    \item \dfntxt{Cross-origin resource sharing (CORS):} A header in the HTTP response indicates origins that are allowed to access the response body; can also allow additional methods and header options
+\end{itemize}
+
+\section{Cookie Attacks}
+If an attacker can steal a user's session identifier cookie, the attacker can use that cookie to impersonate the user! Methods include:
+\begin{itemize}
+    \item Intercepting HTTP traffic; can be stopped by using TLS and/or setting the Secure attribute on cookies
+    \item Malicious client-side scripts: supply-chain threats make this threat increasingly common
+    \item Client-side malware: malware can attack the browser and steal the cookies, either out of memory or on the disk where they are stored
+\end{itemize}
+
+Let's say an attacker can't directly steal the cookies. They might still try to misuse them instead. Recall that whenever an HTTP request is made, cookies are automatically attached to that request. The browser sends these cookies. We can trigger a web request using \texttt{fetch()} to request a resource from any origin!
+
+\begin{dfnbox}{Cross-Site Request Forgery (CSRF)}{csrf}
+    \dfntxt{Cross-Site Request Forgery (CSRF)} refers to a common online attack. The user connects to a malicious website which executes a web request for the legitimate website. The browser will attach the legitimate site's cookies to this request.
+\end{dfnbox}
+
+\begin{enumerate}
+    \item A user connects to a legitimate website and has a cookie.
+    \item The user connects to a malicious website
+\end{enumerate}
+\todo{finish steps of CSRF attack}
+
+There are several methods for defense against CSRF attacks:
+\begin{itemize}
+    \item Limit what can be done with the \texttt{GET}, \texttt{POST}, and \texttt{HEAD} requests; these are the only requests allowed by SOP, but can be overridden with CORS
+    \item Set the \texttt{SameSite} attribute on the cookies; will only attach cookies originating from the domain that set the cookie
+    \item Use an anti-CSRF token which itself is a cookie. Whenever the user triggers a sensitive action, include the anti-CSRF token in the request. Then the server only allows the operation if both values match.
+\end{itemize}
+
+Another approach is \dfntxt{cross-site scripting}. The vulnerability lies in the fact that websites often include user input in their output. This can allow attacks to inject malicious scripts.
+
+\begin{dfnbox}{Cross-Site Scripting (XSS)}{}
+    \dfntxt{Cross-Site Scripting (XSS)} refers to a method of online attack where an attacker finds a means to get a user to run malicious code by visiting some link or website.
+\end{dfnbox}
+
+These attacks can result in varying outcomes including stolen cookies, stolen data stored in the browser (e.g. \texttt{LocalStorage}), redirecting the browser to an attacker-controlled domain, and/or modifying the document itself.
+
+\dfntxt{Reflect XSS:}
+\begin{enumerate}
+    \item An adversary includes some malicious code or script to an otherwise legitimate link
+    \item A user clicks on the link, where the malicious script runs while connected to the legitimate website
+\end{enumerate}
+
+This requires the user to click an attacker-controlled link. This is not effective if the user directly visits the website. In addition, this only impacts a single user. A common approach use a URL shortener to hide the malicious content from the URL. Also, it's common to load some arbitrary image with \texttt{onLoad="malicous code"} as well as some code to reload the page to hide the malicious code from the URL.
+
+\dfntxt{Stored XSS:}
+\begin{enumerate}
+    \item The adversary directly connects to the legitimate website and uploads some malicious code (perhaps through a POST request)
+    \item The website stores the adversary-owned script in their database
+    \item A user connects to the legitimate website and sends a request to get relevant items from a database (perhaps comments on a post/thread)
+    \item The website sends the adversary-owned script to the user, where it is then run on the user's machine.
+\end{enumerate}
+
+This does not require any error on the user's part, and works even if the user directly visits the site. Moreover, this impacts many users. Reflected XSS attacks can be used to set up Stored XSS attacks
+
+To address XSS attacks, we never user functionality that can allow an attacker to inject malicious content. Specifically, we avoid setting the \texttt{innerHTML} attribute and avoid calling \texttt{eval()} on user input. It's best to rely on frameworks that sanitize and filter malicious content before processing user input.
+
+\section{SQL Attacks}
+SQL is a language used to query data in a database. SQL injection attacks happen when user input is directly included inside SQL statements executed on the database. It's similar to XSS where the attacker injects malicious code.
+
+SQL itself stores data in \dfntxt{relational databases} which can be better thought of simply as tables. Each table has a \dfntxt{schema} that defines the columns or fields that make up the tables. In terms of OOP, tables are like classes and each row is an instantiation of that class.
+
+
+\todo[inline]{Missing a lot of notes}
+
+Allows for arbitrary access to the SQL interface which means the attacker can do anything they want.
