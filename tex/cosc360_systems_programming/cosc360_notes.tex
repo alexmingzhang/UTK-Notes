@@ -236,5 +236,35 @@ C has special variables that mark the end of the memory segments for each region
     Flush before fork
 \end{notebox}
 
+\chapter{Threads}
+
+Why do we care about threads?
+\begin{enumerate}
+    \item They excel at handling asynchronous computations/instructions
+    \item Running threads in parallel offers a performance boost
+\end{enumerate}
+
+We will cover POSIX threads, which are standardized among all UNIX operating systems. The general idea is that we have two procedures that look something like:
+\begin{enumerate}
+    \item \texttt{TCB thread\_fork(proc, arg)} that creates a thread which shares the same address space but has its own stack. It runs \texttt{proc(arg)} on its own stack.
+    \item \texttt{int thread\_join(TCB)} that waits for the thread \texttt{TCB} to exit, and returns what the thread returned from \texttt{proc}. Although a thread may finish running a procedure, its stack will persist until something calls \texttt{pthread\_join} on its thread.
+\end{enumerate}
+
+In C, these procedures are part of \texttt{pthread.h}, named \texttt{pthread\_create()} and \texttt{pthread\_join()}.
+
+A \dfntxt{preemptive} thread system means that either:
+\begin{itemize}[noitemsep]
+    \item each thread runs on separate CPUs, or
+    \item the thread system makes each thread run ``simultaneously''.
+\end{itemize}
+
+Most modern thread systems are preemptive.
+
+\begin{dfnbox}{Race Condition}{}
+    A \dfntxt{race condition} is present in code that relies on separate threads running deterministically, but really they run non-deterministically.
+\end{dfnbox}
+
+To protect against race conditions, we can specify a certain procedure to only run one thread at a time. In C, this is done using a \texttt{mutex}.
+
 \amzindex
 \end{document}

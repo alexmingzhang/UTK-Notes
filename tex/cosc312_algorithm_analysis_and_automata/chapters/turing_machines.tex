@@ -48,7 +48,22 @@ As a Turing machine computes, three things may change: the current state, curren
     We say a Turing machine is a \dfntxt{decider} if it halts on all possible inputs.
 \end{dfnbox}
 
-\begin{dfnbox}{Turing-decidable, Turing-recognizable}{}
-    We say a language is \dfntxt{Turing-decidable} if there exists some Turing machine that decides it. We say a language is \dfntxt{Turing-recognizable} if there exists some Turing machine that recognizes it.
+\begin{dfnbox}{Recognizes, Decides}{}
+    For a language $L$, we say a Turing machine:
+    \begin{itemize}
+        \item \dfntxt{recognizes} $L$ if it accepts all strings in the language and either rejects or loops on strings not in the language. In this case, $L$ is \dfntxt{Turing-recognizable}.
+        \item \dfntxt{decides} $L$ if it accepts all strings in the language and rejects all strings not in the language. In this case, $L$ is \dfntxt{Turing decidable}.
+    \end{itemize}
 \end{dfnbox}
-\todo{elaboration on turing recognizable, difference between the two, why decideable is better}
+
+\begin{thmbox}{CFLs are not Closed Under Complementation}{}
+    \begin{proof}
+        Suppose for contradiction that all CFLs are closed under complementation. Let $G_1$ and $G_2$ be CFGs. Then $\overline{L(G_1)}$ and $\overline{L(G_2)}$ are context-free. Since CFLs are closed under union, then $\overline{L(G_1)} \cup \overline{L(G_2)}$ is context-free.
+        \todo[inline]{Finish proof, apply complement again to get intersectino, nto context fre}
+    \end{proof}
+\end{thmbox}
+
+% \todo{elaboration on turing recognizable, difference between the two, why decideable is better}
+
+\section{The Halting Problem}
+

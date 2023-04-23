@@ -1,0 +1,79 @@
+\chapter{Network-Based Attacks}
+\section{Intrusion Detection}
+
+\begin{dfnbox}{Intrusion}{}
+    An \dfntxt{intrusion} is an event on a host or network that maliciously violates the security policy.
+\end{dfnbox}
+
+An \dfntxt{intrusion detection system (IDS)} and \dfntxt{intrusion prevention system (IPS)} are often used together to address intrusions in real-time.
+
+\dfntxt{Sensors} are used to collect data for use in IDS and IPS. Sensors can be installed in a variety of locations, including:
+\begin{itemize}[noitemsep]
+    \item In the network as packet scanners
+    \item In the network as circuit-level proxies
+    \item At the host as packet scanners/circuit-level proxies
+    \item At the host as a running application
+    \item At the host as a kernel module
+\end{itemize}
+It's best to install sensors at as many places as possible.
+
+
+
+There are three popular approaches to intrusion detection systems:
+\begin{enumerate}
+    \item \dfntxt{Signature-based IDS:} Blacklist malicious patterns, scanning traffic and flagging those patterns. This is very fast, simple to implement, and has few false positives. However, it will only detect known attacks, generating false negatives for unknown or zero-day exploits.
+    \item \dfntxt{Specification Based:} Whitelist allowed behavior on a per-app basis, scanning traffic and flagging any disallowed behavior. This is very fast and generates very few false negatives, and it can even detect some new attacks. However, it requires developing a well-defined and broad specification which is difficult and time-consuming. It also does not detect allowed but malicious behavior (e.g. a virus embedded in a PDF file).
+    \item \dfntxt{Anomaly-Based:} Build a model of normal behaviors, often done by machine learning. It scans traffic, flagging new or anomalous behaviors. This can be particularly good at detecting new attacks. However, it needs a long training period, after which its accuracy depends on the training data and implementation. In addition, there's a high level of false positives as there are many anomalous but benign events.
+\end{enumerate}
+
+Again, it's best to apply defense in depth: utilize all three and reap the benefits from each one. Anomaly-based detection is particularly popular as of late, but its efficacy is still questionable.
+
+\section{Vulnerability Assessment}
+
+Vulnerability assessment can be used by both malicious and benevolent applications.
+
+\begin{dfnbox}{Penetration Test}{}
+    A \dfntxt{penetration test} is an internal or external audit of security done by actually attacking the system to find vulnerabilities.
+\end{dfnbox}
+
+Penetration testing includes:
+\begin{enumerate}
+    \item Rules of engagement
+    \item Credential
+    \item Responsible disclosure
+\end{enumerate}
+
+Rules of engagement include well-defined terms of engagements (what is allowed and not allowed) and should only be conducted by credentialed entities. In addition, the company should be made aware of all vulnerabilities and should have time to patch them before an announcement is made.
+
+\section{Attacks}
+
+\begin{dfnbox}{Denial of Service (DoS), Complete Denial, Partial Denial}{}
+    A \dfntxt{denial of service (DoS)} attack impedes the availability or usability of a service. \dfntxt{Complete denial} renders the service totally unusable. \dfntxt{Partial denial} involves a degradation of the quality of service. If degradation is sufficient, it may still drive people away.
+\end{dfnbox}
+
+Some motivations for such an attack include:
+\begin{itemize}[noitemsep]
+    \item Financial gain via extortion
+    \item Commercial competitive gains; drives traffic away from attacked website to competitors
+    \item Government censorship, information warfare, and/or activism; prevents access to resources that are deemed to be inappropriate
+    \item Vengeance
+    \item Experimentation
+\end{itemize}
+
+Attackers can leverage other methods, including software vulnerabilities or exhausting the service's resources. Most commonly, DoS attacks exhaust the service's network resources. In packet-switched networks, routers have fixed-size queues for storing incoming packets waiting to be routed. If the queue becomes full, new packets get dropped. Thus, an attacker can prevent legitimate traffic by generating enough malicious traffic. This is often referred to as \dfntxt{flooding}.
+
+A DoS attack can be further amplified by employing several attackers (referred to as \dfntxt{distributed denial of service}) or by reflection. In reflection, the attacker prompts the server for a response, which gets redirected to the victim. It has to leverage responses that are larger than the initial input.
+
+Mitigations for such attacks include:
+\begin{itemize}
+    \item \dfntxt{Ingress filtering:} quick filter that happens as far upstream as possible (usually just a blacklist of IP ranges)
+    \item \dfntxt{Egress filtering:} prevent local devices from being used as part of a DDoS or amplification attack
+    \item \dfntxt{Zero-trust networking:} drops all traffic without processing it; helps prevent against non-network resource exhaustion DoS attacks
+    \item Simply upgrade your system to handle more bandwidth, such as using a content-distribution networks (CDN)
+\end{itemize}
+
+\paragraph*{DNS Resolution Attacks} DNS is an incredibly fragile system with potential for attacks. An attacker can corrupt the local DNS cache (such as the \texttt{hosts} file), tamper with an intermediate DNS server, modify the DNS response during transmission, and/or setup a malicious DNS server.
+
+\paragraph*{DNS Resolution Defenses} DNSSEC addresses attacks by digitally signing domain-IP associations. Adoption has been very slow due to the hassle of key management. It still doesn't address attacks that affect the local DNS cache.
+
+\paragraph*{ARP Spoofing} The address resolution protocol (ARP) handles mapping IP addresses to MAC addresses. This protocol relies on hosts to self-identify the appropriate mapping. This makes it trivial to spoof any desired mapping and is one of the biggest oversights by the original designers of the internet. The only way to defend against this attack is to hard-code mappings in the switch (which is not feasible in most cases).

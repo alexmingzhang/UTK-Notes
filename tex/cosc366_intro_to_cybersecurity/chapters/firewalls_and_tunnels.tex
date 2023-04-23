@@ -68,7 +68,7 @@ Initially, IP was created without security in mind. It did not guarantee confide
 \end{dfnbox}
 
 \subsection*{Packet Filters}
-The most common type of firewall is a \dfntxt{packet filter}, which filters traffic at a packet-level based on a list of rules. The most common actions are \texttt{ALLOW}, \texttt{DROP}, or \texttt{REJECT}.
+The most common type of firewall is a \dfntxt{packet filter}, which filters traffic at a packet-level based on a list of rules. The most common actions are \texttt{ALLOW}, \texttt{DROP} (don't allow the packet), or \texttt{REJECT} (drop and notify the sender). In practice, \texttt{REJECT} is rarely used.
 
 Some limitations include:
 \begin{itemize}
@@ -80,3 +80,31 @@ Some limitations include:
 
 \subsection*{Proxy Firewall}
 A \dfntxt{proxy firewall} is a proxy that is an intermediary connection between two hosts. It can then pass all traffic to an app-level filter for inspection. It can view all traffic, including encrypted traffic. In addition to allowing or denying traffic, it can even modify traffic to possibly add or remove functionality. To any user, the proxy can be entirely transparent.
+
+\section{Tunnels}
+
+Tunneling is the process of transporting packets from one protocol and transmitting them using another protocol. So far, we've covered TLS and will soon explore SSH.
+
+\subsection*{Secure Shell Protocol (SSH)}
+
+\begin{dfnbox}{SSH}{}
+    \dfntxt{SSH} is an application-layer protocol that adds confidentiality and integrity to other application-layer protocols.
+\end{dfnbox}
+
+At a high level, the remote host runs an SSH server which relays all inputs to some program (most commonly the server's shell). All traffic goes through an encrypted tunnel. A single SSH connection is \dfntxt{multiplexed}, meaning it can be used to handle multiple protocols. It also supports port forwarding (e.g. if a server hosts a website on port 8080, we can use SSH to redirect all traffic from our port 8080 to the server's port 8080).
+
+When establishing an encrypted tunnel, we always want to authenticate the server. Each server has a unique SSH host key which identifies the system.\footnote{It's also possible to use PKI for SSH host keys, although rarely used in practice.} Most of the time, the client validates the key by trust on first use (TOFU). Then, if the host's SSH key has changed, the connection is rejected.
+
+The server also needs to authenticate the user, most commonly by password and/or public key. Passwords are not the preferred method as they are susceptible to phishing (if connected to the wrong server) and are generally less secure. Much more secure is the public-key, which conducts a challenge-response protocol to verify ownership of the private key. After the first login, the user's public key is listed as an authorized key on the server. The user's private key should be password-protected on the client.
+
+\subsection*{Virtual Private Networks}
+
+Traditionally, computers are physically networked together. The boundary to a network is well-defined, and computers within that boundary are considered trusted. Incoming and outgoing traffic across that boundary is monitored in our firewall.
+
+Obviously, the limitation is that the computers have to be physically connected. Instead, we can tunnel all computer networking through a remote network.
+
+\begin{dfnbox}{Virtual Private Network (VPN)}{}
+
+\end{dfnbox}
+
+VPNs do not protect against malicious insiders nor lateral movement in the network. As such, VPNs are slowly being replaced by \dfntxt{zero-trust networking} which works using a whitelist. All connections are distrusted by default unless explicitly authenticated.

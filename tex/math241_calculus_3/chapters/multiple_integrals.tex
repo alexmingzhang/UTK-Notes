@@ -4,15 +4,85 @@
 
 Recall the intuition behind integrals: we are chopping up a function's graph into little bits and summing the area of each of those bits. The same intuition can be applied to multiple integrals. Instead of our bits being slivers of the two-dimensional graph, we will instead have our bits be very skinny rectangular prisms of the three-dimensional graph.
 
-\section{Double Integrals}
+\section{Double Integrals over Rectangles}
 
 \begin{dfnbox}{Double Integral}{}
     The \dfntxt{double integral} of $f$ over a rectangle $R$ is:
     \[ \iint\limits_R f(x,y) dA =  \]
-    \todo[inline]{formal definition}
 \end{dfnbox}
 
 \begin{thmbox}{}{}
-    If $f(x,y)$ is a continuous function defined on a rectangle $R \coloneq [a,b] \times [c,d]$, then the limit always exists, and
+    If $f(x,y)$ is a continuous function defined on a rectangle $R \coloneq [a,b] \times [c,d]$, then the limit always exists, and:
     \[ \iint\limits_R f(x,y) dA = \int_c^d \left( \int_a^b f(x,y)\ dx \right)\ dy \]
 \end{thmbox}
+
+\section{Double Integrals over General Regions}
+Let $f : A \to B$ be a function where $A \subseteq \R^2$ and $B \subseteq \R$. To generalize the double integral of $f$ to a general region $D$ (not just a rectangle), we simply define a new function $F : \R^2 \to \R$ as:
+\[ F(x,y) \coloneq \begin{cases}
+    f(x,y), & \text{if}\ (x,y) \in D \\
+    0, & \text{if}\ (x,y) \in A \setminus D
+\end{cases}\]
+
+Then our integral is as follows:
+
+\[ \iint\limits_D f(x,y)\ dA = \iint\limits_R F(x,y)\ dA \]
+
+To help us compute these integrals, we classify these regions into two distinct types, based on how they are bounded.
+
+\begin{dfnbox}{Type I and Type II Region}{}
+    Let $D$ be a planar region. We characterize $D$ as a:
+    \begin{itemize}
+        \item \dfntxt{type I region} if it lies between two continuous functions of $x$.
+        \item \dfntxt{type II region} if it lies between two continuous functions of $y$.
+    \end{itemize}
+\end{dfnbox}
+
+In other words we can describe some region $D_1$ as a type I region if we can bound the region between two functions of $x$. That is, for some $a,b \in \R$ and continuous functions $g_1,g_2$:
+\[ D_1 = \{ (x,y) : a \leq x \leq b \land g_1(x) \leq y \leq g_2(x) \} \]
+We can describe some region $D_2$ as a type II region if we can bound the region between two functions of $y$. That is:
+\[ D_2 = \{ (x,y) : g_1(y) \leq x \leq g_2(y) \land a \leq y \leq b \} \]
+
+We use the limits described in the above set builder notation as the limits used to integrate over the region. We will always integrate the value bounded by functions first. That is, we integrate over $D_1$ by:
+\[ \iint\limits_{D_1} f(x,y)\ dA = \int_a^b \left( \int_{g_1(x)}^{g_2(x)} f(x,y)\ dy \right)\ dx \]
+We integrate over $D_2$ by:
+\[ \iint\limits_{D_2} f(x,y)\ dA = \int_a^b \left( \int_{g_1(y)}^{g_2(y)} f(x,y)\ dx \right)\ dy \]
+
+\todo[inline]{Include graphics of type 1 and 2 regions, as well as more formal definitions}
+
+\begin{tecbox}{Integrating Over a Type I Region}
+    If $f$ is continuous on a type I region $D$ described by
+    \[ D = \{ (x,y) : a \leq x \leq b \land g_1(x) \leq y \leq g_2(x) \} \]
+    then
+    \[ \iint\limits_D f(x,y)\ dA = \int_{a}^{b} \left( \int_{g_1(x)}^{g_2(x)} f(x,y)\ dy \right)\ dx  \]
+\end{tecbox}
+
+\begin{tecbox}{Integrating Over a Type II Region}
+    If $f$ is continuous on a type II region $D$ described by
+    \[ D = \{ (x,y) : c \leq y \leq d \land h_1(y) \leq x \leq h_2(y) \} \]
+    then
+    \[ \iint\limits_D f(x,y)\ dA = \int_{c}^{d} \left( \int_{h_1(y)}^{h_2(y)} f(x,y)\ dx \right)\ dy \]
+\end{tecbox}
+
+\section{Properties of Double Integral}
+
+Here, we will consider functions $f(x,y)$ and $g(x,y)$ that are continuous on a region $D \subseteq \R^2$ where $D$ is also a subset of the intersection of the domains of $f$ and $g$. These are more or less analogous to properties of single integrals.
+
+\begin{enumerate}
+    \item $\displaystyle \iint\limits_D (f(x,y) + g(x,y))\ dA = \iint\limits_D f(x,y)\ dA + \iint\limits_D g(x,y)\ dA $
+    \item $\displaystyle \iint\limits_D k f(x,y)\ dA = k \iint\limits_D f(x,y)\ dA $
+    \item If $D = D_1 \cup D_2$ and $D_1 \cap D_2 = \emptyset$, then $\displaystyle \iint\limits_D f(x,y)\ dA = \iint\limits_{D_1} f(x,y)\ dA + \iint\limits_{D_2} f(x,y)\ dA$
+    \item If $f(x,y) \leq g(x,y)$ for every $(x,y) \in D$, then $\displaystyle \iint\limits_D f\ dA \leq \iint\limits_D g\ dA$.
+    \item If $f(x,y) = 1$ for every $(x,y) \in D$, then $\displaystyle \iint\limits_D f(x,y)\ dA = \iint\limits_D dA$, which is just the area of $D$.
+\end{enumerate}
+
+Properties 1 and 2 tell us that---like single integrals---double integrals are also linear.
+
+\section{Polar Coordinates}
+
+A point $(x,y)$ in the $xy$-plane is expressed as a Cartesian coordinate. It describes its position by where it is on the $x$-axis and $y$-axis.
+
+\todo[inline]{everything}
+
+\section{Applications of Double Integral}
+
+\todo[inline]{everything}

@@ -143,12 +143,18 @@ We can apply this relationship to directly prove that the finite union of closed
     Since each $\R \setminus E_k$ is open, the finite intersection $\bigcap_{k=1}^n (\R \setminus E_k)$ is also open. Hence, $\R \setminus \left( \bigcup_{k=1}^n E_k \right)$ is open, so $\bigcup_{k=1}^n E_k$ is closed.
 \end{proof}
 
-\section{Closure}
+\section{Interior and Closure}
+\begin{dfnbox}{Interior of a Set}{}
+    Intuitively, the \dfntxt{interior} of a set is the set containing its elements but not its boundary points.
+    \tcblower
+    Formally, for $A \subseteq \R$, the \dfntxt{interior} of $A$ is the set $A^{\circ}$ defined as:
+    \[ A^{\circ} \coloneq \{ x \in A : \exists (r>0)(B(x,r) \subseteq A) \} \]
+\end{dfnbox}
 
 \begin{dfnbox}{Closure of a Set}{}
     Intuitively, the \dfntxt{closure} of a set is the set containing its elements and boundary points.
     \tcblower
-    Formally, for $A \subseteq \R$, the \dfntxt{closure} of $A$ is the set:
+    Formally, for $A \subseteq \R$, the \dfntxt{closure} of $A$ is the set $\overline{A}$ defined as:
     \[ \overline{A} \coloneq \{ x \in \R : \exists\ (\text{sequence}\ (x_n)) \forall(n \in \N)(x_n \in A)\ \text{and}\ x_n \to x \} \]
 \end{dfnbox}
 
@@ -194,7 +200,3 @@ These properties can make it easier to prove statements about closures.
         By (i), $A \subseteq B \subseteq \overline{B}$, and by (ii), $\overline{B}$ is closed. Thus, by (v), $\overline{A} \subseteq \overline{B}$.
     \end{proof}
 \end{exbox}
-
-\begin{notebox}
-    The corresponding idea for open sets is the \dfntxt{interior} of a set.
-\end{notebox}

@@ -1,0 +1,137 @@
+\chapter{Continuity}
+
+In calculus classes, we are often taught: ``$f$ is continuous at $c$ if $\lim_{x \to c} = f(c)$.'' This is fine for ``well-behaving'' functions, but consider a function $f : [0,1] \cup \{2\} \to \R$. It may be tempting to say $f$ is not continuous at $2$ because it does not have a limit when $x$ approaches $2$. However, for the sake of simplifying future ideas and theorems, we will consider $f$ to be (vacuously) continuous at $2$.
+
+\begin{dfnbox}{Isolated Point}{}
+    Let $A \subseteq \R$. A point $x \in A$ is an \dfntxt{isolated point} of $A$ if there exists $r > 0$ such that $B(x,r) \cap A = \{x\}$.
+\end{dfnbox}
+
+In other words, and isolated point is anything that is not a limit point. For example, in the set $[0,1] \cup \{2\}$, we would consider $2$ to be an isolated point.
+
+\begin{lembox}{Limit/Isolated Point Exclusivity}{}
+    Let $A \subseteq \R$ and $x \in A$. Then $x$ is \textbf{either} a limit point of $A$ or isolated point of $A$.
+    \tcblower
+    \begin{proof}
+        Suppose $x$ is not an isolated point of $A$. Then, for any $n \in \N$, there exists some value $x_n \in A$ such that $x_n \neq x$, and $x_n \in B(x, \sfrac{1}{n})$. Then $(x_n)$ is entirely contained in $A \setminus \{x\}$, and $\abs{x_n - x} < \sfrac{1}{n}$ for any $n \in \N$. That is, $x_n$ converges to $x$. Therefore, $x$ is a limit point of $A$.
+    \end{proof}
+\end{lembox}
+
+We upgrade the normal calculus definition of continuity by accounting for any potential isolated points.
+
+\begin{dfnbox}{Continuity at a Point}{}
+    Let $A \subseteq \R$, $f : A \to \R$, $c \in A$. Then $f$ is \dfntxt{continuous at} $c$ if:
+    \begin{enumerate}
+        \item $c$ is an isolated point of $A$, or
+        \item $c \in A\prime$, $\lim_{x \to c} f(x)$ exists, and $\lim_{x \to c} f(x) = f(c)$.
+    \end{enumerate}
+\end{dfnbox}
+
+\begin{thmbox}{Equivalent Characterizations of Continuity}{}
+    Let $A \subseteq \R$, $f : A \to \R$, $c \in A$. Then the following are equivalent:
+    \begin{enumerate}[label=(\alph*)]
+        \item $f$ is continuous at $c$.
+        \item For all $\epsilon > 0$, there exists $\delta > 0$ such that if $\abs{x-c} < \delta$, then $\abs{f(x) - f(c)} < \epsilon$.
+        \item For all sequences $(x_n)$ contained in $A$ that converge to $c$, $\lim_{n\to\infty} f(x_n) = f(c)$.
+    \end{enumerate}
+    \tcblower
+    \begin{proof}[Proof sketch]
+        If $c$ is an isolated point of $A$, then (a) holds. For $\epsilon > 0$, choose $\delta > 0$ such that $B(c, \delta) \cap A = \{c\}$. If $x \in A$ and $\abs{x-c} < \delta$, then $x = c$, so (b) holds. Similarly, if $(x_n)$ is contained in $A$ and converges to $c$, then $x_n = c$ for some large enough $n$. Thus, $\lim_{n\to\infty} f(x_n) = f(c)$.
+
+        If instead $c$ is a limit point of $A$, then we can simply prove the following statements:
+        \begin{itemize}
+            \item (a) $\implies$ (b) by definition (only need to check $\abs{x-c} = 0$)
+            \item (b) $\implies$ (c) similar to proof of sequential characterization of limits
+            \item (c) $\implies$ (a) similar to the above case
+        \end{itemize}
+    \end{proof}
+\end{thmbox}
+
+\begin{thmbox}{Continuity Preservation}{}
+    Let $A \subseteq \R$, $c \in A$, and $f,g : A \to \R$ that are continuous at $c$. Then:
+    \begin{enumerate}[label=(\alph*)]
+        \item For all $\alpha \in \R$, $\alpha f$ is continuous at $c$.
+        \item $f + g$ is continuous at $c$.
+        \item $fg$ is continuous at $c$.
+        \item if $g(c) \neq 0$, then $\sfrac{f}{g}$ is continuous at $c$.
+    \end{enumerate}
+    \tcblower
+    \begin{proof}[Proof of (b)]
+        If $c$ is an isolated point of $A$, then $f+g$ is continuous at $c$, and we are done. Otherwise, $c$ is a limit point. Then:
+        \[ \lim_{x \to c} (f(x) + g(x)) = \lim_{x \to c} f(x) + \lim_{x \to c} g(x) = f(c) + g(c) \]
+        Therefore, $f+g$ is continuous at $c$.
+    \end{proof}
+\end{thmbox}
+
+For example, the polynomial $p(x) = \sum_{k=0}^{n} a_k x^k$ is continuous at every $c \in \R$. To prove this, we would show:
+\begin{enumerate}
+    \item $f(x)=x$ is continuous at every $x \in \R$
+    \item $f(x) = x^k$ is continuous at every $x \in \R$
+    \item $f(x) = ax^k$ is continuous at every $x \in \R$
+    \item $f(x) = \sum a_k x^k$ is continuous at every $x \in \R$
+\end{enumerate}
+
+If $p$ and $q$ are polynomials and $q(c) \neq 0$, then the rational function $\sfrac{p}{q}$ is continuous at $c \in \R$. In other words, rational functions are continuous everywhere in their domain.
+
+\begin{dfnbox}{Continuity on a Set}{}
+    Let $f : A \to \R$, $B \subseteq A$. We say $f$ is \dfntxt{continuous on} $B$ if $f$ is continuous at every $x \in B$.
+\end{dfnbox}
+
+For example, the function $f : (0,1) \to \R$ defined by $f(x) = x$ is continuous on $(0,1)$. Interestingly, this function has neither a maximum nor a minimum on this domain. $0$ is the infimum of image of $f$ under $(0,1)$, but $0$ can never be attained as a function value. The same can be said about $1$ as the supremum of the image of $f$.
+
+Another example, let $f : (0,1) \to \R$ be a function defined by $f(x) = \sfrac{1}{x}$. Then $f$ is continuous on $(0,1)$, but again, there is no minimum nor maximum. This time, we only have an infimum for the image of $f$ under $(0,1)$. There is no upper bound for the function values of $f$.
+
+If instead $f$ were defined on a closed and bounded (i.e. compact) set, then we would have a minimum and maximum for the function values of $f$. We prove this in the following theorem.
+
+\begin{thmbox}{Extreme Value Theorem}{evt}
+    Suppose $K$ is a nonempty and compact subset of $\R$, and suppose $f : K \to \R$ is continuous. Then:
+    \begin{enumerate}[label=(\alph*)]
+        \item $f$ is bounded on $K$ (that is, $f[K]$ is bounded),
+        \item there exists $x_0 \in K$ such that $f(x_0) = \sup( f[K] )$
+        \item there exists $x_1 \in K$ such that $f(x_1) = \inf( f[K] )$
+    \end{enumerate}
+    \tcblower
+    \begin{proof}[Proof of (a)]
+        Suppose for contradiction that $f$ is not bounded on $K$. Then for each $n \in \N$, there must exist $x_n \in K$ such that $\abs{f(x_n)} > n$. Since $K \subseteq \R$ is compact (and thus sequentially compact), there exists a subsequence $(x_{n_k})$ of $(x_n)$ such that $(x_{n_k})$ converges to some $x \in K$. Since $f$ is continuous, then the sequence $\{ f(x_{n_k}) \}$ converges to $f(x)$. Since convergent sequences are bounded, then there exists $M \in \R$ such that $\abs{f(x_{n_k})} \leq M$. This contradicts the fact that $\abs{f(x_{n_k})} > n_k \geq k$. Therefore, $f$ must be bounded on $K$ (i.e. $f[K]$ is bounded).
+    \end{proof}
+
+    \begin{proof}[Proof of (b)]
+        By (a), we know $f[K]$ is bounded. Since $f[K]$ is also nonempty, then completeness guarantees that $f[K]$ has a supremum in $\R$. By Problem Set 6 \# 8, there exists a sequence in $f[K]$ that converges to $\sup(f[K])$. That is, there exists a sequence $(x_n)$ contained in $K$ where the sequence $\{ f(x_n) \}$ converges to $\sup(f[K])$. Since $K$ is sequentially compact, there exists a subsequence $(x_{n_k})$ of $(x_n)$ such that $x_{n_k}$ converges to some $x_0 \in K$. By continuity:
+        \[ f(x_0) = \lim_{k \to \infty} f(x_{n_k}) = \lim_{n \to \infty} f(x_n) = \sup f[K] \]
+    \end{proof}
+\end{thmbox}
+
+
+
+\begin{thmbox}{}{}
+    Suppose $O \subseteq \R$ is open and $f : O \to \R$. Then $f$ is continuous on $O$ if and only if, for every open set $U \subseteq \R$, $f[U^{-1}]$ is open.
+\end{thmbox}
+
+\section{Uniform Continuity}
+
+\begin{dfnbox}{Uniform Continuity}{}
+    Let $f : A \to \R$ be a function. We say $f$ is \dfntxt{uniformly continuous} on $A$ if, for all $\epsilon > 0$, there exists $\delta > 0$ such that if $\abs{x-y} < \delta$, then $\abs{f(x) - f(y)} < \epsilon$.
+\end{dfnbox}
+
+\begin{exbox}{Simple Uniform Continuity Proof}{}
+    $f(x) = x$ is uniformly continuous on $\R$.
+    \tcblower
+    \begin{proof}
+
+    \end{proof}
+\end{exbox}
+
+\begin{exbox}{Simple Uniform Continuity Disproof}{}
+    $f(x) = x^2$ is not uniformly continuous on $\R$.
+    \tcblower
+    \begin{proof}
+
+    \end{proof}
+\end{exbox}
+
+\begin{thmbox}{}{}
+    Let $K$ be a compact subset of $\R$, and let $f : K \to \R$ be a continuous function on $K$. Then $f$ is uniformly continuous on $K$.
+    \tcblower
+    \begin{proof}
+
+    \end{proof}
+\end{thmbox}

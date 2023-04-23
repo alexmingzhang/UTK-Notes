@@ -1,0 +1,159 @@
+\chapter{Limits of Functions}
+
+In this chapter, we give precise meaning to the familiar notation $\lim_{x \to c} f(x)$, as well as intuition behind the formalization. For example, it is obvious to see that $\lim_{x \to 4} (5x+1) = 21$. We can simply plug in the value $4$ for $x$ and attain the answer. Not so obvious, we also have $\lim_{x \to 0} \frac{\sin x}{x} = 1$. In this example, we can't just plug in the value $0$ as we can't divide by $0$. However, we still have a limit value at the point $0$.
+
+We need some notion of $f$ being defined ``near'' $c$ despite the possibility that it may not actually be defined at $c$.
+
+\section{Introduction}
+
+We start by introducing the definition of a limit for sort of ``well-behaving'' functions. It's simple to parse but does not generalize to all real functions.
+
+\begin{dfnbox}{Limit of a Function (for ``well-behaving'' functions)}{}
+    Let $c, r, L \in \R$ where $r > 0$, and let $f : B(c, r) \to \R$ be a function. We write $\lim_{x \to c} f(x) = L$ to mean: for every $\epsilon > 0$, there exists some $\delta > 0$ such that if $0 < \abs{x-c} < \delta$, then $\abs{f(x) - L} < \epsilon$.
+    \tcblower
+    \[ \lim_{x \to c} f(x) = L \iff \forall(\epsilon > 0) \left[ \exists (\delta > 0) (0 < \abs{x-c} < \delta \implies \abs{f(x) - L} < \epsilon) \right] \]
+\end{dfnbox}
+
+That is, we need to choose $\delta > 0$ so that $f(x)$ is within $\epsilon$ of $L$ when $x$ is within $\delta$ of $c$.
+
+\begin{exbox}{Simple Function Limit Proof}{}
+    Prove that $\lim_{x \to 4} (5x + 1) = 21$.
+    \tcblower
+    \textbf{Intuition:} As always for convergence proofs, we let $\epsilon$ be some arbitrary real number greater than $0$. Now we do some scratch work to find an appropriate $\delta$ value.
+    \begin{align*}
+        \abs{(5x+1)-21}
+        &= \abs{5x-20} \\
+        &= 5 \abs{x-4}
+    \end{align*}
+    We need $0 < \abs{x-4} < \delta$, so we choose $\delta \leq \sfrac{\epsilon}{5}$.
+
+    \begin{proof}
+        Let $\epsilon > 0$. Choose $\delta \coloneq \sfrac{\epsilon}{5}$. If $0 < \abs{x-4} < \delta$, then:
+        \begin{align*}
+            \abs{(5x+1) - 21}
+            &= \abs{5x - 20} \\
+            &= 5 \abs{x-4} \\
+            &< 5\delta \\
+            &= \epsilon
+        \end{align*}
+        which completes the proof.
+    \end{proof}
+\end{exbox}
+
+\begin{exbox}{Limit of Piecewise Function}{}
+    Let $f(x) \coloneq \begin{cases}
+        x^2, & x \neq 4 \\
+        0, & x = 4
+    \end{cases}$.
+    Prove that $\lim_{x \to 4} f(x) = 16$.
+    \tcblower
+    \textbf{Intuition:} We want $\abs{f(x) - L} < \epsilon$. When $x \neq 4$, we have:
+    \begin{align*}
+        \abs{f(x) - L}
+        &= \abs{x^2 - 16} \\
+        &= \abs{(x+4)(x-4)} \\
+        &= \abs{x+4} \abs{x-4} \\
+    \end{align*}
+    We need some estimate for $\abs{x+4}$. If we suppose $\abs{x-4} < 1$, then:
+    \[ -1 < x-4 < 1 \implies 7 < x+4 < 9 \]
+    So $\abs{x+4} < 9$. Thus:
+    \[ \abs{f(x) - L} = \abs{x+4}\abs{x-4} < 9 \abs{x-4} \]
+    So we choose $\delta \leq \sfrac{\epsilon}{9}$.
+    \begin{proof}
+        Let $\epsilon > 0$. Let $\delta = \min\{ 1, \sfrac{\epsilon}{9} \}$. If $0 < \abs{x-4} < \delta$, then $\abs{x-4} < 1$, and $\abs{x-4} < \sfrac{\epsilon}{9}$. Thus:
+        \begin{alignat*}{2}
+            && \abs{x-4} < 1 &\implies 3 < x < 5 \\
+            && &\implies 7 < x+4 < 9
+        \end{alignat*}
+        That is, $\abs{x+4} < 9$, so:
+        \begin{align*}
+            \abs{f(x) -L}
+            &= \abs{x^2 - 16} \\
+            &= \abs{(x+4)(x-4)} \\
+            &= \abs{x+4} \abs{x-4} \\
+            &< 9 \delta \\
+            &= \epsilon
+        \end{align*}
+        which completes the proof.
+    \end{proof}
+\end{exbox}
+
+\begin{exbox}{Simple Function Limit Disproof}{}
+    Let $f(x) \coloneq \begin{cases}
+        1, & x > 0 \\
+        -1, & x < 0
+    \end{cases}$.
+    Prove that $\lim_{x \to 0} f(x)$ does not exist.
+    \tcblower
+    \textbf{Intuition:} Approaching from the left-hand side, we have $f(x) = -1$, but approaching from the right-hand side, we have $f(x) = 1$.
+    \begin{proof}
+        Let $\epsilon \coloneq \sfrac{1}{2}$. Suppose for contradiction that $\lim_{x \to 0} f(x) = L$. Then there exists $\delta > 0$ such that if $0 < \abs{x} < \delta$, then $\abs{f(x) - L} < \sfrac{1}{2}$. For all $x_1 \in \R$ where $0 < x_1 < \delta$, we have $f(x_1) = 1$, so $\abs{f(x_1) - L} = \abs{1 - L} < \sfrac{1}{2}$, so $\sfrac{1}{2} < L < \sfrac{3}{2}$. For all $x_2 \in \R$ such that $-\delta < x_2 < 0$, we have $f(x_2) = -1$. Thus, $\abs{f(x_2) - L} = \abs{-1 - L}$, so $-\sfrac{3}{2} < L < -\sfrac{1}{2}$. No such $L$ exists, contradicting our supposition that such an $L$ did exist. Therefore, $\lim_{x \to 0} f(x)$ does not exist.
+    \end{proof}
+\end{exbox}
+
+\begin{exbox}{Dirichlet Function}{}
+    Let $f(x) \coloneq \begin{cases}
+        1, & x \in \Q \\
+        0, & x \notin \Q
+    \end{cases}$. This function has no limit for any $x \in \R$.
+\end{exbox}
+
+\begin{exbox}{Topologists' Sine Curve}{}
+    Consider the function $f: B(0, \infty) \to \R$ defined by $f(x) = \sin \sfrac{1}{x}$.
+    \todo[inline]{Graph here}
+
+    $\sin \theta = 0$ when $\theta = \pi, 2\pi, 3\pi, \ldots$. And $\sin \sfrac{1}{x} = 0$ when $x = \sfrac{1}{\pi}, \sfrac{2}{\pi}, \sfrac{3}{\pi}, \ldots$. The limit as $x$ approaches $0$ does not exist!.
+\end{exbox}
+
+\section{Limit Points}
+
+Suppose $A = (0,1) \cup \{2\}$. If a function is defined only on $A$, then there is no notion of a limit as $x$ approaches $2$. The function isn't defined for values ``near'' $2$.
+
+\begin{dfnbox}{Limit Point}{}
+    Let $A \subseteq \R$. We say $x \in \R$ is a \dfntxt{limit point} of $A$ if there exists a sequence $(x_n)$ contained in $A \setminus \{x\}$ that converges to $x$. We write $A\prime$ to denote the set of all limit points of $A$.
+\end{dfnbox}
+
+In set $A$ defined above, the number $2$ is \textbf{not} a limit point. That is, $2 \in A$, but $2 \notin A\prime$. In fact, $A\prime = [0,1]$ because $0$ and $1$ (and any number in between) are limit points of $A$. In general, $A \not \subseteq A\prime$, and $A\prime \not\subseteq A$.
+
+With this definition, we can give a more generalized definition of a limit.
+\begin{dfnbox}{Limit of a Function (in terms of limit points)}{}
+    Let $A \subseteq \R$, $f : A \to \R$, and $c \in A\prime$. We write $\lim_{x \to c} = L$ to mean: for all $\epsilon > 0$, there exists $\delta > 0$ such that if $0 < \abs{x - c} < \delta$, then $\abs{f(x) - L} < \epsilon$.
+    \tcblower
+    \[ \lim_{x \to c} = L \iff \forall(\epsilon > 0) \left[ \exists(\delta > 0)(0 < \abs{x-c} < \delta \implies \abs{f(x) - L} < \epsilon) \right] \]
+\end{dfnbox}
+
+\begin{thmbox}{Characterization of Function Limits using Sequences}{limit-dfn-equiv}
+    Suppose $A \subseteq \R$, $f: A \to \R$, $c \in A\prime$, and $L \in \R$. Then $\lim_{x \to c} f(x) = L$ is equivalent to saying: for all sequences $(x_n)$ contained in $A \setminus \{c\}$ that converge to $c$, $\lim_{n \to \infty} f(x_n) = L$.
+    \tcblower
+    \textbf{Intuition:} This theorem relates the definition of sequential limits with the definition for functional limits.
+    \begin{proof}
+        First, suppose $\lim_{x \to c} = L$. Let $(x_n)$ be an arbitrary sequence contained in $A \setminus \{c\}$ that converges to $c$. We prove that the sequence $\{ f(x_n) \}$ converges to $L$. Let $\epsilon > 0$. Since $\lim_{x \to c} f(x) = L$, there exists $\delta > 0$ such that if $0 < \abs{x-c} < \delta$, then $\abs{f(x) - L} < \epsilon$. Since $x_n$ converges to $c$, there exists $N \in \N$ such that if $n > N$, then $\abs{x_n - c} < \delta$. Note that $x_n \neq c$, so $0 < \abs{x_n - c} < \delta$. Thus, $\abs{f(x_n) - L} < \epsilon$ for all $n \in \N$.
+        \todo[inline]{Improve clarity of above proof.}
+
+        We prove the converse implication by contraposition. Suppose that $\lim_{x \to c} f(x) \neq L$. Then there exists some $\epsilon > 0$ such that for all $\delta > 0$, there exists $x \in A$ where $0 < \abs{x-c} < \delta$ but $\abs{f(x) - L} \geq \epsilon$. Thus, for each $n \in \N$, there exists $x_n \in A$ where $0 < \abs{x_n - c} < \sfrac{1}{n}$ but $\abs{f(x_n) - L} \geq \epsilon$. So $(x_n)$ is contained in $A \setminus \{c\}$ and converges to $c$. Thus, $\lim_{n \to \infty} f(x_n) \neq L$.
+    \end{proof}
+\end{thmbox}
+
+\begin{thmbox}{Uniqueness of Function Limits}{}
+    Suppose $A \subseteq \R$, $f: A \to \R$, $c \in A\prime$, and $L_1, L_2 \in \R$. If $\lim_{x \to c} L_1$ and $\lim_{x \to c} f(x) = L_2$, then $L_1 = L_2$.
+    \tcblower
+    \begin{proof}
+        Since $c \in A\prime$, there exists a sequence $(x_n)$ contained in $A \setminus \{c\}$ that converge to $c$. By Theorem \ref{thm:limit-dfn-equiv}, we have $\lim_{n \to \infty} f(x_n) = L_1$ and $\lim_{n \to \infty} f(x_n) = L_2$. Since sequential limits must be unique, then $L_1 = L_2$. (todo: ref to sequence limit uniqueness)
+    \end{proof}
+\end{thmbox}
+
+\begin{thmbox}{Algebraic Properties of Limits}{}
+    Suppose $A \subseteq \R$, $f : A \to \R$, $g : A \to \R$, $c \in A\prime$, $L,M \in \R$, and $\lim_{x \to c} f(x) = L$, and $\lim_{x \to c} g(x) = M$. Then:
+    \begin{enumerate}[label=(\roman*)]
+        \item for all $\alpha \in \R$, $\lim_{x \to c} \alpha f(x) = \alpha L$.
+        \item $\lim_{x \to c} (f(x) + g(x)) = L + M$
+        \item $\lim_{x \to c} (f(x)g(x)) = LM$
+        \item if $M \neq 0$, then $\lim_{x \to c} \frac{f(x)}{g(x)} = \frac{L}{M}$
+    \end{enumerate}
+    \tcblower
+    \begin{proof}[Proof of (iii)]
+        Let $(x_n)$ be a sequence contained in $A \setminus \{c\}$ that converges to $c$. Then $\lim_{n\to\infty} f(x_n) = L$. and $\lim_{n\to\infty} g(x_n) = M$. By limit properties for sequences:
+        \[ \lim_{n\to\infty} f(x_n) g(x_n) = \left( \lim_{n\to\infty} f(x_n) \right) \left( \lim_{n\to\infty} g(x_n) \right) = LM \]
+    \end{proof}
+    By Theorem $\ref{thm:limit-dfn-equiv}$, $\lim_{x \to c} f(x) g(x) = LM$.
+\end{thmbox}

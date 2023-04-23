@@ -1,0 +1,15 @@
+\chapter{Reduction}
+\dfntxt{Reduction} is the primary method by which we prove that problems are computationally unsolvable. It converts a problem to a simpler problem in such a way that the simpler problem can be used to solve the original one.
+
+As we've shown in the previous chapter, $A_{TM}$ is an undecidable language. We will reduce problems that seem complex to the simpler $A_{TM}$ problem.
+
+
+
+\begin{tecbox}{Reduction}{}
+    To prove that a problem $P$ is undecidable by reduction:
+    \begin{enumerate}
+        \item Find a problem $Q$ known to be undecidable.
+        \item Assume $P$ is decidable by a TM, say $M_P$.
+        \item Use $M_P$ to construct a TM $M_Q$ that solves $Q$: encode every instance $q$ of problem $Q$ as an instance $q_P$ of problem $P$.
+    \end{enumerate}
+\end{tecbox}

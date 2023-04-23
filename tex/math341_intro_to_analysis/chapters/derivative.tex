@@ -1,0 +1,211 @@
+\chapter{Differential Calculus}
+
+\begin{dfnbox}{Differentiable, Derivative}{}
+    Let $a,b \in \R$ where $a < b$, let $f : (a,b) \to \R$ be a function, and let $x_0 \in (a,b)$.
+    \begin{itemize}
+        \item We say $f$ is \dfntxt{differentiable at} $x_0$ if $\lim_{x \to x_0} \frac{f(x) - f(x_0)}{x - x_0}$ exists.
+        \item We say $f$ is \dfntxt{differentiable on} $I$ if $f$ is differentiable at every $x \in I$.
+        \item If this limit exists, we define the \dfntxt{derivative} of $f$ as $f\prime(x_0) \coloneq \lim_{x \to x_0} \frac{f(x) - f(x_0)}{x - x_0}$.
+    \end{itemize}
+\end{dfnbox}
+
+We can also write the derivative as $ f\prime(x_0) = \lim_{h \to 0} \frac{f(x_0+h) - f(x_0)}{h}$. In this context, we replace $x$ with $x_0 + h$. This is usually the more familiar form and is referred to as the \dfntxt{difference quotient}. Without the limit, the difference quotient by itself gives us the slope of the line from $(x_0, f(x_0))$ to $(x_0+h, f(x_0+h))$. With the limit, it gives us the slope of the line tangent to $f$ at $x_0$.
+
+We can think of the derivative $f\prime(x)$ as:
+\begin{itemize}
+    \item definition: the limit of the difference quotient
+    \item graphical: slope of the tangent line
+    \item interpretation: instantaneous rate of change
+\end{itemize}
+
+\begin{exbox}{Simple Derivative Example}{}
+    Given $f(x) = x^2$, find $f\prime(x_0)$.
+    \tcblower
+    If $x \neq x_0$, then:
+    \[ \frac{f(x) - f(x_0)}{x - x_0} = \frac{x^2 - x_0^2}{x - x_0} = \frac{(x + x_0)(x - x_0)}{x - x_0} = x + x_0 \]
+    Thus:
+    \[ f\prime (x) = \lim_{x \to x_0} \frac{f(x) - f(x_0)}{x - x_0} = \lim_{x \to x_0} (x + x_0) = x_0 + x_0 = 2x_0 \]
+\end{exbox}
+
+\begin{thmbox}{Differentiability Implies Continuity}{}
+    If $f$ is differentiable at $x_0$, then $f$ is continuous at $x_0$.
+    \tcblower
+    \begin{proof}
+        If $x \neq x_0$, then $f(x) = f(x_0) + \frac{f(x) - f(x_0)}{x - x_0} (x - x_0)$. Thus:
+        \begin{align*}
+            \lim_{x \to x_0} f(x)
+            &= \lim_{x \to x_0} \left( f(x_0) + \frac{f(x) - f(x_0)}{x - x_0} (x - x_0) \right) \\
+            &= \left( \lim_{x \to x_0} f(x_0) \right) + \left( \lim_{x \to x_0} \frac{f(x) - f(x_0)}{x - x_0} \right) \left( \lim_{x \to x_0} (x - x_0) \right) \\
+            &= f(x_0) + f\prime (x_0) \cdot 0 \\
+            &= f(x_0)
+        \end{align*}
+        Therefore, $f$ is continuous at $x_0$.
+    \end{proof}
+\end{thmbox}
+
+As we'll see in the next example, the converse statement is not true. That is, continuity does not generally imply differentiability.
+
+\begin{exbox}{Continuity does not imply differentiability}{}
+    $f(x) = \abs{x}$ is continuous at $0$ but is not differentiable at $0$.
+    \tcblower
+    \begin{proof}
+        We first show $f$ is continuous at $x = 0$. We have $f(0) = 0$, and:
+        \begin{align*}
+            \lim_{x \to 0} f(x)
+            &= \lim_{x \to 0} \abs{y} \\
+            &= 0
+        \end{align*}
+        Now to show it is not differentiable, if $x \neq 0$, we have:
+        \[ \frac{f(x) - f(0)}{x - 0} = \frac{abs{x} - 0}{x - 0} = \frac{\abs{x}}{x} = \begin{cases}1, & x>0 \\ -1, & x < 0 \end{cases} \]
+        Then:
+        \[ \lim_{x \to 0} \frac{f(x) - f(0)}{x - 0} = \lim_{x \to 0} \abs{x}{y} \]
+        so its limit as $x$ approaches $0$ does not exist. Therefore, $f$ is not differentiable at $x = 0$.
+    \end{proof}
+\end{exbox}
+
+\begin{exbox}{Piecewise Differentiability Example}{}
+    Let $f(x) \coloneq \begin{cases}
+        x^2 \sin \sfrac{1}{x}, & x \neq 0 \\
+        0, & x = 0
+    \end{cases}$. Is $f$ differentiable at $x = 0$?
+    \tcblower
+    It turns out that $f$ is differentiable at $x = 0$! However, it may be tempting to give the following \textbf{incorrect} proof (assuming we already have the chain rule and product rule):
+    \begin{proof}[Incorrect proof]
+        If $x \neq 0$:
+        \[ f\prime(x) = 2x \sin \left( \frac{1}{x} \right) + x^2 \cos \left( \frac{1}{x} \right) \cdot \left( -\frac{1}{x^2} \right) = 2x\sin \left( \frac{1}{x} \right) - \cos \left( \frac{1}{x} \right) \]
+        This has no limit as $x$ approaches $0$, so $\lim_{x \to 0} f\prime(x)$ does not exist.
+    \end{proof}
+    The above approach erroneously hinges on the assumption that the derivative must be continuous (which is not generally true). We must instead use the definition of differentiability.
+    \begin{proof}[Correct proof]
+        If $x \neq 0$:
+        \begin{align*}
+             \lim_{x \to 0} \frac{f(x) - f(0)}{x - 0}
+             &= \lim_{x \to 0} \frac{x^2 \sin \sfrac{1}{x}}{x} \\
+             &= \lim_{x \to 0} x \sin \left( \frac{1}{x} \right) \\
+             &= 0
+        \end{align*}
+        Therefore, $f$ is differentiable at $x = 0$, and $f\prime(0) = 0$.
+    \end{proof}
+    This function $f$ is differentiable for every $x \in \R$, but $\lim_{x \to 0} f\prime(x)$ does not exist! So we have shown $f\prime$ is not continuous at $x = 0$.
+\end{exbox}
+
+\begin{thmbox}{Properties of Differentiation}{}
+    Suppose $f,g : (a,b) \to \R$ are differentiable at $x_0 \in (a,b)$. Let $c \in \R$. Then $cf$, $f+g$, and $fg$ are differentiable at $x$, and if $g\prime(x) \neq 0$, then $\sfrac{f}{g}$ is differentiable. Moreover:
+    \begin{enumerate}[label=(\alph*)]
+        \item $(cf)\prime(x_0) = cf\prime(x_0)$
+        \item $(f+g)\prime(x_0) = f\prime(x_0) + g\prime(x_0)$
+        \item $(fg)\prime(x_0) = f\prime (x_0) g(x_0) + f(x_0) g\prime (x_0)$
+        \item $( \sfrac{f}{g})\prime(x_0) = \frac{f\prime(x_0) g(x_0) - f(x_0) g\prime(x_0)}{\left( g(x_0) \right)^2}$
+    \end{enumerate}
+    \tcblower
+    \begin{proof}[Proof]
+        To prove (a):
+        \begin{align*}
+            (cf)\prime(x_0)
+            &= \lim_{x \to x_0} \frac{cf(x) - cf(x_0)}{x - x_0} \\
+            &= c \lim_{x \to x_0} \frac{f(x) - f(x_0)}{x - x_0} \\
+            &= c f\prime(x)
+        \end{align*}
+        To prove (b):
+        \begin{align*}
+            (f+g)\prime(x)
+            &= \lim_{x \to x_0} \frac{\left( f(x) + g(x) \right) - \left( f(x_0) + g(x_0) \right)}{x - x_0} \\
+            &= \lim_{x \to x_0} \left[ \frac{f(x) - f(x_0)}{x - x_0} + \frac{g(x) - g(x_0)}{x - x_0} \right] \\
+            &= \lim_{x \to x_0} \frac{f(x) - f(x_0)}{x - x_0} + \lim_{x \to x_0} \frac{g(x) - g(x_0)}{x - x_0} \\
+            &= f\prime(x_0) + g\prime(x_0)
+        \end{align*}
+        To prove (c):
+        \begin{align*}
+            (fg)\prime(x)
+            &= \lim_{x \to x_0} \frac{f(x)g(x) - f(x_0)g(x_0)}{x - x_0} \\
+            &= \lim_{x \to x_0} \frac{f(x)g(x) - f(x_0)g(x) + f(x_0)g(x) - f(x_0)g(x_0)}{x - x_0} \\
+            &= \lim_{x \to x_0} \left[ \frac{f(x) - f(x_0)}{x - x_0} \cdot g(x) + f(x) \cdot \frac{g(x) - g(x_0)}{x - x_0} \right] \\
+            &= \ldots
+        \end{align*}
+        Since $f$ and $g$ were assumed to be differentiable (and thus continuous at $x_0$), we can apply properties of limits to finally attain:
+        \[ f\prime(x_0) g(x_0) + f(x_0) g\prime(x_0) \]
+    \end{proof}
+\end{thmbox}
+
+\begin{thmbox}{Chain Rule}{}
+    Let $f : (a,b) \to (c,d)$ and $g : (c,d) \to \R$ be arbitrary functions. If $f$ is differentiable at some $x \in (a,b)$ and $g$ is differentiable at $f(x) \in (c,d)$, then $g \circ f : (a,b) \to \R$ is differentiable at $x$, and:
+    \[ ( g \circ f )\prime (x) = g\prime(f(x)) \cdot f\prime(x) \]
+    \tcblower
+    \textbf{Intuition:} When taking $( g \circ f )\prime$, there are two rates of the change to consider: $f\prime$ and $g\prime$, which ``compound'' one another.
+    \begin{proof}[Proof sketch]
+        \begin{align*}
+            (g \circ f)\prime(x_0)
+            &= \lim_{x \to x_0} \frac{g(f(x)) - g(f(x_0))}{x - x_0} \\
+            &= \lim_{x \to x_0} \left( \frac{g(f(x)) - g(f(x_0))}{f(x) - f(x_0)} \cdot \frac{f(x) - f(x_0)}{x - x_0} \right)
+        \end{align*}
+        The idea is the first fraction approaches $g\prime(f(x_0))$, and the second fraction approaches $f\prime(x_0)$. However, if $f(x) - f(x_0) = 0$, then the first fraction is invalid. To circumvent this, we can redefine differentiability as a multiplicative property. Precisely, we can say a function $f$ is \dfntxt{differentiable} at $x$ to mean:
+        \[ f(x+h) - f(x) = f\prime(x) \cdot h + \epsilon(h) \cdot h \]
+        where $\epsilon(h)$ approaches $0$ as $h$ approaches $0$. Intuitively, this definition verifies that we can well approximate the function at that point using a linear function. The $\epsilon(h) \cdot h$ term denotes the error in the linear approximation, which should become negligible
+    \end{proof}
+\end{thmbox}
+
+\begin{dfnbox}{Local/Global Maxima/Minima (Extreme Values)}{}
+    Let $I \subseteq \R$ be an interval, $x_0 \in I$, and $f : I \to \R$ be a function. We say $f$ has a:
+    \begin{itemize}
+        \item \dfntxt{local maximum} at $x_0$ if there exists $\delta > 0$ such that for all $x \in B(x_0, \delta) \cap I$, $f(x) \leq f(x_0)$.
+        \item \dfntxt{local minimum} at $x_0$ if there exists $\delta > 0$ such that for all $x \in B(x_0, \delta) \cap I$, $f(x) \geq f(x_0)$.
+        \item \dfntxt{global maximum} at $x_0$ if for all $x \in I$, $f(x) \leq f(x_0)$.
+        \item \dfntxt{global minimum} at $x_0$ if for all $x \in I$, $f(x) \geq f(x_0)$.
+    \end{itemize}
+\end{dfnbox}
+
+\begin{thmbox}{Fermat's Theorem}{fermat}
+    Let $f : I \to \R$ be a function. If $f$ has a local minimum or local maximum at $x_0 \in I$, then either:
+    \begin{enumerate}[label=(\alph*)]
+        \item $x_0$ is an endpoint of $I$, or
+        \item $f$ is not differentiable at $x_0$, or
+        \item $f$ is differentiable at $x_0$, and $f\prime (x_0) = 0$.
+    \end{enumerate}
+    \tcblower
+    \begin{proof}
+        Suppose $f$ has a local maximum at $x_0$. Then there exists $\delta > 0$ such that for all $x \in B(x_0, \delta) \cap I$, $f(x) \leq f(x_0)$. We prove that, if neither (a) nor (b) are true, then (c) must be true. Suppose $x_0$ is not an endpoint of $I$, and suppose that $f$ is differentiable at $x_0$. Let $x \in B(x_0, \delta) \cap I$ be arbitrary.
+        \begin{itemize}
+            \item If $x > x_0$, then $x - x_0 >0$ and $f(x) - f(x_0) \leq 0$. Hence, $\frac{f(x) - f(x_0)}{x - x_0} \leq 0$, so $f\prime(x_0) = \lim_{x \to 0} \frac{f(x) - f(x_0)}{x - x_0} \leq 0$.
+            \item If $x < x_0$, then $x - x_0 < 0$ and $f(x) - f(x_) \leq 0$. Hence, $\frac{f(x) - f(x_0)}{x - x_0} \geq 0$, so $f\prime(x_0) = \lim_{x \to 0} \frac{f(x) - f(x_0)}{x - x_0} \geq 0$.
+        \end{itemize}
+        By trichotomy, $f\prime(x_0) = 0$.
+    \end{proof}
+\end{thmbox}
+
+\begin{thmbox}{Rolle's Theorem}{rolle}
+    Let $a,b \in \R$ where $a < b$, and let $f : [a,b] \to \R$ be continuous on $[a,b]$ and differentiable on $(a,b)$. If $f(a) = 0$ and $f(b) = 0$, then there exists $c \in (a,b)$ such that $f\prime(c) = 0$.
+    \tcblower
+    \begin{proof}
+        Since $[a,b]$ is compact and $f$ is continuous, the \nameref{thm:evt} states that $f$ attains both its maximum and minimum on $[a,b]$.
+        \begin{itemize}
+            \item If both the maximum and minimum of $f$ occur at the endpoints $a$ and $b$, then maximum and minimum of $f[(a,b)]$ is $0$. Thus, $f(x) = 0$ for all $x \in [a,b]$. Thus, $f\prime(x) = 0$ for all $x \in (a,b)$, so we can take $c$ to be any value in $(a,b)$.
+            \item Otherwise, either the maximum or the minimum occurs at some point $c \in (a,b)$. By \nameref{thm:fermat}, we have $f\prime(c) = 0$.
+        \end{itemize}
+        Since the above cases are exhaustive, the proof is complete.
+    \end{proof}
+\end{thmbox}
+
+\begin{thmbox}{Mean Value Theorem}{mvt}
+    Let $a,b \in \R$ where $a < b$, and let $f : [a,b] \to \R$ be continuous on $[a,b]$ and differentiable on $(a,b)$. Then there exists $c \in (a,b)$ such that $f\prime(c) = \frac{f(b) - f(a)}{b-a}$.
+    \tcblower
+    \begin{proof}
+        Let $l : [a,b] \to \R$ be the function of the line through $(a, f(a))$ and $(b, f(b))$. That is, for any $x \in [a,b]$:
+        \[ l(x) \coloneq f(a) + \frac{f(b) - f(a)}{b - a} (x-a) \]
+        Note that $l\prime(x) = \frac{f(b) - f(a)}{b-a}$. Let $g : [a,b] \to \R$ be defined for every $x \in [a,b]$ by:
+        \[ g(x) \coloneq f(x) - l(x) \]
+        Then $g$ is continuous on $[a,b]$, and $g$ is differentiable on $(a,b)$. Also note $g(a) = 0$ and $g(b) = 0$. By \nameref{thm:rolle}, there exists $c \in (a,b)$ such that $g\prime(c) = 0$. We then have:
+        \[ 0 = g\prime(c) = f\prime(c) - l\prime(c) = f\prime(c) - \frac{f(b) - f(a)}{b-a} \]
+        Adding across by $\frac{f(b)-f(a)}{b-a}$, we have $f\prime(c) = \frac{f(b) - f(a)}{b-a}$.
+    \end{proof}
+\end{thmbox}
+
+The \nameref{thm:mvt} has tons of application in both calculus and real analysis.
+
+\begin{exbox}{Positive derivative means increasing}{}
+    If $f\prime(x) > 0$ for all $x \in (a,b)$, then $f$ is strictly increasing on $(a,b)$.
+    \tcblower
+    \textbf{Intuition:} This seems like a fairly obvious result, but to prove it rigorously, we can apply the \nameref{thm:mvt}.
+    \begin{proof}
+        If $a < x < y < b$, then there exists $c \in (a,b)$ where $\frac{f(y) - f(x)}{y-x} = f\prime(c)$. Thus, $f(y) - f(x) > 0$ for any choice of $x,y \in (a,b)$ where $y > x$. Therefore, $f$ is strictly increasing.
+    \end{proof}
+\end{exbox}

@@ -1,0 +1,74 @@
+\chapter{Blockchain}
+
+Nowadays, we typically associate the term ``blockchain'' 
+
+\section{Introduction}
+
+\begin{dfnbox}{Blockchain}{}
+    \dfntxt{Blockchain} is a database technology with three key properties:
+    \begin{enumerate}
+        \item Cryptographic append-only ledger, which stores the full history of all transactions
+        \item Replication
+        \item Distributed operation (i.e. decentralized)
+    \end{enumerate}
+\end{dfnbox}
+
+\paragraph{Cryptographic, append-only ledger}
+A blockchain's ledger uses cryptography to guarantee its integrity. It does so via an \dfntxt{Authenticated Data Structure (ADS)}, where modifications to the data can be detected (but does not necessarily prevent modification of the ADS). An ADS produces a \dfntxt{verifier} that can be used to verify the data hasn't been changed since the verifier was produced. This requires access to the ADS to verify its integrity. In some ADS systems, the verifier can also be used to create proofs of inclusion and non-inclusion. In this case, access to the ADS is not required.
+
+\begin{dfnbox}{Hash Chain}{}
+    A \dfntxt{hash chain} is an authenticated data structure based on singly linked lists. Each item stores the following:
+    \begin{itemize}
+        \item Its data
+        \item A pointer to the previous item
+        \item A hash value calculated based on the value of the current item and the hash value of the previous item; the first item uses a hard-coded value, and is sometimes called the \dfntxt{genesis item}
+    \end{itemize}
+\end{dfnbox}
+
+Items in the hash chain that store transactions are referred to as \dfntxt{blocks}, hence the term \dfntxt{blockchain}.
+
+\paragraph{Replication}
+
+Multiple entities store the blockchain ledger in its entirety as well as the verifier. If one entity modifies their ledger, the others can detect that change because their verifier values will no longer match. If the modification was malicious, the modified ledger can be restored from the replicated copies.
+
+\paragraph{Distributed Operation}
+Multiple entities operate the system, often referred to as \dfntxt{miners}. Each miner replicates the full blockchain, operating individually but verify and replicate each other.
+
+To add a new block, miners undergo the following procedure:
+\begin{enumerate}
+    \item An individual miner will first add a new block to their personal copy of the blockchain. The miner generates a list of transactions to add to a blockchain. They verify the legitimacy of those transactions and then create a block with those transactions. That miner adds the block to their copy of the blockchain.
+    \item Next, that miner announces the new block to the other miners. Each other miner verifies the legitimacy of the transactions in the new block. The other miners then add the new block to their copy of the blockchain.
+\end{enumerate}
+
+In public blockchains, anybody can be a miner. Each miner votes on which blocks should be added. This requires a mechanism to fairly allocate votes.
+
+In permissioned blockchains, the identities of the miners are defined by the system. Blocks are added directly without voting. Hence, it is more efficient than open operation.
+
+\paragraph{Miscellaneous Features}
+
+Some blockchains also include:
+\begin{itemize}
+    \item Smart contracts: algorithms stored on the blockchain that are run by miners when triggered by certain transactions. These can change the state of data on the blockchain and are subject to validation like transactions. They're commonly used to automate contractual processes.
+    \item Non-fungible tokens (NFTs): cryptographic tokens representing physical or digital assets
+\end{itemize}
+
+\paragraph{Challenges} Blockchain systems are severely limited in terms of:
+\begin{itemize}
+    \item Scalability: blockchain systems add significant overhead.
+    \item On-chain correctness: it's hard to ensure that the digital blockchain fully represents the real world. What about counter-party risk, and how should bugs be handled when everything in a blockchain is permanent?
+    \item Regulatory compliance: often, performance benefits of blockchain come from ignoring regulation
+    \item Security and privacy: blockchain systems can have software vulnerabilities; public blockchains can be attacked by malicious entities
+    \item Usability: users need to manage cryptographic keys, but key management is hard. Smart contracts need to be perfect, but development tools can't verify this.
+\end{itemize}
+
+\section{Bitcoin}
+
+\dfntxt{Bitcoin} is a decentralized, pseudonymous cryptocurrency. A blockchain is used to store bitcoin transactions.
+
+A transaction stores the following information:
+\begin{itemize}
+    \item List of inputs: the bitcoin that will be burned
+    \item List of outputs: The bitcoin that results from the transaction, which is less than or equal in value to the input bitcoin
+    \item Transaction hash: generated based on the transaction's data
+\end{itemize}
+

@@ -128,7 +128,7 @@ Surprisingly, we can add a single point to the set in the above example and make
     \end{proof}
 \end{exbox}
 
-\begin{thmbox}{Compactness implies boundedness}{}
+\begin{thmbox}{Compactness implies boundedness}{compact-implies-bounded}
     If $K \subseteq \R$ is open cover compact, then $K$ is bounded.
     \tcblower
     \begin{proof}
@@ -142,7 +142,7 @@ Surprisingly, we can add a single point to the set in the above example and make
     \end{proof}
 \end{thmbox}
 
-\begin{thmbox}{Compactness implies closedness}{}
+\begin{thmbox}{Compactness implies closedness}{compact-implies-closed}
     If $K \subseteq \R$ is open cover compact, then $K$ is closed.
     \tcblower
     \begin{proof}
@@ -167,7 +167,7 @@ Surprisingly, we can add a single point to the set in the above example and make
     \end{proof}
 \end{thmbox}
 
-\begin{thmbox}{Every closed interval is compact}{}
+\begin{thmbox}{Every closed interval is compact}{closed-intervals-are-compact}
     Let $a,b \in \R$ where $a < b$. Then $[a,b]$ is open cover compact.
     \tcblower
     \begin{proof}
@@ -192,10 +192,21 @@ Surprisingly, we can add a single point to the set in the above example and make
         \end{enumerate}
         Thus, $P(j+1)$ is true. By the Principle of Induction, $P(n)$ is true for all $n \in \N$. By the Nested Interval Property (todo: ref), we have:
         \[ \bigcap_{j \in \N} I_j \neq \emptyset \]
-        so there exists some $x \in \bigcap_{j \in \N} I_j \subseteq [a,b]$. Since $O$ is an open cover for $[a,b]$, there exists an index $\lambda_x \in \Lambda$ such that $x \in O_{\lambda_x}$. Since $O_{\lambda_x}$ is open, there exists some radius $r > 0$ such that $B(x,r) \subseteq O_{\lambda_x}$. Choose $n \in \N$ such that $\mathscr{l}(I_n) < r $
+        so there exists some $x \in \bigcap_{j \in \N} I_j \subseteq [a,b]$. Since $O$ is an open cover for $[a,b]$, there exists an index $\lambda_x \in \Lambda$ such that $x \in O_{\lambda_x}$. Since $O_{\lambda_x}$ is open, there exists some radius $r > 0$ such that $B(x,r) \subseteq O_{\lambda_x}$. Choose $n \in \N$ such that $\mathscr{l}(I_n) < r $. Since $x \in I_n$, we have $I_n \subseteq B(x,r) \subseteq O_{\lambda_x}$, so $I_n$ is covered by just one open set in the open cover $O$. This contradicts the claim that there does not exist any finite subcover of $I_n$ from $O$, also contradicting the assumption that $[a,b]$ has no finite subcover. Therefore, $[a,b]$ is open cover compact.
     \end{proof}
 \end{thmbox}
 
 \begin{thmbox}{Heine-Borel Theorem}{}
     A set $E \subseteq \R$ is open cover compact if and only if $E$ is both closed and bounded.
+    \tcblower
+    \begin{proof}
+        The forward direction follows from Theorems \ref{thm:compact-implies-closed} and \ref{thm:compact-implies-bounded}. For the converse direction, suppose $E \subseteq \R$ is closed and bounded. Since $E$ is bounded, there exists $M \in \R$ such that for all $x \in E$, $-M \leq x \leq M$. Thus, $E \subseteq [-M, M]$. By Theorem \ref{thm:closed-intervals-are-compact}, $E$ is compact.
+    \end{proof}
 \end{thmbox}
+
+For any $E \subseteq \R$, the following statements are equivalent:
+\begin{enumerate}[noitemsep]
+    \item $E$ is sequentially compact.
+    \item $E$ is closed and bounded.
+    \item $E$ is open cover compact.
+\end{enumerate}
