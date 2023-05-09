@@ -1,0 +1,269 @@
+\chapter{Riemann Integration}
+
+Recall that the main motivating problem in Calculus II was to find the area under the graph of a function $y = f(x)$ on some interval $[a,b]$. The idea was to take a lot of rectangles reaching from the $x$-axis to points of the graph, then combine the areas of those rectangles to create a rough estimate. As we chop the graph up into more rectangles, we get closer and closer to the actual area under the graph.
+
+\section{Riemann Sums}
+
+\begin{dfnbox}{Partition}{}
+    A \dfntxt{partition} $P$ of $[a,b]$ is an ordered set of points $P \coloneq \{ x_0, x_1, \ldots, x_n \}$ for some $n \in \N$ such that $a = x_0 < x_1 < \cdots < x_n = b$.
+\end{dfnbox}
+
+\todo[inline]{Graphic}
+
+For $j \in \{1, 2, \ldots, n\}$, we define $I_j \coloneq [x_{j-1}, x_j]$ and $\Delta x_j \coloneq x_j - x_{j-1}$. Then we have:
+
+\[ \sum_{j=1}^{n} x_j = b - a \]
+
+
+
+\begin{dfnbox}{Riemann Sum}{}
+    Suppose $f : [a,b] \to \R$ is bounded, and $P$ is a partition of $[a,b]$ with $n$ pieces (i.e. $P = \{x_0, x_1, \ldots, x_n\}$). For $j \in \{1, 2, \ldots, n\}$, define:
+    \begin{align*}
+        m_j(f, P) &\coloneq \inf \left( f[I_j] \right) = \inf\{ f(x) : x \in I_j \} \\
+        M_j(f, P) &\coloneq \sup \left( f[I_j] \right) = \sup\{ f(x) : x \in I_j \}
+    \end{align*}
+    The \dfntxt{lower Riemann sum} is defined as:
+    \[ L(f, P) \coloneq \sum_{j=1}^{n} m_j(f,P) \cdot \Delta x_j \]
+    The \dfntxt{upper Riemann sum} is defined as:
+    \[ U(f, P) \coloneq \sum_{j=1}^{n} M_j(f,P) \cdot \Delta x_j \]
+\end{dfnbox}
+
+\begin{dfnbox}{Refinement}{}
+    Let $P \coloneq \{ x_0, x_1, \ldots, x_n\}$ and $Q \coloneq \{y_0, y_1, \ldots, y_m \}$ be partitions of $[a,b]$. We say $Q$ is a \dfntxt{refinement} of $P$ if $P \subseteq Q$, in which case $n \leq m$.
+\end{dfnbox}
+
+That is, for all $j \in \{1,2, \ldots, n\}$, there exists $k_j \in \N$ such that $x_j = y_{k_j}$. Note that $x_0 = y_0$, so $k_0 = 0$.
+
+\begin{lembox}{}{riemann-sum-bounds}
+    Suppose $f : [a,b] \to \R$ is bounded, and $P$ and $Q$ are partitions of $[a,b]$ where $Q$ is a refinement of $P$. Then $L(f,P) \leq L(f, Q) \leq U(f, Q) \leq U(f,P)$.
+    \tcblower
+    \textbf{Intuition:} When we refine our partition $P$, the lower sum increases, and the upper sum decreases. The infimum can only increase, and the supremum can only decrease.
+    \begin{proof}
+        Let $P \coloneq \{x_0, x_1, \ldots, x_n\}$ and $Q \coloneq \{y_0, y_1, \ldots, y_m\}$. Then:
+        \begin{align*}
+            U(f,Q)
+            &= \sum_{l=1}^{m} M_l(f,Q) \cdot \Delta y_l \\
+            &= \sum_{j=1}^{n} \left( \sum_{l=k_{j-1}+1}^{k_j} M_l(f, Q) \cdot \Delta y_l \right) \\
+            &\leq \sum_{j=1}^{n} \left( \sum_{l=k_{j-1}+1}^{k_j} M_j(f, P) \cdot \Delta y_l \right) \\
+            &= \sum_{j=1}^{n} \left( M_j(f,P) \sum_{l=k_{j-1}+1}^{k_j} \Delta y_l \right) \\
+            &= \sum_{j=1}^{n} M_j(f, P) \cdot \Delta x_j \\
+            &= U(f,P)
+        \end{align*}
+        Note that:
+        \begin{align*}
+            M_l(f,Q)
+            &= \sup \{ f(x) : y_{l-1} \leq x \leq y_l \} \\
+            &\leq \sup\{ f(x) : x_{j-1} \leq x \leq x_j \} \\
+            &= M_j(f,P)
+        \end{align*}
+    \end{proof}
+\end{lembox}
+
+\begin{lembox}{Lower sums are always smaller than upper sums}{}
+    Let $f : [a,b] \to \R$ be a bounded function, and let $P$ and $Q$ be partitions of $[a,b]$. Then $L(f, P) \leq U(f, Q)$.
+    \tcblower
+    \textbf{Intuition:} Any lower Riemann sum is smaller than (or equal to) any upper Riemann sum.
+    \begin{proof}
+        Note that the set $P \cup Q$ is a refinement of both $P$ and $Q$ (because $P \subseteq P \cup Q$ and $Q \subseteq P \cup Q$). By Lemma \ref{lem:riemann-sum-bounds}:
+        \[ L(f, P) \leq L(f, P \cup Q) \leq U(f, P \cup Q) \leq U(f, Q) \]
+        which completes the proof.
+    \end{proof}
+\end{lembox}
+
+\section{Riemann Integration}
+
+\begin{dfnbox}{Riemann Integral}{}
+    Let $f : [a,b] \to \R$ be a bounded function. We define \dfntxt{lower Riemann integral} of $f$ on $[a,b]$ as:
+    \[ L(f) \coloneq \sup\{ L(f,P) : P\ \text{is a partition of}\ [a,b] \} \]
+    We define \dfntxt{upper Riemann integral} of $f$ on $[a,b]$ as:
+    \[ U(f) \coloneq \inf \{ U(f,P) : P\ \text{is a partition of}\ [a,b] \} \]
+\end{dfnbox}
+
+Note that for any partitions $P$ and $Q$ of $[a,b]$, $L(f,P) \leq U(f,Q)$. Taking the supremum on the left:
+\[ L(f) \leq U(f, Q) \]
+Taking the infimum on the right:
+\[ L(f) \leq U(f) \]
+\todo{fix wording of ``taking the supremum''}
+
+\begin{dfnbox}{Riemann Integrable}{}
+    We say $f$ is \dfntxt{Riemann integrable} if on $[a,b]$ if $L(f) = U(f)$, in which case we define:
+    \[ \int_{a}^{b} f(x)\ dx \coloneq L(f) = U(f) \]
+    For any set $A$, we write $\mathcal{R}(A)$ to denote the set of all Riemann integrable functions with domain $A$.
+\end{dfnbox}
+
+\begin{exbox}{Simple Riemann Integration}{}
+    Show that $x^2 \in \mathcal{R}([0,1])$ (i.e. $x^2$ is Riemann integrable on $[0,1]$), and find $\int_0^1 x^2\ dx$.
+    \tcblower
+    \begin{proof}
+        For any $n \in \N$, consider the ``regular partition'' $P_n$ of $[0,1]$ where:
+        \[ P_n \coloneq \{ \sfrac{0}{n}, \sfrac{1}{n}, \sfrac{2}{n}, \ldots, \sfrac{n}{n} \} \]
+        In other words, the regular partition evenly splits the interval $[0,1]$. Then $x_0 = 0$, and for any $j \in \{1, 2, \ldots, n\}$, we have $x_j = \sfrac{j}{n}$ and $\Delta x_j = \sfrac{1}{n}$. Also:
+        \[ m_j (f, P_n) \coloneq \inf ( f[I_j] ) = \left( \frac{j-1}{n} \right)^2 \]
+        \[ M_j(f, P_n) \coloneq \sup ( f[I_j] ) = \left( \frac{j}{n} \right)^2 \]
+        Thus:
+        \begin{align*}
+            L(f, P_n)
+            &= \sum_{j=1}^{n} m_j(f, P_n) \cdot \Delta x_j \\
+            &= \sum_{j=1}^{n} \left( \frac{j-1}{n} \right)^2 \cdot \frac{1}{n} \\
+            &= \frac{1}{n^3} \sum_{j=1}^{n} \left( j-1 \right)^2 \\
+            &= \frac{1}{n^3} \sum_{j=0}^{n-1} j^2 \\ 
+            &= \frac{1}{n^3} \sum_{j=1}^{n-1} j^2 \\ 
+        \end{align*}
+        \begin{align*}
+            U(f, P_n)
+            &= \sum_{j=1}^{n} M_j(f, P_n) \cdot \Delta X_j \\
+            &= \sum_{j=1}^{n} \left( \frac{j}{n} \right)^2 \cdot \frac{1}{n} \\
+            &= \frac{1}{n^3} \sum_{j=1}^{n} j^2
+        \end{align*}
+        Recall from Problem Set 6 (todo: ref) that $\sum_{j=1}^{n} j^2 = \frac{n(n+1)(2n+1)}{6}$. Therefore:
+        \[ L(f, P_n) = \frac{1}{n^3} \cdot \frac{(n-1)n(2n-1)}{6} = \frac{1}{3} - \frac{1}{2n} + \frac{1}{6n^2} \]
+        \[ U(f, P_n) = \frac{1}{n^3} \cdot \frac{n(n+1)(2n+1)}{6} = \frac{1}{3} + \frac{1}{2n} + \frac{1}{6n^2} \]
+        Now:
+        \[ L(f, P_n) \leq \sup \{ L(f,P) : P\ \text{is a partition of}\ [0,1] \} = L(f) \]
+        \[ U(f, P_n) \geq \inf \{ U(f,P) : P\ \text{is a partition of}\ [0,1] \} = U(f) \]
+        so:
+        \[ \lim_{n\to\infty} L(f, P_n) \leq L(f) \]
+        \[ \lim_{n\to\infty} U(f, P_n) \geq U(f) \]
+        and hence:
+        \[ \lim_{n\to\infty} L(f, P_n) = \lim_{n\to\infty} \left( \frac{1}{3} - \frac{1}{2n} + \frac{1}{6n^2} \right) = \frac{1}{3} \]
+        \[ \lim_{n\to\infty} U(f, P_n) = \lim_{n\to\infty} \left( \frac{1}{3} + \frac{1}{2n} + \frac{1}{6n^2} \right) = \frac{1}{3} \]
+        Thus, $U(f) \leq \sfrac{1}{3} \leq L(f) \leq U(f)$, so $U(f) = L(f) = \sfrac{1}{3}$. Therefore, $x^2 \in \mathcal{R}([0,1])$, and $\int_0^1 x^2\ dx = \sfrac{1}{3}$.
+    \end{proof}
+\end{exbox}
+
+\begin{lembox}{Criterion for Riemann Integrability}{}
+    Let $f : [a,b] \to \R$ be a bounded function. Then $f$ is Riemann integrable if and only if, for all $\epsilon > 0$, there exists a partition $P$ of $[a,b]$ such that $U(f,P) - L(f,P) < \epsilon$.
+    \[ f \in \mathcal{R}([a,b]) \iff \forall (\epsilon > 0) \exists (P) \left[ U(f,P) - L(f,P) < \epsilon \right] \]
+    \tcblower
+    \begin{proof}
+        Suppose that the right-hand side of the equivalence holds. Then for each $n \in \N$, there exists a partition $P_n$ of $[a,b]$ such that $U(f, P_n) - L(f, P_n) < \sfrac{1}{n}$. Then, for any $n \in \N$:
+        \[ U(f) \leq U(f, P_n) < L(f, P_n) + \sfrac{1}{n} \leq L(f) + \sfrac{1}{n} \]
+        That is, $U(f) < L(f) + \sfrac{1}{n}$ for any $n \in \N$. Taking the limit as $n \to \infty$, we get $U(f) \leq L(f)$. Since $L(f) \leq U(f)$, then by trichotomy, $L(f) = U(f)$. Thus, $f$ is Riemann integrable on $[a,b]$.
+
+        Suppose that the left-hand side of the equivalence holds (that is, $f$ is Riemann integrable). Then $L(f) = U(f)$. Let $\epsilon > 0$.
+
+        \begin{notebox}
+            Our goal here is to find a partition $P$ such that $U(f,P) - L(f,P) < \epsilon$.
+        \end{notebox}
+
+        Since $L(f) = \sup \{ L(f,P) : P\ \text{is a partition of}\ [a,b]\}$, there exists a partition $Q_1$ of $[a,b]$ such that $L(f,Q_1) > L(f) - \sfrac{\epsilon}{2}$. This is guaranteed by the approximation property (todo: ref). Similarly, since $U(f) = \inf \{ U(f,P) : P\ \text{is a partition of}\ [a,b] \}$, there exists a partition $Q_2$ of $[a,b]$  such that $U(f, Q_2) < U(f) + \sfrac{\epsilon}{2}$. Let $Q \coloneq Q_1 \cup Q_2$, which is the common refinement of $Q_1$ and $Q_2$. Then, from Lemma 22.4 (todo: ref):
+        \[ \underbrace{U(f,Q) \leq U(f, Q_2)}_{\text{$Q$ is a refinement of $Q_2$}} < \underbrace{U(f) + \frac{\epsilon}{2} = L(f) + \frac{\epsilon}{2}}_{U(f) = L(f)} < \underbrace{\left( L(f, Q_1) + \frac{\epsilon}{2} \right) + \frac{\epsilon}{2} \leq L(f, Q) + \epsilon}_\text{$Q$ is a refinement of $Q_1$} \]
+        Subtracting across by $L(f,Q)$, we have $U(f,Q) - L(f,Q) < \epsilon$.
+    \end{proof}
+\end{lembox}
+
+\begin{thmbox}{Continuous Functions are Riemann Integrable}{}
+    Let $f : [a,b] \to \R$ be a function. If $f$ is continuous, then $f$ is Riemann integrable.
+    \tcblower
+    \begin{proof}
+        Let $\epsilon > 0$. We will find a partition $P$ of $[a,b]$ such that $U(f,P) - L(f,P) < \epsilon$. Since the interval $[a,b]$ is a compact set and $f$ is continuous on $[a,b]$, then $f$ is uniformly continuous on $[a,b]$ and bounded on $[a,b]$ (todo: ref proposition 20.9 and proposition 19.13). Hence, there exists $\delta > 0$ such that, for all $x,y \in [a,b]$ where $\abs{x-y} < \delta$, $\abs{f(x) - f(y)} < \frac{\epsilon}{b-a}$. Let $P \coloneq \{x_0, x_1, \ldots, x_n\}$ be a partition of $[a,b]$ such that, for each $j \in \{1, 2, \ldots, n\}$, $\Delta x_j < \delta$.
+        \begin{notebox}
+            To be clear, we can say ``chose a $P$ such that $\ldots$'', but there might not exist such a $P$. To be especially clear that this choice of $P$ exists, consider the regular partition of $[a,b]$ where $n \in \N$ satisfies $\frac{b-a}{n} < \delta$.
+        \end{notebox}
+        Then:
+        \begin{align*}
+            U(f,P) - L(f,P) 
+            &= \sum_{j=1}^{n} M_j(f,P) \Delta x_j - \sum_{j=1}^{n} m_j(f,P) \Delta x_j \\
+            &= \sum_{j=1}^{n} \left( M_j(f,P) - m_j(f,P) \Delta x_j \right)
+        \end{align*}
+        Since $[x_{j-1}, x_j]$ is compact and $f$ is continuous on $[x_{j-1}, x_j]$, then by the \nameref{thm:evt}, there exists $a_j, b_j \in [x_{j-1}, x_j]$ such that $f(a_j) = m_j(f,P)$, and $f(b_j) = M_j(f,P)$. Then $\abs{b_j - a_j} \leq \abs{x_j - x_{j-1}} < \delta$, so $\abs{f(b_j) - f(a_j)} < \frac{\epsilon}{b-a}$. Thus:
+        \begin{align*}
+            U(f,P) - L(f,P)
+            &= \sum_{j=1}^{n} \left( M_j(f,P) - m_j(f,P) \Delta x_j \right) \\
+            &= \sum_{j=1}^{n} \left( f(b_j) - f(a_j) \right) \Delta x_j \\
+            &< \sum_{j=1}^{n} \left( \frac{\epsilon}{b-a} \right) \Delta x_j \\
+            &= \frac{\epsilon}{b-a} \sum_{j=1}^{n} \Delta x_j \\
+            &= \frac{\epsilon}{b-a} (b-a) \\
+            &= \epsilon
+        \end{align*}
+    \end{proof}
+\end{thmbox}
+
+\begin{exbox}{Dirichlet Function is not Riemann Integrable}{}
+    Define $f : [0,1] \to \R$ by:
+    \[ f(x) \coloneq \begin{cases}
+        1, & x \in \Q \cup [0,1] \\
+        0, & x \in (\R \setminus \Q) \cup [0,1]
+    \end{cases}\] 
+    Show that $f$ is not Riemann integrable.
+    \tcblower
+    \begin{proof}
+        Let $P \coloneq \{x_0, x_1, \ldots, x_n\}$ be a partition of $[0,1]$. Note that on any interval $[x_{j-1}, x_j]$, there exists a rational number $y$ and irrational number $z$ such that $f(y) = 1$ and $f(z) = 0$. Hence, $m_j(f,P) = 0$ and $M_j(f,P) = 1$, so:
+        \[ L(f,P) = \sum_{j=1}^{n} m_j(f,P) \Delta x_j = \sum_{j=1}^{n} 0 = 0 \]
+        \[ U(f,P) = \sum_{j=1}^{n} M_j(f,P) \Delta x_j = \sum_{j=1}^{n} \Delta x_j = 1 - 0 = 1 \]
+        Thus, $L(f) = 0$ and $U(f) = 1$, so $f$ is not Riemann integrable.
+    \end{proof}
+\end{exbox}
+
+\section{Fundamental Theorem of Calculus}
+
+\begin{thmbox}{Fundamental Theorem of Calculus (Part I)}{ftc-1}
+    Let $f : [a,b] \to \R$ be a Riemann integrable function, and let $F : [a,b] \to \R$ be a function that's continuous on $[a,b]$, differentiable on $(a,b)$, and for any $x \in (a,b)$, $F\prime(x) = f(x)$. Then:
+    \[ \int_a^b f(x)\ dx = F(b) - F(a) \]
+    \tcblower
+    \begin{proof}
+        Let $P \coloneq \{x_0, x_1, \ldots, x_n\}$ be a partition of $[a,b]$. Then:
+        \begin{align*}
+            F(b) - F(a)
+            &= \left( F(x_n) - F(x_{n-1}) \right) + \left( F(x_{n-1}) - F(x_{n-2}) \right) + \cdots + \left( F(x_1) - F(x_0) \right) \\
+            &= \sum_{j=1}^{n} \left( F(x_j) - F(x_{j-1}) \right)
+        \end{align*}
+        Since we assumed that $F$ is continuous on $[x_{j-1}, x_j]$ and differentiable on $(x_{j-1}, x_j)$, we can apply the \nameref{thm:mvt} to find some $c_j \in (x_{j-1}, x_j)$ such that:
+        \[ F(x_j) - F(x_{j-1}) = F\prime(c_j) (x_j - x_{j-1}) = f(c_j)(x_j - x_{j-1}) = f(c_j) \Delta x_j \]
+        We can apply this in our initial calculation as follows:
+        \[ F(b) - F(a) = \sum_{j=1}^{n} \left( F(x_j) - F(x_{j-1}) \right) = \sum_{j=1}^{n} f(c_j) \Delta x_j \]
+        Now:
+        \[ L(f,P) = \sum_{j=1}^{n} m_j(f, P) \Delta x_j \leq \sum_{j=1}^{n} f(c_j) \Delta x_j \leq \sum_{j=1}^{n} M_j(f, P) \Delta x_j = U(f,P) \]
+        That is, $L(f,P) \leq F(b) - F(a) \leq U(f,P)$ for \textbf{any} partition $P$ of $[a,b]$. Hence:
+        \[ \sup\{L(f,P) : P\ \text{partitions}\ [a,b]\} \leq F(b) - F(a) \leq \inf\{U(f,P) : P\ \text{partitions}\ [a,b]\} \]
+        Thus:
+        \[ L(f) \leq F(b) - F(a) \leq U(f) \]
+        Since we assumed $f$ to be Riemann integrable, then $L(f) = U(f) = \int_a^b f(x)\ dx$. Therefore:
+        \[ \int_a^b f(x)\ dx = F(b) - F(a) \]
+    \end{proof}
+\end{thmbox}
+
+In loose terms, the above theorem states that integration cancels out differentiation. What happens if we differentiate an integral?
+
+\[ \odv{}{x} \int_a^b f(x)\ dx = \odv{}{x} (\text{some number}) = 0 \]
+
+\begin{thmbox}{Fundamental Theorem of Calculus (Part II)}{ftc-2}
+    Let $f : [a,b] \to \R$ be a Riemann integrable function. For all $x \in [a,b]$, define:
+    \[ F(x) \coloneq \int_{a}^{x} f(t)\ dt \]
+    If $x_0 \in (a,b)$ and $f$ is continuous at $x_0$, then $F$ is differentiable at $x_0$, and $F\prime(x_0) = f(x_0)$.
+    \tcblower
+    \textbf{Intuition:} We may be more familiar with a slight rewriting of the theorem which states:
+    \[ \odv{}{x} \int_a^x f(t)\ dt = f(x) \]
+    \begin{proof}[Proof sketch]
+        \begin{align*}
+            F(x) - F(x_0)
+            &= \int_a^x f(t)\ dt - \int_a^{x_0} f(t)\ dt \\
+            &= \int_{x_0}^{x} f(t)\ dt \\
+            &\approx f(x_0) (x - x_0) + \bigO \left( (x - x_0)^2 \right)
+        \end{align*}
+        Dividing across by $x - x_0$, we have:
+        \[ \frac{F(x) - F(x_0)}{x - x_0} \approx f(x_0) + \bigO(x - x_0) \]
+        If we take the limit as $x$ approaches $x_0$, we have:
+        \begin{align*}
+             F\prime(x_0)
+             &= \lim_{x \to x_0} \frac{F(x) - F(x_0)}{x - x_0} \\
+             &= \lim_{x \to x_0} \left( f(x_0) + \bigO(x - x_0) \right) \\
+             &= f(x_0)
+        \end{align*}
+    \end{proof}
+\end{thmbox}
+
+\begin{exbox}{Picard Method Revisited}{}
+    Solve $y\prime(x) = f(x, y(x))$ where $y_0 \coloneq y(x_0)$.
+    \tcblower
+    Introduce a ``dummy variable,'' say $t$:
+    \[ y\prime(t) = f(t, y(t)) \]
+    Integrate from $x_0$ to $x$:
+    \[ \int_{x_0}^{x} y\prime(t)\ dt = \int_{x_0}^{x} f(t, y(t))\ dt \]
+    Apply the \nameref{thm:ftc-1}:
+    \begin{alignat*}{2}
+        && y(x) - y(x_0) &= \int_{x_0}^{x} f(t, y(t))\ dt \\
+        & \implies \quad & y(x) &= y_0 + \int_{x_0}^{x} f(t, y(t))\ dt
+    \end{alignat*}
+    Define an ``integral operator,'' say $T$. For a function $z$, let $Tz(x) \coloneq z(x_0) + \int_{x_0}^{x} f(t, z(t))\ dt$. Note that $y(x)$ satisfies $Ty(x) = y(x)$, so we call $y$ a ``fixed point'' of the operator $T$. Find a fixed point of $T$ (i.e. find $y$ such that $Ty = y$).
+\end{exbox}

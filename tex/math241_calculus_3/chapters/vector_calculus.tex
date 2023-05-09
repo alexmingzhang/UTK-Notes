@@ -1,0 +1,28 @@
+\chapter{Vector Calculus}
+
+\section{Vector Fields}
+
+\begin{dfnbox}{Vector Field}{}
+    Let $D \subseteq \R^n$. A \dfntxt{vector field} on $\R^n$ is a function $\vec{F}$ that assigns every point $p \in D$ to an $n$-dimensional vector in $\R^n$.
+\end{dfnbox}
+
+For example, a vector field in $\R^3$ may have the form $\vec{F} \coloneq \alg{P,Q,R}$, where $P$, $Q$, and $R$ are functions of three variables. That is:
+\[ \vec{F} \alg{P, Q, R} = \alg{P(x,y,z), Q(x,y,z), R(x,y,z)} \]
+We say a vector field in $\R^3$ is \dfntxt{conservative} if there exists a function $f(x,y,z)$ satisfying:
+\[ \nabla f(x,y,z) = \vec{F}(x,y,z) \]
+That is:
+\[ \alg{ f_x (x,y,z), f_y(x,y,z), f_z(x,y,z) } = \alg{ P(x,y,z), Q(x,y,z), R(x,y,z)} \]
+Thus:
+\begin{align*}
+    f_x (x,y,z) = P(x,y,z) &\implies \int P(x,y,z)\ dx = f(x,y,z) + K(y,z) \\
+    f_y (x,y,z) = Q(x,y,z) &\implies \int Q(x,y,z)\ dy = f(x,y,z) + K(x,z) \\
+    f_z (x,y,z) = R(x,y,z) &\implies \int R(x,y,z)\ dx = f(x,y,z) + K(x,y)
+\end{align*}
+
+\begin{exbox}{Gravitational Force Field is Conservative}{}
+    
+\end{exbox}
+
+\begin{dfnbox}{Force Field}{}
+    
+\end{dfnbox}

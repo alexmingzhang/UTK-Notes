@@ -1,0 +1,43 @@
+\chapter{Usable Security}
+
+New security features should ultimately strike a balance between security and usability. We still want the user to be able to easily and quickly accomplish the intended tasks, all while maintaining security properties including confidentiality, integrity, authentication, etc. Although mistakes in usability are fine, mistakes in security can be catastrophic.
+
+While there is natural tension between usability and security, it is wrong to think that these two are mutually exclusive. That is, it is wrong to think that secure systems are inherently unusable, or usable systems are inherently insecure.
+
+The people in charge of 
+
+\begin{notebox}
+    If users aren't doing what you want, don't blame them, blame your software or system!
+\end{notebox}
+
+\section{Designing with Users in Mind}
+
+As developers, we need to align ourselves with the users' needs. We can ask ourselves:
+\begin{itemize}[noitemsep]
+    \item What roles do they have?
+    \item What are their critical tasks?
+    \item What expertise can you expect?
+    \item How much of a security budget do they have? (including mental, time, and financial budgets)
+\end{itemize}
+From this, we can match the system design to the users. We should never try to change the user to fit our contrived design. Taking this approach will increase the likelihood of user buy-in.
+
+\paragraph{Communicating Clearly}
+We also need to give users just the right amount of information to figure out the software. Concrete examples will help in conveying new ideas. This also includes making notifications actionable, giving ample information to make a decision and the ability to execute that decision.
+
+\paragraph{Educating Users}
+Users rarely have time to read nor effort to read lengthy instruction manuals. As such, software should make it trivial to become educated, whether it be via integrated tutorials or inline documentation. It is critical not to treat education as a panacea. It's better to improve your design than to rely solely on education.
+
+\paragraph{Avoiding Dangerous Errors}
+It should be difficult for a user to make a dangerous error. We need safe default settings that make it easy to increase security and difficult to decrease security. The path of least resistance should lead to a secure outcome.
+
+\paragraph{Avoiding Too Many Alerts}
+If we overwhelm the user with too many dialog boxes, the user will stop reading them and just habitually click through them. Hence, keep dialog boxes to a minimum.
+
+\section{Testing for Usability}
+\paragraph{Developer Evaluations}
+To help determine whether a product is usable on a commercial scale, there are several methods:
+\begin{itemize}
+    \item \dfntxt{Expert review:}
+    \item \dfntxt{Cognitive walkthroughs:} Walk through the steps that a first-time user would undergo when using the software.
+    \item \dfntxt{User studies:} interact with users to understand their mental models, perceptions, and requirements (including surveys, interviews, ethnographies, telemetry, lab studies, A/B testing)
+\end{itemize}

@@ -26,7 +26,7 @@ We upgrade the normal calculus definition of continuity by accounting for any po
     \end{enumerate}
 \end{dfnbox}
 
-\begin{thmbox}{Equivalent Characterizations of Continuity}{}
+\begin{thmbox}{Equivalent Characterizations of Continuity}{continuity-things}
     Let $A \subseteq \R$, $f : A \to \R$, $c \in A$. Then the following are equivalent:
     \begin{enumerate}[label=(\alph*)]
         \item $f$ is continuous at $c$.
@@ -108,23 +108,39 @@ If instead $f$ were defined on a closed and bounded (i.e. compact) set, then we 
 
 \section{Uniform Continuity}
 
+Recall from Theorem \ref{thm:continuity-things} where we described equivalent characterizations of continuity, we can say $f : A \to \R$ is continuous at $c \in A$ if, for all $\epsilon > 0$, there exists $\delta > 0$ such that for every $x \in A$, if $\abs{x-c} < \delta$, then $\abs{f(x) - f(c)} < \epsilon$. That is:
+\[ \forall (\epsilon > 0) \exists (\delta > 0) \forall (x \in A) (\abs{x-c} < \delta \implies \abs{f(x) - f(c)} < \epsilon) \]
+
+The $\delta$ value in the above description of continuity depends on not only on $f$ and $\epsilon$, but also the value of $c$. Our current idea of continuity is a very local property; the choice of $\delta$ can vary greatly. Uniform continuity extends this idea by ``unfixing'' that $c$ value. That is, we try to say that the function has the same degree of continuity at every point, so one choice of $\delta$ works for all points on the function.
+
+\todo[inline]{Would be nice to have the graphic from inclass notes}
+
 \begin{dfnbox}{Uniform Continuity}{}
-    Let $f : A \to \R$ be a function. We say $f$ is \dfntxt{uniformly continuous} on $A$ if, for all $\epsilon > 0$, there exists $\delta > 0$ such that if $\abs{x-y} < \delta$, then $\abs{f(x) - f(y)} < \epsilon$.
+    Let $f : A \to \R$ be a function. We say $f$ is \dfntxt{uniformly continuous} on $A$ if, for all $\epsilon > 0$, there exists $\delta > 0$ such that, for every $x,y \in A$, if $\abs{x-y} < \delta$, then $\abs{f(x) - f(y)} < \epsilon$.
+    \tcblower
+    \[ \forall (\epsilon > 0) \exists (\delta > 0) \forall (x,y \in A) \left( \abs{x-y} < \delta \implies \abs{f(x) - f(y)} < \epsilon \right) \]
 \end{dfnbox}
+
+Once again, the choice of $\delta$ depends on $f$ and $\epsilon$, but not any specific point in the domain.
 
 \begin{exbox}{Simple Uniform Continuity Proof}{}
     $f(x) = x$ is uniformly continuous on $\R$.
     \tcblower
     \begin{proof}
-
+        Let $\epsilon > 0$. Choose $\delta \coloneq \epsilon$. Let $x,y \in \R$ (the domain of $f$). If $\abs{x-y} < \delta$, then:
+        \[ \abs{f(x) - f(y)} = \abs{x - y} < \delta = \epsilon \]
+        Therefore, $f$ is uniformly continuous.
     \end{proof}
 \end{exbox}
 
 \begin{exbox}{Simple Uniform Continuity Disproof}{}
     $f(x) = x^2$ is not uniformly continuous on $\R$.
     \tcblower
+    \textbf{Intuition:} We may think that $x^2$ would be a ``well-behaving'' function, but since its graph gets steeper, we would have to adjust our $\delta$ depending on which point on the graph we chose. The further out we go, we can find huge jumps in the function value for tiny steps in the $x$ values.
     \begin{proof}
-
+        Let $\epsilon \coloneq 1$, and let $\delta > 0$. Choose $x \coloneq \sfrac{2}{\delta} > 0$ and $y \coloneq x + \sfrac{\delta}{2} > 0$. Then \( \abs{x-y} = \sfrac{\delta}{2} < \delta \), and:
+        \[ \abs{f(x) - f(y)} = \abs{x^2 - y^2} = \abs{x-y}\abs{x+y} > \abs{x-y} (x) = \frac{2}{\delta} \cdot \frac{\delta}{2} = 1 = \epsilon \]
+        Therefore, $f$ is not uniformly continuous.
     \end{proof}
 \end{exbox}
 
@@ -132,6 +148,20 @@ If instead $f$ were defined on a closed and bounded (i.e. compact) set, then we 
     Let $K$ be a compact subset of $\R$, and let $f : K \to \R$ be a continuous function on $K$. Then $f$ is uniformly continuous on $K$.
     \tcblower
     \begin{proof}
-
+        Let $\epsilon > 0$. Since $f$ is continuous on $K$, then for any $z \in K$, there exists $\delta_z > 0$ such that for any $x \in K$, if $\abs{x-z} < \delta_z$, then $\abs{f(x) - f(z)} < \sfrac{\epsilon}{2}$. Let $I_z \coloneq B(z, \sfrac{\delta_z}{2}) = (z - \sfrac{\delta_z}{2}, z + \sfrac{\delta_z}{2})$. Since it is open and $K \subseteq \bigcup_{z \in K} I_z$, then $\{ I_z : z \in K \}$ is an open cover of $K$. Since $K$ is compact, there exists a finite subcover $\{ I_{z_1}, I_{z_2}, \ldots, I_{z_n} \}$ for some $n \in \N$. So we have $n$ different radii we can choose from. Let $\delta \coloneq \min\left\{ \frac{\delta_{z_1}}{2}, \frac{\delta_{z_2}}{2}, \ldots, \frac{\delta_{z_n}}{2} \right\}$. Let $x,y \in K$ such that $\abs{x-y} < \delta$.
+        \begin{notebox}
+            It is important that we chose $\delta$ before choosing $x$ and $y$.
+        \end{notebox}
+        Since $x \in K \subseteq \bigcup_{i = 1}^{n} I_{z_i}$, there exists $j \in \{1, 2, \ldots, n\}$ such that $x \in I_{z_j}$. Also, $\abs{x-y} < \delta < \frac{\delta_{z_j}}{2}$. Thus:
+        \[ \abs{y - z_j} = \abs{y - x + x - z_j} \leq \abs{y-x} + \abs{x - z_j} < \frac{\delta_{z_j}}{2} + \frac{\delta_{z_j}}{2} = \delta_{z_j} \]
+        That is, $x,y \in B(z_j, \delta_{z_j})$. 
+        \begin{align*}
+            \abs{f(x) - f(y)}
+            &= \abs{f(x) - f(z_j) + f(z_j) - f(y)} \\
+            &\leq \abs{f(x) - f(z_j)} + \abs{f(z_j) - f(y)} \\
+            &< \frac{\epsilon}{2} + \frac{\epsilon}{2} \\
+            &= \epsilon
+        \end{align*}
+        which completes the proof.
     \end{proof}
 \end{thmbox}

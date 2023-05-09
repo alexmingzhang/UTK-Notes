@@ -17,11 +17,11 @@ Nowadays, we typically associate the term ``blockchain''
 A blockchain's ledger uses cryptography to guarantee its integrity. It does so via an \dfntxt{Authenticated Data Structure (ADS)}, where modifications to the data can be detected (but does not necessarily prevent modification of the ADS). An ADS produces a \dfntxt{verifier} that can be used to verify the data hasn't been changed since the verifier was produced. This requires access to the ADS to verify its integrity. In some ADS systems, the verifier can also be used to create proofs of inclusion and non-inclusion. In this case, access to the ADS is not required.
 
 \begin{dfnbox}{Hash Chain}{}
-    A \dfntxt{hash chain} is an authenticated data structure based on singly linked lists. Each item stores the following:
+    A \dfntxt{hash chain} is an authenticated data structure based on singly linked lists where each node stores:
     \begin{itemize}
-        \item Its data
-        \item A pointer to the previous item
-        \item A hash value calculated based on the value of the current item and the hash value of the previous item; the first item uses a hard-coded value, and is sometimes called the \dfntxt{genesis item}
+        \item its data,
+        \item a pointer to the previous item, and
+        \item a hash value calculated based on the value of the current item and the hash value of the previous item; the first item uses a hard-coded value, and is sometimes called the \dfntxt{genesis item}
     \end{itemize}
 \end{dfnbox}
 
@@ -65,10 +65,53 @@ Some blockchains also include:
 
 \dfntxt{Bitcoin} is a decentralized, pseudonymous cryptocurrency. A blockchain is used to store bitcoin transactions.
 
-A transaction stores the following information:
+Each transaction stores the following information:
 \begin{itemize}
     \item List of inputs: the bitcoin that will be burned
     \item List of outputs: The bitcoin that results from the transaction, which is less than or equal in value to the input bitcoin
     \item Transaction hash: generated based on the transaction's data
 \end{itemize}
 
+\paragraph{Proof of Work} To add a block, miners race to create a block with a valid hash. What if two transactions try to spend the same bitcoin? The miners get to vote, with voting power determined by computational power. This is referred to as \dfntxt{proof of work}. For public blockchains, proof-of-X protocols are used to fairly allocate votes within governance and operation. 
+
+\section{Blockchain Myths}
+
+\paragraph{``Blockchain is always public.''} Blockchains can be public. Openness comes with additional overhead, such as the proof of work algorithms. Permissioned blockchains limit who can participate. Membership can be static or dynamic, and the ledger itself can be public or private.
+
+\paragraph{``Blockchain is fast and efficient.''} Blockchain has immense overhead. Ledgers store the entire history of every bitcoin transaction, and replication itself has a high storage cost. Decentralized operation is much slower than centralized operation. It's not the technology that's faster; it's the ignoring of regulation that's faster.
+
+Systems using blockchain often claim to have increased efficiency. For example, many claim that it is faster to send money internationally using Bitcoin rather than through a traditional bank. This efficiency usually comes from those systems ignoring regulations and/or compliance. For example, Visa's network is much faster than Bitcoin for sending money, but that money won't be sent by Visa until proper regulatory compliance steps are taken, while Bitcoin payments ignore regulation.
+
+\paragraph{``Blockchain is immutable.''} The ledger is in fact mutable. Note that miners themselves cannot change each other's copy of data, but miners can collectively agree to change the data. If only some agree, the blockchain can \dfntxt{fork} to create two blockchains with different ledgers. This is what happened with Ethereum and Ethereum Classic. These changes may be detectable by non-miners, so long as the ledger is publicly available.
+
+\paragraph{``Blockchain is trustless.''} Although blockchain is in fact decentralized, we have only shifted our trust from a centralized entity to the bitcoin miners. This is better, but we still need to trust the software behind bitcoin, trust the connection between on-chain and off-chain assets, and trust the miners to vote fairly in transactions.
+
+\paragraph{``Blockchain removes the need for trusted third-parties.''}
+ Trusted third-parties are still needed to mediate between the real-world and on-chain ledger. For example:
+ \begin{itemize}
+    \item currency exchanges that convert on-chain assets to real-world money
+    \item product vendors that convert on-chain assets to real-world products
+    \item entities that report real-world events on the chain
+    \item entities that handle dispute resolution (e.g. miners)
+ \end{itemize}
+
+\paragraph{``Smart contracts are novel and innovative.''} Smart contracts are just software attached to the blockchain database. Transactions provide smart contracts with input. Their output is used to update state stored on the blockchain. The new state is validated by the miners. Any database can have smart contract equivalents.
+
+Admittedly, companies are using smart contracts in innovative ways. For example:
+\begin{itemize}
+    \item Decentralized autonamous organizations (DAOs)
+    \item Automated supply chain tracking
+\end{itemize}
+
+\paragraph{``Blockchain is wasteful.''} In reality, it's only the proof-of-work algorithms which are wasteful. Public blockchains can simply use other proof-of-X protocols. Permissioned blockchains don't need to use proof-of-X protocols.
+
+\section{Use Cases}
+\paragraph{Cryptocurrency} Fiat currencies are managed by central banks. These are susceptible to inflation, seizure, and general poor management. Cryptocurrencies decentralize the management of currency, removing the need for a central bank. They have public, set-in-stone rules are in place for minting additional currency, so inflation is entirely deterministic.
+
+\paragraph{Electronic Payments} Payments are being processed by just four corporations: Visa, mastercard, discover, and American Express. Government regulations can cause significant delays (e.g. international transactions can take days to clear). Blockchain payments should be near-instantaneous.
+
+\paragraph{Supply Chain Management} We can track products on the blockchain, and automate contracts/payments using smart contracts. Transaction history provides a permanent record, allowing for things like root-cause analysis and taint tracking. Moreover, the permanent record supports conflict resolution. This approach also removes the need for centralized infrastructure (which is nice because many producers don't trust the man).
+
+\paragraph{Multi-Organization Data Sharing} Blockchains can act as sharing mediators to help people find data, validate access to the data, and automate things using smart contracts.
+
+\paragraph{Voting} This is actually a terrible idea. Physical voting is always preferred to digital voting.
