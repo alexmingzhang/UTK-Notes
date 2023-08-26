@@ -7,26 +7,25 @@ Instead of forming a rigorous, axiomatic basis for sets, we will simply take an 
     A \dfntxt{set} is a collection of distinct objects.
 \end{dfnbox}
 
-For example, $\N \coloneq \{1,2,3\ldots\}$ is the set of all natural numbers, and $\Z \coloneq \{ \ldots, 1, 2, 3, \ldots\}$ is the set of all integers. It's conventional to use capital letters to denote sets and use lowercase letters to denote elements of sets. Throughout this
-chapter, we will use $A$ and $B$ to represent arbitrary sets.
+For example, $\N = \{1,2,3\ldots\}$ is the set of all natural numbers, and $\Z = \{ \ldots, -2, -1, 0, 1, 2, \ldots\}$ is the set of all integers. These aren't restricted to just sets of numbers; for example, we may have a set of letters $\{ \texttt{a}, \texttt{b}, \texttt{c} \} $ or a set of shapes $\{ \star, \circ, \sqcap \}$. It's conventional to use capital letters to denote sets and use lowercase letters to denote elements of sets. Throughout this chapter, we will use $A$ and $B$ to represent arbitrary sets.
 
-\begin{dfnbox}{Membership, $\in$}{}
+\begin{dfnbox}{Set Membership ($\in$)}{}
     We write $a \in A$ to mean ``$a$ is in $A$''.
 \end{dfnbox}
 
-\begin{dfnbox}{Subset, $\subseteq$}{}
+\begin{dfnbox}{Subset ($\subseteq$)}{}
     $A$ is a \dfntxt{subset} of $B$ if everything in $A$ is also in $B$.
     \tcblower
     \[ A \subseteq B \iff \forall(x \in A)(x \in B) \]
 \end{dfnbox}
 
-\begin{dfnbox}{Set Equality, $=$}{}
+\begin{dfnbox}{Set Equality ($=$)}{}
     $A$ \dfntxt{equals} $B$ if $A$ is a subset of $B$ and $B$ is a subset of $A$.
     \tcblower
     \[ A = B \iff (A \subseteq B \land B \subseteq A) \]
 \end{dfnbox}
 
-\begin{dfnbox}{Proper Subset, $\subsetneq$}{}
+\begin{dfnbox}{Proper Subset ($\subsetneq$)}{}
     $A$ is a \dfntxt{proper subset} of $B$ if $A$ is a subset of $B$ but $B$ is not a subset of $A$.
     \tcblower
     \[ A \subsetneq B \iff (A \subseteq B \land B \not\subseteq A) \]
@@ -66,13 +65,19 @@ As convention, we assume that $\emptyset$ is a subset of every set, including it
     \end{proof}
 \end{exbox}
 
-\begin{dfnbox}{Union}{}
+When defining the contents of a set, we often use a special notation called \dfntxt{set builder notation}. It specifies conditions that members of the set must reach. For example, we can notate the set of all non-negative integers $\Z^+$ as:
+
+\[ \Z^+ \coloneq \{ x \in \Z : x \geq 0 \} \]
+
+In English, this could read as ``the set of every integer that is greater than or equal to $0$.'' Also note the use of the ``$\coloneq$'' symbol, which is used to emphasize definition/assignment rather than express a relationship about equality.
+
+\begin{dfnbox}{Union ($\cup$)}{}
     The \dfntxt{union} of two sets is the set of all things that are in one or the other set.
     \tcblower
     \[ A \cup B \coloneq \left\{ x : x \in A \lor x \in B \right\} \]
 \end{dfnbox}
 
-\begin{dfnbox}{Intersection}{}
+\begin{dfnbox}{Intersection ($\cap$)}{}
     The \dfntxt{intersection} of two sets is the set of all things that are in both sets.
     \tcblower
     \[ A \cap B \coloneq \left\{ x : x \in A \land x \in B \right\} \]
@@ -80,8 +85,8 @@ As convention, we assume that $\emptyset$ is a subset of every set, including it
 
 More generally, we can apply union and intersection to an arbitrary number of sets, finite or infinite. We use a notation similar to summation using $\sum$. Let $\Lambda$ be an indexing set, and for each $\lambda \in \Lambda$, let $A_\lambda$ be a set.
 \begin{align*}
-    \bigcup_{\lambda \in \Lambda} A_\lambda &= \left\{ x : x \in A_\lambda\ \text{for some}\ \lambda \in \Lambda \right\} \\
-    \bigcap_{\lambda \in \Lambda} A_\lambda &= \left\{ x : x \in A_\lambda\ \text{for all}\ \lambda \in \Lambda \right\}
+    \bigcup_{\lambda \in \Lambda} A_\lambda &\coloneq \left\{ x : x \in A_\lambda\ \text{for some}\ \lambda \in \Lambda \right\} \\
+    \bigcap_{\lambda \in \Lambda} A_\lambda &\coloneq \left\{ x : x \in A_\lambda\ \text{for all}\ \lambda \in \Lambda \right\}
 \end{align*}
 \begin{exbox}{Indexed Sets}{}
     For $n \in \N$, let $A_n = \left[ \frac{1}{n}, 1 \right] = \left\{ x \in \R : \frac{1}{n} \leq x \leq 1 \right\}$. Prove that:
@@ -103,16 +108,16 @@ More generally, we can apply union and intersection to an arbitrary number of se
     \end{proof}
 \end{exbox}
 
-\begin{dfnbox}{Set Minus}{}
-    The \dfntxt{set difference} of two sets is the set of all things that are in first set but not the second set.
+\begin{dfnbox}{Set Minus ($\setminus$)}{}
+    The \dfntxt{set difference} of two sets is the set of things that are in the first but not the second set.
     \tcblower
-    \[ A \setminus B = \{ x \in A : x \notin B \} \]
+    \[ A \setminus B \coloneq \{ x : x \in A \land x \notin B \} \]
 \end{dfnbox}
 
-\begin{dfnbox}{Complement}{}
+\begin{dfnbox}{Complement ($A^c$)}{}
     Let $X$ be a set called the \dfntxt{universal set}. The \dfntxt{complement} of $A$ in $X$ is defined as $X \setminus A$.
     \tcblower
-    \[ A^c = X \setminus A = \{ x \in X : x \notin A \} \]
+    \[ A^c \coloneq X \setminus A = \{ x \in X : x \notin A \} \]
 \end{dfnbox}
 
 \begin{thmbox}{De Morgan's Laws for Sets}{}
@@ -136,10 +141,10 @@ More generally, we can apply union and intersection to an arbitrary number of se
 \end{thmbox}
 
 \section{Functions}
-We generally think of functions as a ``map'' or ``rule'' that assigns numbers to other numbers. For example, $f(x) = 2x$ maps $1 \mapsto 2$, $2 \mapsto 4$, etc. More formally, we define functions in terms of sets.
+We generally think of functions as a ``map'' or ``rule'' that assigns numbers to other numbers. For example, $f(x) = 2x$ maps $1 \mapsto 2$, $2 \mapsto 4$, etc. More formally, we define functions in terms of sets. 
 
 
-\begin{dfnbox}{Cartesian Product}{}
+\begin{dfnbox}{Cartesian Product ($\times$)}{}
     Let $X$ and $Y$ be sets. The \dfntxt{Cartesian product} of $X$ and $Y$ is the set of all ordered pairs $(x,y)$ where $x \in X$ and $y \in Y$.
     \tcblower
     \[ X \times Y \coloneq \left\{ (x,y) : x \in X \land y \in Y \right\} \]
@@ -149,7 +154,7 @@ We generally think of functions as a ``map'' or ``rule'' that assigns numbers to
     Let $X$ and $Y$ be sets. A \dfntxt{relation} between $X$ and $Y$ is a subset of the Cartesian product $X \times Y$.
 \end{dfnbox}
 
-\begin{dfnbox}{Function}{function}
+\begin{dfnbox}{Function, $f : X \to Y$}{function}
     Let $X$ and $Y$ be sets. A \dfntxt{function} from $X$ to $Y$ is a relation from $X$ to $Y$ such that for every $x \in X$, there exists a unique $y \in Y$ where $(x,y) \in f$.
     \tcblower
     More formally, a \dfntxt{function} $f : X \to Y$ is a subset of $X \times Y$ satisfying:
@@ -305,7 +310,7 @@ Note that $f : X \to f[X]$ is \textbf{always} surjective.
     \[ f^{-1} \coloneq \{ (y,x) \in Y \times X : (x,y) \in f \} \]
 \end{dfnbox}
 
-The notation for inverse functions conflicts with the notation for inverse images. A key distinction to make it that only bijections can have an inverse function, but we can apply the inverse image to any function. Thus, given a bijection $f : X \to Y$, we know $f^{-1}(f(x)) = x$ for all $x \in X$, and $f(f^{-1}(y)) = y$ for all $y \in Y$.
+The notation for inverse functions conflicts may be confused with the notation for inverse images. A key distinction to make is that the inverse image is applied to a subset of the range, whereas the inverse function is applied to specific members of range. Furthermore, only bijections can have an inverse function, but we can apply the inverse image to any function. Thus, given a bijection $f : X \to Y$, we know $f^{-1}(f(x)) = x$ for all $x \in X$, and $f(f^{-1}(y)) = y$ for all $y \in Y$.
 
 \begin{exbox}{}{}
     Let $f : X \to Y$ and $g : Y \to X$ be functions such that $(g \circ f) = x$ for all $x \in X$, and $(f \circ g)(y) = y$ for all $y \in Y$. $f^{-1} = g$.

@@ -1,0 +1,108 @@
+\chapter{Introduction}
+Numerical analysis studies algorithms that use numerical approximation, focused on practical use by computers rather than theoretical use by mathematicians. It covers:
+\begin{itemize}[noitemsep]
+    \item computation, instabilities and rounding,
+    \item solution of nonlinear equations and systems,
+    \item interpolation and approximation by polynomials,
+    \item numerical differentiation and integration, and
+    \item solution of initial and boundary value problems for ordinary differential equations.
+\end{itemize}
+To prime ourselves for numerical analysis, let's review some key concepts from previous math courses:
+
+\section{Calculus Review}
+Concepts from calculus play a key role in numerical techniques. Let's begin by reviewing some familiar theorems.
+
+\begin{thmbox}{Extreme Value Theorem}{evt}
+    (Simplified) If $f$ is continuous on a closed interval $[a, b]$, then $f$ attains an absolute maximum value and an absolute minimum value at some values $x_0$ and $x_1$ in $[a,b]$.
+    \tcblower
+    (More formal) Suppose $K$ is a nonempty and compact subset of $\R$, and suppose $f : K \to \R$ is continuous. Then:
+    \begin{enumerate}[label=(\alph*)]
+        \item $f$ is bounded on $K$ (that is, $f[K]$ is bounded),
+        \item there exists $x_0 \in K$ such that $f(x_0) = \sup( f[K] )$, and
+        \item there exists $x_1 \in K$ such that $f(x_1) = \inf( f[K] )$.
+    \end{enumerate}
+\end{thmbox}
+
+\begin{thmbox}{Intermediate Value Theorem}{ivt}
+    Suppose $f$ is continuous on the closed interval $[a,b]$. Then for any function value $y$ between the minimum and maximum function values from $[a,b]$, there exists some $x$ in $[a,b]$ where $f(x) = y$.
+\end{thmbox}
+
+A notable application of the \nameref{thm:ivt} is figuring out whether a polynomial function attains zero (i.e. whether a polynomial has a root). For example, let's consider the following polynomial:
+
+\[ f(x) = 2x^3 - 3x - 7\]
+
+Using the \nameref{thm:ivt}, all we need to do is find a value $x_0$ where $f(x_0) < 0$, and a value $x_1$ where $f(x_1) > 0$. Since polynomial functions are continuous, we can use the IVT to ensure that the polynomial has a root. For the above example, we can consider $f(-1) = -2$ and $f(0) = 3$. By the IVT, there must exist some $x \in [-1, 0]$ where $f(x) = 0$.
+
+Moving on, let's recall the following two theorems related to derivatives:
+
+\begin{thmbox}{Rolle's Theorem}{rolles}
+    Let $a,b \in \R$ where $a < b$, and let $f : [a,b] \to \R$ be continuous on $[a,b]$ and differentiable on $(a,b)$. If $f(a) = 0$ and $f(b) = 0$, then there exists $c \in (a,b)$ such that $f\prime(c) = 0$.
+\end{thmbox}
+
+\begin{thmbox}{Mean Value Theorem}{mvt}
+    Let $a,b \in \R$ where $a < b$, and let $f : [a,b] \to \R$ be continuous on $[a,b]$ and differentiable on $(a,b)$. Then there exists $c \in (a,b)$ such that $f\prime(c) = \frac{f(b) - f(a)}{b-a}$.
+\end{thmbox}
+
+Intuitively, the \nameref{thm:mvt} states the following: given any two points on a differentiable function's curve, there exists some $x$ value where the tangent line at $f(x)$ is the same slope as the slope between those two points.
+
+One of the most important theorems in analysis is the following:
+
+\begin{thmbox}{Taylor's Theorem}{}
+    Let $n$ be a non-negative integer. Let $f : (a,b) \to \R$ be a function where $f^{(n+1)} (x)$ exists for any $x \in (a,b)$. Then, for any $c,x \in (a,b)$, there exists some number $\zeta$ between $c$ and $x$ such that:
+    \[ f(x) = p_n + R_n(\zeta) \]
+    Here, $p_n(x)$ represents the Taylor polynomial of $f$:
+    \[ p_n(x) = f(c) + f\prime(c)(x-c) + \cdots + \frac{f^{(n)}(c)}{n!} (x-c)^n \]
+    And, $R_n(\zeta)$ represents the remainder (i.e. how far off the Taylor polynomial was to approximating the actual answer):
+    \[ R_n(\zeta) = \frac{f^{(n+1)}(\zeta)}{(n+1)!} (x-c)^{n+1} \]
+\end{thmbox}
+
+The Taylor expansion is well-liked in numerical analysis since it can turn an incomputable function such as sine or cosine to a computable one (albeit, only an approximation). The above theorem gives us a formula for determining the inaccuracy of certain Taylor polynomial approximations of functions.
+
+We use $\abs{R_n(\zeta)}$ as the error term for how different the approximation is from the actual answer. In practical application, we often do not know the value for $\zeta$. However, since the theorem states $\zeta$ is between $c$ and $x$, it is easy to attain and upper and lower bound for $\zeta$.
+
+% Suppose we wish to approximate $\sin(31^\circ)$.
+% Absolute error: $\abs{exact - approx}$
+% Relative error: $\frac{\abs{exact - approx}}{\abs{exact}}$
+
+A Taylor polynomial's accuracy is good near the initial point $c$, but deteriorates farther from initial point. It's a consequence of the fact that all information about the approximated function $f$ is coming from a single point of that function.
+
+On the other hand, interpolation is not so accurate at any specific point, but it's often more accurate across a range of points.
+
+\section{Sequences}
+
+Many algorithms generate sequences. For example, consider Newton's method for calculating $\sqrt{3}$:
+\[ \begin{cases}
+    x_{k+1} = \frac{x_k}{2} + \frac{3}{2x_k}, & k = 0,1,2,\ldots \\ 
+    x_0 = 2
+\end{cases}\]
+
+\begin{notebox}
+    In this course, we will use $0$ to index the first element of a sequence.
+\end{notebox}
+
+This method works as this sequence $(x_k)$ converges to $\sqrt{3}$. We can notate this as:
+\[ \lim_{k \to \infty} x_k = \sqrt{3} \]
+Intuitively, this means that the numbers of the sequences gets closer to the limit $\sqrt{3}$ as $k$ gets bigger. We formalize this idea in the following definition:
+
+\begin{dfnbox}{Convergence}{}
+    We say a sequence $x_n$ converges if: for any $\epsilon > 0$, there exists $K \in \N_0$ such that, for all $k \geq K$, $\abs{x_k - L} < \epsilon$.
+\end{dfnbox}
+
+In practical applications, we want the sequence to converge quickly. The ``speed'' of convergence matters, especially in numerical analysis. For example, consider the following two sequences:
+\[ x_n = \frac{n}{n+1} \quad \text{and} \quad y_n = 1 - \sfrac{1}{n^2} \]
+Both of these sequences converge to $1$. However, it might be intuitive to think that $(y_n)$ converges ``faster'' than $(x_n)$. The problem is: how do prove that $(y_n)$ converges ``faster'' than $(x_n)$? And how do we quantify this? We may look at the progress achieved at each iteration of the sequence. More specifically, we can calculate:
+
+\[ \frac{\abs{x_{n+1} - L}}{\abs{x_n - L}} \]
+
+where $L$ is the limit of this sequence. The lower this expression evaluates, the ``faster'' or ``better'' the sequence.
+
+\begin{dfnbox}{Sublinear, linear, superlinear}{}
+    Let $x_n$ be a sequence that converges to $L$, and suppose that $\lim_{n \to \infty} \frac{\abs{x_{n+1} - L}}{\abs{x_n - L}} = \lambda$ where $0 \leq \lambda \leq 1$.
+    \begin{itemize}[noitemsep]
+        \item If $\lambda = 1$, then $(x_n)$ is \dfntxt{sublinear}.
+        \item If $0 < \lambda < 1$, then $(x_n)$ is \dfntxt{linear}.
+        \item If $\lambda = 0$, then $(x_n)$ is \dfntxt{superlinear}.
+    \end{itemize}
+\end{dfnbox}
+
+Although all three of these types are convergent, it is clear that a lower value of $\lambda$ yields a more easily-computable sequence.

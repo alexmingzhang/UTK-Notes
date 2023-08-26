@@ -100,7 +100,7 @@ In 1998, SGML was reworked into XML, after the creation of HTML. HTML and XML ar
 \begin{dfnbox}{HTML Element}{}
     \[ \texttt{<tag [attribute='value']>[content]</tag>} \]
     \begin{itemize}
-        \item Tag: \todo[inline]{This}
+        \item Tag: the name of the element, such as \texttt{p} for paragraph or \texttt{h1} for header.
         \item Attribute list: each element defines a set of attributes with well-defined behavior; HTML also supports arbitrary attributes but without well-defined behavior (up to your own implementation)
         \item Content: can be composed of other elements (i.e. children), textual content, or a combination of the two
         \item Closing tag: Only tags that can have contents need to be closed
@@ -166,13 +166,42 @@ The DOM is composed of several things, including:
     \textbf{As a developer, never trust client-side code.} Clients can arbitrarily access, modify, and injects scripts. Big takeaway: \textbf{important data should never be stored on the client.}
 \end{notebox}
 
+\paragraph{Sessions}
 Originally, the web was purely static HTML webpages. As such, each request was independent of one another. At most, the \texttt{referer} header was used to link requests. In order to create more fully-featured web applications, web developers have created mechanisms for storing session data to be associated with HTTP requests, allowing HTTP requests to be linked to users.
 
-\todo[inline]{missing notes}
+When linking sessions to HTTP requests, we need to ask ourselves, ``what session data should be stored by the server? The client?'' Sessions are located by the server using a \dfntxt{session ID}. This identifier is used to lookup session data for a connection.
+
+How does the session know which session ID to use for each request? HTTP is a stateless protocol. Originally, each HTML document was sent in its own TCP connection. As such, it's not possible to bind the session ID to the connection. While HTTP/1.1+ allows many HTML documents to be sent in a single TCP connection, the stateless nature of the protocol was preserved.
+
+\begin{notebox}
+    Instead, each HTTP request needs to contain the session ID.
+\end{notebox}
 
 \begin{dfnbox}{Cookies}{}
     \dfntxt{Cookies} refer to data stored on the web client that is used for additional functionality and/or as a means of identifying users. They usually exist between webpages and sessions on the same website.
 \end{dfnbox}
+
+Cookies are the standardized approach for sending session data with each HTTP request. Cookies are sent by the server in an HTTP response, and all future HTTP requests will automatically include the cookies sent by the server. Cookies can also be created, read, updated, or deleted by client-side scripts.
+
+In an HTTP response, the set-cookie header may look something like:
+\begin{align*}
+    \texttt{Set-Cookie:} & \texttt{sessionID=78ac63ea01ce23ca; Path=/; Domain=mystore.com} \\
+    \texttt{Set-Cookie:} & \texttt{language=french; Path=/faculties; HttpOnly}
+\end{align*}
+As we can see, it is composed of name-value pairs separated by semicolons. Optional attributes include \texttt{domain}, \texttt{path}, \texttt{max-age}, \texttt{Secure}, \texttt{HttpOnly}, \texttt{SameSite}.
+
+In an HTTP request, the cookie header may look something like:
+\begin{align*}
+    \texttt{Cookie: sessionID=78ac63ea01ce23ca; language=french}
+\end{align*}
+This includes all cookies in a single header. Once again, fields are separated by semicolons. These cookies are only sent if:
+\begin{enumerate}[noitemsep]
+    \item they are for the correct domain and path,
+    \item they satisfy the \texttt{Secure} and \texttt{SameSite} attributes, and
+    \item they have not expired.
+\end{enumerate}
+
+\section{Same Origin Policy}
 
 \begin{dfnbox}{Origin, Same-Origin Policy (SOP)}{}
     An \dfntxt{origin} refers to the scheme (e.g. HTTP), host (fully-qualified domain name or IP address), and port. The \dfntxt{same-origin policy} guarantees that content from one origin will have limited access to content from another origin.
@@ -181,45 +210,51 @@ Originally, the web was purely static HTML webpages. As such, each request was i
 For example, \texttt{http://site.com/asdf} and \texttt{http://site.com:80/asdfzxcv} have the same origin.
 
 \begin{notebox}
- The same-origin policy is widely regarded the most important security feature for web documents.
+ The same-origin policy is widely regarded as the most important security feature that web browsers provide.
 \end{notebox}
 
 For example, same-origin policy is applied to:
 \begin{itemize}
-    \item Frames: scripts in one frame are only allowed access to the DOM of another frame if they share the same origin.
-    \item Web requests: scripts from one origin are only allowed to make \texttt{GET}, \texttt{POST}, and \texttt{HEAD} requests to another origin, and even then have limited headers and cannot view the response bodies.
+    \item \dfntxt{Frames:} scripts in one frame are only allowed access to the DOM of another frame if they share the same origin.
+    \item \dfntxt{Web requests:} scripts from one origin are only allowed to make \texttt{GET}, \texttt{POST}, and \texttt{HEAD} requests to another origin, and even then have limited headers and cannot view the response bodies. Some safe headers include \texttt{Accept}, \texttt{Accept-Language}, and \texttt{Content-Language}. Some safe \texttt{Content-Type} values include plaintext and form data.
 \end{itemize}
 
+\paragraph{Loosening SOP Protections}
 There are some circumstance to loosen SOP protections. Regardless of the intent, extreme precaution must be taken when doing so.
 \begin{itemize}
     \item \texttt{document.domain} can be used to override the fully-qualified domain name in the origin. This allows pages from two distinct subdomains to change their domain to the same parent domain, allowing cross-page domain access. This feature is now deprecated.
     \item Channel messaging API allows frames to send messages to each other. The sender explicitly identifies the domain(s) they send messages to. The receiver explicitly identifies the domains they are receiving from.
-    \item \dfntxt{Cross-origin resource sharing (CORS):} A header in the HTTP response indicates origins that are allowed to access the response body; can also allow additional methods and header options
+    \item \dfntxt{Cross-origin resource sharing (CORS):} A header in the HTTP response indicates origins that are allowed to access the response body; can also allow additional methods and header options.
 \end{itemize}
 
 \section{Cookie Attacks}
 If an attacker can steal a user's session identifier cookie, the attacker can use that cookie to impersonate the user! Methods include:
 \begin{itemize}
-    \item Intercepting HTTP traffic; can be stopped by using TLS and/or setting the Secure attribute on cookies
-    \item Malicious client-side scripts: supply-chain threats make this threat increasingly common
-    \item Client-side malware: malware can attack the browser and steal the cookies, either out of memory or on the disk where they are stored
+    \item Intercepting HTTP traffic; can be stopped by using TLS and/or setting the Secure attribute on cookies.
+    \item Malicious client-side scripts: supply-chain threats make this threat increasingly common; can be prevented by setting the \texttt{HttpOnly} attribute on cookies.
+    \item Client-side malware: malware can attack the browser and steal the cookies, either out of memory or on the disk where they are stored.
 \end{itemize}
 
-Let's say an attacker can't directly steal the cookies. They might still try to misuse them instead. Recall that whenever an HTTP request is made, cookies are automatically attached to that request. The browser sends these cookies. We can trigger a web request using \texttt{fetch()} to request a resource from any origin!
+Let's suppose an attacker can't directly steal the cookies. They might still try to misuse them instead. Recall that whenever an HTTP request is made, cookies are automatically attached to that request. The browser sends these cookies. We can trigger a web request using \texttt{fetch()} to request a resource from any origin!
 
 \begin{dfnbox}{Cross-Site Request Forgery (CSRF)}{csrf}
     \dfntxt{Cross-Site Request Forgery (CSRF)} refers to a common online attack. The user connects to a malicious website which executes a web request for the legitimate website. The browser will attach the legitimate site's cookies to this request.
 \end{dfnbox}
 
+Such an attack has the following steps:
+
 \begin{enumerate}
     \item A user connects to a legitimate website and has a cookie.
-    \item The user connects to a malicious website
+    \item The user unknowingly visits a malicious website or clicks on a malicious link.
+    \item The malicious website contains a script that generates a request to the legitimate website.
+    \item The browser, unaware of the malicious intent of the request, automatically attaches the cookie from the legitimate website to this request.
+    \item The request is sent to the legitimate website. Because the request includes the user's legitimate session cookie, the website assumes the request is from the authenticated user and processes it.
+    \item The malicious site thus can perform actions on the legitimate site on behalf of the user, without their knowledge or consent. This could include actions like changing the user's email address or password, performing transactions, or any other action the user is authorized to perform on the legitimate website.
 \end{enumerate}
-\todo{finish steps of CSRF attack}
 
 There are several methods for defense against CSRF attacks:
 \begin{itemize}
-    \item Limit what can be done with the \texttt{GET}, \texttt{POST}, and \texttt{HEAD} requests; these are the only requests allowed by SOP, but can be overridden with CORS
+    \item Limit what can be done with the \texttt{GET}, \texttt{POST}, and \texttt{HEAD} requests; these are the only requests allowed by SOP, but can be overridden by CORS headers
     \item Set the \texttt{SameSite} attribute on the cookies; will only attach cookies originating from the domain that set the cookie
     \item Use an anti-CSRF token which itself is a cookie. Whenever the user triggers a sensitive action, include the anti-CSRF token in the request. Then the server only allows the operation if both values match.
 \end{itemize}

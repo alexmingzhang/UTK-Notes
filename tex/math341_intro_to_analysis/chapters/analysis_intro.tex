@@ -1,26 +1,26 @@
-\chapter{Introduction}
-Our goal is to understand the theory of real functions in one variable. Specifically, we will deal with functions, limits, sequences, convergence, continuity, differentiation, and integration. The same ideas, concepts, and techniques are used to study more complicated mathematics.
+\chapter{Introduction and Motivation}
+Our goal is to understand the theory of real functions in one variable. Specifically, we will deal with functions, limits, sequences, convergence, continuity, differentiation, and integration. One can think of real analysis as ``advanced calculus.'' The same ideas, concepts, and techniques are used to study more complicated mathematics.
 
-We will primarily focus on the idea of \textbf{convergence}. Many computational techniques and algorithms rely on iteration---successive approximations getting closer to an actual solution. In order for those algorithms to work, they need to converge towards an actual solution.
+A recurring topic in real analysis will be \dfntxt{convergence}. Many computational techniques and algorithms rely on iteration---successive approximations getting closer to an actual solution. In order for those algorithms to work, they need to converge towards an actual solution.
 
-To motivate our quest to learn about convergence, let's look at some classic iterative methods.
+To motivate our quest to learn about convergence, let's explore some classic iterative methods that rely on convergence to approximate solutions.
 
 % Real analysis is the branch of mathematics concerned with the study of functions, limits, and continuity of real numbers. It encompasses a wide range of concepts and techniques, including differentiation and integration. Real analysis serves as a foundation for many areas of mathematics and science. Its principles are used extensively in various computational techniques and algorithms.
 
 % In this course, we will focus on the central idea of convergence, which is fundamental to many of these concepts and techniques. To motivate our exploration of convergence, we will examine classic iterative methods that rely on the concept of convergence to approximate solutions.
 
 \begin{exbox}{Newton's Method}{}
-    Given $c > 0$, suppose we want to calculate $\sqrt{c}$. Start with some initial guess $x_1 > 0$.
-    \begin{alignat*}{2}
-        & \text{Let}\quad & x_2 &\coloneq \frac{1}{2} \left( x_1 + \frac{c}{x_1} \right) \\
-        & \text{Let}\quad & x_3 &\coloneq \frac{1}{2} \left( x_2 + \frac{c}{x_2} \right) \\
-        && &\vdots \\
-        & \text{Let}\quad & x_{n+1} &\coloneq \frac{1}{2} \left( x_n + \frac{c}{x_n} \right)
-    \end{alignat*}
-    We find that $\lim_{n\to\infty} x_n = \sqrt{c}$.
+    Suppose we want to calculate the square root of some real number $c$. We with some initial guess $x_1 > 0$, then iterate as follows:
+    \begin{align*}
+        x_2 &\coloneq \frac{1}{2} \left( x_1 + \frac{c}{x_1} \right) \\
+        x_3 &\coloneq \frac{1}{2} \left( x_2 + \frac{c}{x_2} \right) \\
+        &\vdots \\
+        x_{n+1} &\coloneq \frac{1}{2} \left( x_n + \frac{c}{x_n} \right)
+    \end{align*}
+    We find that, as $n$ approaches $\infty$, $x_n$ gets closer to $\sqrt{c}$.
 \end{exbox}
 
-Does this method work for all $c > 0$ and $x_1 > 0$? Assuming $\lim_{n\to\infty} x_n = x$ converges, then:
+Does this method work for all $c > 0$ and $x_1 > 0$? Assuming this sequence $(x_n)$ converges, then:
 \begin{alignat*}{2}
     && x_{n+1} &= \frac{1}{2} \left( x_n + \frac{c}{x_n} \right) \\
     &\implies \quad &x &= \frac{1}{2} \left( x + \frac{c}{x} \right) \\
@@ -36,7 +36,7 @@ The above calculation only makes sense if we know the sequence converges. Consid
 % TODO: add reference for monotone convergence theorem
 % TODO: explain what a bounded monotone sequence even is
 
-Since this sequence does not converge, there is no limit when $n$ approaches infinity.
+Since this sequence does not converge, there is no limit when $n$ approaches $\infty$.
 % In chapter 14, we will cover the Monotone Convergence Theorem, which states that any bounded monotone sequence converges.
 
 % \begin{exbox}{Monotone Convergence Theorem}{}
@@ -47,8 +47,6 @@ Since this sequence does not converge, there is no limit when $n$ approaches inf
 %     \end{itemize}
 %     Therefore, $x_n$ converges by the Monotone Convergence Theorem, and $\lim_{n\to\infty} x_n = \sqrt{c}$.
 % \end{exbox}
-
-Let's look at a more complicated iterative method.
 
 \begin{exbox}{Picard's Method}{}
     Suppose we had to solve $y\prime = f(x,y)$ where $y(x_0) = y_0$ (i.e. find a function $y$ that satisfies our two conditions). As it turns out, we can use an iterated method to solve this as well.

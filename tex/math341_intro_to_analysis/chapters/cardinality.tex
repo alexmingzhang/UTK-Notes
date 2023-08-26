@@ -1,22 +1,35 @@
 \chapter{Cardinality}
+
+In this chapter, we explore one of the most confusing and counterintuitive ideas present in introductory analysis. Consider the following two sets:
+\begin{align*}
+    \N &= \{1, 2, 3, 4, \ldots \} \\
+    2\N &\coloneq \{2, 4, 6, 8, \ldots \}
+\end{align*}
+Which set is ``larger''? It might seem that the set of all natural numbers is bigger than the set of all even natural numbers. After all, there are ``twice'' as many integers as there are even numbers. As it turns out, these two sets have the same number of elements. That is, there are exactly as many positive integers as there are positive even numbers.
+
+\section{Introduction}
+
 \begin{dfnbox}{Cardinality}{cardinality}
     \dfntxt{Cardinality} is a measure of the amount of elements in a set, denoted $\abs{A}$. We say two sets have the same cardinality if there exists a bijection between them.
 \end{dfnbox}
 
-For finite sets, we can think of cardinality as the number of elements in that set. For infinite sets, cardinality can sometimes go against our intuition. For any sets $A,B,C$:
-\begin{enumerate}[noitemsep]
-    \item $\abs{A} = \abs{A}$
-    \item if $\abs{A} = \abs{B}$, then $\abs{B} = \abs{A}$
-    \item if $\abs{A} = \abs{B}$ and $\abs{B} = \abs{C}$, then $\abs{A} = \abs{C}$.
-\end{enumerate}
-Hence, equality of cardinalities is an equivalence relation.
+Regarding finite sets, we can think of cardinality as the number of elements in that set. For example if we had a set $ A \coloneq \{1,2,3\}$, then $\abs{A} = 3$. However, regarding infinite sets, cardinality can sometimes go against our intuition. Consider the following example:
+
+% For any sets $A,B,C$:
+% \begin{enumerate}[noitemsep]
+%     \item $\abs{A} = \abs{A}$
+%     \item if $\abs{A} = \abs{B}$, then $\abs{B} = \abs{A}$
+%     \item if $\abs{A} = \abs{B}$ and $\abs{B} = \abs{C}$, then $\abs{A} = \abs{C}$.
+% \end{enumerate}
+% Hence, equality of cardinalities is an equivalence relation.
 % Above is kinda self evident? maybe delete this
 
 \begin{exbox}{Cardinality of $\N$ and $2\N$}{}
     Let $2\N \coloneq \{ 2n : n \in \N \}$ (i.e. the set of even natural numbers). Then $\abs{\N} = \abs{2\N}$.
     \tcblower
+    \textbf{Intuition:} This result may seem entirely counterintuitive! It suggests that there are just as many positive even numbers as there are positive integers, even though there seems to be ``twice'' as many positive integers than positive even numbers. So it's entirely possible that an infinite set is a proper subset of another infinite set, but both infinite sets have the same cardinality.
     \begin{proof}
-        To show that these two sets have the same cardinality, we need to find some bijection between the sets. Let $f : \N \to 2\N$ be a function defined by $f(n) = 2n$. Note that $f$ is well-defined (i.e. is actually a function) because $f(n) \in 2 \N$ for all $n \in \N$. To prove that $f$ is a bijection, we need to prove it is both injective and surjective.
+        To prove that these two sets have the same cardinality, we need to establish some bijection between the sets. Let $f : \N \to 2\N$ be a function defined by $f(n) = 2n$. Note that $f$ is well-defined (i.e. is actually a function) because $f(n) \in 2 \N$ for all $n \in \N$. To prove that $f$ is a bijection, we need to prove it is both injective and surjective.
         \begin{enumerate}
             \item Let $n_1, n_2 \in \N$ such that $f(n_1) = f(n_2)$. Then $2n_1 = 2n_2$, so $n_1 = n_2$. Thus, $f$ is injective.
             \item Let $m \in 2\N$. Then $m = 2k$ for some $k \in \N$, so $m = 2k = f(k)$ for some $k \in \N$. Thus, $f$ is surjective.
@@ -25,11 +38,17 @@ Hence, equality of cardinalities is an equivalence relation.
     \end{proof}
 \end{exbox}
 
+\begin{notebox}
+    Wrestling with infinite cardinality ideas is one of the most unintuitive and foreign concepts in introductory analysis, so it's crucial to study these concepts well.
+\end{notebox}
+
+To help our intuition of cardinality for infinite sets, let's explore another example:
+
 \begin{exbox}{Cardinality of Intervals}{}
     Let $a,b \in \R$ where $a < b$. Then $\abs{(0,1)} = \abs{(a,b)}$.
     \tcblower
     \begin{proof}
-        We need to find a bijection from $(0,1)$ to $(a,b)$. We need to ``scale'' the interval $(0,1)$ to the width of $(a,b)$, then translate it to match $(a,b)$. Define $f : (0,1) \to (a,b)$ by $f(x) = a + (b-a)x$. (We need to check $f$ is well-defined). Let $x \in (0,1)$. Then $0<x<1$, so multiplying by $(b-a)$ which is positive gives $0 < (b-a)x < b-a$. Adding $a$, we get $a < a+(b-a)x < b$. Now we need to show $f$ is a bijection:
+        We need to find a bijection from $(0,1)$ to $(a,b)$. One possibility is to ``scale'' the interval $(0,1)$ to the width of $(a,b)$, then translate it to match $(a,b)$. Define $f : (0,1) \to (a,b)$ by $f(x) = a + (b-a)x$. (We need to check $f$ is well-defined). Let $x \in (0,1)$. Then $0<x<1$, so multiplying by $(b-a)$ which is positive gives $0 < (b-a)x < b-a$. Adding $a$, we get $a < a+(b-a)x < b$. Now we need to show $f$ is a bijection:
         \begin{enumerate}
             \item Let $x_1, x_2 \in (0,1)$ such that $f(x_1) = f(x_2)$. Then $a + (b-a)x_1 = a+ (b-a)x_2$. Subtracting $a$ from both sides, we get $(b-a)x_1 = (b-a)x_2$. Since $(b-a) \neq 0$, we can divide both side by $(b-a)$ to get $x_1 = x_2$.
             \item Let $y \in (a,b)$.
@@ -71,15 +90,18 @@ For example, the power set of $\{1,2,3\}$ is $\left\{\emptyset, \{1\}, \{2\}, \{
     \end{proof}
 \end{exbox}
 
+\section{Countability}
 \begin{dfnbox}{Finite, Countably Infinite, Countable, Uncountable}{}
     Let $A$ be a set. We say $A$ is:
     \begin{itemize}[noitemsep]
-        \item \dfntxt{finite} if $A \neq \emptyset$ or $\abs{A} = \abs{\{1, 2, \ldots, n\}}$ for some $n \in \N$.
-        \item \dfntxt{countably infinite} if $\abs{A} = \abs{N}$.
-        \item \dfntxt{countable} if $A$ is finite or countably infinite
-        \item \dfntxt{uncountable} if $A$ is not countable
+        \item \dfntxt{finite} if $A = \emptyset$ or $\abs{A} = \abs{\{1, 2, \ldots, n\}}$ for some $n \in \N$.
+        \item \dfntxt{countably infinite} if $\abs{A} = \abs{\N}$.
+        \item \dfntxt{countable} if $A$ is finite or countably infinite.
+        \item \dfntxt{uncountable} if $A$ is not countable.
     \end{itemize}
 \end{dfnbox}
+
+We can think of uncountable sets being ``larger'' than countable sets. In terms of cardinality, this means there will never exist a bijection between a countable and uncountable set.
 
 \begin{thmbox}{$\mathcal{P}(\N)$ is uncountable.}{}
     \begin{proof}
@@ -98,6 +120,8 @@ Generally, there is never a bijection from a set to its power set.
     \[ X = \{x_1, x_2, \ldots \} = \{x_k\}_{k=1}^\infty \]
     If $X$ is finite, then there exists a bijection $f : \{1,2,\ldots,n\} \to X$ . Thus, $X = \{f(1), f(2), \ldots, f(n) \}$. If $X$ is countably infinite, then there exists a bijection $f : \N \to X$. Thus, $X = \{f(1), f(2), \ldots\}$.
 \end{notebox}
+
+Due to the nature of cardinality being defined in terms of bijections, many cardinality ideas which seem intuitive often have long and tiring proofs. Case in point:
 
 \begin{thmbox}{Subsets of Countable Sets are Countable}{card-subset}
     The subset of a countable set is still countable. (i.e. a countable set cannot contain an uncountable subset).
@@ -194,7 +218,6 @@ This means we can ``list'' the rational numbers (disregarding order) as $\Q = \{
 \end{thmbox}
 
 \section{Additional Remarks}
-
 \begin{dfnbox}{Algebraic Number, Transcandental Number}{}
     If $\alpha$ is a root of the polynomial $a_nx^n + a_{n-1} x^{n-1} + \cdots + a_1 x + a_0 = 0$ where each $a_i \in \Z$, then $\alpha$ is called an \dfntxt{algebraic number}. If $\alpha$ is not algebraic, then we call it a \dfntxt{transcendental number}.
 \end{dfnbox}
@@ -216,7 +239,7 @@ This means we can ``list'' the rational numbers (disregarding order) as $\Q = \{
     There is no cardinality between $\abs{\N}$ and $\abs{\R}$.
 \end{thmbox}
 
-In Zermelo-Fraenkel with Choice (ZFC) set theory, the continuum hypothesis cannot be proven to be true nor false. In 1938, Godel proved that the continuum hypothesis is consistent with ZFC. In 1963, Colen proved that the negation of the continuum hypothesis is also consisten with ZFC.
+In Zermelo-Fraenkel with Choice (ZFC) set theory, the continuum hypothesis cannot be proven to be true nor false. In 1938, Godel proved that the continuum hypothesis is consistent with ZFC. In 1963, Colen proved that the negation of the continuum hypothesis is also consistent with ZFC.
 
 \begin{notebox}
     Just because you can write a description of a set does not mean that the set exists nor makes sense.

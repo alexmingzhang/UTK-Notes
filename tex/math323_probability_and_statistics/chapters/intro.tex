@@ -1,0 +1,106 @@
+\chapter{Introduction}
+
+As an introduction, let's consider some problems we might want to answer. We may use probability to test models against data. For example, imagine we rolled a six-sided die 100 times and rolled five each time. It's certainly a possibility albeit an unlikely one. Now imagine instead we rolled another die 100 times and got 17 1s, 17 2s, 17 3s, 17 4s, 16 5s, and 16 6s. Our intuition leads us to believe that the second die is more ``fair'' than the first. The first die certainly seems more suspicious than the second. The problem is: how do we quantify our suspicion with the first die?
+
+\begin{dfnbox}{Experiment, event, simple event, sample point}{experiment}
+    An \dfntxt{experiment} is the process by which an observation is made. Something can be an experiment if it has a measurable outcome. An \dfntxt{event} is the set of outcome(s). An event is \dfntxt{simple} if it only contains one outcome, in which case it cannot be decomposed.
+\end{dfnbox}
+
+For example, rolling dice, flipping a coin, or drawing a card from a deck can all be experiments. Let's consider an experiment in which we flip a coin three times. There are eight possible outcomes, which we will denote by a set named $S$:
+\[ S \coloneq \{ \text{HHH}, \text{TTT}, \text{HHT}, \text{HTH}, \text{HTT}, \text{THH}, \text{THT}, \text{TTH} \} \]
+In this case, any subset of $S$ can be considered an event. Suppose we wanted to focus on all the outcomes where heads appeared more than tails. The set of these outcomes can be simply defined as:
+\[ E \coloneq \{ \text{HHH}, \text{HHT}, \text{HTH}, \text{THH} \} \]
+If we only focus on a single specific outcome, say $\text{HHH}$, we denote this by a singleton set containing only that outcome:
+\[ H \coloneq \{ \text{HHH} \} \]
+This event $H$ is simple as it only contains one possible outcome: $\text{HHH}$.
+
+\begin{dfnbox}{Probability}{}
+    The \dfntxt{probability} of an event is the likelihood that the event occurs. Given an event $E$, we write $P(E)$ to denote the probability that event $E$ occurs.
+\end{dfnbox}
+
+In our coin flip example (and other naive probability examples), we can deduce the probability of an event by the following formula:
+\[ P(E) = \frac{\text{num. outcomes in E}}{\text{num. possible outcomes}} \]
+The probability that more heads occur than tails (denoted by $E$) is calculated as:
+\[ P(E) = \frac{4}{8} = \frac{1}{2} \]
+
+
+\begin{exbox}{Betting}{betting}
+    \textbf{Question:} Suppose that two people, $B$ and $P$, have placed equal bets on winning the best of 5 fair coin flips. $B$ is betting on heads, and $T$ is betting on tails. They are interrupted after 3 flips and have to stop the game short, with $B$ ahead 2 heads to 1 tails. How should they fairly divide pot?
+    \tcblower
+    It's clear that $B$ is more likely to win this game than $P$. The question is: how probable is $B$ winning in this scenario? If we replicated this experiment 44 times, we may see that $B$ wins 39 times and $P$ wins 15 times. Denoting $S$ as the set of all possible outcomes, we have:
+    \[ S \coloneq \{ \text{HH}, \text{HT}, \text{TH}, \text{TT} \} \]
+    From these 4 outcomes, $B$ will win 3 of the 4 outcomes, and $P$ will win 1 of the  outcomes.
+\end{exbox}
+
+TODO: stuff below should be mixed with above stuff?
+
+\begin{dfnbox}{Sample point, sample space, discrete sample space}{}
+    A \dfntxt{sample point} is any single outcome from an experiment. The \dfntxt{sample space} is the set of all possible sample points. A sample space is \dfntxt{discrete} if it contains a countable amount of distinct sample points.
+\end{dfnbox}
+
+In this context, we can think of an event as a collection of sample points. Note that a simple event is always a singleton set whereas a sample point does not have to be; we will not worry over these differences and simply use the two terms interchangeably.
+%Note that a simple event does not constitute a sample point, as a simple event must be a singleton set. A sample point does not have to be encapsulated into a set.
+
+\begin{dfnbox}{Probability (Formal Definition)}{}
+    Let $S$ be the sample space associated with an experiment. To each event $A \subseteq S$, we assign a number $P(A)$ called the \dfntxt{probability} of $A$, satisfying:
+    \begin{enumerate}
+        \item $P(A) \geq 0$ for all $A \subseteq S$,
+        \item $P(S) = 1$, and
+        \item if $A_1, \ldots, A_n$ are disjoint, then we have $P(A_1 \cup \cdots \cup A_n) = P(A_1) + \cdots + P(A_n)$.
+    \end{enumerate}
+\end{dfnbox}
+
+
+For example, let's consider a homemade, six-sided die. Using $S$ to denote our sample space, we have
+\[ S \coloneq \{ E_1, E_2, E_3, E_4, E_5, E_6 \} \]
+where $E_j$ is the event that $j$ is rolled. Suppose that we had the following probabilities for each of the events:
+\begin{align*}
+    P(E_1) &= \sfrac13 \\
+    P(E_2) &= \sfrac14 \\
+    P(E_3) &= \sfrac16 \\
+    P(E_4) &= \sfrac{1}{12} \\
+    P(E_5) &= \sfrac18 \\
+    P(E_6) &= \sfrac{1}{24}
+\end{align*}
+To find the probability that we roll an even number, we look at the event $\{E_2, E_4, E_6\}$. The probability that this event occurs is $\sfrac{1}{4} + \sfrac{1}{12} + \sfrac{1}{24} = \sfrac{3}{8}$. 
+
+\begin{exbox}{Laptop Refurbish}{}
+    Suppose we had a refurbished laptop with the following probabilities:
+    \begin{align*}
+        P(\text{bad battery}) &= 0.32 \\
+        P(\text{bad screen}) &= 0.18 \\
+        P(\text{bad battery and bad screen}) &= 0.12
+    \end{align*}
+    Find the probabilities for:
+    \begin{align*}
+        P(\text{bad battery OR bad screen}) \\
+        P(\text{neither defect}) \\
+        P(\text{bad screen but NOT bad battery})
+    \end{align*}
+    \tcblower
+    In this example, we have only two simple events: having a bad battery but not a bad screen, and having a bad screen but not a bad battery.
+
+    TODO: venndiagram
+
+    From this, we have:
+    \begin{align*}
+        P(\text{bad battery OR bad screen}) &= 0.20 \\
+        P(\text{neither defect}) &= 0.62 \\
+        P(\text{bad screen but NOT bad battery}) &= 0.06
+    \end{align*}
+\end{exbox}
+
+\begin{exbox}{Markers}{}
+    Five seemingly identical markers are left in a classroom. Only two of have enough ink to write well. The instructor selects two of these markers at random.
+    \begin{enumerate}
+        \item What is the sample space?
+        \item Assign probabilities to each sample point in the sample space.
+        \item What is the probability that neither marker has enough ink to write?
+    \end{enumerate}
+    \tcblower
+    To determine the sample space, we consider all the possibilities for the instructor. We denote each marker as:
+    \[ W_1, W_2, D_1, D_2, D_3 \]
+    If we consider picking $W_1$ then $W_2$ to be the same event as picking $W_2$ then $W_1$, we can simply enumerate all possible pairs of markers for our sample space:
+    \[ S \coloneq \left\{ W_1W_2, W_1D_1, W_1D_2, W_1D_3, W_2D_1, W_2D_2, W_2D_3, D_1D_2, D_1D_3, D_2D_3 \right\} \]
+    The probability of any sample point occurring is $\sfrac{1}{10}$. From this, we can simply add up the sample points for each of the events. The probability that the instructor selects two dead markers is given by the event $\{D_1D_2, D_1D_3, D_2D_3\}$ whose probability is $\sfrac{3}{10}$.
+\end{exbox}

@@ -284,7 +284,9 @@ $\R$ and $\Q$ are ordered fields.
     \[ \abs{a} \coloneq \begin{cases} a, & a \geq 0 \\ -a, & a < 0 \end{cases} \]
 \end{dfnbox}
 
-We can think of $\abs{a-b}$ as the distance between $a$ and $b$. More generally, $\abs{a-b} = d(a,b)$ is the metric we will be using throughout real analysis.
+We can think of $\abs{a-b}$ as the distance between $a$ and $b$.
+%More generally, $\abs{a-b} = d(a,b)$ is the metric we will be using throughout real analysis.
+It is a common metric which we will use repeatedly throughout real analysis.
 
 \begin{thmbox}{Properties of Absolute Value}{}
     \begin{itemize}
@@ -315,7 +317,7 @@ We can think of $\abs{a-b}$ as the distance between $a$ and $b$. More generally,
     \end{proof}
 \end{thmbox}
 
-\section{Completeness}
+\section{Completeness and Suprema}
 
 \begin{dfnbox}{Bounded Above, Bounded Below, Bounded}{}
     Let $F$ be an ordered field, and let $A \subseteq F$.
@@ -422,3 +424,171 @@ Additionally, $\N \subseteq \R$ where $\N$ satisfies the Peano axioms.
         More generally, if $n,m \in \N$, then $\sqrt[n]{m} \in \R$.
     \end{proof}
 \end{thmbox}
+
+\section{Infima}
+\begin{dfnbox}{Infimum}{}
+    Let $F$ be an ordered field, and let $A \subseteq F$. $s$ is the \dfntxt{infimum} of $A$ if:
+    \begin{enumerate}[noitemsep]
+        \item $s$ is a lower bound for $A$, and
+        \item $s$ is greater than every other lower bound for $A$.
+    \end{enumerate}
+\end{dfnbox}
+
+We can prove that the existence of infima is already implied by completeness.
+
+\begin{thmbox}{Existence of Infima in $\R$}{}
+    Let $A \subseteq \R$ be nonempty and bounded below. Then $A$ has an infimum in $\R$.
+    \tcblower
+    \begin{proof}
+        Let $A \subseteq \R$ be nonempty and bounded below. Let $B$ be the set of all lower bounds for $A$. In other words, $B \coloneq \left\{ b \in \R : \forall(a \in A)(b < a) \right\}$. Since $A$ is bounded below, then $B$ is nonempty. Note also that $B$ is bounded above by element of $A$. By completeness, $s \coloneq \sup B$ exists. Now, we need to show that $\sup B = \inf A$.
+        \begin{enumerate}
+            \item Every $a \in A$ is an upper bound for $B$, and $\sup B$ is the least upper bound for $B$. Then, $\sup B \leq a$. That is, $\sup B$ is a lower bound for $A$.
+            \item Let $t$ be a lower bound for $A$. Then, by definition of $B$, it follows that $t \in B$. Then $t \leq \sup B$ as required.
+        \end{enumerate}
+        Therefore, $\sup B = \inf A$ in $\R$.
+    \end{proof}
+\end{thmbox}
+
+\begin{thmbox}{Well-Ordering Principle}{wop}
+    Every non-empty subset of $\N$ has a minimum.
+    \tcblower
+    \begin{proof}
+        We will use induction. For convenience, let $P(n)$ represent the following statement: ``If $A \subseteq \N$ and $A \cap \{1,2,\ldots,n \} \neq \emptyset$, then $A$ has a minimum.''
+
+        \textbf{Base Case:} First, we will prove $P(1)$. If $A \subseteq \N$ and $A \cap \{1\} \neq \emptyset$, then $1 \in A$, so $A$ has a minimum.
+
+        \textbf{Induction Step:} Assume that $P(n)$ holds for some $n \in N$. Suppose $A \subseteq \N$ and $A \cap \{1,2,\ldots,n+1\} \neq \emptyset$.
+        \begin{enumerate}
+            \item If $A \cap \{ 1,2,\ldots,n \} \neq \emptyset$, then $A$ has a minimum by $P(n)$.
+            \item If $A \cap \{1,2,\ldots,n\} = \emptyset$, then $n+1 \in A$, so $\min A = n+1$.
+        \end{enumerate}
+        By induction, $P(n)$ holds for all $n \in \N$. If $A \subseteq \N$ and $A \neq \emptyset$, then there exists $m \in A$ such that $m \in \N$. By $P(m)$ (which is true by induction), the set $A$ has a minimum.
+    \end{proof}
+\end{thmbox}
+
+\begin{thmbox}{Pushing Supremum}{push}
+    Let $A$ be a nonempty subset of $\R$, and let $b,c$ be real numbers.
+    \begin{enumerate}[noitemsep, label=(\alph*)]
+        \item If $a \leq b$ for all $a \in A$, then $\sup A \leq b$.
+        \item If $c \leq a$ for all $a \in A$, then $c \leq \inf A$.
+    \end{enumerate}
+    \tcblower
+    \textbf{Intuition:} Consider the interval $A \coloneq (0,1)$. Because $a \leq 1$ for all $a \in (0,1)$, we have $\sup A \leq 1$. Because $0 \leq a$ for all $a \in (0,1)$,we have $0 \leq \inf A$.
+    \begin{proof}[Proof of (a)]
+        Since $a \leq b$ for all $a \in A$, then $b$ is an upper bound for $A$. By completeness, $A$ has a supremum, and $s \coloneq \sup A$ is the least upper bound for $A$. Thus, $s \leq b$.
+    \end{proof}
+    \begin{proof}[Proof of (b)]
+
+    \end{proof}
+\end{thmbox}
+
+\begin{exbox}{}{}
+    Suppose $A,B \subseteq \R$, $A \neq \emptyset$, $A \subseteq B$, and $B$ is bounded above. Prove that $A$ is bounded above and $\sup A \leq \sup B$.
+    \tcblower
+    \begin{proof}
+        Since $A \subseteq B$ and $A \neq \emptyset$, then $B \neq \emptyset$. Also, $B$ is bounded above, so $B$ has a supremum (by completeness). Let $a \in A$ be arbitrary. Then $a \in B$, so $a \leq \sup B$. Thus, $A$ is bounded above, so $A$ has a supremum (by completeness). By \nameref{thm:push}, $\sup A \leq \sup B$.
+    \end{proof}
+\end{exbox}
+
+\begin{thmbox}{Approximation Property of Suprema and Infima}{approx}
+    Suppose $A$ is a nonempty subset of $\R$, and $s,r \in \R$. Then:
+    \begin{enumerate}[label=(\alph*)]
+        \item $s = \sup A$ if and only if (i) $s$ is an upper bound for $A$, and (ii) for all $\epsilon > 0$, there exists $a \in A$ such that $s - \epsilon < a$.
+        \item $r = \inf A$ if and only if (i) $r$ is a lower bound for $A$, and (ii) for all $\epsilon > 0$, there exists $a \in A$ such that $a < r + \epsilon$.
+    \end{enumerate}
+    \tcblower
+    \textbf{Intuition:} If we nudge the supremum ever so slightly to the left, then we must have moved past something in $A$.
+    \begin{proof}[Proof of (a)]
+        Let $s \coloneq \sup A$. Then (i) holds by definition of suprema. To prove (ii), let $\epsilon > 0$. Since $s - \epsilon < s$, then $s - \epsilon$ is not an upper bound for $A$. Therefore, there exists $a \in A$ such that $s - \epsilon < a$.
+
+        Conversely, suppose that (i) and (ii) hold. We need to show $s = \sup A$. From (i), we know that $s$ is an upper bound for $A$. Now, we need to show that $s$ is the least upper bound. Let $t$ be an upper bound for $A$. Suppose for contradiction that $t < s$. Let $\epsilon \coloneq s - t > 0$. Then $t = s - \epsilon$. By (ii), there exists $a \in A$ such that $a > s - \epsilon = t$. This contradicts $t$ being an upper bound for $A$. Thus, there is no upper bound less than $s$. Therefore, $s = \sup A$.
+    \end{proof}
+\end{thmbox}
+
+\section{Consequences of Completeness}
+\begin{thmbox}{$\N$ is not Bounded Above}{}
+    \begin{proof}
+        Suppose for contradiction $\N$ is bounded above. Since $\N$ is not empty, then $\N$ has a supremum in $\R$. Let $s \coloneq \sup \N \in \R$. Then $n \leq s$ for all $n \in \N$. By the Peano axioms, $n$ has a successor $n+1 \in \N$, so $n+1 \leq s$ for all $n \in \N$. Therefore, $n \leq s - 1$ for all $n \in \N$. This contradicts $s$ being the least upper bound for $\N$.
+    \end{proof}
+\end{thmbox}
+
+\begin{thmbox}{Archimedean Principle}{archimedean}
+    Suppose $x,y \in \R$ where $x > 0$. Then, there exists $n \in \N$ such that $nx > y$.
+    \tcblower
+    \textbf{Intuition:} This is basically an extension of the fact that $\N$ is not bounded above.
+    \begin{proof}
+        Since $\sfrac{y}{x}$ is not an upper bound for $\N$, then there exists $n \in \N$ such that $n > \sfrac{y}{x}$. Since $x > 0$, then $nx > y$.
+    \end{proof}
+\end{thmbox}
+
+\begin{thmbox}{Density of $\Q$ in $\R$}{}
+    Suppose $x,y \in \R$ where $x < y$. Then there exists $r \in Q$ such that $x < r < y$.
+    \tcblower
+    \textbf{Intuition:} Given any two different real numbers, there's some rational number between them.
+    \begin{proof}
+        We will consider three cases:
+        \begin{enumerate}
+            \item If $x \geq 0$, then $0 \leq x < y$. Since $y - x > 0$, then by the \nameref{thm:archimedean}, there exists $n \in \N$ such that $n(y-x) > 1$. We want to show there is a natural number between $nx$ and $ny$. Let $A \coloneq \{ k \in \N : k > nx \}$. Since $\N$ isn't bounded above, then $A$ is not empty. By the \nameref{thm:wop}, $A$ has a minimum. Let $m \coloneq \min A$. Then $m > nx$, and $m-1 \leq nx$. Thus, $m \leq nx+1$, so:
+            \[ nx < m \leq nx+1 < ny \]
+            Dividing across by $n$ yields $x < \sfrac{m}{n} < y$. Note that $m,n \in \N \subseteq \Z$, so $\sfrac{m}{n} \in \Q$.
+            \item If $x < 0$ and $y > 0$, then $x < 0 < y$ where $0 \in \Q$.
+            \item If $x < 0$ and $y \leq 0$, then $x < y \leq 0$. Multiplying across by $-1$, we have $-x > -y \geq 0$. By the first case, there must exist $t \in \Q$ where $-y < t < -x$. Multiply across by $-1$ again to attain $y > -t > x$ where $-t \in \Q$.
+        \end{enumerate}
+        This completes the proof.
+    \end{proof}
+\end{thmbox}
+
+\begin{thmbox}{$\sqrt{2}$ is a Real Number}{}
+    There exists $s \in \R$ such that $s^2 = 2$.
+    \tcblower
+    \begin{proof}
+        Let $A \coloneq \left\{ x \in \R : x^2 < 2 \right\}$. Since $0^2 < 2$, then $0 \in A$, so $A$ is not empty. Also, $A$ is bounded above, for example by $2$. By completeness, $A$ must have a supremum in $\R$. Let $s \coloneq \sup A$. We will use trichotomy to show that $s^2 = 2$.
+        \begin{enumerate}
+            \item If $s^2 > 2$, then$\ldots$
+            \begin{notebox}
+                \textbf{Scratchwork:} We need to show that this is not possible, i.e. show there is some $s - \sfrac{1}{n}$ that is less than $s$ but is still an upper bound for $A$. We want $(s - \sfrac{1}{n})^2 > 2$. Then, $s^2 - \sfrac{2s}{n} + \sfrac{1}{n^2} > 2$. We can chop off the $\sfrac{1}{n^2}$, reducing the inequality to $s^2 - \sfrac{2s}{n} > 2$. Thus, we need to choose $n > \frac{2s}{s^2-2}$.
+            \end{notebox}
+            $\ldots$ let $n \in \N$ such that $n > \frac{2s}{s^2-2}$. Then:
+            \begin{alignat*}{2}
+                && n &> \frac{2s}{s^2-2} \\
+                & \implies \quad & s^2 - \frac{2s}{n} &> 2 \\
+                & \implies &  s^2 - \frac{2s}{n} + \frac{1}{n^2} &> 2 \\
+                & \implies & \left( s - \frac{1}{n} \right)^2 &> 2
+            \end{alignat*}
+            Thus, $s - \sfrac{1}{n}$ is an upper bound for $A$ that is less than $s$. This contradicts $s$ being the supremum for $A$.
+            \item If $s^2 < 2$, then$\ldots$
+            \begin{notebox}
+                \textbf{Scratchwork:} Again, we need to show that this is not possible. We know that in this case, $s \in A$, so we need to find another thing in $A$ that is bigger than $s$. In other words, we want some $(s + \sfrac{1}{n})^2 < 2$. Then, $s^2 + \sfrac{2s}{n} + \sfrac{1}{n^2} < 2$. Choose $n > \sfrac{1}{2s}$ and $n > \frac{4s}{2-s^2}$.
+                \begin{align*}
+                    \left( s + \frac{1}{n} \right)^2 &= s^2 + \frac{2s}{n} + \frac{1}{n^2}
+                \end{align*}
+            \end{notebox}
+            $\ldots$ let $n \in \N$ such that $n > \max\left\{ \frac{1}{2s}, \frac{4s}{2-s^2} \right\}$. Then $\frac{1}{n} < 2s$ and $s^2 + \frac{4s}{n} < 2$. So:
+            \begin{align*}
+                \left( s + \frac{1}{n} \right)^2
+                &= s^2 + \frac{2s}{n} + \frac{1}{n^2} \\
+                &< s^2 + \frac{2s}{n} + \frac{2s}{n} \\
+                &= s^2 + \frac{4s}{n} < 2
+            \end{align*}
+            That is, $s + \frac{1}{n} \in A$. This contradicts $s$ being an upper bound for $A$.
+        \end{enumerate}
+        By trichotomy, $s^2 = 2$.
+    \end{proof}
+\end{thmbox}
+
+\begin{thmbox}{Nested Interval Property}{nested-interval-property}
+    Suppose that for each $n \in \N$, $a_n, b_n \in \R$ with $a_n \leq b_n$, and $a_n \leq a_{n+1} \leq b_{n+1} \leq b_n$ for all $n \in \N$. Then $\bigcap_{n=1}^\infty [ a_n, b_n ] \neq \emptyset$.
+    \tcblower
+    \textbf{Intuition:} We can move the two borders of an open interval closer and closer to each other, and it won't be empty.
+    \begin{proof}
+        Note that $a_n \leq a_{n+1} \leq a_{n+2} \leq \ldots$ and $\ldots \leq b_{n+2} \leq b_{n+1} \leq b_n$. If $k \leq n$, then $a_k \leq a_n \leq b_n$.
+        \begin{itemize}[noitemsep]
+            \item If $k \leq n$, then $a_k \leq a_n \leq b_n$.
+            \item If $k \geq n$, then $a_k \leq b_k \leq b_n$.
+        \end{itemize}
+        That is, $a_k \leq b_n$ for all $k_n \in \N$. Let $A \coloneq \{ a_k : k \in \N\}$. Then $A$ is bounded above, for example by $b_1$. Also, $A$ is not empty. By completeness, $A$ has a supremum. Let $s \coloneq \sup A$. Note that since $s$ is an upper bound for $A$, then $a_n \leq \sup A$ for all $n \in \N$. Also note that $\sup A$ is the least upper bound for $A$, so $\sup A \leq b_n$ for all $n \in \N$. Thus, $a_n \leq \sup A \leq b_n$ for all $n \in \N$, so $\sup A \in [ a_n, b_n ]$ for all $n \in \N$. Thus, $\sup A \in \bigcap_{n=1}^\infty [ a_n, b_n ]$, so it is not empty.
+    \end{proof}
+\end{thmbox}
+
+The nested interval property is actually false for open intervals!
+\[ \forall (x \in (0,1)) \exists (n \in \N) (\sfrac{1}{n} < x \implies x \notin (0, \sfrac{1}{n}) ) \]

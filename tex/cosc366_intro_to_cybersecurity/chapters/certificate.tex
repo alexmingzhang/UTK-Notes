@@ -1,35 +1,48 @@
 \chapter{Certificate Management and Use Cases}
 
-\dfntxt{Key management} is the foundation of most secure protocols. Managing them across their lifetime is critical to a secure system.
+Although we can create theoretically secure protocols for storing and sending information, we can't be sure that the users don't mess something up. For example, managing one's public and private keys can be error-prone, especially in the hands of a non-tech-savvy user. While we try to make these secure protocols as fool-proof as possible, there will always be room for error.
+
+\section{Introduction}
+
+\begin{dfnbox}{Key Management}{}
+    \dfntxt{Key management} is the collection of mechanisms and protocols for safely and conveniently distributing such keys—includes managing not only session keys, but public keys (as discussed herein) and their corresponding long-term private keys.
+\end{dfnbox}
+
+Proper key management is the foundation of most secure protocols. Managing them across their lifetime is critical to a secure system. A key's ``lifecycle'' includes:
+
 \begin{enumerate}[noitemsep]
     \item Creating a cryptographic key
     \item Storing a key in a secure place
     \item Replacing an old or stolen key
     \item Destroying unused keys in a safe way
 \end{enumerate}
-We must also ensure their correct usage (e.g. dissemination, verification, synchronization, recovery).
+We must also ensure their correct usage (e.g. dissemination, verification, synchronization, recovery). We address these problems using different key infrastructures.
 
-We address these problems using different key infrastructures.
-
-\begin{dfnbox}{Public Key Infrastructure (PKI)}
+\begin{dfnbox}{Public Key Infrastructure (PKI)}{}
     A \dfntxt{public key infrastructure} is a collection technologies and processes for managing public keys. It also manages their associated private keys and dictates how keys should be used by applications
 \end{dfnbox}
 
-\todo[inline]{Structure of PKI from slides}
+There are four components in a PKI:
+\begin{enumerate}[noitemsep]
+    \item Data structures
+    \item Procedures and protocols for key management
+    \item Architectural and backend components
+    \item Cryptographic toolkits and key management software
+\end{enumerate}
 
-PKI is an incredibly general idea that is applicable to several kinds of systems, such as web PKI, email PKI, code signing PKI. Often, there is significant overlap in their design.
+PKI is an incredibly general idea that is applicable to several kinds of systems. Often, there is significant overlap in their design. In terms of the X509 specification, there are several PKI instantiations including web PKI, email S/MIME PKI, and code signing PKI. There are also per-application PKI, including email PGP PKI and email identity-based cryptography PKI.
 
-\section{Web PKI}
+\section{X509 Certificates}
 The core data structure in web PKI is the certificate.
 
 \begin{dfnbox}{Public-Key Certificate, Certificate Authority (CA)}{}
     A \dfntxt{public-key certificate} associates a public key with a specific owner. In this context, the owner is referred to as the \dfntxt{subject}, and the association is referred to as a \dfntxt{binding}. Crucially, the certificate is digitally signed by a \dfntxt{certificate authority}---a trusted verifier of bindings between subjects and public keys.
 \end{dfnbox}
 
- Certificates may also be self-signed, but this signature cannot be used to verify the binding.
+Certificates may also be self-signed, but this signature cannot be used to verify the binding. This is sometimes used to just conform to the PKI spec.
 
-Certificates contain a ``signed portion'' which consist of:
-\begin{itemize}
+Certificates contain several name-value pairs called \dfntxt{fields}. The ``signed portion'' of the fields includes:
+\begin{itemize}[noitemsep]
     \item \dfntxt{Version:} certificate definition version (highly standardized, usually x509 version 3)
     \item \dfntxt{Serial Number:} uniquely identifies certificates
     \item \dfntxt{Issuer:} name of the CA signing the certificate
@@ -38,8 +51,8 @@ Certificates contain a ``signed portion'' which consist of:
     \item \dfntxt{Subject Public Key Info:} the public key and its relevant information
     \item \dfntxt{Extensions:} other optional/miscellaneous info that can add specific functionality
 \end{itemize}
-There are two unsigned fields:
-\begin{itemize}
+There are two unsigned fields, which include:
+\begin{itemize}[noitemsep]
     \item \dfntxt{Signature Algorithm:} algorithm and its parameters
     \item \dfntxt{Signature:} digital signature of the certificate from the CA
 \end{itemize}
@@ -53,7 +66,7 @@ The subject and issuer fields are of type \texttt{name}, which is a dictionary o
 \end{itemize}
 Collectively, these components are referred to as a \dfntxt{distinguished name}.
 
-Common extensions include:
+Extension fields are application-specific attributes. Common extensions include:
 \begin{itemize}
     \item \texttt{keyUsage}: specifies what the key is used for (e.g. signatures, encryption, key agreement, CRL signatures, etc.)
     \item \texttt{extendedKeyUsage}: even more specification for usage (e.g. code signing, TLS server authentication, etc.)
@@ -62,12 +75,14 @@ Common extensions include:
 
 \begin{tecbox}{Acquiring a Certificate from a CA}{}
     \begin{enumerate}
-        \item An entity generates a public-private key pair
-        \item The entity sends a \dfntxt{certificate request} to a CA
-        \item The CA verifies the certificate request
-        \item The CA provides a signature of the certificate
+        \item An entity generates a public-private key pair.
+        \item The entity sends a \dfntxt{certificate request} to a CA which includes all the fields of the certificate that will be signed.
+        \item The CA verifies the certificate request.
+        \item The CA provides a signature of the certificate.
     \end{enumerate}
 \end{tecbox}
+
+Before the CA issues the signed certificate, they must verify the certificate request by the following procedure:
 
 \begin{tecbox}{Verifiying a Certificate Request}{}
     \begin{enumerate}
@@ -77,7 +92,9 @@ Common extensions include:
     \end{enumerate}
 \end{tecbox}
 
-This only verifies that a binding is legitimate, not that the subject is a trusted entity!
+\begin{notebox}
+    The above process only verifies that the binding is legitimate, not that the subject is a trusted entity!
+\end{notebox}
 
 \begin{tecbox}{Validating a Certificate}{}
     \begin{enumerate}

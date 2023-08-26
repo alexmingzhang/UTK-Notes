@@ -1,13 +1,13 @@
 \chapter{Logic and Proofs}
 % Logic is the backbone of all formal mathematics. When building a logically sound model of mathematics, we start with a small collection of axioms. We then work with those axioms to deduce other logically sound statements, reaffirming what we already knew and discovering new ideas along the way.
 
-Formal logic is the foundation of mathematics. It enables us to construct logically consistent models by starting with a set of axioms and systematically deducing new statements from them. This process not only helps us to prove known results but also to uncover new mathematical concepts and theorems.
+Formal logic is the foundation of mathematics. It allows us to construct a logically consistent framework for mathematics, starting with a small set of assumed statements, then systematically deducing new statements from them. This process not only helps us to prove known results, but it also helps us find and prove new ideas.
 
 \section{Basic Logic}
 \begin{dfnbox}{Statement}{}
     A \dfntxt{statement} is a claim that is either true or false.
     \tcblower
-    \[ p : \text{some claim} \]
+    \[ p : \text{The sky is blue.} \]
 \end{dfnbox}
 
 We usually denote statements with a letter like $p$. For example, we can write ``$p: x > 2$'', which means $p$ represents the statement ``$x$ is greater than $2$''. Throughout this chapter, we will use $p$ and $q$ to represent arbitrary statements.
@@ -54,13 +54,21 @@ We usually denote statements with a letter like $p$. For example, we can write `
     \[ \neg p \]
 \end{dfnbox}
 
-\begin{dfnbox}{Implication}{}
-    An \dfntxt{implication} ``$p$ implies $q$'' states ``if $p$ is true, then $q$ is true''.
+For example, if $p$ denotes the statement ``the sky is blue,'' then $\neg p$ denotes the statement ``the sky is \textbf{not} blue.'' Notice that $\neg p$ doesn't say that the sky is any specific color like red or green; it only says that the color is not blue.
+
+\begin{dfnbox}{Implication, Hypothesis, Conclusion}{}
+    An \dfntxt{implication} ``$p$ implies $q$'' states ``if $p$ is true, then $q$ is true.'' We call $p$ the \dfntxt{hypothesis} and $q$ the \dfntxt{conclusion}.
     \tcblower
     \[ p \implies q \]
 \end{dfnbox}
 
-In the implication $p \implies q$, we call $p$ the \dfntxt{hypothesis} and $q$ the \dfntxt{conclusion}. If the hypothesis is false to begin with, then the implication is not really meaningful. Instead of assigning those kinds of implications no truth value, we simply consider them true by convention. These kinds of truths are called \dfntxt{vacuous truths}.
+If the hypothesis of an implication is false to begin with, then the implication is not really meaningful. Instead of assigning those kinds of implications no truth value, we simply consider them true by convention. These kinds of truths are called \dfntxt{vacuous truths}.
+
+\begin{notebox}
+    Does this mean a false statement can imply any other statement, regardless of its truth value? The answer is yes, and it is not as problematic as one may think. This is because the concept of implication in logic isn't about a causal or chronological connection, but rather about the consistency of statements. In the realm of logic, if a false statement is said to imply another statement, it doesn't create any inconsistency, since the initial condition is never met. This principle is known as ``ex falso quodlibet'' or ``from falsehood, anything follows.'' Understanding this allows us to maintain a consistent framework in logic, despite the seemingly counterintuitive nature of vacuous truths.
+\end{notebox}
+
+To reiterate, let's consider the truth table for logical implications and some simple examples:
 
 \begin{exbox}{Truth Table of Implication}{}
     \begin{center}\begin{tabular}{c | c || c}
@@ -72,28 +80,28 @@ In the implication $p \implies q$, we call $p$ the \dfntxt{hypothesis} and $q$ t
     \end{tabular}\end{center}
 \end{exbox}
 
-\begin{exbox}{Simple Statements}{}
-    Let $p : x > 2$ and $q : x^2 > 1$. Consider the following statements:
+\begin{exbox}{Simple Logical Implications}{}
+    Let $p : x > 2$ and $q : x^2 > 1$. Let's figure out (without proof) whether the following statements are true or false:
     \begin{itemize}
-        \item ``For all real numbers $x$, $p \implies q$''
+        \item ``For every real number $x$, $p \implies q$.''
 
-        \textbf{True.} If $x > 2$, then $x^2 > 1$.\footnote{This is normally where we would rigorously prove such a statement, but we will omit this for now.}
+        In English, this statement reads, ``for every real number $x$, if $x > 2$, then $x^2 > 1$.'' This statement is \textbf{true}. Since $x > 2$, then $x^2$ can only be bigger than $2^2$ which equals $4$.
 
         \item ``For all real numbers $x$, $q \implies p$''
 
-        \textbf{False.} Consider $x = 1.1$. Then $x^2 = 1.21 > 1$, but $x = 1.1 < 2$.
+        In English, this statement reads, ``for every real number $x$, if $x^2 > 1$, then $x > 2$.'' This statement is \textbf{false}. What if $x = 1.1$? Then $x^2 = 1.21 > 1$, but $x = 1.1 < 2$.
     \end{itemize}
 \end{exbox}
 
 \begin{dfnbox}{Logical Equivalence}{equiv}
-    $p$ and $q$ are \dfntxt{logically equivalent} if $p \implies q$ and $q \implies p$.
+    Two statements $p$ and $q$ are \dfntxt{logically equivalent} if $p \implies q$ and $q \implies p$.
     \tcblower
     \[ p \iff q \]
 \end{dfnbox}
 
-In other words, $p \iff q$ means that $p$ and $q$ share the same truth value. Either $p$ and $q$ are \textbf{always both true}, or $p$ and $q$ are \textbf{always both false}. Logical equivalence says nothing about the truth of $p$ and $q$ themselves.
+In other words, $p \iff q$ means that $p$ and $q$ share the same truth value. Either $p$ and $q$ are \textbf{both true}, or $p$ and $q$ are \textbf{both false}. Logical equivalence says nothing about the individual truth values of $p$ nor $q$.
 
-We can also say ``$p$ if and only if $q$'' or ``$p$ iff $q$'' to denote logical equivalence.
+In English, logical equivalence can be expressed as ``$p$ if and only if $q$.'' Some people abbreviate this as ``$p$ iff $q$.''
 
 \begin{exbox}{Truth Table of Logical Equivalence}{}
     \begin{center}\begin{tabular}{c | c || c}
@@ -106,10 +114,10 @@ We can also say ``$p$ if and only if $q$'' or ``$p$ iff $q$'' to denote logical 
 \end{exbox}
 
 \begin{dfnbox}{Converse}{converse}
-    Given the implication $p \implies q$, its \dfntxt{converse} statement is $q \implies p$.
+    Given an implication $p \implies q$, its \dfntxt{converse} statement is $q \implies p$.
 \end{dfnbox}
 
-It's important to note that an implication and its converse have no intrinsic equivalence.
+It's important to note that an implication and its converse have no intrinsic equivalence. That is, if $p$ implies $q$, it's not generally true to say that $q$ also implies $p$---unless $p$ and $q$ are logically equivalent.
 
 
 \begin{exbox}{Truth Table of Converse}{}
@@ -141,16 +149,16 @@ Unlike the converse, an implication and its contrapositive are logically equival
 As we can see, no matter what the truth values of the hypothesis and conclusion are, an implication and its contrapositive always have the same truth values.
 
 \begin{notebox}
-    When constructing a truth table, we must include \textbf{all} intermediate statements, not just the final statement.
+    It's important to note that when we construct a truth table, it's best practice to include all the intermediate statements, not just the final statement.
 \end{notebox}
 
 % TODO: add truth table for contrapositive
-
+\todo[inline]{TODO: Logical quantifiers $\forall$ and $\exists$}
 
 \section{Proofs and Proof Techniques}
 While truth tables are a useful tool for evaluating simple statements, they quickly become impractical when dealing with more complex propositions. Moreover, they do not offer insights into the reasoning behind such statements. In contrast, proofs can provide us with a deeper understanding of logical relationships and help us reason about complex statements.
 
-In particular, we often need to prove implications of the form $p \implies q$, where the truth of $p$ guarantees the truth of $q$. To do so, we can use a variety of proof techniques:
+We often need to prove implications of the form $p \implies q$, where the truth of $p$ guarantees the truth of $q$. In this chapter, we will break down three main techniques for proving such an implication. Here's a quick overview:
 \begin{enumerate}
     \item \dfntxt{Direct Proof:} Assume $p$ is true, then reason that $q$ must be true as well.
     \item \dfntxt{Proof by Contradiction:} Assume both $p$ and $\neg q$ are true, then logically derive some contradiction.
@@ -167,6 +175,8 @@ However, it is worth noting that an indirect proof may be easier to find than a 
 
 %It's hard to decide which proof technique is easiest for any given problem. Direct proofs are often more ``enlightening'', but it can be difficult to find the appropriate logic to reach the conclusion. It may be easier to try proof by contradiction or contrapositive.
 
+\subsection*{Proof by Contradiction}
+
 \begin{tecbox}{Proof by Contradiction}{contradiction}
     To prove $p \implies q$ by contradiction, we carry out the following steps:
     \begin{enumerate}
@@ -176,7 +186,24 @@ However, it is worth noting that an indirect proof may be easier to find than a 
     \end{enumerate}
 \end{tecbox}
 
-In terms of logic notation, proof by contradiction follows:
+For a contrived example (courtesy of GPT-4), let's prove the fact that pigs cannot fly. This is a rather simplified example, but it effectively illustrates the process of proof by contradiction.
+
+\begin{exbox}{Pigs Can't Fly (Proof by Contradiction)}{}
+    Prove that if an animal is a pig, then that animal cannot fly.
+    \tcblower
+    We have two statements connected by logical implication. For convenience, we will:
+    \begin{itemize}
+        \item use $p$ to denote the statement ``an animal is a pig,'' and
+        \item use $q$ to denote the statement ``that animal cannot fly.''
+    \end{itemize}
+    \begin{proof}
+        We assume that $p$ is true (an animal is a pig), and for the sake of contradiction, suppose $\neg q$ is also true (it can fly). This leads us to a situation where we have a flying pig. However, we know from established biological and physiological facts that pigs, as a species, do not have the capability to fly. This contradicts our known reality.
+        Does this mean that the world we know has been a contradiction, and our whole lives heretofore have been lies? The answer is no; we must have made an erroneous assumption.
+        Thus, we conclude that our supposition that $\neg q$ was true is actually wrong! Therefore, $q$ must be true when $p$ is true. That is, if an animal is a pig, then that animal cannot fly.
+    \end{proof}
+\end{exbox}
+
+In terms of logic notation, proof by contradiction can be expressed as such:
 \[ \left[ \left( p \land (\neg q) \right) \implies \text{Contradiction} \right] \implies \left[ p \implies q \right]\]
 
 \begin{exbox}{Truth Table of \nameref{tec:contradiction}}{}
@@ -192,26 +219,39 @@ In terms of logic notation, proof by contradiction follows:
 By the above truth table, we can safely assume the following logical equivalence:
 \[ (p \implies q) \iff \neg \left[ p \land (\neg q) \right] \]
 
+\subsection*{Proof by Contrapositive}
+
 \begin{tecbox}{Proof by Contrapositive}{}
     To prove $p \implies q$ by contrapositive, we carry out the following steps:
     \begin{enumerate}
         \item Assume $\neg q$ is true.
-        \item Directly prove that $\neg p$ is true.
+        \item Directly reason that $\neg p$ is true.
     \end{enumerate}
 \end{tecbox}
 
-In terms of logic notation, proof by contrapositive follows:
-\[ (\neg q \implies \neg p) \iff (p \implies q) \]
-We can actually prove this using proof by contradiction!
-\begin{exbox}{Logical Equivalence of Contrapositive}{}
-    Given statements $p$ and $q$, $p \implies q$ and $\neg q \implies \neg p$ are equivalent.
+Let's revisit the idea that pigs can't fly, this time proving it by contrapositive.
+
+\begin{exbox}{Pigs Can't Fly (Proof by Contrapositive)}{}
+    Prove that if an animal is a pig, then that animal cannot fly, denoted as $p \implies q$.
     \tcblower
     \begin{proof}
-        Assume $p \implies q$. To prove $\neg q \implies \neg p$, we can suppose for contradiction that $\neg q$ and $p$ are both true. But $p \implies q$, so $q$ is true which contradicts $\neg q$. Hence, the assumption that $p$ is true was incorrect. Thus, $\neg q \implies \neg p$.
-
-        Assume $\neg q \implies \neg p$. From above, we have $\neg ( \neg p ) \implies \neg (\neg q)$, so $p \implies q$.
+        We assume that $\neg q$ holds (an animal can fly). Since we know that pigs are incapable of flight due to their biology and physiology, any animal capable of flight must belong to a different species. Therefore, we can conclude $\neg p$ holds (it isn't a pig).
     \end{proof}
 \end{exbox}
+
+
+In terms of logic notation, proof by contrapositive can be expressed as:
+\[ (\neg q \implies \neg p) \iff (p \implies q) \]
+Although we can simply use a truth table to reveal the logical equivalence here, let's instead give a formal proof of the equivalence. Notice that, since this is a logical equivalence, there are really two implications we must prove: one going the ``forward'' direction $(\implies)$, and one going the ``backwards'' or converse direction $(\impliedby)$. 
+\begin{lembox}{Logical Equivalence of Contrapositive}{}
+    Given statements $p$ and $q$, $p \implies q$ if and only if $\neg q \implies \neg p$.
+    \tcblower
+    \begin{proof}
+        First, suppose that $p \implies q$. To prove $\neg q \implies \neg p$, we can suppose for contradiction that $\neg q$ and $p$ are both true. But $p \implies q$, so $q$ is true which contradicts $\neg q$. Hence, the assumption that $p$ is true was incorrect. Thus, $\neg q \implies \neg p$.
+
+        Conversely, suppose that $\neg q \implies \neg p$. From above, we have $\neg ( \neg p ) \implies \neg (\neg q)$, so $p \implies q$.
+    \end{proof}
+\end{lembox}
 
 \begin{exbox}{Proving Simple Logic Statements}{}
     Let $p$, $q$, and $r$ be arbitrary statements. Prove that $\left[ p \implies (q \lor r) \right] \iff \left[ (p \land \neg q) \implies r \right]$.

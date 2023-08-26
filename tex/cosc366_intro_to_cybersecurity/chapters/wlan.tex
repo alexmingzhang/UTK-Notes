@@ -1,13 +1,13 @@
 \chapter{WLAN}
 \section{Introduction}
 \begin{dfnbox}{Wireless Local Area Network (WLAN)}{}
-    \dfntxt{WLAN}
+    \dfntxt{WLAN} is simply a network that can be accessed wirelessly.
 \end{dfnbox}
 
 WLANs are accessed using the Wi-Fi\footnote{Wi-Fi isn't an acronym, but rather a reference to the IEEE 802.11 standard} protocol. Wi-Fi itself is a data link layer protocol like ethernet (layer 2).
 
 \paragraph{Components}
-The mobile station (STA) connects to a network using Wi-Fi. The STA connects to the network by way of an \dfntxt{access point}, often part of the router. The access point is identified by a \dfntxt{service set identifier} (SSID) which appears as the network name. These are not intended to be secret.
+The mobile station (STA) connects to a network using Wi-Fi. The STA connects to the network by way of an \dfntxt{access point (AP)}, often part of the router. The access point is identified by a \dfntxt{service set identifier} (SSID) which we know as the network name. These are not intended to be secret.
 
 \paragraph{Connecting to an Access Point}
 In this context, we can think of the mobile station (STA) as the ``client'' and the access point as the ``server''.
@@ -18,12 +18,13 @@ In this context, we can think of the mobile station (STA) as the ``client'' and 
     \item High-level authentication: Authenticates the STA to the PA. It may also authenticate the AP to the STA. This step is omitted for open networks.
 \end{enumerate}
 
-\paragraph{Frame Types}
-\begin{itemize}
+\paragraph{Frames and Frame Types}
+In the context of Wi-Fi, \dfntxt{frames} are units of data transmission or packets. They carry information necessary for devices on the network to understand data being sent and how to process it. Frames are divided into three distinct types:
+\begin{enumerate}
     \item \dfntxt{Data Frames} carry upper-layer protocol data, similar to an ethernet frame.
     \item \dfntxt{Management Frames} ensure connections maintain basic service guarantees. They handle new connections between STA and AP, handle handovers between APs as STAs physically move, and handle disconnections.
     \item \dfntxt{Control frames} communicate data and management frames and are the lowest-layer frames
-\end{itemize}
+\end{enumerate}
 
 \section{WLAN Threats}
 WLAN has many of the same vulnerabilities as a physical LAN. However, it is more vulnerable as an attacker does not need physical access to the network. They would only need to be within proximity and attack devices. The issue is further exacerbated as Wi-Fi is a Broadcast Protocol---any device within proximity can receive, record, and inject Wi-Fi packets. Modern Wi-Fi supports beam forming (one-way communication), but this is only designed as an efficiency benefit and should not be relied on for security.
@@ -52,14 +53,10 @@ War driving involves scanning radio channels for in-range wireless networks. The
     \item \dfntxt{Manipulating packets:} It's possible to override a client's packet with an attacker's packet if the attacker can generate a stronger signal. It is also easy to perform a denial of service to the WLAN.
 \end{itemize}
 
-\paragraph{Connecting to AP}
-The authentication server () \todo{dothis}
-
-
 \paragraph{Open Networks}
-Open networks omit any form of authentication, allowing for any device to connect. As such, packets are neither encrypted nor authenticated. Any confidential communication over an open network has to rely on end-to-end encryption such as TLS. In addition, open networks are highly susceptible to rogue AP attacks.
+Open networks omit any form of authentication, allowing for any device to connect. As such, packets are neither encrypted nor authenticated. Any confidential communication over an open network has to rely on end-to-end encryption such as TLS. Consequently, open networks are highly susceptible to rogue AP attacks.
 
-Some open networks authenticate users by a login page (e.g. hotel Wi-Fi). However, this happens over the HTTP protocol and is not part of the Wi-Fi protocol itself. Packets are still neither encrypted nor authenticated. This kind of authentication is also susceptible to session hijacking.
+Some open networks authenticate users by a login page (e.g. hotel Wi-Fi). However, this happens over the HTTP protocol and is not part of the Wi-Fi protocol itself. Packets are still neither encrypted nor authenticated. This kind of authentication is susceptible to session hijacking.
 
 Note that, even with end-to-end encryption, the DNS protocol is still plaintext and thus highly vulnerable.
 
@@ -67,9 +64,9 @@ Note that, even with end-to-end encryption, the DNS protocol is still plaintext 
 
 WEP verifies integrity by using CRC-32 checksum. This protocol is highly susceptible to collisions, so it isn't a cryptographically secure protocol.
 
-WEP uses Open System Authentication (OSA) which allows anyone to \todo{finish}
+WEP uses Open System Authentication (OSA) which allows anyone to connect to the system. A random RC4 key is assigned to each connection.
 
-A pre-shared key between the STA and AP may be used for authentication (usually just a password). RC4 key is based on the pre-shared key, which is the same for all clients. This renders it less secure than just using OSA!
+A pre-shared key (PSK) between the STA and AP may be used for authentication (usually just a password). The RC4 key is based on the pre-shared key, which is the same for all clients. This renders it less secure than just using OSA!
 
 \begin{notebox}
     Ultimately, WEP is extremely insecure and should not be used.
@@ -77,9 +74,11 @@ A pre-shared key between the STA and AP may be used for authentication (usually 
 
 \section{EAP, Radius, WPA3}
 
-\begin{dfnbox}{Authentication Server (AS)}{}
+% \begin{dfnbox}{Authentication Server (AS)}{}
 
-\end{dfnbox}
+% \end{dfnbox}
+
+\paragraph{Authentication Server (AS)} To improve security, we can move high-level authentication to its own service. The AS can be integrated into the access point, or it can be a separate RADIUS server.
 
 \begin{dfnbox}{Extensible Authentication Protocol (AEP)}{}
     \dfntxt{EAP} provides a framework for implementing Wi-Fi authentication between STA and AP, and between AP and the AS. It does not specify how authentication happens, rather only facilitates how the communication happens between devices.
@@ -99,7 +98,7 @@ EAP can be used to implement many authentication protocols. It is now considered
 For example, Eduroam can use a specific university's RADIUS server to implement arbitrary authentication methods, and decouple authentication from the access points themselves.
 
 \begin{dfnbox}{Wi-Fi Protected Access (WPA)}{}
-    WPA integrates PEAP and RADIUS to create a protocol more secure than WEP, by:
+    WPA integrates AS, PEAP, and RADIUS to create a protocol more secure than WEP by:
     \begin{enumerate}
         \item significantly increasing the key length,
         \item giving each packet a different key (called \dfntxt{key rotation}), and
@@ -107,4 +106,11 @@ For example, Eduroam can use a specific university's RADIUS server to implement 
     \end{enumerate}
 \end{dfnbox}
 
-\todo[inline]{Explain why WPA1 and WPA2 are broken, and how good WPA3 is}
+% \todo[inline]{Explain why WPA1 and WPA2 are broken, and how good WPA3 is}
+
+It's important to note that WPA1 and WPA2 are broken protocols, and only WPA3 should be used. To see why, let's break down the three protocols:
+\begin{enumerate}
+    \item WPA1 uses the RC4 stream cipher for confidentiality with a 128-bit key. The key is derived using the Temporal Key Integrity Protocol (TKIP) and is changed for every packet. It uses a MAC for integrity. However, flaws were discovered due to WPA's backwards compatible design.
+    \item WPA2 uses the AES stream cipher in CTR mode for confidentiality. It uses AES CBC-MAC for integrity. However, it is partially broken by the KRACK attack.
+    \item WPA3 uses AES in GCM mode for confidentiality with a 192-bit key. It uses an HMAC with SHA-384 for integrity. Simultaneous Authentication of Equals (SAI) is used for password authentication, which provides more security against brute force attacks than pre-shared key exchange (PSK). In addition, SAI provides forward security, and WPA3 protects management frames.
+\end{enumerate}
