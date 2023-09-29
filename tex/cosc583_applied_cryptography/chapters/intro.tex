@@ -204,7 +204,20 @@ There are generally two types of random number generators. The first is \dfntxt{
     A \dfntxt{true random number generator} observes randomness from a physical system or process to generate random numbers.
 \end{dfnbox}
 
-A pitfall of this mechanism is that we may sample from a flawed source of randomness. For example, it may be biased, meaning whether it outputs a $0$ or $1$ is not a 50/50 split. In addition, it may be correlated, meaning the probability of emitting a $0$ or $1$ depends on what was previously emitted. Luckily, it's not hard to fix these problems in a process called de-skewing. One possibility is passing bits through a cryptographic hash function.
+A pitfall of this mechanism is that we may sample from a flawed source of randomness. For example, it may be biased, meaning whether it outputs a $0$ or $1$ is not a 50/50 split. In addition, it may be correlated, meaning the probability of emitting a $0$ or $1$ depends on what was previously emitted.
+
+\begin{notebox}
+    Using a flawed source of randomness for determining keys may narrow down the key space to something searchable by an adversary.
+\end{notebox}
+
+Luckily, it's not hard to fix these problems in a process called \dfntxt{randomness extracting} or de-skewing. That is, we can take input from a weak random source and produce unbiased and/or uncorrelated output. One example of a simple random extractor is the \dfntxt{Von Neumann extractor}, which:
+\begin{itemize}
+    \item Takes a pair of bits as input
+    \item If the bits match, output nothing
+    \item Otherwise, output the first bit
+\end{itemize}
+Another example of extracting randomness is putting the bits through a cryptographic hash algorithm (called a \dfntxt{cryptographic hash extractor}). Although we cannot prove they are the ``ideal'' de-skewing technique, it is one of the best and most commonly used methods of de-skewing.
+
 
 Common sources of physical randomness include radioactive decay, atmospheric noise, manufacturing differences, and even lava lamps. Common sources of software randomness include the system clock, user inputs, system load, and network statistics. This is often limited by the fact that we need highly-precise measuring equipment to pick up on some of these sources. Moreover, the data itself may be skewed, causing a long and slow de-skewing process.
 

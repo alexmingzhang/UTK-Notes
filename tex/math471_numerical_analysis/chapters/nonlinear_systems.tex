@@ -1,0 +1,317 @@
+\chapter{Non-linear Equations and Systems}
+
+\section{Roots and Fixed Points}
+
+\begin{dfnbox}{Root}{}
+    Given a function $f : [a,b] \to \R$, we say that $x^* \in [a,b]$ is a \dfntxt{root} of $f$ if $f(x^*) = 0$.
+\end{dfnbox}
+
+Intuitively, we can think of roots as places where the graphed function crosses the $x$-axis or $y = 0$ line. A common question in mathematics is finding the root of a given function.
+
+\todo[inline]{ill-condition well-condition example}
+
+\begin{dfnbox}{Fixed point}{}
+    Given $g : [a,b] \to \R$, we say $p \in [a,b]$ is a \dfntxt{fixed point} of $g$ if $g(p) = p$.
+\end{dfnbox}
+
+Intuitively, we can think of fixed points as places where the graphed function crosses the $y=x$ line (often called a \dfntxt{bisecting} line).
+
+Root problems and fixed point problems are related in the sense that one can be ``converted'' into the other.
+
+\begin{exbox}{Root problem to fixed point problem}{}
+    For example, we may want to find the root(s) of the function $f(x) = x^2 + 2x$. We would solve for $f(x) = 0$, which means we want to solve the equation $x^2 + 2x = 0$ for $x$. We can convert this to a fixed point problem in several ways, including:
+    \begin{enumerate}
+        \item $f(x) = 0 \iff x + f(x) = x$ 
+        \item $f(x) = 0 \iff g(x) = x - \frac{f(x)}{f\prime(x)}$
+        \item This is the same as finding the fixed-point(s) of $g(x) = -\sfrac{x^2}{2}$.
+    \end{enumerate}
+\end{exbox}
+
+\begin{exbox}{Root problem}{}
+    $f(x) = \sqrt{x^2 + x - \cos x} + \sin x$.
+    \tcblower
+    Finding a root of $f$ is equivalent to finding a fixed point of which function $g$?
+    \todo[inline]{Example from notes}
+\end{exbox}
+
+To solve the root problem, there are several methods, including:
+\begin{itemize}
+    \item Bisection
+    \item Newton's method
+    \item Variants of Newton's method
+\end{itemize}
+
+
+\begin{tecbox}{Calculating midpoint in fixed-precision computing}{}
+    In fixed-precision computing, we calculate the midpoint $m$ between two numbers $a$ and $b$ where $a < b$ by:
+    \[ m \coloneq a + \frac{b - a}{2} \]
+\end{tecbox}
+
+\todo[inline]{Why (a+b)/2 is bad for fixed-precision computing}
+
+\begin{tecbox}{Root problem: bisection method}{}
+    This method is analogous to binary search. Assume $f : [a,b] \to \R$ has a root in some interval $[a,b]$. For simplicity, we will assume that there is only one root.
+
+    \todo[inline]{todo: rest of this}
+
+\end{tecbox}
+
+As with any iterative method, we need some criteria to know when to start and stop the method. We may stop the method once the interval reaches some small width.
+
+Using IEEE-754 floating points, each iteration of the bisection method will yield one more bit of accuracy. Thus, for single-precision floats, we only need 22 iterations to achieve full accuracy. For double-precision floats, we only need 52 iterations.
+
+\section{Newton's Method}
+
+\todo[inline]{Notes on paper}
+
+\begin{dfnbox}{Multiplicity of a root}{}
+    Let $f : [a,b] \to \R$ be a function, and let $r \in [a,b]$ be a root of $f$. We say $r$ is a \dfntxt{root of multiplicity} $m \in \Z^+$ of $f$ if:
+    \[ f(r) = \cdots = f^{(m-1)}(r) = 0 \quad \text{but} \quad f^{(m)}(r) \neq 0 \]
+\end{dfnbox}
+
+For example:
+\begin{itemize}
+    \item If $f\prime(r) \neq 0$, then $r$ is a \dfntxt{simple root} or \dfntxt{root of multiplicity} $1$.
+    \item If $f\prime(r) = 0$ and $f \dprime(r) \neq 0$, then $r$ is a \dfntxt{root of multiplicity} $2$.
+\end{itemize}
+
+Suppose $r$ is a root of multiplicity $m$ of $f$. Then there exists some function $q$ such that:
+\[ f(x) = (x - r)^m q(x) \quad \text{with} \quad q(r) \neq 0 \]
+
+Newton's method only converges quickly if (1) we start with a guess ``close enough'' to the actual root, and (2) we have $f\prime(r) \neq 0$. If $f(r) = f\prime(r) = 0$, then our convergence is slow. This can be fixed by modifying to:
+
+\[ x_{k+1} = x_k - m \frac{f(x_k)}{f\prime(x_k)} \]
+
+However, it is expensive to compute the function, and it is especially expensive to compute the derivative. Worse yet, there might not be a computable derivative function. For example, $f$ itself may be unknown to us, perhaps operating purely on empirical data. Without access to the underlying function, there is no good way to compute the derivative.
+
+The problem is further exacerbated in the case of vector functions in several variables. In this case, $f\prime(x)$ is an $n \times n$ matrix of partial derivatives, called a \dfntxt{Jacobian matrix}. We may have:
+\begin{align*}
+    J(x) = \begin{bmatrix}
+        \pdv{f_1}{x_1} & \pdv{f_1}{x_2} & \ldots & \pdv{f_1}{x_n} \\
+        \vdots \\
+        \pdv{f_n}{x_1} & \pdv{f_n}{x_2} & \ldots & \pdv{f_n}{x_n}
+    \end{bmatrix}
+\end{align*}
+How can we replace $f\prime(x_k)$ by something ``cheaper'' and/or more available? This brings us to the secant method. Recall that the derivative is defined by the following limit:
+
+\[ f\prime(x_k) = \lim_{x \to x_k} \frac{f(x) - f(x_k)}{x - x_k} \]
+
+The limit is expensive and sometimes infeasible to compute. We can approximate $f\prime(x_k)$ by simply choosing some $\zeta$ close to $x_k$:
+
+\[ f\prime(x_k) \approx \frac{f(\zeta) - f(x_k)}{\zeta - x_k} \]
+
+A common and good choice for $\zeta$ is simply $x_{k-1}$, the previous term in Newton's method.
+
+\begin{tecbox}{Secant method}{}
+    Taking the approximation $ f\prime(x_k) \approx \frac{f(x_{k-1}) - f(x_k)}{x_{k-1} - x_k}$, we have:
+
+    \[ \begin{cases}
+        x_{k+1} = x_k - \frac{f(x_k)}{\frac{f(x_{k-1}) - f(x_k)}{x_{k-1} - x_k}}, & k \geq 1 \\
+        x_0, x_1\ \text{given.}
+    \end{cases}\]
+
+    Note that whereas Newton's method requires one starting value $x_0$, the secant method requires two starting values $x_0$ and $x_1$.
+\end{tecbox}
+
+Some properties of Secant method:
+\begin{itemize}
+    \item Almost as fast as Newton's method. In fact, we can show Newton's method converges quadratically, meaning $\abs{e_{n+1}} \approx c \abs{e_n}^2$. Instead of converging by an exponent of $2$, the secant method converges by an exponent of $\frac{1 + \sqrt{5}}{2} \approx 1.6$. This difference in convergence speed is less noticeable when we start closer to the actual root.
+\end{itemize}
+
+\section{Roots of Polynomials}
+
+Any polynomial can be written in the following standard form:
+\[ p(z) = a_n z^n + \cdots + a_z z + 1 \]
+
+\begin{thmbox}{Fundamental Theorem of Algebra}{}
+    A polynomial of degree $n \geq 1$ has at least one complex root.
+\end{thmbox}
+
+It follows that $p$ can have up to $n$ roots \todo{write the m m-1 m-2 thing}
+
+For example, we may a polynomial like:
+\[ p(x) = (x-1)^2 (x+1)^3 \]
+This polynomial has two distinct roots but five total roots: $1$ which has multiplicity $2$, and $-1$ which has multiplicity $3$.
+
+Suppose all coefficients are real numbers. Then if $z = a + bi \in \C$ is a root, then so is $\overbar{z} = a - bi$.
+
+\todo[inline]{Descarte's rule of signs}
+
+This limits the possibilities for the number of positive roots. For example, if there are no sign changes, then we know there are no positive roots. If there is only one sign change, then we know there must be one positive root.
+
+Consider $p(x) = 2x^3 +2x^2 + 1$. As long as $x > 0$, then $p(x) > 0$. Any polynomial $p(x)$ might only be $0$ if $x < 0$, which is not guaranteed.
+
+All roots are contained within a disk in the complex plane $\C$ within $\abs{z} \leq \alpha$. Here, $\abs{z}$ denotes the Euclidean distance from $0$ to $z$ in the complex plane.
+
+\todo[inline]{Horner's method}
+
+There is a specific way to compute the value of a polynomial. For example, to compute $p(x) = 2x^5 + 7x^4 + 3x^3 + 2x - 5$, we may do:
+\[ p(a) = -5 + a(2+a(0+a(3+a(7 + a(2))))) \]
+
+\begin{tecbox}{Horner's method}{}
+    \todo[inline]{More about this?}
+    Horner's method is the most efficient method for computing the value of a polynomial. Let $p(x)$ be a polynomial, and let $a$ be given. We wish to calculate $p(a)$. Define $b_n, \ldots, b_0$ by:
+    \[ b_n = a_n \]
+    \[ b_k = ab_{k+1} + a_k \quad \text{where}\ k \in \{n-1, \ldots, 0\} \]
+    We get $b_0 = p(a)$, and moreover, $p(x) = $ TODO: MORE
+\end{tecbox}
+
+\todo[inline]{Usefulness of horner's method on polynomial's derivative; usefulness when doing newton's method for polynomials}
+
+Moreover:
+
+\[ p(x) = (x - x_0)Q(x) + b_0 \]
+\[ p\prime(x) = Q(x) + (x - x_0)Q\prime(x) + 0\]
+\[ p\prime(x_0) = Q(x_0) + 0 \]
+
+So:
+
+\[ a_n a_{n-1} \cdots a_1 a_0 \]
+\[ b_n b_{n-1} \cdots b_1 b_0 \]
+\[ Q(x) = b_n x^{n-1} + \cdots + b_2 x + b_1  \]
+
+\section{Deflation}
+Say $r$ is a root of $p$. Horner's method tells us that:
+\[ p(x) = (x - r) Q(x) + b_0 \quad \text{where}\ b_0 = 0 = p(r) \]
+
+The remaining roots are in $Q(x)$ (the ``quotient''). Whatever method we applied to find $r$, we can apply it to $Q$ as well to find the other roots. This is a technique known as \dfntxt{deflation}. Essentially, we ``deflate'' the original polynomial by one root at a time.
+
+For any $p(x) = (x - r_1) Q_{n-1}(x)$, we have $Q_{n-1}(x) = (x - r_2) Q_{n-2}(x)$. We continue this until we get to $Q_1(x) = (x - r_n)$.
+
+\todo[inline]{tecbox for deflation?}
+
+\paragraph{Cascading Error}
+Consider the case $r_1$ is an approximate root. Our $b_0$ is hopefully quite small, in which case we might simply pretend that the $b_0$ isn't even there. Then apply root finding to $Q$ to find another approximate root $r_2$, and drop the $b_0$. This can lead to a cascading series of errors, growing exponentially.
+
+Our erroneous approximations can be ``refined'' by applying Newton's method to the \textbf{original} polynomial $p(x)$, using our approximated roots as starting values.
+
+\section{Eigenvalue Stuff}
+
+\begin{dfnbox}{Eigenvector, eigenvalue}{}
+    Given an $n \times n$ matrix $A$, if there exist $\vec{v}$ and scalar $\lambda$ such that:
+    \[ A\vec{v} = \lambda \vec{v} \]
+    then we call $\vec{v}$ the \dfntxt{eigenvector} and $\lambda$ the \dfntxt{eigenvalue}.
+\end{dfnbox}
+
+Moreover, for identity matrix $I$, we define the \dfntxt{characteristic polynomial} as:
+\[ P_A(\lambda) \coloneq \det(\lambda I - A) \]
+
+\section{The Fixed-Point Problem}
+Recall that a fixed point $p$ of a function $g : [a,b] \to \R$ is where $g(p) = p$. Intuitively, it's wherever the graph of $g$ intersects the $y=x$ line.
+
+\begin{notebox}
+    We will use $f$ to denote functions in root-finding problems and use $g$ to denote functions in fixed-point problems.
+\end{notebox}
+
+\begin{thmbox}{Fixed Point Theorem}{}
+    Let $g : [a,b] \to [a,b]$ be a function continuous on $[a,b]$, and suppose that $g$ is differentiable on $(a,b)$, satisfying:
+    \[ -1 < g\prime(x) < 1 \quad \text{for any}\ x \in (a,b) \]
+    Then $g$ has at least one fixed point in $[a,b]$.
+    \tcblower
+    \textbf{Intuition:} Since the function is bounded to this square $[a,b] \times [a,b]$ and is continuous, then there's no way for the function to avoid the line $y=x$.
+    \begin{proof}
+        Let $f(x) \coloneq g(x) - x$. Since $g$ is continuous, then $f$ is continuous. Also:
+        \[ f(a) = g(a) - a \geq 0 \]
+        \[ f(b) = g(b) - b \leq 0 \]
+        There are three possibilities:
+        \begin{enumerate}
+            \item If $g(a) = a$, then $a$ is the fixed point, and we are done.
+            \item If $g(b) = b$, then $b$ is the fixed point, and we are done.
+            \item If $g(a) \neq a$ and $g(b) \neq b$, then $a < g(x) < b$. $g(x) > a$ implies $f(a) > 0$, and $g(x) < b$ implies $f(b) < 0$. Thus, by the \nameref{thm:imv}, $f$ has a root in $(a,b)$.
+        \end{enumerate}
+
+    \end{proof}
+\end{thmbox}
+\todo{uniqueness of fixed point}
+
+
+\todo[inline]{Fixed point to root finding and vice versa}
+
+
+\paragraph{Fixed Point iteration}
+To approximate a fixed point, define:
+\[ \begin{cases}
+    p_{n+1} = g(p_n), & n \in \{ 0, 1, 2, \ldots\} \\
+    p_0, & \text{given}
+\end{cases} \]
+
+\todo[inline]{Convergence of fixed point iteration}
+
+\todo[inline]{k is the upper bound on derivative}
+
+\section{Systems of Nonlinear Equations}
+Now we consider vector equations, which map $\R^n$ to $\R^n$, denoted:
+\[ F : \R^n \to \R^n \]
+
+
+\begin{exbox}{Root finding problem for vector functions}{}
+    For example, we may have $F : \R^2 \to \R^2$ where $F(x,y) = \begin{bmatrix} x-y^2 \\ \cos x + \sin y \end{bmatrix}$.
+
+    Find $\vec{x} \in \R^2$ such that $F(\vec{x}) = 0$.
+    \tcblower
+    For the first component:
+    \[ \cos x + \sin y = 0 \implies y = \pm x \]
+    \[ \cos x + \sin y = 0 \implies \ldots \]
+\end{exbox}
+
+\paragraph{Newton's Method for Systems}
+Newtons' method generalizes very well to vector functions. Recall the regular Newton's method for scalar values:
+
+\[ x_{k+1} = x_k - \frac{f(x_k)}{f\prime(x_k)} \]
+
+We instead write:
+
+\[ \vec{x}_{k+1} = x_k - \left[ f\prime(\vec{x}_k) \right]^{-1} f(\vec{x}_k) \]
+
+Note that matrix multiplication does not commute, so we must not switch the roles of the two matrices. We may also instead write:
+
+\[ f\prime(\vec{x}_k) \underbrace{(\vec{x}_{k+1} - \vec{x}_k)}_{\vec{\delta}_k} = -f(\vec{x}_k) \]
+
+Or better yet:
+
+\[ \begin{cases}
+    f\prime(\vec{x}_k) \vec{\delta}_k = -f(\vec{x}_k) \\
+    \vec{x}_{k+1} = \vec{x}_k + \vec{\delta}_k
+\end{cases} \]
+
+We:
+\begin{itemize}
+    \item Form matrix $f\prime(\vec{x}_k)$
+    \item Form $f(\vec{x}_k)$ (vector)
+    \item Solve linear system $f\prime(\vec{x}_k) \vec{\delta}_k = -f(\vec{x}_k)$.
+\end{itemize}
+
+How might we improve the efficiency of this method? One way may be to \todo{FINISH THIS}
+
+\section{Broyden's Method}
+\todo[inline]{Broyden's method}
+
+\paragraph{Norms}
+For a given vector $\vec{v} = (v_1, \ldots, v_n)$, there are various notions for measuring the ``size'' or ``magnitude'' of $\vec{v}$. The most common is the Euclidean norm:
+
+\[ \norm{\vec{v}}_2 = \sqrt{\sum_{i=1}^{n} v_i^2} \]
+
+There is also the ``Manhattan norm'' or ``taxicab norm'':
+
+\[ \norm{\vec{v}}_1 = \sum_{i=1}^{n} \abs{v_i} \]
+
+In general, we can take the norm with respect to any non-negative real number $r$:
+
+\[ \norm{\vec{v}}_r = \sqrt[r]{\sum_{i=1}^{n} \abs{v_i^r}} \]
+
+As $r$ approaches infinity, we have:
+
+\[ \norm{\vec{v}}_\infty = \sup \{ \abs{v_i} : 1 \leq i \leq n \} \]
+
+This is called the \dfntxt{infinity norm} or \dfntxt{supremum norm}.
+
+Given two column vectors $u$ and $v$, we have the inner product defined as:
+\[ u^T v = \begin{pmatrix} u_1 & \ldots & u_n \end{pmatrix}\begin{pmatrix}v_1 \\ \vdots \\ v_n \end{pmatrix} = u_1v_1 + \cdots + u_nv_n \]
+The outer product is defined as:
+\[ u v^T = \begin{pmatrix}u_1 \\ \vdots \\ u_n\end{pmatrix} \begin{pmatrix}v_1 & \ldots & v_n \end{pmatrix} = \text{todo: n by n matrix} \]
+
+\paragraph{Fixed Point System (FPS)}
+Recall that in fixed point iteration, we take:
+\[ x_{k+1} = G(x_k) \]
+When we compute $G(x_k)$, the value $x_k$ is not altered. However, in Nonlinear Gauss-Seidel, $x_k$ is updated.
+\todo[inline]{a lot}

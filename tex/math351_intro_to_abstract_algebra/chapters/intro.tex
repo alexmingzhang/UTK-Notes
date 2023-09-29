@@ -4,15 +4,51 @@ TODO: Pentagon rotation and mirroring example
 
 \section{Relations}
 
-\section{Induction}
+\begin{dfnbox}{Relation}{}
+    Let $A$ and $B$ be sets.
+    \begin{itemize}
+        \item A \dfntxt{relation} from $A$ to $B$ is a subset of the Cartesian product $A \times B$.
+        \item A \dfntxt{relation} on $A$ is a subset of the Cartesian product $A \times A$.
+    \end{itemize}
+    Given a relation $\rho$, we denote $(a,b) \in \rho$ as $a \mathrel{\rho} b$. If $(a,b) \notin \rho$, we write $a \mathrel{\not\rho} b$.
+\end{dfnbox}
 
-\begin{thmbox}{Principle of Mathematical Induction}{}
-    For each $n \in \N$, let $P(n)$ denote a statement. Suppose that:
-    \begin{enumerate}
-        \item $P(1)$ is true, and
-        \item for each $n \in \N$, if $P(n)$ is true, then $P(n+1)$ is true.
-    \end{enumerate}
-    Then $P(n)$ is true for all $n \in \N$.
-\end{thmbox}
+\begin{dfnbox}{Reflexive, symmetric, transitive, equivalence relation}{}
+    Let $\rho$ be a relation on a set $A$.
+    \begin{itemize}
+        \item $\rho$ is \dfntxt{reflexive} if, for any $a \in A$, $a \mathrel{\rho} a$.
+        \item $\rho$ is \dfntxt{symmetric} if $a \mathrel{\rho} b$ implies $b \mathrel{\rho} a$.
+        \item $\rho$ is \dfntxt{transitive} if, whenever $a \mathrel{\rho} b$ and $b \mathrel{\rho} c$, we have $a \mathrel{\rho} c$.
+    \end{itemize}
+    If $\rho$ satisfies all three properties, it is called an \dfntxt{equivalence relation}. We often use $\sim$ to denote an equivalence relation.
+\end{dfnbox}
+
+\begin{dfnbox}{Equivalence class}{}
+    Let $\sim$ be an equivalence relation on a set $A$, and let $a \in A$. The \dfntxt{equivalence class} of $a$ is a set defined as:
+    \[ [a] \coloneq \{b \in A : a \sim b \} \]
+\end{dfnbox}
+
+\section{Functions}
+
+\begin{dfnbox}{Function}{}
+    Let $X$ and $Y$ be sets. A \dfntxt{function} from $X$ to $Y$ is a relation $f$ from $X$ to $Y$ such that, for each $x \in X$, there exists exactly one $y \in Y$ where $x \mathrel{f} y$. We write $f : X \to Y$ to mean $f$ is a function from $X$ to $Y$, and we write $f(x) = y$ to mean $x \mathrel{f} y$.
+\end{dfnbox}
+
+\begin{dfnbox}{Injective, surjective, bijective}{}
+    Let $f : X \to Y$ be a function.
+    \begin{itemize}
+        \item $f$ is \dfntxt{injective} if, for all $x_1$ and $x_2$ where $x_1 \neq x_2$, we have $f(x_1) \neq f(x_2)$.
+        \item $f$ is \dfntxt{surjective} if, for all $y \in Y$, there exists $x \in X$ such that $f(x) = y$.
+        \item $f$ is \dfntxt{bijective} if it is both injective and surjective.
+    \end{itemize}
+\end{dfnbox}
+
+\begin{dfnbox}{Permutation}{}
+    A \dfntxt{permutation} of a set $A$ is a function from $A$ to $A$.
+\end{dfnbox}
+
+\begin{dfnbox}{Binary operation}{}
+    A \dfntxt{binary operation} on a set $A$ is a function from $A \times A$ to $A$.
+\end{dfnbox}
 
 Wowzers

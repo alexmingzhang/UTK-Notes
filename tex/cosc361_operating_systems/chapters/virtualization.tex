@@ -1,0 +1,284 @@
+\chapter{Virtualization}
+
+\section{Processes}
+
+\begin{dfnbox}{Process, process state}{}
+    A \dfntxt{process} is an OS abstraction of a running program. A process can be described by its \dfntxt{state}, which includes:
+    \begin{itemize}
+        \item memory or \dfntxt{address space} which contains the program's instructions and data that the program reads from and writes to;
+        \item registers which many instructions must read from or write to, as well as specialized registers such as the program counter, stack pointer, and frame pointer\footnote{The program counter specifies the very next instruction for the program to execute. A stack pointer and frame pointer are used to manage the process' stack memory.}; and
+        \item I/O information that specifies access to persistent storage devices.
+    \end{itemize}
+\end{dfnbox}
+
+Nowadays, our computers are often running tens if not hundreds of processes concurrently, despite lacking tens or hundreds of CPU cores. The OS presents the illusion of many CPUs through virtualization.
+
+\begin{dfnbox}{Time sharing, space sharing}{}
+    \dfntxt{Time sharing} is a basic technique used by an OS to share a resource. It involves rapidly switching between executing different concurrent processes, allowing for the illusion of concurrency at the cost of performance as more processes are being run. \dfntxt{Space sharing} simply divides a resource among the processes that use it (e.g. disk space).
+\end{dfnbox}
+
+The OS does not arbitrarily choose which process it will start and stop running; it has a \dfntxt{scheduling policy} which enforces time sharing decisions, which we discuss later.
+
+\paragraph{Process API}
+The operating system makes available an application programming interface (API) to manage processes. The \dfntxt{process API} includes functionality for
+\begin{itemize}[noitemsep]
+    \item creating new processes,
+    \item destroying running processes,
+    \item waiting for a process to finish running,
+    \item suspending and resuming processes,
+    \item obtaining status information about a process, and
+    \item other miscellaneous control features.
+\end{itemize}
+
+We discuss this in more detail in Section \ref{sec:processapi}.
+
+\paragraph{Process Creation}
+To create a process, an OS:
+\begin{enumerate}
+    \item loads its code and any static data (e.g. initialized variables) into memory as the address space for the process\footnote{Older operating systems tend to load programs eagerly, meaning loading all its code at once. Newer operating systems tend to load code lazily, meaning loading code as needed during execution.};
+    \item allocates memory for the process' \dfntxt{stack}, used for local variables, function parameters, and return addresses, as well as arguments such as the \texttt{main()} function's \texttt{argc} and \texttt{argv};
+    \item may allocate memory for the process' \dfntxt{heap};
+    \item does I/O setup, such as opening file descriptors for stdin, stdout, and stderr; and finally
+    \item starts the program execution at the entry point \texttt{main()}, transfering control of the CPU to the newly-created process.
+\end{enumerate}
+
+\paragraph{Process States}
+A process can be in the following states:
+\begin{enumerate}
+    \item \dfntxt{Running:} The processor is executing instructions of the program.
+    \item \dfntxt{Ready:} A process is ready to run, but the OS has not chosen to run it yet.
+    \item \dfntxt{Blocked:} A process has performed some operation that requires it to wait until another thing happens first.
+\end{enumerate}
+
+Moving a process from ready to running is \dfntxt{scheduling} a process; moving from running to ready is \dfntxt{descheduling} a process. When a process is blocked, the OS will wait for the desired event to occur, then unblock it by moving it to the ready state.
+
+Deciding whether to move a process to running or ready and vice versa is dictated by an OS scheduler, which will be discussed later.
+
+Some other niche states include:
+\begin{itemize}
+    \item \dfntxt{Initial/Embryo:} The process is being created by the OS.
+    \item \dfntxt{Final/Zombie:} The process exited but has not yet been cleaned up; useful for a parent process to see if the child process executed successfully. The parent calls \texttt{wait()} to wait for the child process to finish and to indicate to the OS that it can clean up the child process.
+\end{itemize}
+
+\paragraph{Data Structures}
+To keep track of processes, the OS maintains a list of processes (called a \dfntxt{process list}) as well as information to keep track of which processes are running and bookkeeping for blocked processes.
+
+The OS stores a couple pieces of important information for each process in what's called a \dfntxt{process control block (PCB)}. This is composed of:
+\begin{itemize}
+    \item a \dfntxt{register context} which holds the contents of a register right before the process is moved from running to ready,
+    \item information about the process memory, such as where it starts and the size of the memory,
+    \item process state and a unique identifier (PID),
+    \item a pointer to the PCB of the parent (if applicable),
+    \item a list of open files for the process,
+    \item the current working directory of the process, and
+    \item much much more (depending on the operating system).
+\end{itemize}
+
+\todo[inline]{More things from the proc struct?}
+
+\section{Process API} \label{sec:processapi}
+
+\todo[inline]{Fork, exec, wait system calls}
+
+\paragraph{API Design Motivations}
+The separation of \texttt{fork()} and \texttt{exec()} is essential to UNIX shells, enabling the shell to run code after forking and before execing. For example, in 
+
+
+\section{Limited Direct Execution}
+The OS gives users the illusion of concurrency by switching execution time between active processes, a kind of virtualization called \dfntxt{time-sharing}. With this technique comes some pertinent design challenges:
+\begin{itemize}
+    \item \textbf{Performance:} how can we implement virtualization without adding excessive overhead to the system?
+    \item \textbf{Control:} how can we run processes efficiently while retaining control over the CPU?
+\end{itemize}
+
+\paragraph{Limited Direct Execution}
+The simplest approach is simply running processes natively on hardware CPU. In short, when we want to start a process, the OS goes through the following steps:
+\begin{enumerate}[noitemsep]
+    \item Create entry for process list.
+    \item Allocate memory for program.
+    \item Load program into memory.
+    \item Set up stack with argc/argv.
+    \item Clear registers.
+    \item Execute call main(), in which the program takes over control and runs main until it returns.
+    \item After the program returns, free memory of process.
+    \item Remove from process list.
+\end{enumerate}
+This approach is straightforward and has the advantage of being fast. However, it poses two problems:
+\begin{enumerate}
+    \item The OS gives full trust to the program to run successfully without doing anything we don't want it to do.
+    \item The OS cannot suspend the process while it's running, so we cannot implement any kind of time-sharing technique.
+\end{enumerate}
+
+\paragraph{Restricted Operations and System Calls}
+To prevent processes from doing things we don't want them to do, we introduce two modes of execution: \dfntxt{user mode} and \dfntxt{kernel mode}.
+
+\begin{dfnbox}{User mode, kernel mode}{}
+    \dfntxt{User mode} and \dfntxt{kernel mode} describe modes of operation for processes.
+    \begin{itemize}
+        \item Code that runs in \dfntxt{user mode} has restricted capabilities. For example, user mode processes cannot issue I/O requests.
+        \item Code that runs in \dfntxt{kernel mode} has unrestricted capabilities, allowed to do anything.
+    \end{itemize}
+\end{dfnbox}
+
+When a user process wants to perform a restricted operation, the kernel offers a set of \dfntxt{system calls} to user processes.
+\begin{itemize}
+    \item These carefully expose certain key pieces of functionality to user processes, such as I/O operations, creating/killing/communicating with processes, allocating memory, and much more.
+    \item  All system calls start with a \dfntxt{trap} instruction which transfers control to the kernel and raises privilege level to kernel mode. Once done, the kernel issues a \dfntxt{return-from-trap} instruction which returns into the calling program and deescalate privilege to user mode.
+    \item Before executing the trap instruction, the processor saves a copy of the sensitive registers onto a per-process \dfntxt{kernel stack}\footnote{The kernel stack is used exclusively when invoking kernel-mode instructions, like trap. The user stack is responsible for local variables, function parameters, return addresses, etc. The user stack is generally just called ``stack''.}. When the system call returns, the original registers get restored.
+    \item Each system call has a corresponding number, which is handled by the OS in some functionality called the \dfntxt{trap handler} to jump into the right portion of kernel code. This protects the kernel code from being arbitrarily jumped into.
+    \item This set of correct system call numbers is established when the OS boots and is only possible in kernel mode.
+\end{itemize}
+
+There are two distinct phases in limited direct execution:
+\begin{enumerate}
+    \item At boot time, the kernel initializes the trap table which gets saved by the CPU for future use. This is done by an instruction only available in kernel mode.
+    \item When running a process, sets up some bookkeeping info for a process and issues a return-from-trap to start running the process. If the process issues a system call, it ``traps'' back to the OS which handles it and returns via a return-from-trap instruction. The process ends by returning from \texttt{main()}, which usually returns into some end code such as a trap back into the OS. From here, the OS cleans up the dead process.
+\end{enumerate}
+
+\todo[inline]{Figure 6.2 Limited Direct Execution Protocol}
+
+\paragraph{Switching Between Processes}
+With all this, we have a way for user processes to invoke kernel functionality. However, how can the kernel voluntarily suspend a process to switch to another? There are a few approaches.
+
+\paragraph{Cooperative Approach}
+If the OS is willing to trust processes to behave reasonably, then we could just hope that processes voluntarily relinquish control, whether it be through system calls or trying to invoke an illegal operation (e.g. divide by zero, which generates a trap instruction). From there, the OS can decide to switch to another process. In this approach, we can offer processes a \dfntxt{yield} system call. All it does is relinquish control of the current process, letting the OS decide what to do from there.
+
+Obviously, this is a flawed approach. A process can simply invoke an infinite loop, never giving up control of the processor.
+
+\paragraph{Non-cooperative Approach}
+The OS can reclaim control at its own will by interrupting the running process. This obviously cannot be done in software alone, so we introduce a hardware timer that interrupts the processor at a fixed interval. When this interrupt happens, the running process is halted, and the OS runs a pre-configured interrupt handler. From here, the OS can decide to switch to another process. This interrupt handler is configured at boot time, a privileged operation similar to establishing the trap table.
+
+\paragraph{Context Switch}
+In practice, the OS regains control through both cooperative and non-cooperative approaches. Once it does so, a scheduler decides whether to keep running the same process or switch to another. If it does choose to switch, it performs what is called a \dfntxt{context switch}.
+
+\begin{dfnbox}{Context switch}{}
+    A \dfntxt{context switch} is a low-level piece of code run by the OS when it switches which process it runs. In it, the OS saves important register values for the previous process (e.g. on its kernel stack) and restore a few register values for the next process (from its kernel stack).
+\end{dfnbox}
+
+The context switch is crucial in creating smooth transitions when switching between processes. Some registers that get saved include general purpose registers, program counter (PC), and stack pointers of the current process.
+
+There are two kinds of context switches, depending on how they're invoked:
+\begin{enumerate}[label=\textbf{\Alph*.}]
+    \item When a timer interrupt happens, the hardware implicitly saves the user registers of the running process into the kernel stack of the running process.
+    \item When the OS decides to switch to another process, the OS explicitly saves the kernel registers into the process structure of the previous process.
+\end{enumerate}
+
+\paragraph{Concurrency}
+It's possible that an interrupt can happen while the OS is already handling an interrupt. A simple fix is to just disable interrupts during interrupt processing. A downside is that disabling interrupts for too long can lead to lost interrupts. There are other solutions, such as some locking mechanisms to protect concurrent access. We discuss this more later.
+
+\section{Scheduling}
+
+\begin{dfnbox}{Preemptive, non-preemptive}{}
+    A scheduling policy is \dfntxt{preemptive} if it can stop the currently running process in favor of starting/resuming another process (called a context switch). A scheduling policy is \dfntxt{non-preemptive} if it always executes the currently running process to completion, never interrupting it.
+\end{dfnbox}
+
+Nearly all modern operating systems use a preemptive scheduling policy. Non-preemptive scheduling policies are prone to \dfntxt{starvation}, where a process can wait an arbitrary amount of time before starting.
+
+\paragraph{Workload Assumptions}
+The operating system must enforce a scheduling policy to determine which processes it should execute at any given time. These scheduling policies almost always make choices based on the current active processes or \dfntxt{jobs}, referred to collectively as the \dfntxt{workload}.
+
+To simplify our approach, we will consider a workload in which:
+
+\begin{enumerate}[noitemsep]
+    \item Each job runs for the same duration.
+    \item All jobs arrive at the same time.
+    \item Once started, each job runs to completion.
+    \item All jobs only use the CPU and perform no I/O.
+    \item The run-time of each job is deterministic.
+\end{enumerate}
+
+It will be unrealistic to assume that practical workloads follows these assumptions. 
+
+\paragraph{Scheduling Metrics}
+We compare different scheduling policies by \dfntxt{scheduling metrics}. Some common ones include:
+\begin{itemize}
+    \item \dfntxt{Turnaround time:} the time between when the job first arrives and when the job finishes.
+    \item \dfntxt{Response time:} the time between when the job first arrives and when the job first starts running.
+    \item \dfntxt{Fairness:} ensuring every job gets a good chance to run.
+\end{itemize}
+
+We call turnaround time and response time \dfntxt{performance} metrics.
+
+% A simple scheduling metric is \dfntxt{turnaround time}, which is the elapsed time between when the job arrived in the system and when the job finished. More formally, it is calculated by:
+% \[ T_\text{turnaround} = T_\text{completion} - T_\text{arrival} \]
+% The turnaround is a performance metric. Other metrics may be more interested in fairness, which is often at odds with performance in scheduling. Another metric by which to compare schedules is \dfntxt{response time}. It's the amount of time between when the job first arrives and when the job gets its first run. It's calculated by:
+% \[ T_\text{response} = T_\text{first run} - T_\text{arrival} \]
+% This metric is important to users interacting with the computer. The scheduling policies discussed thus far are good for turnaround but are not necessarily optimal for response time.
+
+
+\paragraph{First In, First Out (FIFO)}
+The most basic scheduling policy is \dfntxt{First In, First Out (FIFO)}. As the name suggests, the very first job gets fully executed, and any jobs that arrive must wait in a queue to get executed. As such, it is a non-preemptive scheduling policy.
+
+\begin{tabularx}{\linewidth}{| X | X |}
+    \hline
+    \textbf{Pros} & \textbf{Cons} \\ \hline
+    Incredibly simple to understand and implement.
+    &
+    \dfntxt{Convoy Effect:} Long-duration jobs will force long waits for future jobs, yielding bad turnaround times and bad response times.
+    \\ \hline
+\end{tabularx}
+
+\paragraph{Shortest Job First (SJF)}
+This non-preemptive scheduling policy solves the convoy effect present in FIFO. It runs the shortest job first, then the next shortest, and so on. This works fine if all the jobs come at the same time, but can go bad if a big job arrives before a small job.
+
+\begin{tabularx}{\linewidth}{| X | X |}
+    \hline
+    \textbf{Pros} & \textbf{Cons} \\ \hline
+    Good turnaround times, so long as jobs all arrive at the same time.
+    &
+    Bad response times, and bad turnaround times if big jobs arrive first.
+    \\ \hline
+\end{tabularx}
+
+\paragraph{Shortest Time-to-Completion First (STCF)}
+\dfntxt{Shortest Time-to-Completion First} adds preemption to SJF, solving the issues in SJF. That is, if we allow the operating system to interrupt a currently running job, then we can solve the problem in SJF. Whenever a new job arrives, the OS can decide to suspend the currently running job in favor for the new job if the new job will complete faster than the current job. 
+
+\begin{tabularx}{\linewidth}{| X | X |}
+    \hline
+    \textbf{Pros} & \textbf{Cons} \\ \hline
+    Always good turnaround times.
+    &
+    Bad response times.
+    \\ \hline
+\end{tabularx}
+
+\paragraph{Round Robin}
+\dfntxt{Round-Robin (RR)} scheduling is optimized for response time. Instead of running jobs to completion, RR runs a job for a set \dfntxt{time slice}, then switches to the next job in the queue. RR performs context switches only on timer-interrupt periods, so the duration of each time slice must be a multiple of the timer-interrupt period. Performing context switches often can be costly, so the time slices are often larger multiples of the timer-interrupt period (at the cost of reduced response time).\todo{mention amortization in here}
+
+\begin{tabularx}{\linewidth}{| X | X |}
+    \hline
+    \textbf{Pros} & \textbf{Cons} \\ \hline
+    Absolute best response time.
+    &
+    Terrible turnaround times.
+    \\ \hline
+\end{tabularx}
+
+\paragraph{Considering I/O}
+When a process access I/O resources, it will be blocked waiting for the I/O operation to finish. As such, it's best for the scheduler to switch to another job while the current process is waiting for I/O to finish.
+
+In the case of preemptive sheduling, an I/O operation can incur a context switch. Read and write can both cause a process to be blocked. Meanwhile, the OS may schedule another process to run while the I/O job finishes. \todo{Check this fact}
+
+\todo[inline]{MORE!!! overlapping stuff}
+
+\paragraph{Shortest CPU Burst First}
+In practice, we can't accurately guess the runtime of jobs. We instead think of a process as a series of \dfntxt{CPU bursts}, which are periods of execution without any internal events. A CPU burst usually ends when a context switch is necessary, such as an I/O operation. 
+
+
+\dfntxt{Shortest CPU Burst First} is the best way to approximate SJF. Although we cannot estimate the runtime of an entire job, we can reasonably estimate the runtime of a single CPU burst. We estimate a CPU burst by how long the current CPU burst lasted. The longer it runs, the more likely \todo{finish this}
+
+\todo{figure out shit}
+Process Priority:
+\begin{itemize}
+    \item Called ``niceness'' in Linux
+    \item A single number associated with a process
+    \item Simple order ready queue as a priority queue
+    \item Calculate effective priority from base priority and wait time in queue (since last time random) called \dfntxt{aging}
+\end{itemize}
+
+% Note that the cost of context switching does not arise solely from the
+% OS actions of saving and restoring a few registers. When programs run,
+% they build up a great deal of state in CPU caches, TLBs, branch predictors,
+% and other on-chip hardware. Switching to another job causes this state
+% to be flushed and new state relevant to the currently-running job to be
+% brought in, which may exact a noticeable performance cost [MB91].

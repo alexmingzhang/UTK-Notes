@@ -1,0 +1,116 @@
+\chapter{Hashing}
+
+\begin{dfnbox}{Hash function}{}
+    A \dfntxt{hash function} is a function that:
+    \todo[inline]{todo}
+\end{dfnbox}
+
+Hashes may be used in:
+\begin{itemize}
+    \item Verifying data integrity by comparing the hashes of the data (e.g. file downloads)
+    \item Chaining events together (e.g. blockchain)
+    \item Digital signatures
+    \item Message authentication codes
+    \item Many other security protocols
+\end{itemize}
+
+Cryptographically speaking, a hash function $H$ must satisfy the following properties:
+\begin{enumerate}
+    \item $H$ can be applied to an input of any size.
+    \item $H$ produces a fixed length output.
+    \item $H$ is easy to compute,
+    \item \dfntxt{One-way:} It is computationally infeasible to determine the input from a given output of $H$,
+    \item \dfntxt{Weak collision resistance:} Given a digest, it is computationally infeasible to find an input whose hash is the digest.
+    \item \dfntxt{Strong collision resistance:} It is computationally infeasible to find any two inputs that make the same hash.
+\end{enumerate}
+
+There are several canonical attacks against hash functions:
+\begin{itemize}
+    \item \dfntxt{First preimage attack:} Given a digest $d$, find the message $m$ where $H(m) = d$. This is defended against by the one-way property. Since the domain of $H$ is infinite but the range of $H$ is finite, then there is an infinite amount of inputs whose hash is $d$. However, for small message domains, this attack can be achieved through brute force.
+    \item \dfntxt{Second preimage attack:} Given a message $m_1$, find another message $m_2$ where $H(m_1) = H(m_2)$. This is defended against by weak collision resistance.
+    \item \dfntxt{Collision attack:} Find any two messages $m_1$ and $m_2$ such that $H(m_1) = H(m_2)$. This is defended against by strong collision resistance.
+\end{itemize}
+
+\todo[inline]{Birthday example}
+
+There are a collection of recommended hash functions for cryptographic applications, including:
+\begin{itemize}
+    \item \dfntxt{SHA-2} family: SHA-224, SHA-256, SHAE-384, SHA-512, SHA-512/224, SHA-512/256
+    \item \dfntxt{SHA-3} family: SHA3-224, SHA3-256, SHA3-384, SHA-512, SHAKE128, SHAKE256
+    \item Fast variants of SHA-3 (not approved by NIST) such as BLAKE2, BLAKE3, KangarooTwelve
+\end{itemize}
+
+Some broken hash functions include:
+\begin{itemize}
+    \item MD5, which is completely broken;
+    \item SHA-0, which is completely broken; and
+    \item SHA-1, which has had weaknesses discovered with the possibility of collisions (avoided for new apps but not broken in practice).
+\end{itemize}
+
+\section{SHA-1}
+Although cryptographers have exposed weaknesses in the SHA-1 algorithm, it's still worth covering its inner workings because:
+\begin{itemize}
+    \item it is still ubiquitous;
+    \item it is constructed using the Merkle-Damgard construction (similar in SHA-2); and
+    \item it is beginner-friendly to understand.
+\end{itemize}
+
+The algorithm takes an input message of length $l$ bits, where $0 \leq l \leq 2^{64}$. This is a restriction imposed by the developers of SHA-1, not a limitation of the underlying algorithm itself. It chunks data into 512-bit blocks and ultimately outputs a 160-bit digest.
+
+\todo[inline]{Padding algorithm for SHA-1}
+
+SHA-1 always pads a message by appending a \texttt{1} bit to the input message and ending the padded message with a 64-bit unsigned integer of the length of the message. In between the \texttt{1} bit and length of the message are \texttt{0} bits that pad the message to a length that's a multiple of 512. Thus, SHA-1 padding will always add at least 65 bits of padding.
+
+\todo[inline]{SHA-1 internal function}
+
+
+\paragraph{Merkle-Damgard Construction}
+
+The Merkle-Damgard construction is an iterative construction that transforms an input message into a hash digest.
+
+\begin{enumerate}
+    \item Pad the message to a specific width.
+    \item Chunk the message into blocks.
+\end{enumerate}
+
+\todo[inline]{Merkle-Damgard please help}
+
+\section{Message Authentication Codes (MAC)}
+Recall that encrypting messages only provides confidentiality. Sure, an eavesdropper would not know the contents of our message; however, they could alter the ciphertext in transmission, and the other party would have no idea. This is especially dangerous if the message format is known.
+
+There are two main approaches to prevent any tampering with our messages:
+\begin{enumerate}
+    \item In symmetric key cryptography, we can use \dfntxt{message authentication codes}.
+    \item In public-key cryptography (more on this later), we can use digital signatures.
+\end{enumerate}
+
+Both approaches provide integrity (insurance that the message was not altered since its creation). However, symmetric key cryptography only provides authenticity for the two parties messaging each other; a third party simply looking at the messages cannot determine which of the two parties authored which message. In contrast, public-key cryptography provides authenticity for any party involved.
+
+\paragraph{Message Authentication Code Model}
+The basic idea is that, when we send our message, we also send some special code that guarantees the message was not tampered with. This code is usually appended to the end of the original message.
+
+We create this special code using a MAC algorithm. When Alice sends a message to Bob, she passes the message through the algorithm alongside a private key that is known by both Alice and Bob. This gives us the MAC which gets appended onto the end of Alice's original message. Once Bob receives the message, he can pass the original message through the algorithm to see if it matches the value of Alice's provided MAC. If so, then Bob can be assured that the message was not tampered with during transmission.
+
+% \paragraph{Common MAC Algorithm Families}
+There are three common ways to create a MAC.
+\begin{enumerate}
+    \item Encrypt the message using a block cipher. Alice can simply encrypt the message using a chained mode (e.g. CBC). Doing this, we only need the final block for the MAC, and sometimes only a portion of the bits of the final block.
+    \item Generate a cryptographic hash of the message concatenated with a cryptographic secret. We must pay attention to how we include the cryptographic secret. For example, some hashing algorithms using the Merkle-Damgard construction are vulnerable to message extension attacks (where concatenating the secret at the beginning of the message is bad).
+    \item Use a keyed cryptographic hash function which incorporates a key in its operation (commonly called sponge-construction hashes). These are almost exclusively used for cryptographic purposes. It's also the fastest of the three options.
+\end{enumerate}
+
+A common way to carry out the second method is by the Hashed Message Authentication Code (HMAC) algorithm:
+
+\[ \text{HMAC}(K, m) = H \left( (K\prime \oplus \text{opad}) \mathrel{\Vert} H \left( (K \prime \oplus \text{ipad}) \mathrel{\Vert} m \right) \right) \]
+In this formula, we have:
+\begin{itemize}[noitemsep]
+    \item $K$ is the shared key;
+    \item $m$ is the message;
+    \item $K\prime$ is a derived key;
+    \item opad is the outer padding; and
+    \item ipad is the inner padding.
+\end{itemize}
+
+Why is this formula so complicated? Let's consider a naive implementation of an HMAC algorithm.
+
+\todo[inline]{Message Extension Attack}

@@ -1,0 +1,131 @@
+\documentclass[code]{amznotes}
+
+\begin{document}
+
+\input{chapters/intro.tex}
+\input{chapters/virtualization.tex}
+
+Underlying theme: minimality; shaped infrastructure for years to come
+
+What is a process? There are many ways to interpret this question:
+\begin{enumerate}
+    \item It can be natively executed alongside the operating system
+    \item It can be interpreted code, where only an interpreter is natively executed (e.g. the Java virtual machine)
+    \item 
+\end{enumerate}
+
+% An OS process is:
+% \begin{itemize}
+%     \item A collection of states, including a memory image, data register contents, system register contents (todo: process control blocks). Proc-to-OS; subroutine call, OS-to-Proc: return. The OS can choose which process to return to (i.e. running a process).
+%     \item 
+% \end{itemize}
+
+The pieces of a process are:
+\begin{itemize}
+    \item Memory image (contents of RAM)
+    \item Register contents (both user-visible and OS managed)
+    \item Process control block (an OS controlled data structure in kernel mode)
+\end{itemize}
+
+Inside the process control block (PCB) are:
+\begin{itemize}
+    \item A unique integer identifier for the process called a \dfntxt{process ID}
+    \item A \dfntxt{state} which denotes the current state of the process, such as running
+    \item A pointer to the parent process
+\end{itemize}
+
+Process Creation involves:
+\begin{itemize}
+    \item Allocation of resources within the OS
+    \item User identity (UID), a field of the process control block
+    \item Group identity (GID), which identifies a set of UIDS
+    \item Limits on resources and billing
+\end{itemize}
+
+In the POSIX standard, a process creates another process by the \texttt{fork()} system call. This creates a child process that replicates the parent process, allocating a PCB and memory for the child. It populates the child PCB with copies of parent's fields except for identity (PID) and data structures that are allocated and copied. It also copies memory image and register values from parent to child.
+
+Both the child and parent processes commence execution by returning from the \texttt{fork()} system call. In the parent process, \texttt{fork()} returns the PID of the child. In the child process, \texttt{fork()} returns \texttt{0}. This is the definitive way to differentiate between child and parent process, and it should be used to control the flow of logic in your program.
+
+\texttt{fork()} allows for asynchronous computation, perhaps letting the child process execute a subroutine call. To synchronize the two processes after the child has done its task, the parent may call \texttt{wait()}, which waits for the child process to die in order to continue execution. It will return the PID of the child process. If there are more than one dead child processes, \texttt{wait()} returns the PID of one random child process.
+
+The \texttt{init} process is the initial process that creates all other processes. There is a file called an administrative file that gives the init process a list of processes to fork off and start. Init has some special properties:
+\begin{itemize}
+    \item \texttt{pid} set to 0,
+    \item \texttt{uid} set to 0 (which is the root user's \texttt{uid})
+\end{itemize}
+Every terminal device attached to the machine has an associated \texttt{login} process, which outputs ``login'' to the terminal, and waits for user input to determine the identity of the user. After this, it changes UID to the respective user.
+
+Memory management:
+\begin{itemize}
+    \item control what a process can see and change
+    \item 
+\end{itemize}
+
+It's an allocation of resources---a data structure within the operating system. The operating system devotes resources to each process. This is a power that was deemed too sensitive for the user to have control over. Moreover, the creation of processes was often a dangerous task. Because of this, this is something that the operating system takes care of.
+
+The operating system is considered to be out of the hands of the end user. There are several layers that make up the operating system, including:
+\begin{itemize}
+    \item Hardware
+    \item Boot loader, kernel, and OS
+    \item Utilities
+    \item User programs
+\end{itemize}
+Anything other than user programs was out of the user's control and are deemed ``protected'' from the user.
+
+In many operating systems before UNIX, there was a supervisory mode of operation which existed between the user and kernel. Nowadays, the POSIX standard has since remove the supervisory mode, giving us user and kernel modes.
+
+OS mechanisms:
+\begin{itemize}
+    \item Native execution, available to the bootloader and operating system without memory management.
+    \item Multiple registers contexts in hardware
+    \item Base and limit registers for memory management
+    \item 
+\end{itemize}
+
+\begin{notebox}
+    Virtual memory is completely implemented in hardware and thus has zero overhead for executing processes.
+\end{notebox}
+
+User mode is a sandbox. Going from kernel to user mode is completely controlled by the kernel. However, to go from user to kernel, we need a special mechanism. There are generally four user-to-kernel transitions. These are to allow the kernel to regain control from the user:
+\begin{enumerate}
+    \item Clock ticks: save PC and PCR values to memory, load the PC for a kernel entry point, and load a PCR value for kernel execution. The PC and PCR values are called the \dfntxt{kernel entry vector}. Then, we save user-accessible registers to the process control block (the \texttt{proc} data structure).
+    \item Hardware interrupts: these are handled just like clock ticks, but are generated from hardware other than the CPU. These can be disabled separated.
+    \item System calls: an instruction \texttt{TRAP} where we load the PC and PCR from entry vector. There is sometimes an argument (syscall number) that indicates the purpose of the system call. The syscall number may index into a list of entry vectors, each corresponding to a different piece of OS code. For example, \texttt{fork()} and \texttt{read()} have a unique system call number as the argument to \texttt{TRAP} which correspond to a specific functionality. It looks like a subroutine call. A system call's arguments are stored on the stack, and the result of the system call is stored in a register.
+    \item 
+\end{enumerate}
+
+There are four kernel entry events to transition from executing a user program to executing the OS:
+\begin{enumerate}
+    \item Exceptions
+    \item Clock tick
+    \item System calls (through a trap instruction)
+    \item Hardware interrupts
+\end{enumerate}
+
+Note that clock ticks and hardware interrupts are not part of the software, rather controlled by the hardware itself. On the other hand, exceptions and system calls are invoked directly by the software itself.
+
+Sandbox mode includes the following controls:
+\begin{itemize}
+    \item Create sandbox with memory management and kernel/user mode
+    \item Kernel mode is all-powerful
+    \item We want to minimize resources and privileges of processes (weak, simple, generic, resource-limited)
+    \item Superuser (i.e. root) identity has UID 0. For example, the \texttt{init} process (the process creating during system bootstrap) runs as root. The \texttt{login} process also runs as root.
+    \item 
+\end{itemize}
+
+\begin{notebox}
+    Running persistent processes as root is prone to security vulnerabilities (e.g. finger daemon, Cornell worm).
+\end{notebox}
+
+In UNIX, the \texttt{exec()} system call takes a string filename, reads that file, puts the corresponding portions into the currently running process' memory, and starts executing the new file. It reuses the same PCB, with the code and data portions being overwritten by whatever is in the new file. Thus, when a process calls \texttt{exec()}, it ``becomes'' a new process, and \texttt{exec()} never returns.
+
+The fork-exec sequence seems to be wasteful. (TODO: more). This used to be optimized in the following way. If a process calls \texttt{fork()}, it creates a copy of the memory image for the child. We can avoid this copying by just letting the child use the same memory as the parent. This is done through the \texttt{vfork()} call, where the parent is immediately blocked, and the child uses the parent's same memory image without copying. This must only be used when the child does not interfere with the parent's memory image, such as when it performs \texttt{exec()} immediately afterwards. Nowadays, virtual memory takes care of this overhead in a much safer way.
+
+Pipes are a shared storage resource in kernel (OS) memory. It's used as a buffer between a writing and reading process, shared between those two processes. It is created by only a single running process.
+
+
+(Page table stuff)
+
+The cache is a small, fast piece of memory. It holds a subset of the Page Table Entires (PTE). Initially, it is empty. Each PTE used is inserted into cache. On subsequenct accesses to memory, it looks into cache simultaneously with address translation. If found, abort translation (lookaside buffer). Process switch: clear cache.
+
+\end{document}

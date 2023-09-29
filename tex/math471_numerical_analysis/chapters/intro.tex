@@ -105,4 +105,58 @@ where $L$ is the limit of this sequence. The lower this expression evaluates, th
     \end{itemize}
 \end{dfnbox}
 
-Although all three of these types are convergent, it is clear that a lower value of $\lambda$ yields a more easily-computable sequence.
+Although all three of these types are convergent, it is clear that a lower value of $\lambda$ yields a more easily-computable sequence. Thus, a superlinear sequence is generally more ideal for computation than either linear or sublinear. This would not be true if the steps themselves are more difficult to compute. (TODO: wording)
+
+(TODO: convergence of order, quadratic convergence)
+
+Linear convergence is slow if $\lambda$ is close to $1$. There is a way to accelerate convergence known as Aitken's $\Delta^2$ method.
+
+(TODO: definition 1.10 and 1.11, theorem 1.12)
+
+Theorem 1.12: intuitively says that Aitken's method actually works in making the new sequences faster than the old
+
+We can apply Aitken's method again to the result of Aitken's method to again achieve a more quickly converging sequence.
+
+When we have a converging sequence, how do we know how far from the limit we actually are? Assuming we don't know the limit beforehand, one way can be to look at the difference between successive steps. This might be a bad metric for some sequences, where two consecutive numbers may be extremely small, but are still far from the limit. 
+
+(Theorem: test of ``closeness'' to limit (stopping criterion) for superlinear sequences)
+
+\section{Computational problems and conditioning}
+Just like how absolute value measures the ``magnitude'' of a real number, the norm measures the size of a vector.
+
+We view a \dfntxt{computational problem} as a function that converts inputs to numbers. More specifically, it is a function $f : X \to Y$ where:
+(todo: normed vector space from notes)
+
+\begin{exbox}{Computational problem}{}
+    Given $f$, find root $r$.
+
+    \[ g : C(\R) \to r \]
+\end{exbox}
+
+\begin{dfnbox}{Condition number}{}
+    For a square matrix $A$, we define the (TODO)
+\end{dfnbox}
+
+\begin{dfnbox}{Well-conditioned, ill-conditioned}{}
+    Intuitively, a problem is:
+    \begin{itemize}
+        \item \dfntxt{well-conditioned} if a small change in input causes only a small change in output.
+        \item \dfntxt{ill-conditioned} if a small change in input may cause a large change in output.
+    \end{itemize}
+\end{dfnbox}
+
+For example, we may want to solve a linear system of the form $Ax = b$. \todo{more}
+
+If a problem is ill-conditioned, then this cannot be cured or fixed by an algorithm. That is, the problem is too unstable for an algorithm to produce a good solution. An ill-conditioned problem is hopeless; it's often better to reconsider the physical phenomenon being observed and reformulate it in a better way.
+
+We can apply the same criteria to algorithms: \dfntxt{stable} and \dfntxt{unstable}.
+
+\begin{dfnbox}{Stable, unstable}{}
+    Intuitively, an algorithm is:
+    \begin{itemize}
+        \item \dfntxt{stable} if a small change in input causes only a small change in output.
+        \item \dfntxt{unstable} if a small change in input may cause a large change in output.
+    \end{itemize}
+\end{dfnbox}
+
+Ideally, we work with well-conditioned problems and solve it using a stable algorithm.

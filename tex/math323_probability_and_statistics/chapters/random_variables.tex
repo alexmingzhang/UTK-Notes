@@ -1,0 +1,161 @@
+\chapter{Random Variables}
+
+\begin{dfnbox}{Random variable}{}
+    A \dfntxt{random variable} is a real-valued function whose domain is a sample space. A random variable is \dfntxt{discrete} if its domain is finite or countably infinite.
+\end{dfnbox}
+
+For example, consider an experiment where we flip three coins. Let $Y$ be the number of heads. Then there are four possible values for $Y$: 0, 1, 2, and 3. The probability of each value is:
+\begin{align*}
+    P(Y = 0) &= \sfrac18 \\ 
+    P(Y = 1) &= \sfrac38 \\
+    P(Y = 2) &= \sfrac38 \\
+    P(Y = 3) &= \sfrac38
+\end{align*}
+
+\todo[inline]{Examples from notes}
+
+The probability that $Y$ takes on the value $y$, $P(Y = y)$, is sometimes written as $p(y)$. The probability distribution of $Y$ must have:
+\begin{enumerate}
+    \item $0 \leq p(y) \leq 1$ for any value $y$; and
+    \item $\sum_y p(y) = 1$, where the summation is over all values $y$ in the domain of $Y$.
+\end{enumerate}
+
+\begin{dfnbox}{Expected Value}{}
+    Let $Y$ be a discrete random variable with probability function $p(y)$. Then the \dfntxt{expected value} of $Y$ is defined as:
+    \[ E(Y) \coloneq \sum_{y} yp(y) \]
+    If the sum diverges, then no such expected value exists.
+\end{dfnbox}
+
+Intuitively, it's a weighted average of all the possible values of $y$. If $Y$ is an accurate characterization of population frequency distribution, then $E(Y)$ is the population mean, in which case we write $E(Y) = \mu$.
+
+If we have a real-valued function $g$ of $Y$, the expected value of $g(Y)$ is given by:
+\[ E\left( g(y) \right) = \sum_{y} g(y)p(y) \]
+where $p(y)$ is the probability function associated with $Y$. Note that $g(Y)$ is itself a random variable.
+
+\begin{dfnbox}{Variance, standard deviation}{}
+    Let $Y$ be a random variable with mean $E(Y) = \mu$. The \dfntxt{variance} of $Y$ is defined as:
+    \[ V(Y) \coloneq E \left( (Y - \mu)^2 \right) \]
+    The \dfntxt{standard deviation} of $Y$ is defined as:
+    \[ \sigma(Y) \coloneq \sqrt{V(Y)} \quad \text{where}\ \sigma(Y) \geq 0 \]
+\end{dfnbox}
+
+Intuitively, variance tells us how ``spread out'' the probabilities are from the mean.
+
+\begin{thmbox}{}{}
+    $E(cg(Y)) = c E(g(Y))$
+    
+    $E(g_1(Y) + g_2(Y) + \cdots + g_k(Y)) = E(g_1(Y)) + E(g_2(Y)) + \cdots = E(g_k(Y))$
+
+    $V(Y) = E((Y-\mu)^2) = E(Y^2) - \mu^2$
+\end{thmbox}
+
+\section{The Binomial Probability Distribution}
+
+\begin{dfnbox}{Binomial experiment, Bernoulli$(p)$ trial}{}
+    A \dfntxt{Bernoulli (p) trial} is one experiment either a success $S$ or failure $F$. In it:
+    \begin{itemize}
+        \item $P(S) = p$
+        \item $P(F) = 1 - p = q$
+        \item $X = \begin{cases}
+            1, & \text{with probability}\ p \\
+            2, & \text{with probability}\ 1 - p
+        \end{cases}$
+    \end{itemize}
+    We write $\text{Binomial}(n, p)$ to be the sum of $n$ independent Bernoulli$(p)$ trials.
+\end{dfnbox}
+
+Thus, we have the following expected values:
+\begin{align*}
+    E(X) &= 0(1-p) + 1(p) = p \\
+    E(X^2) &= 0^2 (1-p) + 1^2 p = p \\
+    V(X) &= E(X^2) - (E(X))^2 = p - p^2 = pq
+\end{align*}
+
+$Y = \text{binomial}(n, p)$, where $n$ identical independent trials are each a success or failure. $P(S) = p$, and $P(F) = 1 - p = q$. In this, $Y$ denotes the number of successes in $n$ trials.
+
+\begin{exbox}{}{}
+    $40\%$ of voters in a large population support candidate $J$. If we ask $10$ randomly selected voters, how many will say they support $J$?
+    \tcblower
+    $X = \text{binomial}(10, 0.4)$. We should have:
+    \[ P(Y = y) = \binom{n}{y} p^y (1-p)^{n-y} \]
+    This is related to $(p+q)^n = \sum_{k=0}^{n} \binom{n}{k} p^k q^{n-k}$.
+\end{exbox}
+
+\begin{dfnbox}{Binomial distribution}{}
+    A random variable $Y$ has \dfntxt{binomial distribution} based on $n$ trials with probability for success $p$ if and only if:
+    \[ P(Y = y) = \binom{n}{y} p^y q^{n-y} \quad y \in \{0,1,\ldots,n\}\ \text{and}\ 0 \leq p \leq 1 \]
+\end{dfnbox}
+
+For $Y = \text{binomial}(n, p)$, we have:
+\begin{align*}
+    p(y) &= \binom{n}{x} p^x (1-p)^{n-x} \\
+    E(Y) &= \sum_{k=0}^{n} k \binom{n}{k} p^k (1-p)^{n-k}
+\end{align*}
+
+For $Y = X_1 + X_2 + \cdots + X_n$ where each $X_i = \text{Beronulli}(p)$:
+\[ E(Y) = E(X_1 + \cdots + X_n) = E(X_1) + \cdots + E(X_n) = np \]
+Similarly:
+\[ V(Y) = V(X_1 + \cdots + X_n) = V(X_1) + \cdots + V(X_n) \]
+
+\begin{exbox}{Calculators}{}
+    10 calculators to sell, \$80 each. But, double your money back guarantee if a calculator is defective. 0.08 probability that a calculator is defective. If all 10 are sold, what is the expected revenue?
+    \tcblower
+    Let $X$ be the number of defective calculators. Then $X = \text{binomial}(n = 10, p = 0.08)$. Then our revenue will be:
+    \[ \underbrace{80 \cdot 10}_\text{revenue for 10 calcs} - \underbrace{160 \cdot X}_\text{double money back for defective} \]
+    Then our expected revenue is:
+    \[ E(800 - 160X) = 800 - 160E(X) = 800 - 160 \cdot 0.8 \]
+\end{exbox}
+
+\begin{exbox}{}{}
+    What is more likely: at least one $6$ in 4 dice rolls, or at least one double 6 in 24 double dice rolls?
+    \tcblower
+    We let $X = \text{binomial}(n=4, p = \sfrac{1}{6})$. Then $P(X \geq 1) = 1 - (\sfrac56)^4$. Also, let $Y = \text{binomial}(n = 24, p = \sfrac{1}{36})$. Then $P(Y \geq 1) = 1 - (\sfrac{35}{36})^{24}$.
+\end{exbox}
+
+\begin{dfnbox}{Geometric random variable}{}
+    Independent Bernoulli$(p)$ trials until the first success. This is written as:
+    \[ Y = \text{geometric}(p) \]
+\end{dfnbox}
+
+In general, $P(Y=y)$ for geometric random variables is given by:
+\[ p(y) = \underbrace{(1-p)^{y-1}}_{\mathclap{\text{must fail first $y-1$ times}}} p \]
+
+Also, note that there can be infinitely many failed trials before a success trial. Thus, $y$ can be any value in $\{1,2,3,\ldots\}$. The probability distribution for $Y$ must still sum to $1$. That is:
+
+\[ \sum_{y=1}^{\infty} P(Y = y) = \sum_{y=1}^{\infty} (1-p)^{y-1} p = 1 \]
+
+\begin{exbox}{Dice rolls}{}
+    Suppose we roll a dice until a $6$ appears. What is the probability it takes more than $3$ rolls?
+    \tcblower
+    We have $X = \text{geometric}(p=\sfrac16)$. The probability it takes more than $3$ rolls is given by:
+    \[ P(X>3) = \sum_{k=4}^{\infty} P(X=k) \]
+    These kinds of infinite sums are hard to deal with. We can instead take an approach considering the complement.
+    $P(X>3) = 1 - P(X \leq 3) = \sum_{k=1}^{3} P(X=k) = \ldots = \frac{125}{216}$.
+\end{exbox}
+
+\begin{dfnbox}{Negative binomial}{}
+    Independent Bernoulli$(p)$ trials until the $r$th success. This is written as:
+    \[ Z = \text{negativebinomial}(r,p) \]
+\end{dfnbox}
+
+Note that a negative binomial can be created by taking the sum of $r$ independent geometric random variables. For example, if $Z = \text{negativebinomial}(r,p)$, then we have:
+\[ E(Z) = \frac{r}{p} \quad \text{and} \quad V(Z) = \frac{r(1-p)}{p^2} \]
+The possible values for $Z$ can be $r$, $r+1$, $r+2$, and so on. For any $k \geq r$:
+\[ p(k) = \binom{k-1}{r-1}p^r q^{k-r} \]
+
+\begin{exbox}{Roblox}{}
+    Each battle in a video game gives a reward of one Robux with probability 0.07. What is the probability it will take eight or fewer battles to collect five Robux?
+    \tcblower
+    We can construct a negative binomial as follows:
+    \[ Z \coloneq \text{negativebinomial}(r=5, p=0.07) \]
+    We are concerned with needing eight or fewer battles, so we want:
+    \[ P(Z \leq 8) \]
+    However, note that we would need at least five battles to collect $5$ Robux. Thus:
+    \begin{align*}
+        P(Z \leq 8)
+        &= P(Z=5) + P(Z=6) + P(Z=7) + P(Z=8) \\
+        &= \underbrace{(0.07)^5}_{P(Z=5)} + \underbrace{\binom{5}{4}(0.07)^5 (0.93)}_{P(Z=6)} + \underbrace{\binom{6}{4} (0.07)^5 (0.93)^2}_{P(Z=7)} + \underbrace{\binom{7}{4}(0.07)^5(0.93)^3}_{P(Z=8)}
+    \end{align*}
+
+
+\end{exbox}

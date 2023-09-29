@@ -1,0 +1,392 @@
+\chapter{Introduction to Groups}
+
+\section{The Basics}
+
+\begin{dfnbox}{Group}{}
+    A \dfntxt{group} is a set $G$ together with a binary operation $*$ satisfying for any $a,b,c \in G$:
+    \begin{itemize}
+        \item \dfntxt{closure} under $*$, meaning $a * b \in G$;
+        \item \dfntxt{associativity} under $*$, meaning $(a * b) * c = a * (b * c)$;
+        \item existence of an \dfntxt{identity element} $e \in G$ satisfying $e * a = a * e$; and
+        \item existence of an \dfntxt{inverse} for $a$, say $a^{-1} \in G$ where $a * a^{-1} = a^{-1} * a = e$.
+    \end{itemize}
+    A group is \dfntxt{abelian} if it is commutative under $*$, meaning $a * b = b * a$ for any $a,b \in G$.
+\end{dfnbox}
+
+Some examples of groups include $\Z$ under addition, $\Z_n$ where $n \geq 2$ under addition, and $D_{10}$ under $\circ$, the dihedral group of the regular pentagon, often called $D_5$. (TODO: pentagon example)
+
+\begin{thmbox}{Uniqueness of identities and inverses}{}
+    Let $G$ be a group.
+    \begin{enumerate}
+        \item The identity of $G$ is unique (that is, there is only one identity element in $G$).
+        \item For any $a \in G$, its inverse $a^{-1}$ is unique.
+    \end{enumerate}
+    \tcblower
+    \begin{proof}[Proof of 1]
+        Let $e$ and $f$ be identity elements in $G$ Then $ef = e$ because $f$ is an identity, and $ef = f$ because $e$ is an identity. Thus, $e = f$.
+    \end{proof}
+
+    \begin{proof}[Proof of 2]
+        Let $b$ and $c$ be inverses of $a$. Then $bac = (ba)c = ec = c$, and $bac = b(ac) = be = b$. Thus, $b = c$.
+    \end{proof}
+\end{thmbox}
+
+\begin{thmbox}{Cancellation}{}
+    Let $G$ be a group, and let $a,b,c \in G$. If $ab = ac$ or $ba = ca$, then $b = c$.
+    \tcblower
+    \begin{proof}[Proof sketch]
+        If $ab = ac$, then $a^{-1}(ab) = a^{-1}(ac)$ $\ldots$ so $b = c$.
+    \end{proof}
+\end{thmbox}
+
+\begin{thmbox}{}{}
+    Let $G$ be a group, and let $a,b \in G$. Then there is a unique $c \in G$ satisfying $ac = b$, and there is a unique $d \in G$ satisfying $da = b$.
+    \tcblower
+    \textbf{Intuition:} $c = a^{-1}b$ and $d = ba^{1}$.
+\end{thmbox}
+
+
+\begin{dfnbox}{Permutation}{}
+    A \dfntxt{permutation} on a set $A$ is an injective function $\sigma : A \to A$, written as:
+    \[ \sigma \coloneq \begin{pmatrix} 1 & 2 & 3 \\ a & b & c \end{pmatrix} \]
+    to mean $\sigma(1) = a, \sigma(2) = b, \sigma(3) = c$.
+\end{dfnbox}
+
+Since these are functions, we can compose two or more permutations.
+
+\todo[inline]{Permutation example, composition example}
+% TODO: compositione xample
+
+The set of permutations, under function composition, is a \dfntxt{group}.
+\begin{itemize}[noitemsep]
+    \item Closed
+    \item Associativity
+    \item Existence of an identity element $e$ where $e \circ \sigma = \sigma \circ e$ for all $\sigma$. In this case, $e$ is simply the identity function.
+    \item Existence of an inverse for each $\sigma$. That is, for any $\sigma$, there exists $\tau$ where $\sigma \circ \tau = \tau \circ \sigma = e$.
+\end{itemize}
+
+\begin{dfnbox}{Symmetric group ($S_n$)}{}
+    The set of permutations on $3$ elements under function composition is called $S_3$, the \dfntxt{symmetric group} on $3$ elements.
+\end{dfnbox}
+
+Let $n \geq 2$. Let $U(n)$ denote the set of all $a \in \Z_n$ where $\gcd(a,n) = 1$, under the multiplication modulo $n$.
+
+\begin{dfnbox}{Direct product}{}
+    Let $G$ be a group with operation $*$, and let $H$ be a group with operation $\cdot$. On the Cartesian product $G \times H$, define the operation $\diamond$ by:
+    \[ (g_1, h_1) \diamond (g_2, h_2) \coloneq (g_1 * g_2, h_1 \cdot h_2) \]
+    for all $g_i \in G, h_i \in H$. We call this the \dfntxt{direct product} of $G$ and $H$.
+\end{dfnbox}
+
+\begin{thmbox}{Direct product is always a group}{}
+    The direct product of any two groups is itself a group.
+\end{thmbox}
+
+\begin{exbox}{Simple direct product}{}
+    Consider the direct product $\Z_3 \times S_3$.
+    \begin{itemize}
+        \item How many elements are in the direct product?
+        \item What is the identity element?
+        \item What is the inverse of $\left( 2, \big( \begin{smallmatrix} 1 & 2 & 3 \\ 3 & 1 & 2 \end{smallmatrix} \big) \right)$?
+    \end{itemize}
+    \tcblower
+    \begin{itemize}
+        \item There are $3$ elements in $\Z_3$ and $6$ elements in $S_3$, so there are a total of $18$ elements in the direct product.
+        \item The identity element is $\left( 0, \begin{pmatrix} 1 & 2 & 3 \\ 1 & 2 & 3 \end{pmatrix} \right)$
+        \item The inverse of $\left( 2, \begin{pmatrix} 1 & 2 & 3 \\ 3 & 1 & 2 \end{pmatrix} \right)$ is $\left(1, \begin{pmatrix} 1 & 2 & 3 \\ 2 & 3 & 1 \end{pmatrix} \right)$
+    \end{itemize}
+\end{exbox}
+\todo{matrix size}
+
+\section{Order}
+
+\todo[inline]{Integer powers}
+
+In groups under an addition operation such as $\Z_{15}$, we write $7 \cdot 2$ instead of $2^7$ to avoid ambiguity with the notation for integer powers.
+
+\begin{thmbox}{Properties of power}{}
+    \begin{enumerate}
+        \item $a^m a^n = a^{m+n}$
+        \item $(a^m)^n = a^{mn}$
+        \item $a^{-n} = (a^{-1})^n = (a^n)^{-1}$
+    \end{enumerate}
+\end{thmbox}
+
+\begin{dfnbox}{Order}{}
+    Let $G$ be a group under operation $\cdot$.
+    \begin{itemize}
+        \item The \dfntxt{order} of $G$ (denoted $\abs{G}$) is the number of elements in $G$. $G$ is \dfntxt{finite} if its order is finite; otherwise, it's an \dfntxt{infinite} group.
+        \item The \dfntxt{order} of an element $a \in G$ (denoted $\abs{a}$) is the smallest positive integer where:
+        \[ \underbrace{a \cdot a \cdot a \cdots a}_\text{$n$ times} = e \quad \text{(the identity element of $G$)} \]
+        If such an $n$ exists, $a$ has \dfntxt{finite order}; otherwise, $a$ has \dfntxt{infinite order}.
+
+    \end{itemize}
+\end{dfnbox}
+
+\begin{notebox}
+    In any group, the identity element is the only element that has order $1$.
+\end{notebox}
+
+\begin{exbox}{Order of common groups}{}
+    \begin{itemize}[noitemsep]
+        \item $\abs{Z} = \infty$
+        \item $\abs{Z_{15}} = 15$
+        \item $\abs{D_{10}} = 10$
+        \item $\abs{S_5} = 5!$
+        \item $\abs{D_6 \times S_4} = 6 \cdot 4!$
+    \end{itemize}
+\end{exbox}
+
+\begin{exbox}{Order of elements in common groups}{}
+    \begin{itemize}
+        \item Order of $2 \in Z_4$ is $2$ because $2 + 2 = 0 = e$
+        \item Order of $3 \in U(8)$ is $3$ because $3^2 = 1 = e$
+        \item Order of $\sigma \coloneq \big(\begin{smallmatrix} 1&2&3 \\ 2&3&1 \end{smallmatrix} \big) \in S_3$ is $3$ because $\big( \begin{smallmatrix} 1&2&3 \\ 2&3&1 \end{smallmatrix} \big)^3 = \big( \begin{smallmatrix} 1&2&3 \\ 1&2&3 \end{smallmatrix} \big)$
+    \end{itemize}
+\end{exbox}
+
+\begin{thmbox}{Properties of order}{}
+    Let $G$ be a group, and let $a \in G$.
+    \begin{enumerate}
+        \item If $a$ has infinite order, then $a^i = a^j$ if and only if $i = j$.
+        \item If $a$ has order $n \in \Z^+$, then $a^i = a^j$ if and only if $n \mid (i - j)$.
+    \end{enumerate}
+    \tcblower
+    \begin{proof}[Proof sketch]
+        Consider $i$ and $j$ where $a^{i-j} = e$.
+        \begin{enumerate}
+            \item If $a$ has infinite order, then $i - j = 0$.
+            \item If $a$ has finite order, write $i - j = nq + r$ for $0 \leq r < n$ (by the division algorithm TODO: REF). Then:
+            \[ a^{i-j} = (a^n)^q a^r = e \]
+            So $a^r = e$. But $r < n$, and $n$ is the smallest positive integer satisfying $a^n = e$. Thus, $r = 0$.
+        \end{enumerate}
+    \end{proof}
+\end{thmbox}
+
+\begin{corbox}{}{}
+    Let $G$ be a group, and let $a \in G$ where $\abs{a} = n \in \Z^+$. Then $a^i = e$ if and only if $n \mid i$.
+\end{corbox}
+
+\begin{exbox}{}{}
+    Show that $ab$ and $ba$ have the same order.
+    \tcblower
+    Suppose $(ab)^n = e$. Then:
+    \begin{align*}
+        (ba)^n &= \underbrace{baba \cdots ba}_\text{$n$ times} \\
+        &= b(ab)^{n-1}a
+    \end{align*}
+    So $(ba)^n b = b(ab)^{n-1}ab = b(ab)^n = b$. Thus, $(ba)^n = e$. Thus, $n \mid \abs{ba}$, or $\abs{ab} \mid \abs{ba}$.
+\end{exbox}
+
+\section{Cyclic Groups}
+
+\begin{dfnbox}{Cyclic}{}
+    A group $G$ is \dfntxt{cyclic} if there exists $a \in G$ where, for any $b \in G$:
+    \[ b = a^n \quad \text{for some}\ n \in \Z \]
+    In other words, $G$ is cyclic if there exists $a \in G$ where any element of $G$ is a power of $a$. In this context, we say $a$ is a \dfntxt{generator} of $G$ and write $G = \alg{a}$, where:
+    \[ \alg{a} \coloneq \{ a^k : k \in \Z \} \]
+\end{dfnbox}
+
+For example, $\Z$ under addition is a cyclic group. For any $n \in \Z$, we have:
+\[ 1 \cdot n = n \]
+Note here that $1 \cdot n$ reflects the idea of integer powers under addition. We apply the group operation of addition $n$-times. For example:
+\begin{align*}
+    5 &= 1^5 = 1 \cdot 5 1 + 1 + 1 + 1 + 1 \\
+    -2 &= 1^{-2} = 1 \cdot (-2) = - (1 + 1)
+\end{align*}
+When dealing with additive operations, we usually omit the exponent notation and simply write the multiplicative expression. Note also that $\Z$ can be generated by $-1$. Thus, the generator of a cyclic group is not guaranteed to be unique.
+
+Another example, in $\Z_{12}$, we have:
+\[ \alg{1} = \{0, 1, 2, \ldots, 10, 11\} \]
+\[ \alg{4} = \{0, 4, 8\} \]
+In fact, this $\alg{4}$ is itself a group under addition modulo 12.
+
+\begin{thmbox}{Every cyclic group is abelian}{}
+    Let $G$ be a group. If $G$ is cyclic, then it is abelian.
+\end{thmbox}
+
+\section{Subgroups}
+
+\begin{dfnbox}{Subgroup}{}
+    Let $G$ be a group under an operation $*$. Then a subset $H \subseteq G$ is considered a \dfntxt{subgroup} of $G$ if $H$ itself also a group under $*$. $H$ is called a \dfntxt{proper subgroup} of $G$ if $H \subsetneq G$.
+\end{dfnbox}
+
+Trivially, every group is a subgroup of itself. Also, $\{e\}$ is a subgroup of every group. More substantially, $\Z$ is a subgroup of $\Q$, and $\Q$ is a subgroup of $\R$. This is sometimes written as $\Z \leq \Q$, and $\Q \leq \R$.
+
+\begin{thmbox}{Conditions for subgroup}{}
+    Let $G$ be a group under operation $*$, and let $H \subseteq G$. Then $H$ is a subgroup of $G$ if and only if:
+    \begin{enumerate}
+        \item $e \in H$ (the subset contains the identity);
+        \item for any $a,b \in H$, $a * b \in H$ (the subset is closed under $*$); and
+        \item for any $a \in H$, $a^{-1} \in H$ (the subset contains all inverses).
+    \end{enumerate}
+\end{thmbox}
+
+\begin{exbox}{Determining $3\Z$ is a subgroup of $\Z$}{}
+    Consider the following set:
+    \[ 3\Z \coloneq \{3x : x \in \Z\} \]
+    We have:
+    \begin{enumerate}
+        \item $0 \in 3\Z$
+        \item For any $a,b \in 3\Z$, $a = 3m$ and $b = 3n$ for some $m,n \in \Z$. Thus, $a+b = 3m + 3n = 3(m+n) \in 3\Z$.
+        \item For any $a \in 3\Z$, $a^{-1} = -a = 3(-m)$.
+    \end{enumerate}
+    Thus, we can confirm that $3\Z$ is a subgroup of $\Z$.
+\end{exbox}
+
+Note that in the above example, we can also write:
+\[ 3\Z \coloneq \alg{3} = \{3x : x \in \Z\} \]
+
+\begin{dfnbox}{Cyclic subgroup}{}
+    Let $G$ be a group, and let $a \in G$. The \dfntxt{cyclic subgroup} generated by $a$ is defined as:
+    \[ \alg{a} \coloneq \{ a^n : n \in \Z \} \]
+\end{dfnbox}
+
+For example, in $\Z_{12}$, we have:
+\begin{align*}
+    \alg{0} &= \{0\} \\
+    \alg{1} &= \Z_{12} \\
+    \alg{2} &= \{0, 2, 4, 6, 8, 10\} \\
+    \alg{3} &= \{0, 3, 6, 9\} \\
+    \alg{4} &= \{0, 4, 8\} \\
+    \alg{5} &= \{0, 5, 10, 3, 8, 1, 6, 11, 4, 9, 2, 7\} = \Z_{12} \\
+    \alg{6} &= \{0, 6\} \\
+    \alg{7} &= \ldots = \Z_{12} \\
+    \alg{8} &= \{ 0, 8, 4 \} \\
+    \alg{9} &= \{0, 9, 6, 3\} \\
+    \alg{10} &= \{0, 10, 8, 6, 4, 2\} = \alg{2} \\
+    \alg{11} &= \ldots = \Z_{12}
+\end{align*}
+
+From this, it seems that numbers relatively prime with $12$ can generate the entirety of $\Z_{12}$. In fact, if $\abs{a} = n$, then $\abs{a^i} = \frac{n}{\gcd(n, i)}$. \todo{Check this fact!!!}
+
+\begin{thmbox}{Cyclic subgroups are groups}{}
+    Let $G$ be a group, and let $a \in G$. $\alg{a}$ is a subgroup.
+    \tcblower
+    \begin{proof}[Proof sketch]
+        We simply check the three conditions.
+        \begin{enumerate}
+            \item $e = a^0$.
+            \item $a^m a^n = a^{m+n}$
+            \item if $a^m \in \alg{a}$, then $a^{-m} \in \alg{a}$.
+        \end{enumerate}
+        Thus, $\alg{G}$ is a subgroup of $G$.
+    \end{proof}
+\end{thmbox}
+
+\begin{thmbox}{Conditions for subgroup relaxed}{}
+    Let $G$ be a group, and let $H \subseteq G$. Then $H$ is a subgroup $G$ if and only if:
+    \begin{enumerate}
+        \item $e \in H$, and
+        \item $ab^{-1} \in H$ for any $a,b \in H$.
+    \end{enumerate}
+    \tcblower
+    \begin{proof}[Proof sketch]
+        Let $a \in H$. $e \in H$ by (1), so $1 \cdot a^{-1} \in H$.
+
+        Let $a,b \in H$. $b^{-1} \in H$ by the first statement, so then $a(b^{-1})^{-1} \in H$, so $ab \in H$.
+    \end{proof}
+\end{thmbox}
+
+\begin{thmbox}{Conditions for finite subgroup}{}
+    Let $G$ be a group, and let $H$ be a \textbf{finite} subset of $G$. Then $H$ is a subgroup of $G$ if and only if:
+    \begin{enumerate}
+        \item $e \in H$, and
+        \item $ab \in H$ for any $a,b \in H$.
+    \end{enumerate}
+    \tcblower
+    \textbf{Intuition:} This theorem is saying that if we take a finite subset of $G$, then these two conditions alone imply the existence of inverses, and vice versa. For any $a \in H$, we have:
+    \[ \alg{a} = \{e, a, a^2, a^3, \ldots \} \subseteq H \]
+    Since $H$ is finite, then these $a$'s must ``wrap around'' back to $e$. For example, we might have $a^5 = a^{17}$, which implies that $e = a^{12} = a(a^{11})$. Thus, the inverse of $a$ is $a^{11}$.
+\end{thmbox}
+
+Crucially, this theorem does not apply for infinite subsets/subgroups. 
+
+\begin{dfnbox}{Center}{}
+    Let $G$ be a group. The \dfntxt{center} of $G$ is defined as:
+    \[ Z(G) \coloneq \{ z \in G : az = za\ \text{for all}\ a \in G \} \]
+\end{dfnbox}
+
+If $G$ is abelian, then $Z(G) = G$.
+
+\todo[inline]{TODO: dihedral groups, diagram thing}
+
+\section{Cyclic Groups}
+
+\begin{dfnbox}{Euler phi-function}{}
+    The \dfntxt{Euler phi-function} is a function $\phi : \N \to \N$ where $\phi(n)$ is the number of integers $1 \leq i \leq n$ where $\gcd(i, n) = 1$.
+\end{dfnbox}
+
+For example, to calculate $\phi(10)$, we can look at all the integers $1$ through $10$ and see if they are relatively prime to $10$. From doing this, we see that only $1$, $3$, $7$, and $9$ are relatively prime to $10$. Thus, $\phi(10) = 4$.
+
+\todo[inline]{Much much more stuff}
+
+\section{Cosets and Lagrange's Theorem}
+\begin{dfnbox}{Modular congruency (groups)}{}
+    Let $G$ be a group, and let $H$ be a subgroup of $G$. For any $a,b \in G$, we say $a$ is \dfntxt{congruent} to $b$ \dfntxt{modulo} if $a^{-1} b \in H$. That is:
+    \[ a \equiv b \pmod{H} \iff a^{-1}b \in H \]
+\end{dfnbox}
+
+\begin{thmbox}{}{}
+    For any group $H$, congruence modulo $H$ is an equivalence relation.
+    \tcblower
+    \begin{proof}
+        If $a \equiv b \pmod{H}$, then $a^{-1}b \in H$. Thus, $a^{-1}b = h$ for some $h \in H$. Also, $b = ah \in aH$, and clearly $a \in aH$. If $b = ah$ for some $h ,\in H$, then $a^{-1}b = h \in H$. Thus, $a \equiv b \pmod{H}$.
+    \end{proof}
+\end{thmbox}    
+
+As with any equivalence relation, we have equivalence classes defined below:
+
+\begin{dfnbox}{Left coset, right coset}{}
+    Let $H$ be a subgroup of $G$. For any $g \in G$, the \dfntxt{left cosets} of $H$ in $G$ are sets defined as:
+    \[ gH \coloneq \{ gh : h \in H \} \]
+    Similarly, we define \dfntxt{right cosets} of $H$ in $G$ as:
+    \[ Hg \coloneq \{ hg : h \in H \} \]
+    Note: If the group operation is addition, we write $g + H$ instead of $gH$.
+\end{dfnbox}
+
+\begin{thmbox}{Cosets partition a group}{}
+    Let $H$ be a group, and let $H$ be a subgroup of $G$. Then the left cosets of $H$ in $G$ partition $G$.
+    \begin{enumerate}
+        \item Each $a \in G$ is in exactly one left coset, $aH$; and
+        \item if $a,b \in G$, either $aH = bH$ or $aH \cap bH = \emptyset$.
+    \end{enumerate}
+\end{thmbox}
+
+\begin{exbox}{Left cosets and partitioning}{}
+    Consider the group $U(16) = \{ 1,3,5,7,9,11,13,15 \}$ with $H = \alg{3}$. Then we have the following left cosets of $H$ in $U(16)$:
+    \begin{enumerate}[noitemsep]
+        \item $1H = H$
+        \item $3H = \{3,9,11,1\} = H$
+        \item $5H = \{ 5 \cdot 1, 5 \cdot 3, 5 \cdot 9, 5 \cdot 11 \} = \{5, 15, 13, 7\}$
+        \item $7H = \{7, 5, 15, 13 \}$
+        \item $9H = \{9, 11, 1, 3\} = H$
+        \item $11H = \{ 11, 1, 3, 9 \} = H$
+        \item $13H = \{ 13, 7, 5, 15 \}$
+        \item $15H = \{ 15, 13, 7, 5 \}$
+    \end{enumerate}
+    From this, there are only two distinct equivalence classes (and thus, only two left cosets): $\{1,3,9,11\}$ and $\{5,7,13,15\}$. These two left cosets partition $U(16)$.
+\end{exbox}
+
+\begin{thmbox}{Lagrange's Theorem}{}
+    Let $G$ be a group, and let $H$ be a subgroup of $G$. Then $\abs{H}$ divides $\abs{G}$.
+\end{thmbox}
+
+\begin{dfnbox}{Index}{}
+    Let $H$ be a subgroup of $G$. The index of $H$ in $G$, written $[G : H]$, is the number of left cosets of $H$ in $G$.
+\end{dfnbox}
+
+\begin{corbox}{}{}
+    If $G$ is a group and $a \in G$, then $\abs{a}$ divides $\abs{G}$.
+\end{corbox}
+
+\begin{corbox}{}{}
+    Every group of prime order is cyclic.
+    \tcblower
+    \begin{proof}
+
+    \end{proof}
+\end{corbox}
+
+\begin{exbox}{}{}
+    Let $G$ be a group having subgroups $H$ and $K$, where $\abs{H} = 20$ and $\abs{K} = 63$. Show that $H \cap K = \{ c \}$.
+\end{exbox}

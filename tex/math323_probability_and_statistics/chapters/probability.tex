@@ -1,28 +1,26 @@
-\chapter{Introduction}
+\chapter{Probability}
 
-As an introduction, let's consider some problems we might want to answer. We may use probability to test models against data. For example, imagine we rolled a six-sided die 100 times and rolled five each time. It's certainly a possibility albeit an unlikely one. Now imagine instead we rolled another die 100 times and got 17 1s, 17 2s, 17 3s, 17 4s, 16 5s, and 16 6s. Our intuition leads us to believe that the second die is more ``fair'' than the first. The first die certainly seems more suspicious than the second. The problem is: how do we quantify our suspicion with the first die?
+\section{Introduction}
 
 \begin{dfnbox}{Experiment, event, simple event, sample point}{experiment}
     An \dfntxt{experiment} is the process by which an observation is made. Something can be an experiment if it has a measurable outcome. An \dfntxt{event} is the set of outcome(s). An event is \dfntxt{simple} if it only contains one outcome, in which case it cannot be decomposed.
 \end{dfnbox}
 
-For example, rolling dice, flipping a coin, or drawing a card from a deck can all be experiments. Let's consider an experiment in which we flip a coin three times. There are eight possible outcomes, which we will denote by a set named $S$:
-\[ S \coloneq \{ \text{HHH}, \text{TTT}, \text{HHT}, \text{HTH}, \text{HTT}, \text{THH}, \text{THT}, \text{TTH} \} \]
-In this case, any subset of $S$ can be considered an event. Suppose we wanted to focus on all the outcomes where heads appeared more than tails. The set of these outcomes can be simply defined as:
-\[ E \coloneq \{ \text{HHH}, \text{HHT}, \text{HTH}, \text{THH} \} \]
-If we only focus on a single specific outcome, say $\text{HHH}$, we denote this by a singleton set containing only that outcome:
-\[ H \coloneq \{ \text{HHH} \} \]
-This event $H$ is simple as it only contains one possible outcome: $\text{HHH}$.
-
-\begin{dfnbox}{Probability}{}
-    The \dfntxt{probability} of an event is the likelihood that the event occurs. Given an event $E$, we write $P(E)$ to denote the probability that event $E$ occurs.
+\begin{dfnbox}{Sample point, sample space, discrete sample space}{}
+    A \dfntxt{sample point} is any single outcome from an experiment. The \dfntxt{sample space} is the set of all possible sample points. A sample space is \dfntxt{discrete} if it contains a countable amount of distinct sample points.
 \end{dfnbox}
 
-In our coin flip example (and other naive probability examples), we can deduce the probability of an event by the following formula:
-\[ P(E) = \frac{\text{num. outcomes in E}}{\text{num. possible outcomes}} \]
-The probability that more heads occur than tails (denoted by $E$) is calculated as:
-\[ P(E) = \frac{4}{8} = \frac{1}{2} \]
+\begin{dfnbox}{Probability}{}
+    Intuitively, the \dfntxt{probability} of an event is the likelihood that the event occurs. Given an event $E$, we write $P(E)$ to denote the probability that event $E$ occurs.
+    \tcblower
+    Let $S$ be the sample space associated with an experiment. To each event $A \subseteq S$, we assign a number $P(A)$ called the \dfntxt{probability} of $A$, satisfying:
+    \begin{enumerate}
+        \item $P(A) \geq 0$ for all $A \subseteq S$,
+        \item $P(S) = 1$, and
+        \item if $A_1, \ldots, A_n$ are disjoint, then we have $P(A_1 \cup \cdots \cup A_n) = P(A_1) + \cdots + P(A_n)$.
+    \end{enumerate}
 
+\end{dfnbox}
 
 \begin{exbox}{Betting}{betting}
     \textbf{Question:} Suppose that two people, $B$ and $P$, have placed equal bets on winning the best of 5 fair coin flips. $B$ is betting on heads, and $T$ is betting on tails. They are interrupted after 3 flips and have to stop the game short, with $B$ ahead 2 heads to 1 tails. How should they fairly divide pot?
@@ -32,24 +30,7 @@ The probability that more heads occur than tails (denoted by $E$) is calculated 
     From these 4 outcomes, $B$ will win 3 of the 4 outcomes, and $P$ will win 1 of the  outcomes.
 \end{exbox}
 
-TODO: stuff below should be mixed with above stuff?
-
-\begin{dfnbox}{Sample point, sample space, discrete sample space}{}
-    A \dfntxt{sample point} is any single outcome from an experiment. The \dfntxt{sample space} is the set of all possible sample points. A sample space is \dfntxt{discrete} if it contains a countable amount of distinct sample points.
-\end{dfnbox}
-
 In this context, we can think of an event as a collection of sample points. Note that a simple event is always a singleton set whereas a sample point does not have to be; we will not worry over these differences and simply use the two terms interchangeably.
-%Note that a simple event does not constitute a sample point, as a simple event must be a singleton set. A sample point does not have to be encapsulated into a set.
-
-\begin{dfnbox}{Probability (Formal Definition)}{}
-    Let $S$ be the sample space associated with an experiment. To each event $A \subseteq S$, we assign a number $P(A)$ called the \dfntxt{probability} of $A$, satisfying:
-    \begin{enumerate}
-        \item $P(A) \geq 0$ for all $A \subseteq S$,
-        \item $P(S) = 1$, and
-        \item if $A_1, \ldots, A_n$ are disjoint, then we have $P(A_1 \cup \cdots \cup A_n) = P(A_1) + \cdots + P(A_n)$.
-    \end{enumerate}
-\end{dfnbox}
-
 
 For example, let's consider a homemade, six-sided die. Using $S$ to denote our sample space, we have
 \[ S \coloneq \{ E_1, E_2, E_3, E_4, E_5, E_6 \} \]
@@ -105,15 +86,37 @@ To find the probability that we roll an even number, we look at the event $\{E_2
     The probability of any sample point occurring is $\sfrac{1}{10}$. From this, we can simply add up the sample points for each of the events. The probability that the instructor selects two dead markers is given by the event $\{D_1D_2, D_1D_3, D_2D_3\}$ whose probability is $\sfrac{3}{10}$.
 \end{exbox}
 
-TODO: stuff before this (absence 8 28 2023)
+\begin{tecbox}{Calculating Probability: The Sample Point Method}{}
+    The sample point method is a very straightforward approach to calculating the probability of an event in an experiment.
+    \begin{enumerate}
+        \item List all the simple events associated with an experiment. This defines the sample space $S$.
+        \item Assign reasonable probabilities to the sample points in $S$.
+        \item Define the event of interest $A$ as a subset of $S$.
+        \item Find $P(A)$ by summing the probability of each sample point in $A$.
+    \end{enumerate}
+\end{tecbox}
 
+\section{Combinatorics}
+
+\begin{dfnbox}{Permutation}{}
+    A \dfntxt{permutation} is an ordered arrangement of $r$ distinct objects. The number of permutations of size $n$ among $r$ objects is defined as:
+    \[ P_n^r \coloneq \frac{n!}{(n-r)!} = n(n-1)(n-2)\cdots(n-r+1) \]
+\end{dfnbox}
+
+\begin{thmbox}{Number of partitions}{}
+    The number of ways partitioning $n$ distinct objects into $k$ disjoint sets is:
+    \[ \binom{n}{n_1\ n_2\ \cdots\ n_k} \coloneq \frac{n!}{n_1! n_2! \cdots n_k!} \]
+\end{thmbox}
+
+The terms $\binom{n}{n_1\ n_2\ \cdots\ n_k}$ are often called \dfntxt{multinomial coefficients} because they occur in the expansion of $y_1 + y_2 + \cdots + y_k$ raised to the $n$th power:
+\[ (y_1 + y_2 + \cdots + y_k)^n = \sum \binom{n}{n_1\ n_2\ \cdots\ n_k} y_1^{n_1} y_2^{n_2} \cdots y_k^{n_k} \]
 
 \begin{dfnbox}{Combination}{}
-    The number of combinations of $r$ objects taken $r$ at a time from $n$ objects is given by
+    The number of combinations of $n$ objects taken $r$ at a time is given by
     \[ \binom{n}{r} = \frac{n!}{r!(n-r)!} \]
 \end{dfnbox}
 
-TODO: permutation and notation
+We can think of the above definition in terms of sets. Given a set $A$ of size $N$, $\binom{n}{r}$ is the number of possible distinct subsets of $A$ that are of size $r$.
 
 \begin{thmbox}{Binomial Theorem}{}
     \[ (x+y)^n = \sum_{i=0}^{n} \binom{n}{i} x^i y^{n-i} \]
@@ -123,6 +126,7 @@ TODO: permutation and notation
     If we were to fully distribute this out, we have:
     \[ t^5 + 5t^4h + \binom{5}{3} t^3 h^2 + \binom{5}{2} t^2 h^3 + 5th^4 + h^5 \]
 \end{thmbox}
+
 
 \begin{exbox}{Coin flips}{}
     Four fair coins are flipped. What is the most likely outcome?
@@ -177,12 +181,15 @@ TODO: permutation and notation
 
 TODO :oisdjfojsdoisjf
 
+\section{Conditional Probability and Independence}
+
 \begin{dfnbox}{Conditional probability}{}
     The \dfntxt{conditional probability} of an event $A$, given that $B$ has occurred, is defined as:
-    \[ P(A \mid B) \coloneq \frac{P(A \cap B)}{P(B)} \]
+    \[ P(A \mid B) \coloneq \frac{P(A \cap B)}{P(B)} \quad \text{if} \quad P(B) > 0. \]
+    We read $P(A \mid B)$ as ``probability of $A$ given $B$.''
 \end{dfnbox}
 
-For example, if we roll a six-sided die and it's odd, the probability then that it is $1$ is:
+For example, if we roll a six-sided die, and we already know that the die landed on an odd number, then the probability that it's $1$ is:
 
 \[ P(1 \mid \text{odd}) = \frac{P(1\ \text{and odd})}{P(\text{odd})} = \frac{\sfrac16}{\sfrac36} \]
 
@@ -198,13 +205,16 @@ For example, if we roll a six-sided die and it's odd, the probability then that 
     To confirm our answer, we can asdofadsiofj
 \end{exbox}
 
-\begin{dfnbox}{Independent}{}
-    Intuitively, two events are called \dfntxt{independent} if the occurrence of one does not affect the probability of occurrence of the other. More formally, two events $A$ and $B$ are \dfntxt{independent} any of the following are true:
+\begin{dfnbox}{Independent, dependent}{}
+    Intuitively, two events are called \dfntxt{independent} if the occurrence of one does not affect the probability of occurrence of the other.
+    \tcblower
+    More formally, two events $A$ and $B$ are \dfntxt{independent} any of the following are true:
     \begin{itemize}
         \item $P(A \mid B) = P(A)$,
         \item $P(B \mid A) = P(B)$, or
         \item $P(A \cap B) = P(A) \cdot P(B)$.
     \end{itemize}
+    Otherwise, the events are \dfntxt{dependent}.
 \end{dfnbox}
 
 \begin{exbox}{Independent dice rolls}{}
@@ -239,4 +249,76 @@ For example, if we roll a six-sided die and it's odd, the probability then that 
         \item $P(C) = \sfrac13$
         \item $P(D) = \sfrac13$
     \end{itemize}
+\end{exbox}
+
+\section{Two Laws of Probability}
+\begin{thmbox}{Multiplicative Law of Probability}{}
+    The probability of the intersection of two events $A$ and $B$ is:
+    \[ P(A \cap B) = P(A)P(B \mid A) = P(B) P(A \mid B) \]
+    If $A$ and $B$ are independent, then:
+    \[ P(A \cap B) = P(A) P(B) \]
+\end{thmbox}
+
+\begin{thmbox}{Additive Law of Probability}{}
+    The probability of the union of two events $A$ and $B$ is:
+    \[ P(A \cup B) = P(A) + P(B) - P(A \cap B) \]
+    If $A$ and $B$ are disjoint, then:
+    \[ P(A \cap B) = 0 \] 
+\end{thmbox}
+
+\begin{thmbox}{Probability of complementary event}{}
+    Let $A$ be an event. Then $P(A) = 1 - P(\overline{A})$.
+\end{thmbox}
+
+\section{The Law of Total Probability and Bayes' Theorem}
+
+\begin{dfnbox}{Partition}{}
+    Let $S$ be a set. If $S = B_1 \cup B_2 \cup \cdots \cup B_k$, and these sets $B_1, \ldots, B_k$ are disjoint, then the set $\{ B_1, \ldots, B_k \}$ is called a \dfntxt{partition} of $S$. Moreover, for any $A \subseteq S$:
+    \[ A = (A \cap B_1) \cup (A \cap B_2) \cup \cdots \cup (A \cap B_k) \]
+    where $A \cap B_1, \ldots, A \cap B_k$ are disjoint.    
+\end{dfnbox}
+
+Partitions are especially useful to us in computing probability. For example:
+\[ P(A) = \sum_{i=1}^{n} P(A \cap B_i) = \sum_{i=1}^{k} P(A \mid B_i) P(B_i) \]
+
+\begin{exbox}{Probability using partition}{disease}
+    A diagnostic test for a disease is 95\% accurate. Let $E_d$ denote the event where a person has a disease, and let $E_+$ denote a positive test. Then:
+    \begin{align*}
+        P(E_+ \mid E_d) &= 0.95 \\
+        P(\overline{E_+} \mid \overline{E_d}) &= 0.95
+    \end{align*}
+    If 1\% of the population has the disease, what is the probability that a randomly selected person tests positive?
+    \tcblower
+    Since $E_d$ and $\overline{E_d}$ are disjoint, we can partition the event $E_+$ into two sets, $E_+ \cap E_d$ and $E_+ \cap \overline{E_d}$. As such, we can calculate $P(E_+)$ by:
+    \begin{align*}
+        P(E_+)
+        &= P(E_+ \cap E_d) + P(E_+ \cap \overline{E_d}) \\
+        &= P(E_+ \mid E_d) P(E_d) + P(E_+ \mid \overline{E_d}) P (\overline{E_d}) \\
+        &= 0.95 \cdot 0.01 + 0.05 \cdot 0.99 \\
+        &= 0.059
+    \end{align*}
+\end{exbox}
+
+\begin{thmbox}{Bayes' Theorem}{}
+    Let $S$ be a set. If $\{B_1, \ldots, B_k\}$ is a partition of $S$, then for any $j \in \{1, \ldots, k\}$:
+    \begin{align*}
+        P(B_j \mid A) &= \frac{P(B_j \cap A)}{P(A)} \\
+        &= \frac{P(A \mid B_j)P(B_j)}{\sum_{i=0}^{k} P(A \mid B_i) P(B_i) }
+    \end{align*}
+\end{thmbox}
+
+\begin{exbox}{Probability using Baye's theorem}{}
+    Revisiting Example \ref{ex:disease}, we have:
+    \begin{align*}
+        P(E_d \mid E_+)
+        &= \frac{P(E_+ \mid E_d) P(E_d)}{P(E_+ \mid E_d)P(E_d) + P(E_+ \mid \overline{E_d}) P(\overline{E_d})} \\
+        &= \frac{0.95 \cdot 0.01}{0.95 \cdot 0.01 + 0.05 \cdot 0.99} \\
+        &= 0.16
+    \end{align*}
+\end{exbox}
+
+\begin{exbox}{}{}
+    Five identical bowls. Bowl $i$ contains $i$ white marbles and $5-i$ black marbles. A bowl is randomly selected, and two marbles are removed without replacement. Determine the probability of $P(\text{both white})$ and $P(\text{bowl 3} \mid \text{both white})$.
+    \tcblower
+    \todo[inline]{On paper notes; branching thing!!!}
 \end{exbox}

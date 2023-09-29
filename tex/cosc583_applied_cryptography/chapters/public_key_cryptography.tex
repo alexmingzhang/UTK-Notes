@@ -1,0 +1,190 @@
+\chapter{Public Key Cryptography}
+
+\begin{dfnbox}{Public-key cryptography}{}
+\dfntxt{Public-key cryptography} is a cryptographic scheme in which the sender and receiver both have a unique key pair, which consists of a \dfntxt{public key} that encrypts messages and a \dfntxt{private key} that decrypts messages.
+\end{dfnbox}
+
+Public-key cryptography also supports digital signatures, which provides integrity and non-repudiation. The sender's key is used to encrypt the hash of the message, and their public key is used to decrypt it.
+
+\paragraph{Public-Key Algorithms}
+There are many public-key algorithms used for a variety of purposes:
+\begin{itemize}
+    \item \textbf{Key agreement:} Diffie-Hellman, YAK
+    \item \textbf{Encryption:} RSA, ElGamal, Paillier, Cramer-Shoup
+    \item \textbf{Digital Signatures:} Digital Signature Algorithm (DSA), ElGamal
+\end{itemize}
+
+\paragraph{Security of Public-Key Algorithms}
+Cryptographers have mathematically proven that public-key algorithms rely on solving hard mathematical problems. So long as these hard problems cannot be solved, then our algorithm is secure. It's not entirely fool-proof, but it still gives us assurance that our schemes will be difficult for an adversary to break.
+
+Another security benefit of public-key algorithms is the prevention of chosen plaintext attacks (CPA) and chosen ciphertext attacks (CCA).
+
+\begin{tecbox}{Chosen plaintext attack (CPA)}{}
+    A \dfntxt{chosen plaintext attack (CPA)} is an attack on an encryption algorithm that involves the following:
+    \begin{enumerate}[noitemsep]
+        \item The adversary submits two messages, $m_0$ and $m_1$.
+        \item A bit $b$ is chosen at random.
+        \item The adversary receives $E(m_b)$ (the encryption of either $m_0$ or $m_1$ based on the bit $b$) and must figure out the value of $b$.
+    \end{enumerate}
+    The adversary wins if they can output $b$ with greater than random luck. The attacker can also ask for the encryption of plaintext messages other than $m_1$ and $m_2$. There is standard (CPA1), where the attacker submits all requests before receiving $E(m_b)$, and there is adaptive (CPA2), where the attacker can submit requests after receiving $E(m_b)$.
+\end{tecbox}
+
+\begin{tecbox}{Chosen ciphertext attack (CCA)}{}
+    \begin{enumerate}
+        \item The adversary submits two ciphertexts $c_0$ and $c_1$.
+        \item A bit $b$ is chosen at random.
+        \item The adversary receives $D(c_b)$ (the decryption of either $c_0$ or $c_1$ based on the bit $b$) and must figure out the value of $b$.
+    \end{enumerate}
+    The rest is analogous to chosen plaintext attacks.
+\end{tecbox}
+
+\begin{dfnbox}{Indistinguishable}{}
+    If an algorithm is resistant to a certain attack, then we say that algorithm is \dfntxt{indistinguishable} under that attack.
+\end{dfnbox}
+
+For example, we can say public-key algorithms are indistinguishable under both CPA and CCA.
+
+\section{Mathematical Background}
+
+\subsection{Division and Primes}
+
+\todo[inline]{Divides}
+
+\todo[inline]{Division algorithm}
+
+\todo[inline]{Greatest common divisor, ``relatively prime''}
+
+We first list some rules about greatest common divisors:
+\begin{itemize}[noitemsep]
+    \item For any nonzero integer $a$, $\gcd(a,0) = a$.
+    \item For any integers $a$ and $b$, there exist integers $s$ and $t$ such that $\gcd(a,b) = a \cdot s + b \cdot t$.
+\end{itemize}
+
+\begin{dfnbox}{Prime}{}
+    An integer $p$ is prime if the only divisors of $p$ are $1$ and $p$ itself.
+\end{dfnbox}
+
+It follows that given an integer $a$ and prime number $p$, $a$ and $p$ are relatively prime.
+
+\begin{tecbox}{Prime number frequency $\pi(x)$}{}
+    For any positive integer $x$, the frequency of prime numbers less than or equal to $x$ is given by the following function:
+    \[ \pi(x) \approx \frac{x}{\ln x} \]
+\end{tecbox}
+
+From this formula, we can estimate the number of $512$-bit primes:
+\[ \pi\left(2^{513}\right) - \pi \left(2^{512} \right) \approx 10^{151} \]
+We would need to generate $2^{2^{256}} \approx 10^{76}$ primes before there was a 50\% chance of collision. So it's safe to say that we'll have plenty of prime numbers to work with.
+
+\begin{notebox}
+    It's important to select cryptographically sound random number generators. Bad random number generators are more prone to collisions and should be avoided in cryptographic applications.
+\end{notebox}
+
+\begin{thmbox}{Fundamental Theorem of Arithmeic}{}
+    All positive integers can be expressed as a product of prime numbers, called a \dfntxt{prime factorization}. Moreover, this prime factorization is unique.
+\end{thmbox}
+
+For example, $48$ can be expressed as $2^4 \cdot 3$. As the theorem states, this is the unique prime factorization, meaning there are no other prime numbers whose product is $48$.
+
+The process of \dfntxt{factorization} is finding a positive integer's prime factorization. This is a computationally difficult problem, especially for large numbers. Currently, there has not been an algorithm for traditional computers that can solve this problem in polynomial time complexity. The best known algorithm has the following asymptotic running time:
+\[ \exp\left( \left( \sqrt[3]{\frac{64}{9}} + o(1) \right) (\ln n)^{\frac13} (\ln \ln n)^{\frac23} \right) \] 
+Although, no one has yet proven that such a polynomial time complexity algorithm does not exist. So there may be an undiscovered algorithm that can wreak havoc in the cryptography world.
+
+\begin{notebox}
+    There does exist a polynomial time complexity algorithm on quantum computers. This is not a present threat, and there are measures that may be taken to deter quantum computing. We discuss this in later chapters.
+\end{notebox}
+
+\subsection{Multiplicative Groups}
+Recall in Section \ref{aesmath} we discussed the definition of a \nameref{dfn:group}. Public-key cryptography generally operates using multiplicative groups, which are just groups whose operation is multiplication. For the most part, multiplicative groups are abelian.
+
+The group we care about is the \dfntxt{multiplicative group of integers modulo} $n$:
+\[\Z_n^* \coloneq \{ a \in \Z_n : \gcd(a,n) = 1 \}\]
+This is sometimes written as $U(n)$. If $n$ is prime, then $\Z_n^* = \{ 1, 2, \ldots, n - 1, n \}$. For any two numbers $a,b \in \Z_n^*$, we calculate their product in this group by:
+\[ (a \cdot b) \mod n \]
+
+\begin{exbox}{Simple multiplicative group}{}
+    For example, $\Z_{10}^*$ is populated by all positive integers relatively prime to $10$. So we have:
+    \[ \Z_{10}^* = \{ 1, 3, 7, 9 \} \]
+    \todo[inline]{Group operation table}
+\end{exbox}
+
+To find the inverse element of some $a \in \Z_n^*$, recall that we can express $\gcd(a,n)$ in the following terms for some $s,t \in \Z$:
+\[ \gcd(a,n) = a \cdot s + n \cdot t \]
+By definition of $\Z_n^*$, we have $\gcd(a,n) = 1$, so:
+\[ 1 = a \cdot s + n \cdot t \]
+Note that multiplication in this group happens under modulo $n$, so:
+\[ 1 \equiv a \cdot s + n \cdot t \pmod{n} \]
+$n \cdot t \mod n = 0$, so:
+\[ 1 \equiv a \cdot s \pmod{n} \implies a^{-1} \equiv s \pmod{n} \]
+Thus, $a^{-1} = s$.
+
+\todo[inline]{Order of group, order of elements in group}
+
+\todo[inline]{Subgroup, cyclic subgroups, generators}
+
+\subsection{Elliptic Curves}
+
+\begin{dfnbox}{Elliptic Curve}{}
+    An \dfntxt{elliptic curve} is a \todo[inline]{definition of elliptic curve}
+\end{dfnbox}
+
+For public-key cryptography, we are usually interested in public keys that belong to elliptic curve groups:
+\[ E / \Z_p \coloneq \left\{ (x,y) : x,y \in \Z_p\ \textbf{and}\ y^2 \equiv x^3 + ax + b \pmod{p} \right\} \]
+Here, the group operation is addition. The identity element is called the ``point at infinity'', written $\mathcal{O}$. We also define multiplication simply as a shorthand notation for addition, where:
+\[ n \cdot P = \underbrace{P + P + \cdots + P}_\text{$n$ times} \]
+This does not work for all elliptic curves. NIST defines a set of curves that are safe for cryptography.
+
+\todo[inline]{How elliptic curve group addition works}
+
+Elliptic curve algorithms can provide the same security with much smaller keys, drastically improving performance. Fortunately, elliptic curve groups are analogous to arithmetic in a multiplicative group $\Z_n^*$. Multiplication in $\Z_n^*$ is analogous to addition in $E/\Z_p$, and exponentiation in $\Z_n^*$ is analogous to multiplication in $E/\Z_p$. Although addition in $\Z_n^*$ has no analog in $E/\Z_p$.
+
+\section{Diffie-Hellman Key Exchange}
+
+A downside of public-key cryptography is its drastically slower speed compared to symmetric-key cryptography. As such, we very rarely use public-key cryptography to directly encrypt things; rather, we use it as a way to ``bootstrap'' symmetric-key cryptography. That is, when Alice and Bob wish to start communicating, one of them sends the other a symmetric key by encrypting it using public-key cryptography. They then use their symmetric keys to both encrypt and decrypt messages, avoiding any additional overhead from public-key cryptography.
+
+This exchange of keys should ultimately allow Alice and Bob to agree on some symmetric key $k$ that they use for future communications. This should be protected from any potential eavesdroppers and ideally resist man-in-the-middle attacks\footnote{For example, if Alice establishes a key with Malory (who is pretending to be Bob), and Bob establishes a key with Malory (who is pretending to be Alice). Malory relays messages between Alice and Bob, reading and modifying messages as desired.}.
+
+\begin{tecbox}{Diffie-Hellman Key Exchange}{}
+    \dfntxt{Diffie-Hellman (DH) key exchange} is the most widely used key exchange algorithm.
+    \begin{enumerate}
+        \item We begin with Alice and Bob establishing shared parameters:
+        \begin{itemize}
+            \item A \textbf{large prime number} $p$ of at least 2048 bits that is also \dfntxt{safe}, meaning there exists another prime $q$ where $p = 2q + 1$.
+            \item A \textbf{generator} $g \in \Z_p^*$ which cyclically generates a subgroup of $\Z_p^*$ of order $q$. This choice provides resilience to chosen-plaintext attacks.
+        \end{itemize}
+        These may be hard-coded with standardized values, or can be picked at runtime.
+        \item Alice and Bob then establish individual parameters:
+        \begin{itemize}
+            \item An integer \dfntxt{private key} $a \in \Z_p^*$, which is randomly selected and large enough to avoid brute-force guessing attacks.
+            \item A \dfntxt{public key} $g^a \mod{p}$.
+        \end{itemize}
+        We will use $a$ to denote Alice's private key and $b$ to denote Bob's private key. We will use $A$ and $B$ to denote public keys.
+        \item Alice and Bob then send each other their public key.
+        \item Alice and Bob compute $g^{ab} \mod p$. For Alice, this is given by $B^a \mod p$, and for Bob, this is given by $A^b \mod p$.
+        \item Alice and Bob then transform $g^{ab} \mod p$ into a symmetric key. For example, this may be done by running $g^{ab} \mod p$ through a hash function.
+    \end{enumerate}
+\end{tecbox}
+
+Diffie-Hellman is secure due to the difficulty of solving the underlying math. Given $A$ where $A = g^a \mod p$, it's difficult to calculate $a$ knowing only the values $A$, $g$, and $p$. This is called the \dfntxt{discrete log problem} and is a notoriously difficult problem. In fact, breaking Diffie-Hellman and the discrete log problem are equivalently difficult problems. Many other public-key algorithms are proven secure by means of showing their algorithm to be equivalently difficult to Diffie-Hellman.
+
+Unfortunately Diffie-Hellman is vulnerable to man-in-the-middle attacks. Malory can replace the legitimate public keys with cryptographically weak public keys. This means that, throughout the communication between Alice and Bob, Malory must be there to intercept messages, decrypt them, and re-encrypt them with the weaker cryptographic keys. This vulnerability can be solved by digitally signing the public keys, which can be done with RSA.
+
+\subsection{Implementation Details}
+To implement DH key exchange, we must satisfy all the conditions of the shared and individual parameters. First, we need a way to generate these large and ``safe'' prime numbers.
+
+\begin{tecbox}{Generating big and safe primes}{}
+\begin{enumerate}
+    \item Generate a random number of length $b$.
+    \item If the most significant\footnote{i.e. high-order or leftmost} bit is not set, go back to step $1$. (This is a quick and easy test to see if our generated number is actually $b$ bits).
+    \item We test whether this number is prime. If not, go back to step 1. This test is usually done by Fermat's primality test.\footnote{This leverages Fermat's Little Theorem, which states: if $p$ is prime, then $p$ divides $(a^p - a)$ for any integer $a$. TODO: more info about this and Miller Rabin Test. There are deterministic tests, but they are much slower.}
+\end{enumerate}
+\end{tecbox}
+
+In addition, we need a way to quickly calculate modular exponentiation. For example, we may need to calculate:
+\[ 4^{13} \mod 497 = \cdots = 445 \]
+In practice, we use much larger numbers, which means we need a fast way to evaluate these kinds of expressions. We can leverage the fact that modular operations are distributive, meaning for any operation $*$:
+\[ a * b \mod n = (a \mod n) * (b \mod n) \mod n \]
+Thus, for sufficiently large $a$ and $b$, it may be computationally advantageous to distribute the modulo operation as above.
+
+\begin{tecbox}{Fast modular exponentiation}{}
+    \todo[inline]{Details of fast modular exponentiation}
+\end{tecbox}

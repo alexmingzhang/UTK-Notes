@@ -1,0 +1,222 @@
+\chapter{Symmetric Encryption}
+In this chapter, we will get an in-depth understanding of symmetric encryption. First, we take a look at the Advanced Encryption Standard (AES), including mathematical concepts used to implement AES. Second, we learn how to apply AES to real-world systems and mechanisms. The goals of this chapter are to:
+\begin{itemize}
+    \item Understand the math used in the Advanced Encryption Standard
+    \item Identify when to use Advanced Encryption Standard and its various modes
+    \item Identify when to use symmetric key cryptography
+    \item Identify which block cipher mode is appropriate for various use cases    
+    \item Implement the Advanced Encryption Standard according to the FIPS 197 specification     
+
+\end{itemize}
+
+\section{Advanced Encryption Standard (AES)}
+
+The \dfntxt{Advanced Encryption Standard (AES)}  belongs to the family of symmetric-key encryption algorithms. These algorithms use the same key for both encryption and decryption, and they must require a strong algorithm to deter chosen-plaintext and chosen-ciphertext attacks. A benefit of symmetric-key algorithms is that they are extremely fast, and are thus used in the bulk of real-world cryptographic applications.
+
+The common symmetric-key algorithm before AES was DES. Unfortunately, researchers discovered that DES in its default configuration was broken. In 1997, National Institute of Science and Technology (NIST) held a competition to replace DES. Of the fifteen proposals that the NIST received, 10 had poor performance or were weak to cryptanalysis. Of the remaining five proposals, Rijndael's algorithm was deemed the clear victor. As such, Rijndael was selected as the Advanced Encryption Standard.
+
+\subsection{Mathematical Background} \label{aesmath}
+The inner workings of AES are deeply rooted in a branch of mathematics known as number theory. We start by giving a high-level overview of some fundamental number theory concepts.
+
+\begin{dfnbox}{Group (Number Theory)}{group}
+    In number theory, a \dfntxt{group} is a collection of:
+    \begin{itemize}[noitemsep]
+        \item a set $G$, called the \dfntxt{underlying set},
+        \item an element of $G$, say $e_0$, called the \dfntxt{identity element},
+        \item a unary operation such as $-$ called \dfntxt{inversion}, and
+        \item a binary operation such as $+$ called the \dfntxt{group operation}.
+    \end{itemize}
+    A group must satisfy the following properties:
+    \begin{itemize}
+        \item \dfntxt{Closed:} For any $a,b$ in $G$, $(a + b)$ is also in $G$.
+        \item \dfntxt{Associative:} For any $a,b,c$ in $G$, $(a+b) + c = a + (b+c)$.
+        \item \dfntxt{Identity element:} For any $a$ in $G$, $e_0 + a = a$, and $a + e_0 = a$.
+        \item \dfntxt{Inverse element:} For any $a$ in $G$, there exists $b$ in $G$ such that $a + b = e_0$, and $b + a = e_0$. In this context, we can call $b$ the \dfntxt{inverse} of $a$.
+    \end{itemize}
+    A group is considered an \dfntxt{abelian group} if it is also commutative, meaning for any $a,b$ in $G$, $a + b = b + a$.
+\end{dfnbox}
+
+\begin{exbox}{Simple group}{}
+    Consider the set of integers $\Z$ with the addition operation. This group is closed under the addition operation as the sum of any two integers is always another integer. Moreover, integer is associative. Our identity element would be $0$, and for any integer $i$, the inverse would be $-i$. Also note that addition is commutative in the integers, making this group an abelian group.
+
+    Now consider the set of integers $\Z$ with the multiplication operation. This is not a group! Although it is closed, associative, and has an identity element $1$, there is not an inverse element. For example, consider the integer $3$. In the rational numbers, its inverse may be $3^{-1}$, or $\sfrac{1}{3}$; however, this number does not exist in the set of integers.
+\end{exbox}
+
+\begin{dfnbox}{Ring (Number Theory)}{}
+    In number theory, a \dfntxt{ring} is an abelian group $R$ with a second binary operation, say $\cdot$, and an identity element, say $e_1$, that must satisfy the following properties:
+    \begin{itemize}
+        \item \dfntxt{Closed:} For any $a,b$ in $R$, $(a \cdot b)$ is also in $R$.
+        \item \dfntxt{Associative:} For any $a,b,c$ in $R$, $(a \cdot b) \cdot c = a \cdot (b \cdot c)$.
+        \item \dfntxt{Identity element:} For any $a$ in $R$, $e_1 \cdot a = a$, and $a \cdot e_1 = a$.
+        \item \dfntxt{Distributive:} For any $a,b,c$ in $G$, $a \cdot (b + c) = (a \cdot b) + (b \cdot c)$.
+    \end{itemize}
+    A ring is considered a \dfntxt{commutative group} if the second operation is commutative, meaning for any $a,b$ in $G$, $a \cdot b = b \cdot a$.
+\end{dfnbox}
+
+The most important property of rings is the distributive property, which relates the two operations of the ring.
+
+\begin{exbox}{Simple ring}{simple-ring}
+    Consider the set $Z_4 = \{0,1,2,3\}$, where the sum or product of any two numbers in $Z_4$ must undergo a $\text{mod} 4$ operation. For example, in $\Z_4$, $3+1 = 4 \mod 4 = 0$, and $3+2 = 5 \mod 4 = 1$. With these modified operations, we can observe that it is:
+    \begin{itemize}
+        \item closed under both operations,
+        \item associative under both operations,
+        \item has identity elements $e_0 = 0$ for addition and $e_1 = 1$ for multiplication, and
+        \item distributive.
+    \end{itemize}
+    Note that we do not need to have an inverse for multiplication, as per our definition of a ring.
+
+    Now consider the set of all integers $\Z$. This is also a ring, as it follows all the properties outlined in our definition.
+\end{exbox}
+
+By adding an inverse operation to undo multiplication, we get a \dfntxt{field}.
+
+\begin{dfnbox}{Field (Number Theory)}{}
+    A \dfntxt{field} is a commutative ring with the addition of an inverse for the second binary operator. A \dfntxt{finite field} or \dfntxt{Galois field} is a field with a finite set of elements.
+\end{dfnbox}
+
+\begin{exbox}{Simple field}{}
+    Consider the set of rational numbers $\Q$ with the traditional addition and multiplication operations. This is a field, as it is a commutative ring that includes a way to inverse elements for multiplication.
+
+    Now consider the set of integers $\Z$. Although it is a commutative ring (as per example \ref{ex:simple-ring}), it does not have a way to inverse elements for multiplication. Thus, it is not a field.
+\end{exbox}
+
+AES works using a finite field, with each member of the field representing a byte. Recall that a byte has 8 ``bits'' which can be either $0$ or $1$. Thus, there are $2^8$ or $256$ possible values for a single byte. This is often abbreviated as $GF(2^8)$, meaning a Galois field with $2^8$ elements. Considering the leftmost bit as $b_7$ and rightmost bit as $b_0$, each byte gets assigned a numerical value in the field as
+\[ b_7 x^7 + b_6 x^6 + \cdots + b_1 x^1 + b_0 x^0 \]
+where $x$ represents some arbitrary number (more on this later). Each bit $b_0$ through $b_7$ must be either $0$ or $1$.
+
+For example, consider the hexadecimal number \texttt{0x63}. This has the binary representation \texttt{0b01100011}. Following our above formula, we see that this number has the following value in our field:
+\[ x^6 + x^5 + x + 1 \]
+
+\paragraph{Addition}
+In this field, addition is analogous to the bitwise \texttt{XOR} operation, which we will notate as $\oplus$. For two bytes $a$ and $b$, their sum is defined as:
+\[ a + b = (a_7 \oplus b_7)x^7 + (a_6 \oplus b_6)x^6 + \cdots + (a_1 \oplus b_1) x^1 + (a_0 \oplus b_0) x \]
+Note that subtraction in this field works exactly the same, meaning $a - b = a + b$.
+
+\paragraph{Multiplication}
+Multiplication is more complicated. When two bytes are multiplied, we first multiply their polynomial representations. Any coefficient that results as $2$ gets reduced modulo $2$ to $0$, similar as how the \texttt{XOR} works in the addition operation. After the polynomial multiplication, if the resulting polynomial is degree $7$ or higher, we reduce it modulo an irreducible polynomial of degree $8$. In Rijndael's implementation, he has chosen the polynomial $x^8 + x^4 + x^3 + x + 1$, which corresponds to the hexadecimal value \texttt{0x11b}. This reduction ensures that the product is at most degree $7$.
+
+For example, let's start by multiplying by \texttt{0b00000001}. Its polynomial representation is simply $x$. Given some byte $a$, we calculate $a \cdot \texttt{0b00000001}$ as:
+\begin{align*}
+    a \cdot \texttt{0b00000001}
+    &= (a_7 x^7 + a_6 x^6 + \cdots + a_1 x^1 + a_0 x^0) \cdot x \\
+    &= a_7 x^8 + a_6 x^7 + \cdots + a_1 x^2 + a_0 x^1
+\end{align*}
+In terms of bits, we can think of a multiplication by $x$ as shifting the bits of $a$ left by $1$ bit. If $a_7 = 0$, then our product is a polynomial of at most order $7$ and is our final product. However, if $a_7 = 1$, then this product is a polynomial of order $8$ and must be reduced. Thus, we perform modulo by $x^8 + x^4 + x^3 + x + 1$. In this case where we are multiplying by the byte \texttt{0b00000001}, then can simply add by the modulus $x^8 + x^4 + x^3 + x + 1$ to obtain the final product:
+\[ a \cdot \texttt{0b00000001} = a_6 x^7 + a_5 x^6 + a_4 x^5 + (a_3 \oplus 1) x^4 + (a_2 \oplus 1) x^3 + a_1 x^2 + (a_0 \oplus 1) x^1 + x^0 \]
+Note that in this case where $a_7 = 1$, adding by $x^8$ gives us a coefficient of $a_7 \oplus 1 = 1 \oplus 1 = 0$. Thus, the $x^8$ term disappears, yielding a polynomial of at most order $7$.
+
+We now have a fast and convenient way of multiplying by $x$. For higher powers of $x$, say $x^2$, we simply multiply by $x$ $2$ times, then handle the modulus after each multiplication by $x$. More generally, to multiply by $x^n$, we multiply by $x$ $n$ times, then handle the modulus after each multiplication by $x$.
+
+With this, we can now generalize multiplication to entire polynomials. Consider multiplication between two bytes, $a$ and $b$. We first distribute the multiplication as such:
+\[ a \cdot b = a_7 x^7 b + a_6 x^6 b + \cdots + a_1 x^1 b + a_0 x^0 b \]
+
+Each of the terms in this sum is simply a multiplication of the polynomial $b$ by some power of $x$. Once we calculate these, we simply add them together to find our product. We add from lower-order bit $a_0$ to high-order bit $a_7$, maintaining a ``running sum'' throughout the calculation. Naturally, a multiplication operation will perform this multiplication by $x$ at most $7$ times.
+
+\subsection{AES Algorithm}
+
+TODO: more explanation of all the things in this section
+
+To discuss the AES algorithm, there are a few terms which we first establish:
+\begin{itemize}
+    \item A \dfntxt{state} refers to an intermediate result during the AES calculations. This can be pictured as a rectangular array of bytes, having four row and $Nb$ columns.
+    \item An \dfntxt{S-box} is a non-linear substitution table.
+    \item \dfntxt{Key expansion} refers to a routine that transforms the input key into several output keys.
+    \item A \dfntxt{word} refers to a 4-byte value.
+\end{itemize}
+
+Some parameters used in AES include:
+\begin{itemize}
+    \item $K$ which denotes the cipher key,
+    \item $N_b$ which denotes the number of columns (usually 4),
+    \item $N_k$ which is amount of 32-bit words comprising the cipher key (for example, using a 128-bit key, $N_k = 4$),
+    \item $N_r$ which is the number of rounds, as a function of $N_b$ and $N_k$, and
+    \item $R_{con}$, which is a four-tuple ``round constant'' that starts at $(1,0,0,0)$, and shifts between rounds.
+\end{itemize}
+
+AES implements the following methods:
+\begin{itemize}
+    \item \texttt{AddRoundKey()}
+    \item \texttt{MixColumns()}
+    \item \texttt{InvMixColumns()}
+    \item \texttt{ShiftRows()}
+    \item \texttt{InvShiftRows()}
+    \item \texttt{InvSubBytes()}
+    \item \texttt{SubBytes()}
+    \item \texttt{RotWord()}
+    \item \texttt{SubWord()}
+\end{itemize}
+
+It's important to note that, although AES may hide the contents of our message, it generally does not significantly alter the size of our message.
+
+\section{Block Cipher Modes}
+
+Block Cipher modes specify how the blocks that make up a message should be passed to the encryption algorithm. This is a common addition to AES, and it is prevalent among other symmetric key encryption schemes.
+
+\paragraph{Electronic code book (ECB)}
+The most naive implementation is the \dfntxt{electronic code book (ECB)} mode, where each block is encrypted independently. That is, we split our plaintext into 128-bit chunks and encrypt each of those chunks. This way, encryption and decryption are both parllelizable, and modifications of the plaintext or ciphertext will only affect a few blocks.
+
+Although simple, this method is insecure because large patterns throughout our plaintext may appear in the ciphertext. This is due to the fact that each block is encrypted independently. Patterns in the plaintext are often retained in the ciphertext.
+
+\paragraph{Cipher block chaining (CBC)}
+A more sophisticated approach is the \dfntxt{cipher block chaining (CBC)} mode, which makes encryption of blocks dependent on other blocks. This solves ECB's security issues by making encryption of blocks interdependent. Plaintext blocks are XORed with the previous ciphertext block before they are encrypted. The first plaintext block is XORed with a random initialization vector (IV), which can be sent unencrypted and should not be reused.
+
+A downside of CBC is that encrypted must be serialized (i.e. linear), but decryption can still be parallel. Note that modifications of plaintext will impact the encryption of that block and all future blocks, hence the ``chaining'' in cipher block chaining. Modifications of ciphertext will impact the decryption of only that block and the very next block.
+
+\begin{notebox}
+    The IV may be sent unencrypted, but it should \textbf{never} be reused with the same key.
+\end{notebox}
+
+\begin{notebox}
+    Changing a single bit in the plaintext may alter the entire corresponding block in the ciphertext, and potentially more in CBC.
+\end{notebox}
+
+\section{Streaming Modes}
+Streaming ciphers encrypt plaintext bit by bit, which is ideal for streaming content of variable length. By default, AES is not a streaming cipher, but using certain modes of operation, we can make it operate as if it were a stream cipher (this idea also extends to other symmetric encryption schemes). Instead of encrypting plaintext directly, we can use encryption algorithm to generate a \dfntxt{keystream} and use this keystream as a one-time pad key.
+
+One such algorithm is \dfntxt{cipher feedback (CFB)}, where ciphertext from one block is encrypted to form the next block's key stream. Like cipher block chaining mode, it starts with a random initialization vector. Encryption is serialized, but decryption can be parallel. Modifications to plaintext will impact the encryption of that block and all future blocks. However, modifications to ciphertext will only impact the decryption of that block and the very next block.
+
+Another mode is \dfntxt{output feedback (OFB)}, where the keystream from one block is encrypted to form the next block's key stream. Once again, we start with a random initialization vector. Both encryption and decryption are serialized; however, keystreams can actually be precomputed, allowing parallel encryption and decryption. Modifications to either plaintext or ciphertext will only affect those blocks.
+
+In \dfntxt{counter (CTR)} mode, a local value is incremented for each block, with the value being encrypted to form that block's keystream. The local value starts with a random IV. Unlike with OFB, both encryption and decryption are fully parallelizable. As such, this method is used more than OFB. In addition, modifications to either plaintext or ciphertext will only affect those blocks.
+
+\begin{notebox}
+    Whereas changing one bit of plaintext in a block cipher mode may potentially change all bits of that corresponding block of ciphertext (and more in some cases), changing a bit of plaintext in a stream cipher mode will only change one bit in the immediate corresponding ciphertext. There may still be changes in the future ciphertext, such as in cipher feedback (CFB)! (Think data dependency; TODO: diagrams of each cipher mode)
+\end{notebox}
+
+\section{Authenticated Modes}
+Symmetric encryption provides confidentiality, but do not provide integrity for our data. To combat this, there are \dfntxt{message authentication codes (MAC)}. The idea is that authenticated encryption with associated data (AEAD) integrates both primitives to provide confidentiality and integrity. It also provides integrity for the associated data.
+
+Authenticated modes require two keys: one for encryption, and one for the message authentication. This is often concatenated into one double-length key.
+
+One authenticated mode is the \dfntxt{Galois/Counter (GCM)} mode. It uses CTR mode for encryption and incorporates a second algorithm to generate an authentication tag that provides integrity. This can also include integrity for additional, non-encrypted data. It starts with a random initialization vector. Although CTR provides parallel encryption, the tag generation is not, so encryption via GCM is serialized. However, decryption can still be parallel.
+
+\section{Padding}
+Block ciphers require that plaintext be a certain length. In AES, we need 128-bit blocks, or equivalently 16-byte blocks. (TODO: is it cryptographically bad to not pad?) To combat this, we may pad the remaining space in the last block with some sequence of bits, dictated by an agreed upon padding scheme. This is only used by block cipher modes where plaintext blocks must be filled to a fixed width.
+
+\paragraph{Bit padding}
+One simple scheme is \dfntxt{bit padding}, where we add a bit value of \texttt{1} and add \texttt{0} bits to fill up remaining space. This method always adds at least one \texttt{1} bit of padding. This means that if our message is an even multiple of 128, this padding scheme would create a new block that is just \texttt{1} followed by 127 \texttt{0}s.
+
+\dfntxt{ISO/IEC 7816-4} adds at least one byte of value \texttt{0x80}, and then fills the remaining space with \texttt{0x00}. Again, this always adds at least one byte of value \texttt{0x80}.
+
+\dfntxt{PKCS5/PKCS7} padding are the most commonly used padding algorithms for AES. PKCS5 required a fixed size for block width, while PKCS7 removed such limitation. In this scheme, we add $n$ padding bytes of value $n$. The value for $n$ is calculated based on the block size in bytes, $b$:
+
+\[ n \coloneq \begin{cases}
+    b, & \text{len}(m) \equiv 0 \pmod{b} \\
+    b - (\text{len}(m) \mod{b}), & \text{otherwise}
+\end{cases}\]
+
+\todo[inline]{Simplify above formula; intuitively says that $n$ is the amount of remaining space, or an entire block width if no space left in the last block}
+
+As with the other padding schemes, we always add at least one byte of padding. One upside is that, once we decrypt a message padded using PKCS5/7, we can determine the amount of padding added by simply looking at the last byte of data.
+
+\dfntxt{ANSI X9.23} uses the same value for $n$ as above, but instead only adds $n - 1$ padding bytes. Also unlike PKCS5/7, padding bytes are random, but some implementations use \texttt{0x00}. The final byte of padding must have value $n$. As such, when observing plaintext padded using this scheme, we can simply look to the last byte to determine how many padding bytes were added. Still, it will always add at least one byte of padding.
+
+Finally, \dfntxt{zero padding} simply adds bytes of value \texttt{0x00} to fill any remaining space. This is not used in practice as there is no requirement that at least one byte of padding must be added. So if our message ends with \texttt{0x00}, there is no way to determine if it was part of the original message or added as padding.
+
+\begin{notebox}
+    All standardized padding schemes require at least 1 bit of padding.
+\end{notebox}
+
+% It relies on an irreducible polynomial, whose divisors are only 1 and itself:
+% \[ x^8 + x^4 + x^3 + x + 1 \]
+% There are many irreducible polynomials like this; Rijndael has simply chosen this specific polynomial for his implementation. Note that this is a polynomial of order $8$, as the resulting polynomial after modulo is always order $7$ or smaller.

@@ -1,0 +1,13 @@
+\chapter{Floating Point Numbers}
+Brief: How computers store numbers
+
+\section{Integers}
+Every integer can be represented as:
+\[ \alpha_n \beta^n + \alpha_{n-1} \beta^{n-1} + \cdots + \alpha_{1} \beta^1 + \alpha_0 \beta^0 \]
+where $\beta \in \Z$ represents the base we choose, and $\alpha \in \Z$ must be $0 \leq \alpha < \beta$.
+
+(TODO: binary representation for computers, two's complement for signed integers)
+
+A negative integer $-y$, $1 \leq y \leq 2^{31}$ is stored as the binary representation of $2^{32} - y$.
+
+\section{Real Numbers}

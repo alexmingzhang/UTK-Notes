@@ -1,0 +1,157 @@
+\chapter{The Integers and Modular Arithmetic}
+
+\begin{thmbox}{Well Ordering Axiom}{}
+    If $S$ is a nonempty subset of $\N$, then $S$ has a minimum value.
+\end{thmbox}
+
+\begin{thmbox}{Principle of Mathematical Induction}{}
+    For each $n \in \N$, let $P(n)$ denote a statement. Suppose that:
+    \begin{enumerate}
+        \item $P(1)$ is true, and
+        \item for each $n \in \N$, if $P(n)$ is true, then $P(n+1)$ is true.
+    \end{enumerate}
+    Then $P(n)$ is true for all $n \in \N$.
+\end{thmbox}
+
+\section{Divisibility}
+\begin{thmbox}{Division Algorithm}{}
+    TODO: division algorithm
+\end{thmbox}
+
+\begin{dfnbox}{Divides}{}
+    Let $a,b \in \Z$. We say $a$ \dfntxt{divides} $b$ if there exists an integer $k$ such that $b = ka$. We write $a \mid b$ to mean $a$ divides $b$.
+\end{dfnbox}
+
+\begin{dfnbox}{Greatest common divisor (GCD)}{}
+    Let $a,b \in \Z$ where at least one is non-zero. The \dfntxt{greatest common divisor (GCD)} of $a$ and $b$ is the largest positive integer $g$ such that $g \mid a$ and $g \mid b$. We write $\gcd(a,b)$ or simply $(a,b)$ to denote the greatest common divisor of $a$ and $b$.
+\end{dfnbox}
+
+\begin{dfnbox}{Relatively prime, coprime}{}
+    Let $a,b \in \Z$, where at least one is non-zero. We say $a$ and $b$ are \dfntxt{relatively prime} (or \dfntxt{coprime}) if $\gcd(a,b) = 1$.
+\end{dfnbox}
+
+\begin{thmbox}{}{}
+    Let $a,b \in \Z$, where at least one is non-zero. Then there exist $u,v \in \Z$ where $\gcd(a,b) = au + bv$. Moreover, $\gcd(a,b)$ is the smallest possible number of all values of $u$ and $v$.
+\end{thmbox}
+
+\begin{thmbox}{Euclidean Algorithm}{}
+    TODO
+\end{thmbox}
+
+\section{Prime Factorization}
+
+\begin{dfnbox}{Prime, composite}{}
+    A natural number $p > 1$ is \dfntxt{prime} if its only positive divisors are $1$ and $p$ itself. Otherwise, $p$ is \dfntxt{composite}.
+\end{dfnbox}
+
+\begin{thmbox}{Euclid's Lemma}{}
+    Let $p \in \N$ where $p > 1$. $p$ is prime if and only if, for any integers $a$ and $b$ where $p \mid ab$, then $p \mid a$ or $p \mid b$.
+\end{thmbox}
+
+\begin{thmbox}{Fundamental Theorem of Arithmetic}{}
+    For every natural number $a$ greater than $1$, there exists a unique set of primes $\{p_1, \ldots, p_n\}$ such that $a = p_1 \cdots p_n$. 
+\end{thmbox}
+
+\section{Properties of Integers}
+
+
+\section{Modular Arithmetic}
+
+\begin{dfnbox}{Modular congruency}{}
+    Let $n \in \N$ where $n > 1$, and let $a,b \in \Z$. We say $a$ is \dfntxt{congruent} to $b$ \dfntxt{modulo} $n$ if $n \mid (a-b)$ (that is, if $a$ and $b$ have the same remainder when divided by $n$). We write $a \equiv b \pmod{n}$ to mean $a$ is congruent to $b$ modulo $n$.
+\end{dfnbox}
+
+\begin{thmbox}{}{}
+    Let $n \in \N$ where $n > 1$. Then $a \equiv b \pmod{n}$ is an equivalence relation.
+\end{thmbox}
+
+The equivalence classes of $a \equiv b \pmod{n}$ are conventionally written as:
+\[ [0], [1], \ldots, [n-1] \]
+These are called the \dfntxt{congruence classes modulo} $n$, where:
+\[ \Z_n \coloneq \left\{ [0], [1], \ldots, [n - 1] \right\} \]
+On $\Z_n$, we define addition modulo $n$ and multiplication modulo $n$ as:
+\begin{align*}
+    [a] + [b] &= [a+b] \\
+    [a] \cdot [b] &= [ab]
+\end{align*}
+
+For example, in $\Z_7$, we have $[5] + [6] = [4]$. We will often shorten this as $5 + 6 = 4$ when the context is clear.
+
+\begin{thmbox}{}{}
+    Addition modulo $n$ and multiplication modulo $n$ are well-defined.
+    \tcblower
+    \begin{proof}
+        Fix $n \in \N$ where $n > 1$. Suppose $a_1 \equiv a_2 \pmod{n}$ and $b_1 \equiv b_2 \pmod{n}$. To prove addition modulo $n$ is well-defined, we need to verify the following equality:
+        \[ [a_1] + [b_1] = [a_2] + [b_2] \]
+        Note that:
+        \[ (a_1 + b_1) - (a_2 + b_2) = (a_1 - a_2) + (b_1 - b_2) \]
+        Since $n \mid (a_1 - a_2)$ and $n \mid (b_1 - b_2)$, we have $n \mid [ (a_1 + b_1) - (a_2 + b_2)]$, so addition is well-defined.
+
+        To prove multiplication is well-defined, we need to verify the following equality:
+        \[ [a_1][b_1] = [a_2][b_2] \]
+        Note that:
+        \[ a_1b_1 - a_2b_2 = a_1b_1 - a_1b_2 + a_1b_2 - a_2b_2 = a_1(b_1 - b_2) + (a_1 - a_2)b_2 \]
+        So multiplication modulo $n$ is also well-defined
+    \end{proof}
+\end{thmbox}
+
+These operations follow similar properties as traditional integer addition and multiplication. Addition in $\Z_n$ is closed, associative, commutative, and has additive identity $[0]$ and additive inverse $[-a]$ for any $a \in \Z_n$. 
+
+Multiplication in $\Z_n$ is closed, associative, commutative, distributive, and has multiplicative identity $[1]$. However, not every $\Z_n$ has a multiplicative inverse for all elements.
+
+\begin{exbox}{Multiplicative inverse in $\Z_n$}{}
+In $\Z_6$, does $ab = 0$ mean that $a = 0$ or $b = 0$? Not necessarily: $a = 3$ and $b = 2$ is a counterexample.
+
+In $\Z_7$, does $ab = 0$ mean $a=0$ or $b=0$? For any $a \in \Z_7$ where $a \neq 0$, note that $\gcd(a,7) = 1$. Thus, there exist $u,v \in \Z$ where $au + 7v = 1$. Rearranging, we get $7v = 1 - au$, so $7 \mid (au - 1)$. That means $[a][u] = [1]$, so $u$ is the multiplicative inverse of $a$. Since our choice of $a$ was arbitrary, then every element in $\Z_7$ has a multiplicative inverse.
+\end{exbox}
+
+\begin{exbox}{}{}
+    In $\Z_5$, what is $4^{91}$?
+    \begin{align*}
+        4^1 &= 4 \\
+        4^2 &= 1 \\
+        4^3 &= 4 \\
+        4^4 &= 1 \\
+        &\vdots \\
+        4^{91} &= 4
+    \end{align*}
+
+    $3^1 = 3, 3^2 = 4, 3^2 = 2, 3^4 = 1$, so $3^{91} = (3^4)^{22} \cdot 3^3 = 2$.
+\end{exbox}
+
+\begin{exbox}{}{}
+    Find $b$ satisfying:
+    \begin{align*}
+        b &\equiv 3 \pmod{5} \\
+        b &\equiv 4 \pmod{11} \\
+        b &\equiv 6 \pmod{14}
+    \end{align*}
+    Note that $5$ and $11$ are relatively prime, so there exist $u,v \in \Z$ where $5u + 11v = 1$. In this case, we can take $u = -2$ and $v = 1$. Note that:
+    \begin{align*}
+        5(-2)4 + 11(1)3 &\equiv 3 \pmod{5} \\
+        5(-2)4 + 11(1)3 &\equiv 4 \pmod{11}
+    \end{align*}
+    More generally, we can take $b = -7 + 55k$ for any $k \in \Z$.
+    \tcblower
+    Alternatively, we can let:
+    \begin{align*}
+        d_1 &\coloneq 11 \cdot 14 = 154 \\
+        d_2 &\coloneq 5 \cdot 14 = 70 \\
+        d_3 &\coloneq 5 \cdot 11 = 55
+    \end{align*}
+    Note that $\gcd(5, 154) = 1$, so:
+    \[ 5(31) + 154(-1) = 1 \implies 5 \cdot 31 \equiv 1 \pmod{5} \]
+    \[11(-19) + 70(3) = 1 \implies 70 \cdot 3 \equiv 1 \pmod{11}\]
+    \[ 14(4) + 55(-1) = 1 \implies 55(-1) \equiv 1 \pmod{14} \]
+
+    Let $b \coloneq 154(-1)(3) + 70(3)4 + 55(-1)6$. Then:
+    \[ b \pmod{5} = 154(-1)(3) = 3 \]
+    \[ b \pmod{11} = 4 \]
+    \[ b \pmod{14} = 6 \]
+\end{exbox}
+
+\begin{thmbox}{Chinese Remainder Theorem}{}
+    Let $n_1, \ldots, n_k$ be positive integers, all greater than $1$, where any two different $n_i$ and $n_j$ are relatively prime. If $a_1, \ldots, a_n \in \Z$, we can find $b \in \Z$ satisfying $b \equiv a_i \pmod{n_i}$ for all $1 \leq i \leq k$. Moreover, if $c \equiv a_i \pmod{n_i}$, then $b \equiv c \pmod{n_1n_2\cdots n_k}$.
+    \tcblower
+
+\end{thmbox}

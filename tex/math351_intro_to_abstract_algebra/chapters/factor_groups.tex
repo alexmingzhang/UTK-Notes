@@ -1,0 +1,53 @@
+\chapter{Factor groups and Homomorphisms}
+
+\section{Normal Subgroups}
+
+\begin{dfnbox}{Normal subgroup}{}
+    Let $N$ be a subgroup of $G$. We say $N$ is a \dfntxt{normal subgroup} of $G$ if $aN = Na$ for all $a \in G$. That is:
+    \[ N \trianglelefteq G \iff \forall (a \in G)(aN = Na) \]
+\end{dfnbox}
+
+Intuitively, to be a normal subgroup means some symmetry between left and right cosets. For example, $\{e\}$ and $G$ are normal subgroups of $G$. Also, any subgroup of an abelian group $G$ is normal.
+
+In $D_8$, $\alg{R_{90}}$ is normal, even though $F_1 R_{90} \neq R_{90}F_1$. Also, $\alg{R_{180}}$ is normal, and $\alg{R_{180}} = Z(D_8)$ (the center of $D_8$).
+
+\begin{thmbox}{}{}
+    Let $G$ be a group. Any subgroup of index $2$ is normal.
+\end{thmbox}
+
+\begin{thmbox}{}{}
+    Let $H$ be a subgroup of $G$, and let $a \in G$. Then:
+    \[ a^{-1}Ha = \{ a^{-1}ha : h \in H \} \]
+    $a^{-1}Ha$ is a subgroup and $\abs{a^{-1}Ha} = \abs{H}$.
+    \tcblower
+    \begin{proof}
+        
+    \end{proof}
+\end{thmbox}
+
+\begin{thmbox}{}{}
+    Let $H$ be a subgroup of $G$. The following are equivalent:
+    \begin{enumerate}
+        \item $H$ is normal in $G$.
+        \item $a^{-1}ha \in H$ for all $h \in H$ and $a \in G$.
+        \item $a^{-1}Ha \subseteq H$ for all $a \in G$.
+        \item $a^{-1}Ha = H$ for all $a \in G$.
+    \end{enumerate}
+\end{thmbox}
+
+\begin{dfnbox}{Product of subgroups}{}
+    Let $H$ and $K$ be subgroups of $G$. We define the \dfntxt{product of subgroups} $H$ and $K$ as:
+    \[ HK \coloneq \{ hk : h \in H, k \in K \} \]
+\end{dfnbox}
+
+\section{Factor Groups}
+
+\begin{dfnbox}{Factor groups}{}
+    Let $N$ be a normal subgroup of $G$. Then the \dfntxt{factor group} $G/N$ is the set of all left cosets $gN$ for all $g \in G$. For any $aN, bN \in G/N$, we define the group operation to be $(aN)(bN) = (ab)N$.
+\end{dfnbox}
+
+\begin{thmbox}{Factor groups are groups}{}
+    Let $N$ be a normal subgroup of $G$. Then $G/N$ is a group whose order is $[G : N]$.
+    \tcblower
+    \todo[inline]{Do the damn proof}
+\end{thmbox}
