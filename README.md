@@ -8,7 +8,6 @@ A collection of notes I have taken at the University of Tennessee. I will be con
 | COSC 312 | [Algorithm Analysis and Automata](https://catalog.utk.edu/preview_course_nopop.php?catoid=34&coid=182784) | [Link](https://github.com/alexmingzhang/UTK-Notes/blob/main/cosc312_algorithm_analysis_and_automata.pdf)  |
 | COSC 360 | [Systems Programming](https://catalog.utk.edu/preview_course_nopop.php?catoid=34&coid=180792) | [Link](https://github.com/alexmingzhang/UTK-Notes/blob/main/cosc360_systems_programming.pdf)  |
 | COSC 361 | [Operating Systems](https://catalog.utk.edu/preview_course_nopop.php?catoid=43&coid=264939) | [Link](https://github.com/alexmingzhang/UTK-Notes/blob/main/cosc361_operating_systems.pdf)  |
-
 | COSC 366 | [Introduction to Cybersecurity](https://catalog.utk.edu/preview_course_nopop.php?catoid=34&coid=183934) | [Link](https://github.com/alexmingzhang/UTK-Notes/blob/main/cosc366_intro_to_cybersecurity.pdf)
 | COSC 583 | [Applied Cryptography](https://catalog.utk.edu/preview_course_nopop.php?catoid=44&coid=273774) | [Link](https://github.com/alexmingzhang/UTK-Notes/blob/main/cosc583_applied_cryptography.pdf)  |
 | MATH 231 | [Differential Equations](https://catalog.utk.edu/preview_course_nopop.php?catoid=34&coid=181634) | [Link](https://github.com/alexmingzhang/UTK-Notes/blob/main/math231_differential_equations.pdf)  |
