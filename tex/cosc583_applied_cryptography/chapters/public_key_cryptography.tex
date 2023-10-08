@@ -188,3 +188,131 @@ Thus, for sufficiently large $a$ and $b$, it may be computationally advantageous
 \begin{tecbox}{Fast modular exponentiation}{}
     \todo[inline]{Details of fast modular exponentiation}
 \end{tecbox}
+
+\section{RSA and ElGamal Debrief}
+RSA and ElGamal are public-key encryption algorithms which can be used for both encryption and digital signatures. Any public-key algorithm enables key agreement. For example, if Alice wants to share a key with Bob:
+\begin{itemize}
+    \item Alice generates a random symmetric key.
+    \item Alice encrypts the symmetric key with Bob's public key.
+    \item Alice sends the encrypted key to Bob.
+\end{itemize}
+
+This kind of key exchange is not preferable as Alice is able to unilateraly choose the key to be shared. This can have ramifications on usage later, depending on what algorithms use that key. In contrast, true key exchange algorithms like Diffie-Hellman create keys where both parties contribute to its creation, assuring that it is not controlled by one party or the other.
+
+Diffie-Hellman also produces ephemeral keys which provide \dfntxt{perfect forward secrecy}. Even if a long-term private key is stolen and messages are recorded, those messages cannot be decrypted.
+
+\subsection{Mathematical Background}
+
+RSA relies on finding the greatest common divisor of two numbers. We do this by the \dfntxt{Euclidean algorithm}. This is done by recursively applying the following rule:
+\[ \gcd(a,b) = \gcd(b, a \mod b) \]
+We add a base case to stop this recursion:
+\[ \gcd(a,0) = a \]
+For example, if we wanted to calculate $\gcd(91, 208)$, we can apply the first rule recursively to get:
+\begin{itemize}
+    \item $\gcd(91, 208)$
+    \item $\gcd(208,91)$
+    \item $\gcd(91, 26)$
+    \item $\gcd(26,13)$
+    \item $\gcd(13,0)$
+\end{itemize}
+And we are left with 13!
+
+In addition to this, we have the \dfntxt{extended Euclidean algorithm}.
+\todo[inline]{Extended euclidean algorithm}
+
+RSA also relies on \dfntxt{Euler's totient function}, $\phi : \N \to \N$, defined as:
+\[ \phi(n) = \abs{ \{ m \in \N : m < n\ \text{and}\ \gcd{m,n}=1 \} } \]
+
+\section{RSA}
+
+\begin{dfnbox}{RSA}{}
+    \dfntxt{RSA} is one of the first public-key algorithms ever created. It was invented in 1977 by Ron Rivest, Adi Shamir, and Leonard Adleman.
+\end{dfnbox}
+
+Unlike Diffie-Hellman which relies on the difficulty of the discrete log problem, RSA relies on the difficulty of finding the prime factorization of large numbers. This difficulty has withstood years of extensive cryptanalysis, lending a high level of confidence in this algorithm. However, there are attacks against specific implementations. Side-channel attacks as well as exploiting bad RNG or bad padding schemes are possible.
+
+\begin{tecbox}{RSA key generation}{}
+    \begin{enumerate}
+        \item Choose two large primes $p$ and $q$, at least 2048 bits but preferably 4096 bits.
+        \item Calculate $n = p \cdot q$.
+        \item Calculate $\phi(n) = (p-1)(q-1)$.
+        \item Select $e \in \Z_n^*$ such that $\gcd(e, \phi(n)) = 1$. Common values for $e$ are $3$ and $65537$, both of which are small and only have a few number of \texttt{1} bits in binary form.
+        \item Find $d$ such that $d \equiv e^{-1} \pmod{\phi(n)}$, done by the extended Euclidean algorithm.
+        \item The public key is the pair of values $(e, n)$. The private key is the pair of vlaues $(d, n)$.
+        \item Now we destroy $p$ and $q$, as an adversary can calculate $d$ for themselves if $p$ and $q$ are still around.
+    \end{enumerate}
+\end{tecbox}
+
+\begin{tecbox}{RSA encryption and decryption}{}
+    \begin{itemize}
+        \item Given plaintext $m$, we get ciphertext $c$ by $c = m^e \mod{n}$.
+        \item Given ciphertext $c$, we get plaintext $m$ by $m = c^d \mod{n}$.
+    \end{itemize}
+\end{tecbox}
+
+\begin{tecbox}{RSA signing and verification}{}
+    For signatures, we will need to agree upon a hash function $H$.
+    \begin{itemize}
+        \item Given plaintext $m$ we get signature $s$ by $s = H(m)^d \mod n$.
+        \item Given plaintext $m$ and signature $s$, we verify $s$ by seeing if $H(m) = s^e \mod{n}$
+    \end{itemize}
+\end{tecbox}
+
+In addition, we need a padding scheme to ensure that $m$ is a valid message. We need one large enough that $m^e > n$, and we need to ensure that $\gcd(m,n) = 1$.
+
+\begin{tecbox}{RSA padding}{}
+    \begin{itemize}
+        \item For encryption, we use Optimal Asymmetric Encryption Padding (OAEP).
+        \item For signatures, we use Probabilistic Signature Scheme (PSS).
+    \end{itemize}
+\end{tecbox}
+
+This also protects against adaptive chosen-ciphertext attacks (CCA2).
+
+\begin{tecbox}{Adaptive chosen-ciphertext attack against RSA}{}
+    \begin{enumerate}
+        \item Attacker creates $c\prime \equiv c \cdot r^e \equiv m^e \cdot r^e \equiv (m \cdot r)^e \pmod{n}$. $r$ is a random number known to the attacker.
+        \item Attacker requests the decryption of $c\prime$ and receives $p\prime$.
+        \item Attacker calculates $m \equiv p\prime \cdot r^{-1} \equiv (m \cdot r) \cdot r^{-1} \equiv m \pmod{n}$.
+    \end{enumerate}
+\end{tecbox}
+
+\section{ElGamal}
+ElGamal is an alternative to RSA based on Diffie-Hellman, relying on the difficulty of the discrete log problem.
+
+\begin{tecbox}{ElGamal key generation}{}
+    \begin{enumerate}
+        \item Select a large, safe prime $p$, at least 2048 bits but preferably 4096 bits. Safe means that there exists $q$ where $p = 2q + 1$ and $q$ is also prime.
+        \item Select $g \in \Z_p^*$ that generates a subgroup of order $q$. This provides resilience to chosen-plaintext attacks (IND-CPA).
+        \item Pick $x$ randomly from $\{1, 2, \ldots, q -1\}$.
+        \item Calculate $h = g^x \mod{p}$.
+        \item Our public key is the tuple $(G, q, g, h)$. Our private key is just the value $x$.
+    \end{enumerate}
+\end{tecbox}
+
+\begin{tecbox}{ElGamal encryption}{}
+    \begin{enumerate}
+        \item Choose a random integer $r \in \{1, \ldots, q- 1\}$.
+        \item Given plaintext $m$, the ciphertext is the pair:
+        \[ (c_1, c_2) = (g^r \mod{p}, m \cdot h^r \mod{p}) \]
+    \end{enumerate}
+\end{tecbox}
+
+\begin{tecbox}{ElGamal decryption}{}
+    We are given ciphertext $(c_1, c_2)$
+    \begin{enumerate}
+        \item Compute $h^r = c_1^x \mod{p}$.
+        \item Compute $(h^r)^{-1} \mod{p}$.
+        \item Compute $m = c_2 \cdot (h^r)^{-1} \mod{p}$.
+    \end{enumerate}
+\end{tecbox}
+
+\begin{tecbox}{ElGamal signing}{}
+    \begin{enumerate}
+        \item Choose a random integer $k \in \{ 2, \ldots, q - 2\}$ such that $k$ is relatively prime to $q-1$.
+        \item Calculate $r = g^k \mod p$.
+        \item Given plaintext $m$, the signature \todo[inline]{More signing stuff}
+    \end{enumerate}
+\end{tecbox}
+
+ElGamal with padding is IND-CPA and IND-CCA1, but not IND-CCA2 secure (usually not a problem in practice). RSA with OAEP/PSS padding is preferred, but ElGamal is still used as the basis of other algorithms, so it is helpful to understand how it works.

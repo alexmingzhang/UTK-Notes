@@ -3,51 +3,126 @@
 \section{Normal Subgroups}
 
 \begin{dfnbox}{Normal subgroup}{}
-    Let $N$ be a subgroup of $G$. We say $N$ is a \dfntxt{normal subgroup} of $G$ if $aN = Na$ for all $a \in G$. That is:
-    \[ N \trianglelefteq G \iff \forall (a \in G)(aN = Na) \]
+    For $N \leq G$, $N$ is \dfntxt{normal} if $gN = Ng$ for any $g \in G$. This is written as $N \normalin G$.
 \end{dfnbox}
 
-Intuitively, to be a normal subgroup means some symmetry between left and right cosets. For example, $\{e\}$ and $G$ are normal subgroups of $G$. Also, any subgroup of an abelian group $G$ is normal.
+For example, $G \normalin G$, and $\{e\} \normalin G$.
 
-In $D_8$, $\alg{R_{90}}$ is normal, even though $F_1 R_{90} \neq R_{90}F_1$. Also, $\alg{R_{180}}$ is normal, and $\alg{R_{180}} = Z(D_8)$ (the center of $D_8$).
+\begin{thmbox}{Any subgroup of index 2 is normal}{}
+    If $H \leq G$ and $[G:H] = 2$, then $H \normalin G$.
+\end{thmbox}
 
-\begin{thmbox}{}{}
-    Let $G$ be a group. Any subgroup of index $2$ is normal.
+\begin{thmbox}{Equivalent definition of normal subgroup}{}
+    $H \normalin G$ if and only if $g^{-1}hg \in H$ for all $g \in G$ and $h \in H$.
 \end{thmbox}
 
 \begin{thmbox}{}{}
-    Let $H$ be a subgroup of $G$, and let $a \in G$. Then:
-    \[ a^{-1}Ha = \{ a^{-1}ha : h \in H \} \]
-    $a^{-1}Ha$ is a subgroup and $\abs{a^{-1}Ha} = \abs{H}$.
-    \tcblower
-    \begin{proof}
-        
-    \end{proof}
-\end{thmbox}
-
-\begin{thmbox}{}{}
-    Let $H$ be a subgroup of $G$. The following are equivalent:
+    For $H \leq G$ and $K \leq G$, let $HK \coloneq \{ hk : h \in H, k \in K \}$.
     \begin{enumerate}
-        \item $H$ is normal in $G$.
-        \item $a^{-1}ha \in H$ for all $h \in H$ and $a \in G$.
-        \item $a^{-1}Ha \subseteq H$ for all $a \in G$.
-        \item $a^{-1}Ha = H$ for all $a \in G$.
+        \item If $H$ and $K$ are both finite, then $\abs{HK} = \frac{\abs{H}\abs{K}}{\abs{H \cap K}}$.
+        \item If $H \normalin G$ or $K \normalin G$, then $HK \leq G$.
+        \item If $H \normalin G$ and $K \normalin G$, then $HK \normalin G$.
     \end{enumerate}
 \end{thmbox}
 
-\begin{dfnbox}{Product of subgroups}{}
-    Let $H$ and $K$ be subgroups of $G$. We define the \dfntxt{product of subgroups} $H$ and $K$ as:
-    \[ HK \coloneq \{ hk : h \in H, k \in K \} \]
-\end{dfnbox}
+% \begin{dfnbox}{Normal subgroup}{}
+%     Let $N$ be a subgroup of $G$. We say $N$ is a \dfntxt{normal subgroup} of $G$ if $aN = Na$ for all $a \in G$. That is:
+%     \[ N \trianglelefteq G \iff \forall (a \in G)(aN = Na) \]
+% \end{dfnbox}
+
+% Intuitively, to be a normal subgroup means some symmetry between left and right cosets. For example, $\{e\}$ and $G$ are normal subgroups of $G$. Also, any subgroup of an abelian group $G$ is normal.
+
+% In $D_8$, $\alg{R_{90}}$ is normal, even though $F_1 R_{90} \neq R_{90}F_1$. Also, $\alg{R_{180}}$ is normal, and $\alg{R_{180}} = Z(D_8)$ (the center of $D_8$).
+
+% \begin{thmbox}{}{}
+%     Let $G$ be a group. Any subgroup of index $2$ is normal.
+% \end{thmbox}
+
+% \begin{thmbox}{}{}
+%     Let $H$ be a subgroup of $G$, and let $a \in G$. Then:
+%     \[ a^{-1}Ha = \{ a^{-1}ha : h \in H \} \]
+%     $a^{-1}Ha$ is a subgroup and $\abs{a^{-1}Ha} = \abs{H}$.
+%     \tcblower
+%     \begin{proof}
+        
+%     \end{proof}
+% \end{thmbox}
+
+% \begin{thmbox}{}{}
+%     Let $H$ be a subgroup of $G$. The following are equivalent:
+%     \begin{enumerate}
+%         \item $H$ is normal in $G$.
+%         \item $a^{-1}ha \in H$ for all $h \in H$ and $a \in G$.
+%         \item $a^{-1}Ha \subseteq H$ for all $a \in G$.
+%         \item $a^{-1}Ha = H$ for all $a \in G$.
+%     \end{enumerate}
+% \end{thmbox}
+
+% \begin{dfnbox}{Product of subgroups}{}
+%     Let $H$ and $K$ be subgroups of $G$. We define the \dfntxt{product of subgroups} $H$ and $K$ as:
+%     \[ HK \coloneq \{ hk : h \in H, k \in K \} \]
+% \end{dfnbox}
 
 \section{Factor Groups}
 
 \begin{dfnbox}{Factor groups}{}
-    Let $N$ be a normal subgroup of $G$. Then the \dfntxt{factor group} $G/N$ is the set of all left cosets $gN$ for all $g \in G$. For any $aN, bN \in G/N$, we define the group operation to be $(aN)(bN) = (ab)N$.
+    For $N \normalin G$, the \dfntxt{factor group} $G/N$ is the set of all left cosets $gN$ for all $g \in G$, with group operation $(aN)(bN) = (ab)N$.
 \end{dfnbox}
 
-\begin{thmbox}{Factor groups are groups}{}
-    Let $N$ be a normal subgroup of $G$. Then $G/N$ is a group whose order is $[G : N]$.
-    \tcblower
-    \todo[inline]{Do the damn proof}
+\begin{thmbox}{Properties of factor groups}{}
+    For any group $G$ and normal subgroup $N$:
+    \begin{enumerate}
+        \item $G/N$ is a group of order $[G:N]$.
+        \item If $G$ is abelian, then $G/N$ is abelian.
+        \item If $G$ is cyclic, then $G/N$ is cyclic.
+        \item If $g$ is of finite order, then $\abs{gN}$ divides $\abs{g}$.
+        \item Subgroups of $G/N$ are of the form $H/N$, where $H \leq G$ and $N \subseteq H$.
+        \item $H/N \normalin G/N$ if and only if $H \normalin G$.
+    \end{enumerate}
 \end{thmbox}
+
+\begin{thmbox}{Properties of factor groups involving the center}{}
+    \begin{enumerate}
+        \item If $G/Z(G)$ is cyclic, then $G$ is abelian.
+        \item $[G:Z(G)]$ cannot be prime.
+    \end{enumerate}
+\end{thmbox}
+
+\section{Homomorphisms}
+
+\begin{dfnbox}{Homomorphism, kernel}{}
+    For groups $G$ and $H$, a \dfntxt{homomorphism} from $G$ to $H$ is a function $\alpha : G \to H$ where, for all $g_1, g_2 \in G$:
+    \[ \alpha(g_1g_2) = \alpha(g_1) \alpha(g_2) \]
+    The \dfntxt{kernel} of $\alpha$ is:
+    \[ \ker(\alpha) = \left\{ g \in G : \alpha(g) = e \right\} \]
+\end{dfnbox}
+
+\begin{thmbox}{Properties of homomorphism}{}
+    For a homomorphism $\alpha : G \to H$:
+    \begin{enumerate}
+        \item $\alpha(e) = e$.
+        \item $\alpha(g^n) = (\alpha(g))^n$ for any $n \in \Z$.
+        \item If $g$ is of finite order, then $\abs{\alpha(g)}$ divides $\abs{g}$.
+        \item $\ker(\alpha) \normalin G$.
+        \item $\alpha$ is injective if and only if $\ker(\alpha) = \{e\}$.
+    \end{enumerate}
+\end{thmbox}
+
+\begin{thmbox}{Properties of homomorphism involving images/preimages}{}
+    For a homomorphism $\alpha : G \to H$ and $L \subseteq G$, $M \subseteq H$:
+    \begin{enumerate}
+        \item If $L \leq G$, then $\alpha[L] \leq H$.
+        \item If $L \normalin G$, then $\alpha[L] \normalin \alpha(G)$.
+        \item If $L$ is cyclic, then $\alpha[L]$ is cyclic.
+        \item If $L$ is abelian, then $\alpha[L]$ is abelian.
+        \item $\alpha$ is surjective if and only if $\alpha[g] = H$.
+        \item If $M \leq H$, then $\alpha^{-1}[M] \leq G$.
+        \item If $M \normalin H$, then $\alpha^{-1}[M] \normalin G$.
+    \end{enumerate}
+\end{thmbox}
+
+% \begin{thmbox}{Factor groups are groups}{}
+%     Let $N$ be a normal subgroup of $G$. Then $G/N$ is a group whose order is $[G : N]$.
+%     \tcblower
+%     \todo[inline]{Do the damn proof}
+% \end{thmbox}

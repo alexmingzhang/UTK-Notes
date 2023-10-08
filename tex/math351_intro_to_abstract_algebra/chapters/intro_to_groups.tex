@@ -312,81 +312,147 @@ If $G$ is abelian, then $Z(G) = G$.
 
 \section{Cyclic Groups}
 
+\begin{dfnbox}{Cyclic group, generator}{}
+    A group $G$ is \dfntxt{cyclic} if there exists $a \in G$ where every element is a power of $a$. We say $a$ is a \dfntxt{generator} for $G$ and write $G = \alg{a}$.
+\end{dfnbox}
+
+For any group $G$, we can easily attain a cyclic subgroup by choosing any $a \in G$ and seeing what it generates:
+\[ \alg{a} \coloneq \{ a^n : n \in Z \} \]
+
+\begin{thmbox}{Properties of cyclic groups}{}
+    For cyclic group $G$ and any $a \in G$:
+    \begin{enumerate}
+        \item $G$ is abelian.
+        \item $\alg{a} \leq G$ for any $a \in G$.
+        \item $\abs{a} = \abs{\alg{a}}$.
+        \item Any subgroup of $G$ is also cyclic.
+        \item If $k$ divides $\abs{a}$, then $\alg{a}$ has exactly one subgroup of order $k$: $\alg{a^{\abs{a}/k}}$.
+    \end{enumerate}
+\end{thmbox}
+
 \begin{dfnbox}{Euler phi-function}{}
     The \dfntxt{Euler phi-function} is a function $\phi : \N \to \N$ where $\phi(n)$ is the number of integers $1 \leq i \leq n$ where $\gcd(i, n) = 1$.
 \end{dfnbox}
 
-For example, to calculate $\phi(10)$, we can look at all the integers $1$ through $10$ and see if they are relatively prime to $10$. From doing this, we see that only $1$, $3$, $7$, and $9$ are relatively prime to $10$. Thus, $\phi(10) = 4$.
+% For example, to calculate $\phi(10)$, we can look at all the integers $1$ through $10$ and see if they are relatively prime to $10$. From doing this, we see that only $1$, $3$, $7$, and $9$ are relatively prime to $10$. Thus, $\phi(10) = 4$.
 
-\todo[inline]{Much much more stuff}
+\begin{itemize}[noitemsep]
+    \item $\abs{U(n)} = \phi(n)$
+    \item For $\alg{a}$ and $k$ where $k$ divides $\abs{a}$, the number of elements of order $k$ in $\alg{a}$ is $\phi(k)$.
+\end{itemize}
 
-\section{Cosets and Lagrange's Theorem}
-\begin{dfnbox}{Modular congruency (groups)}{}
-    Let $G$ be a group, and let $H$ be a subgroup of $G$. For any $a,b \in G$, we say $a$ is \dfntxt{congruent} to $b$ \dfntxt{modulo} if $a^{-1} b \in H$. That is:
-    \[ a \equiv b \pmod{H} \iff a^{-1}b \in H \]
-\end{dfnbox}
-
-\begin{thmbox}{}{}
-    For any group $H$, congruence modulo $H$ is an equivalence relation.
-    \tcblower
-    \begin{proof}
-        If $a \equiv b \pmod{H}$, then $a^{-1}b \in H$. Thus, $a^{-1}b = h$ for some $h \in H$. Also, $b = ah \in aH$, and clearly $a \in aH$. If $b = ah$ for some $h ,\in H$, then $a^{-1}b = h \in H$. Thus, $a \equiv b \pmod{H}$.
-    \end{proof}
-\end{thmbox}    
-
-As with any equivalence relation, we have equivalence classes defined below:
-
-\begin{dfnbox}{Left coset, right coset}{}
-    Let $H$ be a subgroup of $G$. For any $g \in G$, the \dfntxt{left cosets} of $H$ in $G$ are sets defined as:
-    \[ gH \coloneq \{ gh : h \in H \} \]
-    Similarly, we define \dfntxt{right cosets} of $H$ in $G$ as:
-    \[ Hg \coloneq \{ hg : h \in H \} \]
-    Note: If the group operation is addition, we write $g + H$ instead of $gH$.
-\end{dfnbox}
-
-\begin{thmbox}{Cosets partition a group}{}
-    Let $H$ be a group, and let $H$ be a subgroup of $G$. Then the left cosets of $H$ in $G$ partition $G$.
+\begin{thmbox}{Properties of euler phi with primes}{}
+    For prime number $p$, and any positive integer $m$ and $n$:
     \begin{enumerate}
-        \item Each $a \in G$ is in exactly one left coset, $aH$; and
-        \item if $a,b \in G$, either $aH = bH$ or $aH \cap bH = \emptyset$.
+        \item $\phi(p^n) = p^n - p^{n-1}$.
+        \item If $\gcd(m,n) = 1$, then $\phi(mn) = \phi(m)\phi(n)$.
     \end{enumerate}
 \end{thmbox}
 
-\begin{exbox}{Left cosets and partitioning}{}
-    Consider the group $U(16) = \{ 1,3,5,7,9,11,13,15 \}$ with $H = \alg{3}$. Then we have the following left cosets of $H$ in $U(16)$:
-    \begin{enumerate}[noitemsep]
-        \item $1H = H$
-        \item $3H = \{3,9,11,1\} = H$
-        \item $5H = \{ 5 \cdot 1, 5 \cdot 3, 5 \cdot 9, 5 \cdot 11 \} = \{5, 15, 13, 7\}$
-        \item $7H = \{7, 5, 15, 13 \}$
-        \item $9H = \{9, 11, 1, 3\} = H$
-        \item $11H = \{ 11, 1, 3, 9 \} = H$
-        \item $13H = \{ 13, 7, 5, 15 \}$
-        \item $15H = \{ 15, 13, 7, 5 \}$
-    \end{enumerate}
-    From this, there are only two distinct equivalence classes (and thus, only two left cosets): $\{1,3,9,11\}$ and $\{5,7,13,15\}$. These two left cosets partition $U(16)$.
-\end{exbox}
 
-\begin{thmbox}{Lagrange's Theorem}{}
-    Let $G$ be a group, and let $H$ be a subgroup of $G$. Then $\abs{H}$ divides $\abs{G}$.
+\section{Cosets and Lagrange's Theorem}
+
+\begin{dfnbox}{Congruence modulo a group}{}
+    For $H \leq G$ and $a,b \in G$, $a$ is \dfntxt{congruent to} $b$ modulo $H$ if $a^{-1}b \in H$. This is written as $a \equiv b \pmod{H}$.
+\end{dfnbox}
+
+For group $G$ and $H \leq G$:
+\begin{itemize}[noitemsep]
+    \item Congruence modulo $H$ is an equivalence relation on $G$.
+    \item For any $g \in G$, its equivalence class $[g]$ is $\{gh : h \in H\}$.
+\end{itemize}
+
+\begin{dfnbox}{Left coset}{}
+    For $H \leq G$ and any $a \in G$, the \dfntxt{left coset} of $a$ with respect to $G$ is set $\{ah : h \in H\}$, written as $aH$. We also call $aH$ a left coset of $H$ in $G$.
+\end{dfnbox}
+
+\begin{thmbox}{Left cosets partitioning}
+    For $H \leq G$, the left cosets of $H$ in $G$ partition $G$.
 \end{thmbox}
 
 \begin{dfnbox}{Index}{}
-    Let $H$ be a subgroup of $G$. The index of $H$ in $G$, written $[G : H]$, is the number of left cosets of $H$ in $G$.
+    For $H \leq G$, the \dfntxt{index} of $H$ in $G$ is the number of distinct left cosets of $H$ in $G$, written as $[G : H]$.
 \end{dfnbox}
 
-\begin{corbox}{}{}
-    If $G$ is a group and $a \in G$, then $\abs{a}$ divides $\abs{G}$.
+\begin{thmbox}{Lagrange's Theorem}{}
+    For finite group $G$ and $H \leq G$, $\abs{H}$ divides $\abs{G}$.
+\end{thmbox}
+
+\begin{corbox}{Corollaries to Lagrange's Theorem}{}
+    For finite group $G$ and $H \leq G$:
+    \begin{enumerate}
+        \item $[G : H] = \sfrac{\abs{G}}{\abs{H}}$.
+        \item $\abs{a}$ divides $\abs{G}$ for any $a \in G$.
+        \item Any group of prime order is cyclic.
+    \end{enumerate}
 \end{corbox}
 
-\begin{corbox}{}{}
-    Every group of prime order is cyclic.
-    \tcblower
-    \begin{proof}
+% \begin{dfnbox}{Modular congruency (groups)}{}
+%     Let $G$ be a group, and let $H$ be a subgroup of $G$. For any $a,b \in G$, we say $a$ is \dfntxt{congruent} to $b$ \dfntxt{modulo} if $a^{-1} b \in H$. That is:
+%     \[ a \equiv b \pmod{H} \iff a^{-1}b \in H \]
+% \end{dfnbox}
 
-    \end{proof}
-\end{corbox}
+% \begin{thmbox}{}{}
+%     For any group $H$, congruence modulo $H$ is an equivalence relation.
+%     \tcblower
+%     \begin{proof}
+%         If $a \equiv b \pmod{H}$, then $a^{-1}b \in H$. Thus, $a^{-1}b = h$ for some $h \in H$. Also, $b = ah \in aH$, and clearly $a \in aH$. If $b = ah$ for some $h ,\in H$, then $a^{-1}b = h \in H$. Thus, $a \equiv b \pmod{H}$.
+%     \end{proof}
+% \end{thmbox}    
 
-\begin{exbox}{}{}
-    Let $G$ be a group having subgroups $H$ and $K$, where $\abs{H} = 20$ and $\abs{K} = 63$. Show that $H \cap K = \{ c \}$.
-\end{exbox}
+% As with any equivalence relation, we have equivalence classes defined below:
+
+% \begin{dfnbox}{Left coset, right coset}{}
+%     Let $H$ be a subgroup of $G$. For any $g \in G$, the \dfntxt{left cosets} of $H$ in $G$ are sets defined as:
+%     \[ gH \coloneq \{ gh : h \in H \} \]
+%     Similarly, we define \dfntxt{right cosets} of $H$ in $G$ as:
+%     \[ Hg \coloneq \{ hg : h \in H \} \]
+%     Note: If the group operation is addition, we write $g + H$ instead of $gH$.
+% \end{dfnbox}
+
+% \begin{thmbox}{Cosets partition a group}{}
+%     Let $H$ be a group, and let $H$ be a subgroup of $G$. Then the left cosets of $H$ in $G$ partition $G$.
+%     \begin{enumerate}
+%         \item Each $a \in G$ is in exactly one left coset, $aH$; and
+%         \item if $a,b \in G$, either $aH = bH$ or $aH \cap bH = \emptyset$.
+%     \end{enumerate}
+% \end{thmbox}
+
+% \begin{exbox}{Left cosets and partitioning}{}
+%     Consider the group $U(16) = \{ 1,3,5,7,9,11,13,15 \}$ with $H = \alg{3}$. Then we have the following left cosets of $H$ in $U(16)$:
+%     \begin{enumerate}[noitemsep]
+%         \item $1H = H$
+%         \item $3H = \{3,9,11,1\} = H$
+%         \item $5H = \{ 5 \cdot 1, 5 \cdot 3, 5 \cdot 9, 5 \cdot 11 \} = \{5, 15, 13, 7\}$
+%         \item $7H = \{7, 5, 15, 13 \}$
+%         \item $9H = \{9, 11, 1, 3\} = H$
+%         \item $11H = \{ 11, 1, 3, 9 \} = H$
+%         \item $13H = \{ 13, 7, 5, 15 \}$
+%         \item $15H = \{ 15, 13, 7, 5 \}$
+%     \end{enumerate}
+%     From this, there are only two distinct equivalence classes (and thus, only two left cosets): $\{1,3,9,11\}$ and $\{5,7,13,15\}$. These two left cosets partition $U(16)$.
+% \end{exbox}
+
+% \begin{thmbox}{Lagrange's Theorem}{}
+%     Let $G$ be a group, and let $H$ be a subgroup of $G$. Then $\abs{H}$ divides $\abs{G}$.
+% \end{thmbox}
+
+% \begin{dfnbox}{Index}{}
+%     Let $H$ be a subgroup of $G$. The index of $H$ in $G$, written $[G : H]$, is the number of left cosets of $H$ in $G$.
+% \end{dfnbox}
+
+% \begin{corbox}{}{}
+%     If $G$ is a group and $a \in G$, then $\abs{a}$ divides $\abs{G}$.
+% \end{corbox}
+
+% \begin{corbox}{}{}
+%     Every group of prime order is cyclic.
+%     \tcblower
+%     \begin{proof}
+
+%     \end{proof}
+% \end{corbox}
+
+% \begin{exbox}{}{}
+%     Let $G$ be a group having subgroups $H$ and $K$, where $\abs{H} = 20$ and $\abs{K} = 63$. Show that $H \cap K = \{ c \}$.
+% \end{exbox}
